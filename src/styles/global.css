@@ -407,3 +407,17 @@ a:hover { text-decoration-color: currentColor; }
   .doc { max-width: 78ch; }
   .item { grid-template-columns: 3px 12rem 1fr; }
 }
+
+.crash { max-width: 70ch; margin: 0 auto; padding: var(--gap-xl) var(--gap-m); }
+.crash pre {
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--ground-raised); border: 1px solid var(--line-energy);
+  border-radius: var(--radius); padding: var(--gap-m);
+  font-family: var(--mono); font-size: 0.72rem; line-height: 1.6; color: var(--ink);
+  margin: var(--gap-m) 0;
+}
+.crash button {
+  background: transparent; border: 1px solid var(--hairline); border-radius: var(--radius);
+  color: var(--ink-muted); font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 16px; cursor: pointer;
+}

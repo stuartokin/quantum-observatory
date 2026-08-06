@@ -33,6 +33,15 @@ const PILLAR: FrontierItem['pillar'] = 'quantum'
 type Scale = { label: string; levels: Record<Readiness, string> }
 const SCALES = scales as unknown as Record<string, Scale | undefined>
 
+/** Never let a malformed URL in one content file take the whole board down. */
+function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url
+  }
+}
+
 type Offsets = Record<string, { dx: number; dy: number }>
 
 export function Board() {
@@ -594,7 +603,7 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
             {item.evidence.sources.map((s) => (
               <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer">
                 <span className="src-role">{s.role}</span>
-                {s.identifier ?? s.title ?? new URL(s.url).hostname}
+                {s.identifier ?? s.title ?? hostOf(s.url)}
               </a>
             ))}
             <span className="label">Verified {item.evidence.verified}</span>

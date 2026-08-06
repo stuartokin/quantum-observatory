@@ -35,11 +35,23 @@ export function decayed(stated: Confidence, verified: string, now = new Date()):
   return stated
 }
 
-export const allFrontier: FrontierItem[] = Object.values(files).map((raw) => {
-  const { attributes } = fm<Record<string, unknown>>(raw)
-  const item = normalise(attributes) as FrontierItem
-  return { ...item, confidence: decayed(item.confidence, item.evidence.verified) }
-})
+export const allFrontier: FrontierItem[] = Object.entries(files)
+  .map(([path, raw]) => {
+    try {
+      const { attributes } = fm<Record<string, unknown>>(raw)
+      const item = normalise(attributes) as FrontierItem
+      if (!item?.id || !item.evidence?.verified) {
+        console.warn('Skipping malformed frontier file:', path)
+        return null
+      }
+      return { ...item, confidence: decayed(item.confidence, item.evidence.verified) }
+    } catch (e) {
+      // One bad file must not take the board down — name it and carry on.
+      console.warn('Failed to parse frontier file:', path, e)
+      return null
+    }
+  })
+  .filter((i): i is FrontierItem => i !== null)
 
 export const frontier: FrontierItem[] = allFrontier.filter((i) => i.status === 'published')
 export const frontierById = new Map(allFrontier.map((i) => [i.id, i]))
