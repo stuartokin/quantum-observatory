@@ -16,7 +16,7 @@ metrics:
     note: physical to logical
   - name: 2-qubit gate fidelity
     value: '99.921'
-    note: %
+    note: '%'
 evidence:
   claim: Quantinuum states Helios achieved 48 logical qubits from 98 physical qubits, an error-correcting overhead of 2:1 in a commercial setting, with 99.921% two-qubit gate fidelity.
   verified: '2026-08-04'
