@@ -18,18 +18,22 @@ jobs:
 
       - run: npm install
 
+      # Gate 1 — schema
       - name: Validate content
         run: npm run validate
 
+      # Types
       - name: Typecheck
         run: npx tsc --noEmit
 
       - name: Build
         run: npx vite build
 
+      # Gate 2 — performance budget. A 3D site that fails this is not shippable.
       - name: Performance budget
         run: npm run budget
 
+      # Gate 3 — write scope, agent PRs only
       - name: Agent write scope
         if: startsWith(github.head_ref, 'agent/')
         run: |
