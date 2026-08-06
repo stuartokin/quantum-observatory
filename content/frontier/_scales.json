@@ -1,0 +1,33 @@
+{
+  "_comment": "Readiness means different things per field. When a column is focused, its axis relabels to this language. Definitions are the thing to argue with — they must survive being defended.",
+  "quantum": {
+    "label": "Quantum & PQC",
+    "levels": {
+      "emerging": "Proposed in literature or preprint. No independent replication.",
+      "experimental": "Replicated in at least one independent lab. Not at useful scale.",
+      "demonstrated": "Working at meaningful scale, or a standard formally published.",
+      "adopted": "Shipping in named products, or on a published migration roadmap.",
+      "mainstream": "Default in mainstream deployment; absence is now the exception."
+    }
+  },
+  "cyber": {
+    "label": "Cyber",
+    "levels": {
+      "emerging": "Described in research. No observed use.",
+      "experimental": "Proof of concept, or isolated observed use.",
+      "demonstrated": "Repeatedly observed in the wild, or formally standardised.",
+      "adopted": "Widely deployed in defensive or offensive practice.",
+      "mainstream": "Assumed baseline; its absence is the finding."
+    }
+  },
+  "ai": {
+    "label": "Artificial Intelligence",
+    "levels": {
+      "emerging": "Claimed in a paper or preprint. Not independently reproduced.",
+      "experimental": "Reproduced externally. Benchmark-only, not in products.",
+      "demonstrated": "Working in a shipped product at limited scale.",
+      "adopted": "In general availability across multiple providers.",
+      "mainstream": "Commodity capability, expected by default."
+    }
+  }
+}

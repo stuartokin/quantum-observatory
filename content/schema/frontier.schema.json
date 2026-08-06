@@ -1,0 +1,238 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://horizonqltd.com/schema/frontier/v1",
+  "title": "Horizon Q frontier item",
+  "description": "One development on the frontier. Position is derived from readiness; nothing here stores coordinates. No item exists without a source.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "title",
+    "pillar",
+    "readiness",
+    "evidence",
+    "confidence",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "frontier/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 90
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "pillar": {
+      "enum": [
+        "ai",
+        "quantum",
+        "materials",
+        "energy",
+        "cyber"
+      ]
+    },
+    "readiness": {
+      "enum": [
+        "emerging",
+        "experimental",
+        "demonstrated",
+        "adopted",
+        "mainstream"
+      ],
+      "description": "Top to bottom. Things fall toward reality. Scale is defined per pillar in content/frontier/_scales.json."
+    },
+    "cluster": {
+      "type": "string",
+      "description": "Optional grouping. Items sharing a cluster collapse into one named point with a count until zoomed."
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "sources",
+        "claim",
+        "verified"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "type": "string",
+          "maxLength": 400,
+          "description": "What the sources actually say \u2014 not what we infer from them."
+        },
+        "verified": {
+          "type": "string",
+          "format": "date",
+          "description": "Date a human last opened these and confirmed the claim."
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Ordered, most authoritative first. Preprint and journal versions of the same result are separate entries.",
+          "items": {
+            "type": "object",
+            "required": [
+              "url",
+              "role"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "role": {
+                "enum": [
+                  "primary",
+                  "preprint",
+                  "standard",
+                  "vendor",
+                  "corroborating"
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "publisher": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "identifier": {
+                "type": "string",
+                "description": "DOI, arXiv ID, FIPS number."
+              }
+            }
+          }
+        }
+      }
+    },
+    "confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Decays automatically with age of evidence.verified. Never hand-set to high on a stale source."
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ]
+    },
+    "moved": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Set when readiness changes. Drives the drift animation and the 'moved recently' highlight.",
+      "properties": {
+        "from": {
+          "enum": [
+            "emerging",
+            "experimental",
+            "demonstrated",
+            "adopted",
+            "mainstream"
+          ]
+        },
+        "on": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "articles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs from content/items \u2014 where Stuart has written about this."
+    },
+    "origin": {
+      "enum": [
+        "human",
+        "agent"
+      ],
+      "default": "human",
+      "description": "Agent-proposed items flash in at the top until acknowledged."
+    },
+    "added": {
+      "type": "string",
+      "format": "date"
+    },
+    "constellation": {
+      "type": "string",
+      "description": "Which constellation this star belongs to. Members sit at different readiness levels and are linked; the cluster collapses to one named point until expanded."
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Who demonstrated or published this. A facet, not a category \u2014 organisations do not have readiness levels, so they are never stars."
+    },
+    "metrics": {
+      "type": "array",
+      "description": "The quantitative result. This is usually the whole point of the item and must stay queryable rather than buried in prose.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "description": "Typed relationships to other frontier items. Drives the drawn constellation lines.",
+      "items": {
+        "type": "object",
+        "required": [
+          "to",
+          "relation"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "to": {
+            "type": "string"
+          },
+          "relation": {
+            "enum": [
+              "depends-on",
+              "competes-with",
+              "enables",
+              "supersedes",
+              "evidence-for"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
