@@ -9,18 +9,19 @@
  * 2. IDs are collected in a FIRST pass, before any validation. Otherwise one
  *    bad file makes every connection in the repo look broken.
  */
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import yaml from 'js-yaml'
 
-const ITEMS = 'content/items'
-const schema = JSON.parse(readFileSync('content/schema/item.schema.json', 'utf8'))
+const COLLECTIONS = [
+  { dir: 'content/items', schema: 'content/schema/item.schema.json', label: 'articles' },
+  { dir: 'content/frontier', schema: 'content/schema/frontier.schema.json', label: 'frontier' },
+]
 
 const ajv = new Ajv({ allErrors: true, strict: false })
 addFormats(ajv)
-const validate = ajv.compile(schema)
 
 /** Recursively turn Date objects back into YYYY-MM-DD strings. */
 function normalise(value) {
@@ -33,46 +34,59 @@ function normalise(value) {
 }
 
 const errors = []
-const parsed = []
+let total = 0
 
-// ---- Pass 1: parse everything, collect ids unconditionally ----
-for (const file of readdirSync(ITEMS).filter((f) => f.endsWith('.md'))) {
-  const raw = readFileSync(join(ITEMS, file), 'utf8')
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!match) {
-    errors.push(`${file}: no front matter`)
-    continue
-  }
-  try {
-    parsed.push({ file, data: normalise(yaml.load(match[1])) })
-  } catch (e) {
-    errors.push(`${file}: unparseable front matter — ${e.message}`)
-  }
-}
+for (const col of COLLECTIONS) {
+  if (!existsSync(col.dir)) continue
+  const validate = ajv.compile(JSON.parse(readFileSync(col.schema, 'utf8')))
+  const parsed = []
 
-const ids = new Set()
-for (const { file, data } of parsed) {
-  if (!data?.id) { errors.push(`${file}: missing id`); continue }
-  if (ids.has(data.id)) errors.push(`${file}: duplicate id "${data.id}"`)
-  ids.add(data.id)
-}
-
-// ---- Pass 2: schema ----
-for (const { file, data } of parsed) {
-  if (!validate(data)) {
-    for (const e of validate.errors) errors.push(`${file}${e.instancePath} ${e.message}`)
+  // Pass 1: parse everything, collect ids unconditionally. Collecting ids after
+  // validation means one bad file makes every link in the repo look broken.
+  for (const file of readdirSync(col.dir).filter((f) => f.endsWith('.md'))) {
+    const raw = readFileSync(join(col.dir, file), 'utf8')
+    const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+    if (!match) {
+      errors.push(`${col.dir}/${file}: no front matter`)
+      continue
+    }
+    try {
+      parsed.push({ file, data: normalise(yaml.load(match[1])) })
+    } catch (e) {
+      errors.push(`${col.dir}/${file}: unparseable front matter — ${e.message}`)
+    }
   }
-}
 
-// ---- Pass 3: connections resolve. A world drawing a link to nothing is broken. ----
-for (const { file, data } of parsed) {
-  for (const c of data?.spatial?.connections ?? []) {
-    if (!ids.has(c)) errors.push(`${file}: connection "${c}" does not exist`)
+  const ids = new Set()
+  for (const { file, data } of parsed) {
+    if (!data?.id) { errors.push(`${col.dir}/${file}: missing id`); continue }
+    if (ids.has(data.id)) errors.push(`${col.dir}/${file}: duplicate id "${data.id}"`)
+    ids.add(data.id)
   }
+
+  // Pass 2: schema
+  for (const { file, data } of parsed) {
+    if (!validate(data)) {
+      for (const e of validate.errors) errors.push(`${col.dir}/${file}${e.instancePath} ${e.message}`)
+    }
+  }
+
+  // Pass 3: references resolve. Both collections use different field names.
+  for (const { file, data } of parsed) {
+    for (const c of data?.spatial?.connections ?? []) {
+      if (!ids.has(c)) errors.push(`${col.dir}/${file}: connection "${c}" does not exist`)
+    }
+    for (const l of data?.links ?? []) {
+      if (!ids.has(l.to)) errors.push(`${col.dir}/${file}: link to "${l.to}" does not exist`)
+    }
+  }
+
+  console.log(`  ${col.label}: ${ids.size} items`)
+  total += ids.size
 }
 
 if (errors.length) {
   console.error('Content validation failed:\n' + errors.map((e) => '  - ' + e).join('\n'))
   process.exit(1)
 }
-console.log(`Content OK — ${ids.size} items.`)
+console.log(`Content OK — ${total} items across ${COLLECTIONS.length} collections.`)

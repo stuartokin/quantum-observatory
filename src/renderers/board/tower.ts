@@ -102,7 +102,9 @@ function attentionFor(i: FrontierItem, now: Date): number {
 }
 
 export interface LayoutOpts {
-  constellations: readonly string[]
+  /** Kept for callers that pass the active set; positions come from
+   *  CONSTELLATION_HOME, so layout no longer reads it. */
+  constellations?: readonly string[]
   offsets?: Record<string, { dx: number; dy: number }>
   now?: Date
 }
@@ -121,7 +123,6 @@ export const CONSTELLATION_HOME: Record<string, number> = {
 }
 
 export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
-  const cons = opts.constellations
   const offsets = opts.offsets ?? {}
   const now = opts.now ?? new Date()
 
