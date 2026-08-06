@@ -62,6 +62,10 @@ export interface Node {
   /** Label offset in world units, computed once so labels never jitter. */
   lx: number
   ly: number
+  /** Higher wins the space when labels compete. */
+  rank: number
+  /** Deterministic phase so ambient drift is smooth but not synchronised. */
+  phase: number
   label: string
 }
 
@@ -82,15 +86,19 @@ export function glyphFor(actor?: string): Glyph {
 export const isSourced = (i: FrontierItem) =>
   i.status === 'published' && !i.evidence.claim.startsWith('NEEDS PRIMARY SOURCE')
 
-/** Recently added or recently moved items earn attention. Nothing else does. */
+/**
+ * Attention must be EARNED. The first version gave it to anything recently
+ * added, which meant all 56 items pulsed at once — the same as nothing pulsing.
+ *
+ * Only two things earn it: a change of readiness level, or an agent proposal
+ * you have not yet acknowledged.
+ */
 function attentionFor(i: FrontierItem, now: Date): number {
   const days = (d?: string) =>
     d ? (now.getTime() - new Date(d).getTime()) / 86_400_000 : Infinity
-  const moved = days(i.moved?.on)
-  const added = days(i.added)
-  const best = Math.min(moved, added * 1.5)
-  if (!isFinite(best)) return 0
-  return Math.max(0, 1 - best / 60)
+  if (i.moved?.on) return Math.max(0, 1 - days(i.moved.on) / 90)
+  if (i.origin === 'agent') return Math.max(0, 1 - days(i.added) / 30)
+  return 0
 }
 
 export interface LayoutOpts {
@@ -132,6 +140,8 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
       attention: attentionFor(item, now),
       lx: 0,
       ly: 0,
+      rank: 0,
+      phase: hash(item.id + 'p') * Math.PI * 2,
       label: item.title.length > 34 ? item.title.slice(0, 33) + '…' : item.title,
     }
   })
@@ -163,10 +173,16 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
 
   // Label placement, computed ONCE. Recomputing per frame is what made the
   // earlier board judder — labels leapt between collision slots as points drifted.
+  // Rank decides which labels survive at low zoom. Sourced and moving items
+  // earn a label; unsourced ones are glyphs until you zoom or hover.
+  for (const n of nodes) {
+    n.rank = (n.sourced ? 2 : 0) + (n.attention > 0.1 ? 2 : 0) + n.weight
+  }
+
   const placed: { x: number; y: number; w: number }[] = []
   const CH = 0.0052 // approximate world width of one character
   const LH = 0.019
-  for (const n of [...nodes].sort((a, b) => a.y - b.y)) {
+  for (const n of [...nodes].sort((a, b) => b.rank - a.rank || a.y - b.y)) {
     const w = n.label.length * CH + (n.sourced ? 0 : 0.06)
     let lx = n.x + 0.012
     if (lx + w > 0.995) lx = n.x - 0.012 - w

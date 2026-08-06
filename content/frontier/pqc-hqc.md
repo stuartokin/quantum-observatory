@@ -13,6 +13,9 @@ evidence:
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
       role: standard
+moved:
+  from: experimental
+  on: '2026-06-11'
 confidence: high
 status: published
 added: '2026-08-04'

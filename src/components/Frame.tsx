@@ -22,6 +22,8 @@ export function Frame({
   onClose,
   children,
   accent,
+  z,
+  onFocus,
 }: {
   title: string
   state: FrameState
@@ -29,6 +31,8 @@ export function Frame({
   onClose?: () => void
   children: ReactNode
   accent?: string
+  z?: number
+  onFocus?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
@@ -79,7 +83,9 @@ export function Frame({
       ref={ref}
       className="frame"
       data-active={active}
+      onPointerDown={onFocus}
       style={{
+        zIndex: z,
         left: state.x,
         top: state.y,
         width: state.w,

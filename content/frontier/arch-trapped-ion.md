@@ -30,6 +30,9 @@ links:
     relation: competes-with
   - to: qec-realtime-decoding
     relation: depends-on
+moved:
+  from: demonstrated
+  on: '2026-07-02'
 confidence: high
 status: published
 added: 2026-08-04

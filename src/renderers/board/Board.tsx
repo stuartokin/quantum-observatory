@@ -64,6 +64,11 @@ export function Board() {
   const setFrame = (k: string) => (s: FrameState) =>
     setFrames((f) => ({ ...f, [k]: s }))
 
+  // Stacking order, so touching a frame brings it to the front.
+  const [order, setOrder] = useState<string[]>(['filters', 'actors', 'detail'])
+  const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
+  const zOf = (k: string) => 30 + order.indexOf(k)
+
   const pool = useMemo(
     () => allFrontier.filter((i) => i.pillar === PILLAR && i.status !== 'archived'),
     [],
@@ -96,6 +101,7 @@ export function Board() {
 
   useEffect(() => {
     if (item) {
+      raise('detail')()
       setFrames((f) => ({
         ...f,
         detail: {
@@ -143,7 +149,7 @@ export function Board() {
         activeCons={cons}
       />
 
-      <Frame title="Filters" state={frames.filters} onChange={setFrame('filters')} accent={colour}>
+      <Frame title="Filters" state={frames.filters} onChange={setFrame('filters')} accent={colour} z={zOf('filters')} onFocus={raise('filters')}>
         <fieldset>
           <legend>Constellations</legend>
           {CONSTELLATIONS.map((c) => (
@@ -190,7 +196,7 @@ export function Board() {
         </button>
       </Frame>
 
-      <Frame title="Actors" state={frames.actors} onChange={setFrame('actors')} accent={colour}>
+      <Frame title="Actors" state={frames.actors} onChange={setFrame('actors')} accent={colour} z={zOf('actors')} onFocus={raise('actors')}>
         <ul className="actor-list">
           {actors.map(([a, n]) => (
             <li key={a}>
@@ -215,6 +221,8 @@ export function Board() {
           onChange={setFrame('detail')}
           onClose={() => setSelected(null)}
           accent={colour}
+          z={zOf('detail')}
+          onFocus={raise('detail')}
         >
           <Detail item={item} definition={SCALES[item.pillar]?.levels[item.readiness]} />
         </Frame>
@@ -296,6 +304,9 @@ function Tower({
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
+  const [hover, setHover] = useState<string | null>(null)
+  const hoverRef = useRef<string | null>(null)
+  hoverRef.current = hover
   const drag = useRef<
     | { kind: 'pan'; x: number; y: number; tx: number; ty: number }
     | { kind: 'con'; con: string; x: number; y: number; dx: number; dy: number }
@@ -395,53 +406,93 @@ function Tower({
       g.setLineDash([])
       g.globalAlpha = 1
 
-      // Nodes
-      for (const n of nodes) {
-        const px = X(n.x)
-        const py = Y(n.y)
-        const sel = selected === n.id
-        const r = n.radius * Math.min(1.6, Math.max(0.8, view.k)) * (sel ? 1.5 : 1)
+      // Nodes. Selected and hovered are drawn LAST so they are never buried.
+      const ordered = [...nodes].sort(
+        (a, b) =>
+          Number(a.id === selected) - Number(b.id === selected) ||
+          Number(a.id === hoverRef.current) - Number(b.id === hoverRef.current) ||
+          a.rank - b.rank,
+      )
+      const dimmed = selected !== null
 
-        // Attention: a slow expanding ring on new or recently moved items. The
-        // board tells you where to look rather than daring you to guess.
+      const labelQueue: { n: Node; px: number; py: number; top: boolean }[] = []
+
+      for (const n of ordered) {
+        const sel = selected === n.id
+        const hov = hoverRef.current === n.id
+        // Ambient settling drift. Small, slow, deterministic phase per node —
+        // enough that the board breathes without anything appearing to move.
+        const drift = reduced ? 0 : Math.sin(t * 0.25 + n.phase) * 1.4
+        const px = X(n.x)
+        const py = Y(n.y) + drift
+        const r = n.radius * Math.min(1.5, Math.max(0.85, view.k)) * (sel ? 1.6 : hov ? 1.25 : 1)
+
+        // Attention: earned only by a readiness change or an unacknowledged
+        // agent proposal. Everything pulsing would be the same as nothing.
         if (n.attention > 0.02 && !reduced) {
-          const phase = (t * 0.5 + n.x * 3) % 1
-          g.globalAlpha = (1 - phase) * 0.5 * n.attention
+          const ph = (t * 0.45 + n.phase) % 1
+          g.globalAlpha = (1 - ph) * 0.55 * n.attention
           g.strokeStyle = colour
-          g.lineWidth = 1.4
+          g.lineWidth = 1.5
           g.beginPath()
-          g.arc(px, py, r + phase * 22, 0, Math.PI * 2)
+          g.arc(px, py, r + ph * 26, 0, Math.PI * 2)
           g.stroke()
         }
 
+        const fade = dimmed && !sel ? 0.3 : 1
         g.lineWidth = 1.4
         if (n.sourced) {
-          g.globalAlpha = 0.45 + n.weight * 0.5
+          g.globalAlpha = (0.5 + n.weight * 0.5) * fade
           g.fillStyle = colour
           drawGlyph(g, n.glyph, px, py, r)
           n.glyph === 'cross' ? g.stroke() : g.fill()
         } else {
-          g.globalAlpha = 0.45
+          g.globalAlpha = 0.45 * fade
           g.strokeStyle = colour
           drawGlyph(g, n.glyph, px, py, r)
           g.stroke()
         }
 
-        if (sel) {
+        if (sel || hov) {
           g.globalAlpha = 1
           g.strokeStyle = colour
+          g.lineWidth = sel ? 1.6 : 1
           g.beginPath()
           g.arc(px, py, r + 9, 0, Math.PI * 2)
           g.stroke()
         }
 
-        // Labels: precomputed offsets, so nothing jumps between frames.
-        if (view.k > 0.85 || sel || n.attention > 0.3) {
-          g.globalAlpha = sel ? 1 : n.sourced ? 0.82 : 0.42
-          g.fillStyle = n.sourced ? '#E6EDF7' : '#8697B0'
-          g.fillText(n.sourced ? n.label : n.label + '  ·  UNSOURCED', X(n.lx), Y(n.ly))
-        }
+        // Which labels survive. Universal labelling was the wall of text —
+        // 56 labels cannot be resolved by nudging, only by choosing.
+        const show = sel || hov || view.k > 1.9 || (n.rank >= 2 && view.k > 0.95)
+        if (show) labelQueue.push({ n, px, py, top: sel || hov })
       }
+
+      // Labels last, so a glyph never draws over text.
+      for (const { n, px, py, top } of labelQueue) {
+        const text = n.sourced ? n.label : n.label + ' · unsourced'
+        const lx = top ? px + 14 : X(n.lx)
+        const ly = top ? py + 4 : Y(n.ly)
+        const w = g.measureText(text).width
+
+        if (top) {
+          // A chip behind the active label, so it is readable over anything.
+          g.globalAlpha = 0.92
+          g.fillStyle = '#0D1421'
+          g.beginPath()
+          g.roundRect(lx - 5, ly - 11, w + 10, 16, 2)
+          g.fill()
+          g.globalAlpha = 0.5
+          g.strokeStyle = colour
+          g.lineWidth = 1
+          g.stroke()
+        }
+
+        g.globalAlpha = top ? 1 : dimmed ? 0.28 : n.sourced ? 0.8 : 0.4
+        g.fillStyle = top || n.sourced ? '#E6EDF7' : '#8697B0'
+        g.fillText(text, lx, ly)
+      }
+
       g.globalAlpha = 1
       raf = requestAnimationFrame(draw)
     }
@@ -462,8 +513,30 @@ function Tower({
   }
 
   function onWheel(e: React.WheelEvent) {
-    const k = Math.min(4, Math.max(0.6, view.k * (e.deltaY < 0 ? 1.12 : 0.89)))
-    setView({ ...view, k })
+    // Zoom toward the pointer. Zooming toward the origin is what made this
+    // feel unusable — the thing you were looking at slid off screen.
+    const r = cv.current!.getBoundingClientRect()
+    const PAD = 108
+    const cx = e.clientX - r.left - PAD
+    const cy = e.clientY - r.top - 8
+    const k = Math.min(5, Math.max(0.5, view.k * (e.deltaY < 0 ? 1.15 : 0.87)))
+    setView({
+      k,
+      tx: view.tx + cx / k - cx / view.k,
+      ty: view.ty + cy / k - cy / view.k,
+    })
+  }
+
+  function onMove(e: React.PointerEvent) {
+    if (drag.current) return
+    const w = toWorld(e.clientX, e.clientY)
+    let best: { id: string; d: number } | null = null
+    for (const n of nodes) {
+      const d = Math.hypot(n.x - w.x, (n.y - w.y) * 0.55)
+      if (!best || d < best.d) best = { id: n.id, d }
+    }
+    const id = best && best.d < 0.022 ? best.id : null
+    if (id !== hoverRef.current) setHover(id)
   }
 
   function onPointerDown(e: React.PointerEvent) {
@@ -483,7 +556,7 @@ function Tower({
 
   function onPointerMove(e: React.PointerEvent) {
     const d = drag.current
-    if (!d) return
+    if (!d) return onMove(e)
     const r = cv.current!.getBoundingClientRect()
     if (d.kind === 'pan') {
       setView({ ...view, tx: d.tx + (e.clientX - d.x) / view.k, ty: d.ty + (e.clientY - d.y) / view.k })
@@ -516,13 +589,19 @@ function Tower({
 
   function onTouchMove(e: React.TouchEvent) {
     if (e.touches.length !== 2) return
+    e.preventDefault()
+    drag.current = null // a second finger cancels any pan in progress
     const [a, b] = [e.touches[0], e.touches[1]]
     const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY)
+    const r = cv.current!.getBoundingClientRect()
+    const mx = (a.clientX + b.clientX) / 2 - r.left - 108
+    const my = (a.clientY + b.clientY) / 2 - r.top - 8
     if (!pinch.current) {
       pinch.current = { d, k: view.k }
       return
     }
-    setView({ ...view, k: Math.min(4, Math.max(0.6, (pinch.current.k * d) / pinch.current.d)) })
+    const k = Math.min(5, Math.max(0.5, (pinch.current.k * d) / pinch.current.d))
+    setView({ k, tx: view.tx + mx / k - mx / view.k, ty: view.ty + my / k - my / view.k })
   }
 
   return (
@@ -533,6 +612,7 @@ function Tower({
         onWheel={onWheel}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
+        onPointerLeave={() => setHover(null)}
         onPointerUp={onPointerUp}
         onTouchMove={onTouchMove}
         onTouchEnd={() => (pinch.current = null)}

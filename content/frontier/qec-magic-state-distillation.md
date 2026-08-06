@@ -29,6 +29,9 @@ evidence:
 links:
   - to: qec-below-threshold-surface-code
     relation: depends-on
+moved:
+  from: emerging
+  on: '2026-07-14'
 confidence: high
 status: published
 added: '2026-08-04'
