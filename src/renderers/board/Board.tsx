@@ -6,6 +6,7 @@ import {
   LEVELS,
   CONSTELLATIONS,
   CONSTELLATION_LABEL,
+  CONSTELLATION_HOME,
   layout,
   isSourced,
   glyphFor,
@@ -50,6 +51,7 @@ export function Board() {
   const [selected, setSelected] = useState<string | null>(null)
   const [offsets, setOffsets] = useState<Offsets>({})
   const [view, setView] = useState({ k: 1, tx: 0, ty: 0 })
+  const [focusCon, setFocusCon] = useState<string | null>(null)
 
   const [cons, setCons] = useState<string[]>([...CONSTELLATIONS])
   const [levels, setLevels] = useState<Readiness[]>([...LEVELS])
@@ -147,6 +149,8 @@ export function Board() {
         offsets={offsets}
         setOffsets={setOffsets}
         activeCons={cons}
+        focusCon={focusCon}
+        setFocusCon={setFocusCon}
       />
 
       <Frame title="Filters" state={frames.filters} onChange={setFrame('filters')} accent={colour} z={zOf('filters')} onFocus={raise('filters')}>
@@ -230,8 +234,8 @@ export function Board() {
 
       <p className="board-foot">
         Filled glyphs carry a verified primary source; hollow ones are topics with
-        no source yet. Scroll to zoom, drag to pan, drag a constellation name to
-        move it. <span className="version">v{VERSION}</span>
+        no source yet. Hover a glyph to name it. Double-click a constellation to
+        pull it out, again to release. Scroll or pinch to zoom, drag to pan. <span className="version">v{VERSION}</span>
       </p>
     </main>
   )
@@ -290,6 +294,8 @@ function Tower({
   offsets,
   setOffsets,
   activeCons,
+  focusCon,
+  setFocusCon,
 }: {
   nodes: Node[]
   colour: string
@@ -300,6 +306,8 @@ function Tower({
   offsets: Offsets
   setOffsets: (o: Offsets) => void
   activeCons: string[]
+  focusCon: string | null
+  setFocusCon: (c: string | null) => void
   }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -314,7 +322,39 @@ function Tower({
   >(null)
   const pinch = useRef<{ d: number; k: number } | null>(null)
 
+  // The target view. An internal current view eases toward it every frame —
+  // instant jumps are what made zoom and pinch feel broken.
+  const cur = useRef({ ...view })
+  useEffect(() => { /* target changed; the draw loop chases it */ }, [view])
+
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes])
+
+  /** Convex hull, for the soft nebula behind each constellation's members. */
+  const hulls = useMemo(() => {
+    const groups = new Map<string, Node[]>()
+    for (const n of nodes) {
+      if (!groups.has(n.constellation)) groups.set(n.constellation, [])
+      groups.get(n.constellation)!.push(n)
+    }
+    const out: { con: string; pts: [number, number][] }[] = []
+    for (const [con, g] of groups) {
+      if (g.length < 3) continue
+      const p = g.map((n) => [n.x, n.y] as [number, number]).sort((a, b) => a[0] - b[0] || a[1] - b[1])
+      const cross = (o: number[], a: number[], b: number[]) =>
+        (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+      const build = (src: [number, number][]) => {
+        const h: [number, number][] = []
+        for (const pt of src) {
+          while (h.length >= 2 && cross(h[h.length - 2], h[h.length - 1], pt) <= 0) h.pop()
+          h.push(pt)
+        }
+        h.pop()
+        return h
+      }
+      out.push({ con, pts: [...build(p), ...build([...p].reverse())] })
+    }
+    return out
+  }, [nodes])
   const links = useMemo(() => {
     const out: { a: Node; b: Node; cross: boolean }[] = []
     for (const it of allFrontier) {
@@ -349,46 +389,70 @@ function Tower({
     const PAD = 108
     const W = size.w
     const H = size.h
-    const X = (x: number) => PAD + (x * (W - PAD - 16) + view.tx) * view.k
-    const Y = (y: number) => 8 + (y * (H - 40) + view.ty) * view.k
 
     let raf = 0
     const t0 = performance.now()
 
     const draw = (now: number) => {
       const t = (now - t0) / 1000
+
+      // Ease toward the target. One line, and the difference between an
+      // instrument that feels alive and one that feels like a static image.
+      const e = reduced ? 1 : 0.16
+      cur.current.k += (view.k - cur.current.k) * e
+      cur.current.tx += (view.tx - cur.current.tx) * e
+      cur.current.ty += (view.ty - cur.current.ty) * e
+      const v = cur.current
+      const X = (x: number) => PAD + (x * (W - PAD - 16) + v.tx) * v.k
+      const Y = (y: number) => 10 + (y * (H - 30) + v.ty) * v.k
+
       g.setTransform(dpr, 0, 0, dpr, 0, 0)
       g.clearRect(0, 0, W, H)
+
+      // Soft nebula behind each constellation. Members form a shape, which is
+      // what makes a constellation read as one rather than as a column.
+      for (const { con, pts } of hulls) {
+        if (!activeCons.includes(con)) continue
+        const foc = focusCon === con
+        g.save()
+        g.filter = 'blur(26px)'
+        g.globalAlpha = foc ? 0.3 : focusCon ? 0.05 : 0.13
+        g.fillStyle = colour
+        g.beginPath()
+        pts.forEach((p, i) => (i === 0 ? g.moveTo(X(p[0]), Y(p[1])) : g.lineTo(X(p[0]), Y(p[1]))))
+        g.closePath()
+        g.fill()
+        g.restore()
+      }
 
       // Readiness bands
       g.font = '10px ui-monospace, monospace'
       LEVELS.forEach((lvl, i) => {
         const y = Y(i / LEVELS.length)
-        g.strokeStyle = 'rgba(255,255,255,0.06)'
+        g.strokeStyle = 'rgba(255,255,255,0.05)'
         g.beginPath()
         g.moveTo(0, y)
         g.lineTo(W, y)
         g.stroke()
-        g.fillStyle = 'rgba(134,151,176,0.9)'
-        g.fillText(lvl.toUpperCase(), 8, y + 14)
+        g.fillStyle = 'rgba(134,151,176,0.85)'
+        g.fillText(lvl.toUpperCase(), 8, y + 15)
       })
+      g.strokeStyle = 'rgba(255,255,255,0.05)'
+      g.beginPath()
+      g.moveTo(0, Y(1))
+      g.lineTo(W, Y(1))
+      g.stroke()
 
       // Constellation lanes and draggable names
-      const laneW = 1 / CONSTELLATIONS.length
-      CONSTELLATIONS.forEach((c, i) => {
+      CONSTELLATIONS.forEach((c) => {
         if (!activeCons.includes(c)) return
         const off = offsets[c] ?? { dx: 0, dy: 0 }
-        const cx = X((i + 0.5) * laneW + off.dx)
-        g.strokeStyle = 'rgba(255,255,255,0.035)'
-        g.beginPath()
-        g.moveTo(X(i * laneW + off.dx), 0)
-        g.lineTo(X(i * laneW + off.dx), H)
-        g.stroke()
+        const cx = X((CONSTELLATION_HOME[c] ?? 0.5) + off.dx)
         g.fillStyle = colour
-        g.globalAlpha = 0.75
+        g.globalAlpha = focusCon && focusCon !== c ? 0.25 : 0.85
         g.font = '10px ui-monospace, monospace'
         const label = CONSTELLATION_LABEL[c].toUpperCase()
-        g.fillText(label, cx - g.measureText(label).width / 2, 18)
+        g.fillText(label, cx - g.measureText(label).width / 2, 22)
         g.globalAlpha = 1
       })
 
@@ -439,7 +503,12 @@ function Tower({
           g.stroke()
         }
 
-        const fade = dimmed && !sel ? 0.3 : 1
+        const fade =
+          (dimmed && !sel ? 0.3 : 1) * (focusCon && n.constellation !== focusCon ? 0.22 : 1)
+
+        // Glow. The single biggest difference between a scatter plot and a sky.
+        g.shadowColor = colour
+        g.shadowBlur = n.sourced ? 14 + n.weight * 10 : 6
         g.lineWidth = 1.4
         if (n.sourced) {
           g.globalAlpha = (0.5 + n.weight * 0.5) * fade
@@ -453,6 +522,7 @@ function Tower({
           g.stroke()
         }
 
+        g.shadowBlur = 0
         if (sel || hov) {
           g.globalAlpha = 1
           g.strokeStyle = colour
@@ -464,7 +534,8 @@ function Tower({
 
         // Which labels survive. Universal labelling was the wall of text —
         // 56 labels cannot be resolved by nudging, only by choosing.
-        const show = sel || hov || view.k > 1.9 || (n.rank >= 2 && view.k > 0.95)
+        const show =
+          sel || hov || v.k > 1.6 || n.rank >= 2 || (focusCon && n.constellation === focusCon)
         if (show) labelQueue.push({ n, px, py, top: sel || hov })
       }
 
@@ -499,7 +570,7 @@ function Tower({
 
     raf = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, colour, selected, view, offsets, activeCons])
+  }, [size, nodes, links, hulls, colour, selected, view, offsets, activeCons, focusCon])
 
   /* ---- interaction ---- */
 
@@ -587,6 +658,38 @@ function Tower({
     onSelect(best && best.d < 0.03 ? best.id : null)
   }
 
+  /** Double-click pulls a constellation out for examination. Click empty space
+   *  or double-click again to release it. */
+  function onDoubleClick(e: React.MouseEvent) {
+    const w = toWorld(e.clientX, e.clientY)
+    let best: { con: string; d: number } | null = null
+    for (const n of nodes) {
+      const d = Math.hypot(n.x - w.x, (n.y - w.y) * 0.55)
+      if (!best || d < best.d) best = { con: n.constellation, d }
+    }
+    if (!best || best.d > 0.09) {
+      setFocusCon(null)
+      setView({ k: 1, tx: 0, ty: 0 })
+      return
+    }
+    if (focusCon === best.con) {
+      setFocusCon(null)
+      setView({ k: 1, tx: 0, ty: 0 })
+      return
+    }
+    setFocusCon(best.con)
+    const members = nodes.filter((n) => n.constellation === best!.con)
+    const cx = members.reduce((t, n) => t + n.x, 0) / members.length
+    const cy = members.reduce((t, n) => t + n.y, 0) / members.length
+    const r = cv.current!.getBoundingClientRect()
+    const k = 2.4
+    setView({
+      k,
+      tx: (r.width - 124) * (0.5 / k - cx),
+      ty: (r.height - 30) * (0.5 / k - cy),
+    })
+  }
+
   function onTouchMove(e: React.TouchEvent) {
     if (e.touches.length !== 2) return
     e.preventDefault()
@@ -610,6 +713,7 @@ function Tower({
         ref={cv}
         style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }}
         onWheel={onWheel}
+        onDoubleClick={onDoubleClick}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerLeave={() => setHover(null)}

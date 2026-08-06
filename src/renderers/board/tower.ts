@@ -107,21 +107,36 @@ export interface LayoutOpts {
   now?: Date
 }
 
+/** Where each constellation sits. Organic positions, not a rigid grid — a
+ *  spreadsheet of columns is what made the first version read as a chart. */
+export const CONSTELLATION_HOME: Record<string, number> = {
+  architectures: 0.10,
+  'error-correction': 0.235,
+  enabling: 0.365,
+  algorithms: 0.49,
+  pqc: 0.625,
+  migration: 0.745,
+  communications: 0.865,
+  sensing: 0.965,
+}
+
 export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
   const cons = opts.constellations
   const offsets = opts.offsets ?? {}
   const now = opts.now ?? new Date()
-  const laneW = 1 / cons.length
 
   const nodes: Node[] = items.map((item) => {
-    const ci = Math.max(0, cons.indexOf(item.constellation ?? ''))
+    const con = item.constellation ?? ''
     const level = Math.max(0, LEVELS.indexOf(item.readiness))
-    const off = offsets[item.constellation ?? ''] ?? { dx: 0, dy: 0 }
+    const off = offsets[con] ?? { dx: 0, dy: 0 }
 
-    const laneCentre = (ci + 0.5) * laneW
-    const spread = laneW * 0.66
-    const x = laneCentre + (hash(item.id + 'x') - 0.5) * spread + off.dx
-    const y = (level + 0.25 + hash(item.id + 'y') * 0.5) / LEVELS.length + off.dy
+    // Scatter on a disc around the constellation's home, so members form a
+    // shape rather than a column. Deterministic per id.
+    const a = hash(item.id + 'a') * Math.PI * 2
+    const rad = Math.sqrt(hash(item.id + 'r')) * 0.052
+    const home = CONSTELLATION_HOME[con] ?? 0.5
+    const x = home + Math.cos(a) * rad + off.dx
+    const y = (level + 0.28 + Math.sin(a) * rad * 2.4 + hash(item.id + 'y') * 0.44) / LEVELS.length + off.dy
 
     const sourced = isSourced(item)
     const weight =
@@ -148,7 +163,7 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
 
   // Separate overlapping nodes. Stays within the readiness band, because
   // readiness is data — the jitter is not allowed to change what is claimed.
-  const MIN = 0.014
+  const MIN = 0.016
   for (let pass = 0; pass < 60; pass++) {
     for (let a = 0; a < nodes.length; a++) {
       for (let b = a + 1; b < nodes.length; b++) {
