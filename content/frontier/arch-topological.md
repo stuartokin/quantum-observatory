@@ -2,7 +2,8 @@
 schema: frontier/v1
 id: arch-topological
 title: Topological qubits
-summary: Error resistance built into the physics rather than added by code. Long-promised, still contested.
+summary: Error resistance built into the physics rather than added by code.
+plain: An approach where the information is stored in a property of the system that local disturbances cannot easily change — like a knot that survives being jostled. If it worked, it would need far less error correction. It has been promised for two decades and the underlying physics remains contested.
 pillar: quantum
 constellation: architectures
 readiness: emerging
@@ -12,8 +13,11 @@ evidence:
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography
       role: corroborating
+links:
+  - to: qec-surface-code
+    relation: competes-with
 confidence: low
 status: draft
-added: 2026-08-04
+added: '2026-08-04'
 origin: human
 ---

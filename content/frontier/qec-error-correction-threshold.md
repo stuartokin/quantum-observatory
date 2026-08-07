@@ -1,9 +1,9 @@
 ---
 schema: frontier/v1
-id: qec-logical-fidelity
-title: Logical fidelity beyond physical
-summary: Logical qubits outperforming the physical qubits they are built from.
-plain: 'The moment error correction starts paying for itself: the assembled, protected qubit lasts longer and behaves better than any of the raw components inside it. Before this point you are spending a thousand qubits to get something worse than one.'
+id: qec-error-correction-threshold
+title: Error correction threshold
+summary: The noise level below which adding qubits helps rather than hurts.
+plain: Every error-correcting scheme has a break-even noise level. Above it, adding more qubits adds more errors than it removes and the whole idea fails. Below it, the machine gets better the bigger you build it. Crossing this line is the single most important milestone in the field.
 pillar: quantum
 constellation: error-correction
 readiness: demonstrated
@@ -15,9 +15,9 @@ evidence:
       role: corroborating
 links:
   - to: qec-below-threshold-surface-code
+    relation: evidence-for
+  - to: qec-surface-code
     relation: depends-on
-  - to: qec-logical-qubit-scaling
-    relation: enables
 confidence: low
 status: draft
 added: '2026-08-04'

@@ -2,7 +2,8 @@
 schema: frontier/v1
 id: comms-satellite-qkd
 title: Satellite QKD
-summary: Key distribution over intercontinental distances via satellite, bypassing fibre loss limits.
+summary: Key distribution over intercontinental distances via satellite.
+plain: Because light is absorbed in fibre after a few hundred kilometres, the alternative is to go up through the atmosphere and across space instead. Demonstrated over intercontinental distances, though weather and daylight limit when it can be used.
 pillar: quantum
 constellation: communications
 readiness: demonstrated
@@ -12,8 +13,11 @@ evidence:
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography
       role: corroborating
+links:
+  - to: quantum-key-distribution
+    relation: depends-on
 confidence: low
 status: draft
-added: 2026-08-04
+added: '2026-08-04'
 origin: human
 ---

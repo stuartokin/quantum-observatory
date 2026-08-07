@@ -1266,7 +1266,8 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
       <h3>{item.title}</h3>
       {item.summary && <p>{item.summary}</p>}
       <div className="plain">
-        <span className="label">What this means</span>
+        <span className="label">In plain English</span>
+        {item.plain && <p className="plain__what">{item.plain}</p>}
         <p>{PLAIN_READINESS[item.readiness]}</p>
         {definition && (
           <p className="plain__test">

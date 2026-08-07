@@ -2,7 +2,8 @@
 schema: frontier/v1
 id: qec-magic-state-distillation
 title: Magic state distillation on logical qubits
-summary: Non-Clifford gates produced entirely inside the protected layer. Completes the toolkit for running whole programs on logical qubits rather than raw hardware.
+summary: Non-Clifford gates produced entirely inside the protected layer.
+plain: Error correction protects a limited set of operations easily; one crucial type has to be produced separately by a purification process. Until this, that purification was done on raw, unprotected hardware — a weak link in an otherwise protected chain. Doing it entirely inside the protected layer completes the toolkit for running whole programs on reliable qubits.
 pillar: quantum
 constellation: error-correction
 readiness: experimental
@@ -11,7 +12,7 @@ metrics:
   - name: Protocol
     value: 5-to-1 distillation
   - name: Code distances
-    value: 'd=3 and d=5'
+    value: d=3 and d=5
     note: colour-code logical qubits
   - name: Platform
     value: neutral atom
@@ -24,14 +25,18 @@ evidence:
       role: primary
       title: Experimental demonstration of logical magic state distillation
       publisher: Nature
-      date: '2025-07-14'
+      date: 2025-07-14
       identifier: Nature 645, 620–625 (2025)
 links:
   - to: qec-below-threshold-surface-code
     relation: depends-on
+  - to: arch-neutral-atom
+    relation: depends-on
+  - to: qec-colour-code
+    relation: depends-on
 moved:
   from: emerging
-  on: '2026-07-14'
+  on: 2026-07-14
 confidence: high
 status: published
 added: '2026-08-04'

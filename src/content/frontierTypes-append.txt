@@ -1,0 +1,4 @@
+Add this one line to the FrontierItem interface in src/content/frontierTypes.ts,
+just after `summary?: string`:
+
+  plain?: string
