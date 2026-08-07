@@ -16,6 +16,7 @@ import {
 import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
 import { Frame, type FrameState } from '../../components/Frame'
+import { BoardToolbar } from '../../components/BoardToolbar'
 
 /**
  * THE READINESS TOWER.
@@ -61,7 +62,7 @@ export function Board() {
   const [frames, setFrames] = useState<Record<string, FrameState>>({
     filters: { x: 16, y: 96, w: 250, h: 400 },
     actors: { x: 16, y: 512, w: 250, h: 220 },
-    detail: { x: 0, y: 0, w: 380, h: 460, hidden: true },
+    detail: { x: 0, y: 0, w: 380, h: 460, docked: true },
   })
   const setFrame = (k: string) => (s: FrameState) =>
     setFrames((f) => ({ ...f, [k]: s }))
@@ -108,7 +109,7 @@ export function Board() {
         ...f,
         detail: {
           ...f.detail,
-          hidden: false,
+          docked: false,
           x: f.detail.x || Math.max(16, window.innerWidth - 400),
           y: f.detail.y || 96,
         },
@@ -129,13 +130,9 @@ export function Board() {
           <h2>The frontier, by how close it is to real</h2>
         </div>
         <div className="board-stats">
-          <span>
-            <b>{visible.length}</b> of {pool.length} shown
-          </span>
-          <span>
-            <b>{visible.filter(isSourced).length}</b> sourced
-          </span>
-          {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved recently</span>}
+          <span><b>{visible.length}</b> of {pool.length}</span>
+          <span><b>{visible.filter(isSourced).length}</b> sourced</span>
+          {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
         </div>
       </header>
 
@@ -153,7 +150,7 @@ export function Board() {
         setFocusCon={setFocusCon}
       />
 
-      <Frame title="Filters" state={frames.filters} onChange={setFrame('filters')} accent={colour} z={zOf('filters')} onFocus={raise('filters')}>
+      <Frame title="Filters" state={frames.filters} onChange={setFrame('filters')} accent={colour} z={zOf('filters')} onFocus={raise('filters')} onDock={() => setFrames((f) => ({ ...f, filters: { ...f.filters, docked: true } }))}>
         <fieldset>
           <legend>Constellations</legend>
           {CONSTELLATIONS.map((c) => (
@@ -195,12 +192,9 @@ export function Board() {
             Sourced only
           </label>
         </fieldset>
-        <button className="frame__reset" onClick={() => setView({ k: 1, tx: 0, ty: 0 })}>
-          Reset view
-        </button>
       </Frame>
 
-      <Frame title="Actors" state={frames.actors} onChange={setFrame('actors')} accent={colour} z={zOf('actors')} onFocus={raise('actors')}>
+      <Frame title="Actors" state={frames.actors} onChange={setFrame('actors')} accent={colour} z={zOf('actors')} onFocus={raise('actors')} onDock={() => setFrames((f) => ({ ...f, actors: { ...f.actors, docked: true } }))}>
         <ul className="actor-list">
           {actors.map(([a, n]) => (
             <li key={a}>
@@ -232,11 +226,15 @@ export function Board() {
         </Frame>
       )}
 
-      <p className="board-foot">
-        Filled glyphs carry a verified primary source; hollow ones are topics with
-        no source yet. Hover a glyph to name it. Double-click a constellation to
-        pull it out, again to release. Scroll or pinch to zoom, drag to pan. <span className="version">v{VERSION}</span>
-      </p>
+      <BoardToolbar
+        accent={colour}
+        docked={(['filters', 'actors'] as const)
+          .filter((k) => frames[k].docked)
+          .map((k) => ({ key: k, label: k === 'filters' ? 'Filters' : 'Actors' }))}
+        onRestore={(k) => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: false } }))}
+        onResetView={() => { setView({ k: 1, tx: 0, ty: 0 }); setFocusCon(null) }}
+      />
+
     </main>
   )
 }
@@ -321,6 +319,20 @@ function Tower({
     | null
   >(null)
   const pinch = useRef<{ d: number; k: number } | null>(null)
+
+  /**
+   * Purely ambient. Motes form at the top and settle downward over ~40s, so
+   * the sky has a direction of travel. Deliberately dim and tiny — this is
+   * atmosphere, and must never be mistaken for data.
+   */
+  const motes = useRef(
+    Array.from({ length: 90 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      v: 0.006 + Math.random() * 0.012,
+      r: 0.4 + Math.random() * 0.9,
+    })),
+  )
 
   // The target view. An internal current view eases toward it every frame —
   // instant jumps are what made zoom and pinch feel broken.
@@ -409,6 +421,25 @@ function Tower({
       g.setTransform(dpr, 0, 0, dpr, 0, 0)
       g.clearRect(0, 0, W, H)
 
+      // Ambient descent. Atmosphere only — never data.
+      if (!reduced) {
+        for (const m of motes.current) {
+          m.y += m.v * 0.004
+          if (m.y > 1.04) {
+            m.y = -0.04
+            m.x = Math.random()
+          }
+          // Fade in at the top, out at the bottom, so nothing pops.
+          const a = Math.min(1, m.y * 6) * Math.min(1, (1 - m.y) * 6)
+          g.globalAlpha = a * 0.18
+          g.fillStyle = colour
+          g.beginPath()
+          g.arc(X(m.x), Y(m.y), m.r, 0, Math.PI * 2)
+          g.fill()
+        }
+        g.globalAlpha = 1
+      }
+
       // Soft nebula behind each constellation. Members form a shape, which is
       // what makes a constellation read as one rather than as a column.
       for (const { con, pts } of hulls) {
@@ -449,7 +480,11 @@ function Tower({
         const off = offsets[c] ?? { dx: 0, dy: 0 }
         const cx = X((CONSTELLATION_HOME[c] ?? 0.5) + off.dx)
         g.fillStyle = colour
-        g.globalAlpha = focusCon && focusCon !== c ? 0.25 : 0.85
+        // Fade the category names out as you zoom in — at close range they
+        // clutter the thing you are trying to read.
+        const zoomFade = Math.max(0, Math.min(1, (1.7 - v.k) / 0.5))
+        if (zoomFade <= 0.02) return
+        g.globalAlpha = (focusCon && focusCon !== c ? 0.2 : 0.8) * zoomFade
         g.font = '10px ui-monospace, monospace'
         const label = CONSTELLATION_LABEL[c].toUpperCase()
         g.fillText(label, cx - g.measureText(label).width / 2, 22)
@@ -534,8 +569,12 @@ function Tower({
 
         // Which labels survive. Universal labelling was the wall of text —
         // 56 labels cannot be resolved by nudging, only by choosing.
+        // Labels are rationed. Only what genuinely wants attention keeps one:
+        // recently moved, agent-proposed, or high-confidence sourced work.
+        // Everything else is a glyph until you hover, zoom in, or focus it.
+        const earns = n.attention > 0.1 || (n.sourced && n.weight >= 0.99)
         const show =
-          sel || hov || v.k > 1.6 || n.rank >= 2 || (focusCon && n.constellation === focusCon)
+          sel || hov || earns || v.k > 2.2 || (focusCon && n.constellation === focusCon && v.k > 1.4)
         if (show) labelQueue.push({ n, px, py, top: sel || hov })
       }
 

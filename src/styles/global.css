@@ -220,13 +220,16 @@ a:hover { text-decoration-color: currentColor; }
 
 .board { position: fixed; inset: 0; display: flex; flex-direction: column; }
 
+/* One compact header row — the title lives here, not floating over the board. */
 .board-head {
   display: flex; flex-wrap: wrap; gap: var(--gap-m);
-  align-items: flex-end; justify-content: space-between;
-  padding: var(--gap-m) var(--gap-m) var(--gap-s);
+  align-items: baseline; justify-content: space-between;
+  padding: var(--gap-s) var(--gap-m);
+  border-bottom: 1px solid var(--hairline);
   flex: 0 0 auto;
 }
-.board-title h2 { font-size: var(--step-1); margin-top: 2px; }
+.board-title { display: flex; align-items: baseline; gap: var(--gap-m); flex-wrap: wrap; }
+.board-title h2 { font-size: var(--step-1); }
 
 .board-stats { display: flex; gap: var(--gap-m); font-family: var(--mono); font-size: 0.68rem;
   letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
@@ -236,12 +239,48 @@ a:hover { text-decoration-color: currentColor; }
 .tower { flex: 1 1 auto; min-height: 0; position: relative; cursor: grab; }
 .tower:active { cursor: grabbing; }
 
-.board-foot {
-  flex: 0 0 auto;
-  padding: var(--gap-s) var(--gap-m) calc(env(safe-area-inset-bottom) + 66px);
-  color: var(--ink-faint); font-family: var(--mono); font-size: 0.64rem;
-  line-height: 1.6; max-width: 80ch;
+/* ---------- Board toolbar: draggable, home for minimised frames ---------- */
+
+.board-toolbar {
+  position: fixed;
+  left: 50%; transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom) + 68px);
+  display: flex; align-items: center; gap: 2px;
+  padding: 4px 6px;
+  background: color-mix(in oklab, var(--ground-panel) 92%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.55);
+  z-index: 46;
 }
+.board-toolbar .frame__grip { cursor: move; margin: 0 6px 0 2px; }
+.board-toolbar button {
+  background: transparent; border: 0; border-radius: 999px;
+  color: var(--ink-muted); cursor: pointer;
+  font-family: var(--mono); font-size: 0.64rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 6px 12px; min-height: 32px;
+}
+.board-toolbar button:hover { color: var(--ink); background: var(--ground-raised); }
+.board-toolbar__info {
+  width: 32px; text-transform: none; font-style: italic;
+  border: 1px solid var(--hairline) !important;
+}
+
+.board-legend {
+  position: absolute; bottom: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%);
+  width: min(400px, 90vw);
+  padding: var(--gap-m);
+  background: color-mix(in oklab, var(--ground-panel) 96%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  box-shadow: 0 10px 36px rgb(0 0 0 / 0.6);
+}
+.board-legend p { margin: 0 0 var(--gap-s); font-size: var(--step--1); color: var(--ink-muted); line-height: 1.5; }
+.board-legend p:last-child { margin-bottom: 0; }
+.board-legend strong { color: var(--ink); font-weight: 400; }
 
 /* ---------- Frames: moveable, resizeable ---------- */
 
