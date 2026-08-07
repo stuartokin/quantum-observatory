@@ -15,6 +15,14 @@ import {
   type Glyph,
 } from './tower'
 import { drawBody, drawGlyph } from './glyphs'
+import { layoutTimeline, yearFraction } from './timeline'
+import {
+  DEFAULT_CAMERA,
+  clampCamera,
+  project,
+  ringPosition,
+  type Camera,
+} from './orbit3d'
 import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
 import { Frame, type FrameState } from '../../components/Frame'
@@ -41,6 +49,8 @@ export function Board() {
   const [selected, setSelected] = useState<string | null>(null)
   const [view, setView] = useState({ k: 1, tx: 0, ty: 0 })
   const [mode, setMode] = useState<Mode>('tower')
+  const [timeline, setTimeline] = useState(false)
+  const [cam, setCam] = useState<Camera>(DEFAULT_CAMERA)
   const [focusCon, setFocusCon] = useState<string | null>(null)
 
   const [cons, setCons] = useState<string[]>([...CONSTELLATIONS])
@@ -109,6 +119,7 @@ export function Board() {
   function enterOrbit(con: string) {
     setFocusCon(con)
     setMode('orbit')
+    setCam(DEFAULT_CAMERA)
     setView({ k: 1, tx: 0, ty: 0 })
   }
   function leaveOrbit() {
@@ -121,6 +132,17 @@ export function Board() {
     ...(mode === 'orbit'
       ? [{ key: 'back', label: '← Galaxy', onClick: leaveOrbit }]
       : []),
+    {
+      key: 'timeline',
+      label: timeline ? 'Galaxy view' : 'Timeline',
+      active: timeline,
+      onClick: () => {
+        setTimeline((v) => !v)
+        setMode('tower')
+        setFocusCon(null)
+        setView({ k: 1, tx: 0, ty: 0 })
+      },
+    },
     { key: 'filters', label: 'Filters', active: !frames.filters.docked, onClick: toggle('filters') },
     { key: 'actors', label: 'Actors', active: !frames.actors.docked, onClick: toggle('actors') },
     { key: 'help', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
@@ -157,9 +179,11 @@ export function Board() {
           </select>
           <span className="board-title__sep">·</span>
           <h2>
-            {mode === 'orbit' && focusCon
-              ? CONSTELLATION_LABEL[focusCon]
-              : 'The frontier, by how close it is to real'}
+            {timeline
+              ? 'When the evidence landed'
+              : mode === 'orbit' && focusCon
+                ? CONSTELLATION_LABEL[focusCon]
+                : 'The frontier, by how close it is to real'}
           </h2>
         </div>
         <div className="board-stats">
@@ -182,6 +206,9 @@ export function Board() {
         focusCon={focusCon}
         onEnterOrbit={enterOrbit}
         onLeaveOrbit={leaveOrbit}
+        timeline={timeline}
+        cam={cam}
+        setCam={setCam}
       />
 
       <Frame
@@ -334,6 +361,9 @@ function Sky({
   focusCon,
   onEnterOrbit,
   onLeaveOrbit,
+  timeline,
+  cam,
+  setCam,
 }: {
   nodes: Node[]
   colour: string
@@ -346,6 +376,9 @@ function Sky({
   focusCon: string | null
   onEnterOrbit: (con: string) => void
   onLeaveOrbit: () => void
+  timeline: boolean
+  cam: Camera
+  setCam: (c: Camera) => void
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -355,7 +388,9 @@ function Sky({
   hoverRef.current = hover
 
   const drag = useRef<{ x: number; y: number; tx: number; ty: number } | null>(null)
-  const pinch = useRef<{ d: number; k: number } | null>(null)
+  const pinch = useRef<{ d: number; k: number; angle: number; roll: number } | null>(null)
+  /** Camera drag while in orbit: horizontal is yaw, vertical is pitch. */
+  const camDrag = useRef<{ x: number; y: number; yaw: number; pitch: number; roll: number; rollMode: boolean } | null>(null)
   const cur = useRef({ ...view })
 
   /** Animated positions. Nodes ease between tower and orbit rather than jumping. */
@@ -363,6 +398,8 @@ function Sky({
   /** Bodies the reader has moved by hand. These win over any computed target,
    *  so rearranging to read a label is never undone by the layout. */
   const manual = useRef(new Map<string, { x: number; y: number }>())
+  /** Perspective scale per node while in orbit — drives size and depth fade. */
+  const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
@@ -377,6 +414,46 @@ function Sky({
   )
 
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes])
+
+  const tl = useMemo(
+    () =>
+      timeline
+        ? layoutTimeline(
+            nodes
+              .map((n) => allFrontier.find((i) => i.id === n.id))
+              .filter((i): i is NonNullable<typeof i> => Boolean(i)),
+            {
+              sourced: (i) =>
+                i.status === 'published' && !i.evidence.claim.startsWith('NEEDS PRIMARY SOURCE'),
+              attention: (i) => byId.get(i.id)?.attention ?? 0,
+            },
+          )
+        : null,
+    [timeline, nodes, byId],
+  )
+
+  /** Orbit members as 3D ring positions, so the camera can move around them. */
+  const orbit3d = useMemo(() => {
+    const m = new Map<string, { angle: number; radius: number; lift: number }>()
+    if (mode !== 'orbit' || !focusCon) return m
+    const members = nodes.filter((n) => n.constellation === focusCon)
+    const byLevel = new Map<number, Node[]>()
+    for (const n of members) {
+      if (!byLevel.has(n.level)) byLevel.set(n.level, [])
+      byLevel.get(n.level)!.push(n)
+    }
+    for (const [lvl, group] of byLevel) {
+      const radius = 0.28 + (lvl / (LEVELS.length - 1)) * 1.05
+      group.forEach((n, i) => {
+        m.set(n.id, {
+          angle: (i / group.length) * Math.PI * 2 + lvl * 0.6,
+          radius,
+          lift: (lvl - (LEVELS.length - 1) / 2) * 0.06,
+        })
+      })
+    }
+    return m
+  }, [nodes, mode, focusCon])
 
   const links = useMemo(() => {
     const out: { a: Node; b: Node; cross: boolean }[] = []
@@ -460,6 +537,124 @@ function Sky({
       g.setTransform(dpr, 0, 0, dpr, 0, 0)
       g.clearRect(0, 0, W, H)
 
+      // ---------------- TIMELINE ----------------
+      if (tl) {
+        const L = 116
+        const R = 24
+        const TX = (x: number) => L + (x * (W - L - R) + v.tx) * v.k
+        const TY = (y: number) => 34 + (y * (H - 74) + v.ty) * v.k
+
+        // Readiness bands — the same y axis as the galaxy, deliberately.
+        g.font = '11px ui-monospace, monospace'
+        LEVELS.forEach((lvl, i) => {
+          const y = TY((i + 0.5) / LEVELS.length)
+          g.strokeStyle = 'rgba(255,255,255,0.045)'
+          g.beginPath()
+          g.moveTo(0, y)
+          g.lineTo(W, y)
+          g.stroke()
+          g.fillStyle = 'rgba(134,151,176,0.85)'
+          g.fillText(lvl.toUpperCase(), 8, y - 6)
+        })
+
+        // Year gridlines
+        for (const yr of tl.years) {
+          const fx = TX(yearFraction(yr, tl.from, tl.to))
+          if (fx < L - 40 || fx > W) continue
+          g.strokeStyle = 'rgba(255,255,255,0.05)'
+          g.beginPath()
+          g.moveTo(fx, 20)
+          g.lineTo(fx, H - 8)
+          g.stroke()
+          g.fillStyle = 'rgba(134,151,176,0.75)'
+          g.fillText(String(yr), fx + 4, 16)
+        }
+
+        // Undated gutter — items with no real source date. Saying so beats
+        // inventing a position on a time axis.
+        if (tl.undated > 0) {
+          const gx = TX(-0.02)
+          g.strokeStyle = 'rgba(255,255,255,0.08)'
+          g.setLineDash([2, 4])
+          g.beginPath()
+          g.moveTo(gx, 20)
+          g.lineTo(gx, H - 8)
+          g.stroke()
+          g.setLineDash([])
+          g.fillStyle = 'rgba(134,151,176,0.7)'
+          g.fillText(`UNDATED · ${tl.undated}`, TX(-0.115), 16)
+        }
+
+        const ordered = [...tl.marks].sort(
+          (a, b) =>
+            Number(a.id === selected) - Number(b.id === selected) ||
+            Number(a.id === hoverRef.current) - Number(b.id === hoverRef.current) ||
+            a.r - b.r,
+        )
+        const dim = selected !== null
+
+        for (const m of ordered) {
+          const px = TX(m.x)
+          const py = TY(m.y)
+          const sel = selected === m.id
+          const hov = hoverRef.current === m.id
+          const rr = m.r * (sel ? 1.5 : hov ? 1.2 : 1)
+
+          if (m.attention > 0.02 && !reduced) {
+            const ph = (t * 0.45 + m.x * 5) % 1
+            g.globalAlpha = (1 - ph) * 0.5 * m.attention
+            g.strokeStyle = colour
+            g.lineWidth = 1.4
+            g.beginPath()
+            g.arc(px, py, rr + ph * 22, 0, Math.PI * 2)
+            g.stroke()
+          }
+
+          g.globalAlpha = (dim && !sel ? 0.28 : 1) * (m.sourced ? 1 : 0.5)
+          g.shadowColor = colour
+          g.shadowBlur = m.sourced ? 12 : 0
+          g.fillStyle = m.sourced ? colour : 'rgba(120,132,158,0.9)'
+          g.beginPath()
+          g.arc(px, py, rr, 0, Math.PI * 2)
+          g.fill()
+          g.shadowBlur = 0
+
+          if (sel || hov) {
+            g.globalAlpha = 1
+            g.strokeStyle = colour
+            g.lineWidth = 1.4
+            g.beginPath()
+            g.arc(px, py, rr + 7, 0, Math.PI * 2)
+            g.stroke()
+          }
+
+          if (sel || hov || m.sourced || m.attention > 0.1) {
+            const text = m.label
+            const w = g.measureText(text).width
+            const lx = Math.min(W - w - 8, px + rr + 7)
+            const ly = py + 4
+            if (sel || hov) {
+              g.globalAlpha = 0.92
+              g.fillStyle = '#0D1421'
+              g.beginPath()
+              g.roundRect(lx - 5, ly - 11, w + 10, 16, 2)
+              g.fill()
+              g.globalAlpha = 0.5
+              g.strokeStyle = colour
+              g.lineWidth = 1
+              g.stroke()
+            }
+            g.globalAlpha = sel || hov ? 1 : dim ? 0.3 : m.sourced ? 0.9 : 0.45
+            g.fillStyle = m.sourced || sel || hov ? '#E6EDF7' : '#8697B0'
+            g.fillText(text, lx, ly)
+          }
+        }
+        g.globalAlpha = 1
+        raf = requestAnimationFrame(safeDraw)
+        return
+      }
+
+
       // Starfield, screen space, descending. Atmosphere — never data.
       if (!reduced) {
         g.fillStyle = colour
@@ -480,9 +675,16 @@ function Sky({
       // Ease every node toward its target — this is the tower/orbit transition.
       for (const n of nodes) {
         const held = manual.current.get(n.id)
-        const tgt = held ?? targets.get(n.id) ?? { x: n.x, y: n.y }
+        const ring = orbit3d.get(n.id)
+        let projected: { x: number; y: number } | null = null
+        if (mode === 'orbit' && ring && !held) {
+          const q = project(ringPosition(ring.angle, ring.radius, ring.lift), cam)
+          depthOf.current.set(n.id, { scale: q.scale, depth: q.depth })
+          projected = { x: q.sx, y: q.sy }
+        }
+        const tgt = held ?? projected ?? targets.get(n.id) ?? { x: n.x, y: n.y }
         const a = anim.current.get(n.id) ?? { x: n.x, y: n.y }
-        const speed = nodeDrag.current?.id === n.id ? 1 : reduced ? 1 : 0.09
+        const speed = nodeDrag.current?.id === n.id || projected ? 1 : reduced ? 1 : 0.09
         a.x += (tgt.x - a.x) * speed
         a.y += (tgt.y - a.y) * speed
         anim.current.set(n.id, a)
@@ -519,33 +721,39 @@ function Sky({
           })
         }
       } else {
-        // Orbit: readiness becomes concentric rings, so the reading survives.
-        // Rings, with their names on a single lower-left spoke rather than
-        // stacked through the centre where the bodies are.
+        // ---------------- ORBIT, IN THREE DIMENSIONS ----------------
+        // Rings are projected circles, so they tilt with the camera.
         LEVELS.forEach((lvl, i) => {
-          const radius = 0.075 + (i / (LEVELS.length - 1)) * 0.33
-          const rx = Math.abs(X(0.5 + radius) - X(0.5))
-          const ry = Math.abs(Y(0.5 + radius * 0.82) - Y(0.5))
-          g.strokeStyle = 'rgba(255,255,255,0.055)'
+          const radius = 0.28 + (i / (LEVELS.length - 1)) * 1.05
+          g.strokeStyle = 'rgba(255,255,255,0.05)'
+          g.lineWidth = 1
           g.beginPath()
-          g.ellipse(X(0.5), Y(0.5), rx, ry, 0, 0, Math.PI * 2)
+          for (let k = 0; k <= 72; k++) {
+            const a = (k / 72) * Math.PI * 2
+            const q = project(ringPosition(a, radius, 0), cam)
+            const sx = X(q.sx)
+            const sy = Y(q.sy)
+            if (k === 0) g.moveTo(sx, sy)
+            else g.lineTo(sx, sy)
+          }
           g.stroke()
 
-          const lx = X(0.5) - rx
-          const ly = Y(0.5) - 6
+          const q = project(ringPosition(Math.PI, radius, 0), cam)
           const txt = lvl.toUpperCase()
           const w = g.measureText(txt).width
           g.globalAlpha = 0.9
           g.fillStyle = '#070B14'
-          g.fillRect(lx - 3, ly - 10, w + 6, 14)
+          g.fillRect(X(q.sx) - w - 9, Y(q.sy) - 15, w + 8, 14)
           g.globalAlpha = 1
           g.fillStyle = 'rgba(134,151,176,0.9)'
-          g.fillText(txt, lx, ly)
+          g.fillText(txt, X(q.sx) - w - 5, Y(q.sy) - 5)
         })
-        g.globalAlpha = 0.5
+
+        const c0 = project({ x: 0, y: 0, z: 0 }, cam)
+        g.globalAlpha = 0.55
         g.fillStyle = colour
         g.beginPath()
-        g.arc(X(0.5), Y(0.5), 4, 0, Math.PI * 2)
+        g.arc(X(c0.sx), Y(c0.sy), 4, 0, Math.PI * 2)
         g.fill()
         g.globalAlpha = 1
       }
@@ -565,12 +773,19 @@ function Sky({
       g.setLineDash([])
       g.globalAlpha = 1
 
-      const ordered = [...nodes].sort(
-        (a, b) =>
+      // In orbit, paint far bodies first so nearer ones occlude them.
+      const ordered = [...nodes].sort((a, b) => {
+        if (mode === 'orbit') {
+          const da = depthOf.current.get(a.id)?.depth ?? 0
+          const db = depthOf.current.get(b.id)?.depth ?? 0
+          if (da !== db) return db - da
+        }
+        return (
           Number(a.id === selected) - Number(b.id === selected) ||
           Number(a.id === hoverRef.current) - Number(b.id === hoverRef.current) ||
-          a.rank - b.rank,
-      )
+          a.rank - b.rank
+        )
+      })
       const dimmed = selected !== null
       const labelQueue: { n: Node; px: number; py: number; top: boolean }[] = []
 
@@ -581,7 +796,12 @@ function Sky({
         const bob = reduced ? 0 : Math.sin(t * 0.25 + n.phase) * 1.4
         const px = X(p.x)
         const py = Y(p.y) + bob
-        const r = n.radius * Math.min(1.5, Math.max(0.85, v.k)) * (sel ? 1.6 : hov ? 1.25 : 1)
+        const persp = mode === 'orbit' ? depthOf.current.get(n.id)?.scale ?? 1 : 1
+        const r =
+          n.radius *
+          Math.min(1.5, Math.max(0.85, v.k)) *
+          (sel ? 1.6 : hov ? 1.25 : 1) *
+          Math.max(0.45, Math.min(1.7, persp))
 
         if (n.attention > 0.02 && !reduced) {
           const ph = (t * 0.45 + n.phase) % 1
@@ -593,7 +813,9 @@ function Sky({
           g.stroke()
         }
 
-        const off = mode === 'orbit' && n.constellation !== focusCon ? 0.12 : 1
+        // Bodies further from the camera dim — most of the depth cue.
+        const depthFade = mode === 'orbit' ? Math.max(0.35, Math.min(1, persp)) : 1
+        const off = (mode === 'orbit' && n.constellation !== focusCon ? 0.12 : 1) * depthFade
         const fade = (dimmed && !sel ? 0.3 : 1) * off
         g.shadowColor = colour
         g.shadowBlur = n.sourced ? 16 + n.weight * 12 : 5
@@ -656,7 +878,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
@@ -678,6 +900,10 @@ function Sky({
   }
 
   function onWheel(e: React.WheelEvent) {
+    if (mode === 'orbit') {
+      setCam(clampCamera({ ...cam, dist: cam.dist * (e.deltaY < 0 ? 0.9 : 1.11) }))
+      return
+    }
     const r = cv.current!.getBoundingClientRect()
     const cx = e.clientX - r.left - 108
     const cy = e.clientY - r.top - 10
@@ -690,6 +916,16 @@ function Sky({
     if (best && best.d < 0.028) {
       const p = anim.current.get(best.n.id) ?? { x: best.n.x, y: best.n.y }
       nodeDrag.current = { id: best.n.id, ox: e.clientX, oy: e.clientY, sx: p.x, sy: p.y }
+    } else if (mode === 'orbit') {
+      // Empty space in orbit rotates the camera. Shift or right-button rolls.
+      camDrag.current = {
+        x: e.clientX,
+        y: e.clientY,
+        yaw: cam.yaw,
+        pitch: cam.pitch,
+        roll: cam.roll,
+        rollMode: e.shiftKey || e.button === 2,
+      }
     } else {
       drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
     }
@@ -704,6 +940,19 @@ function Sky({
         x: nd.sx + (e.clientX - nd.ox) / cur.current.k / (r.width - 124),
         y: nd.sy + (e.clientY - nd.oy) / cur.current.k / (r.height - 30),
       })
+      return
+    }
+    const cd = camDrag.current
+    if (cd) {
+      const dx = (e.clientX - cd.x) / 260
+      const dy = (e.clientY - cd.y) / 260
+      setCam(
+        clampCamera(
+          cd.rollMode
+            ? { ...cam, roll: cd.roll + dx * 1.6 }
+            : { ...cam, yaw: cd.yaw + dx * 1.8, pitch: cd.pitch - dy * 1.4 },
+        ),
+      )
       return
     }
     const d = drag.current
@@ -721,6 +970,11 @@ function Sky({
   }
 
   function onPointerUp(e: React.PointerEvent) {
+    if (camDrag.current) {
+      const moved = Math.hypot(e.clientX - camDrag.current.x, e.clientY - camDrag.current.y)
+      camDrag.current = null
+      if (moved > 4) return
+    }
     const nd = nodeDrag.current
     nodeDrag.current = null
     if (nd) {
@@ -752,13 +1006,31 @@ function Sky({
     drag.current = null
     const [a, b] = [e.touches[0], e.touches[1]]
     const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY)
+    const angle = Math.atan2(b.clientY - a.clientY, b.clientX - a.clientX)
     const r = cv.current!.getBoundingClientRect()
     const mx = (a.clientX + b.clientX) / 2 - r.left - 108
     const my = (a.clientY + b.clientY) / 2 - r.top - 10
+
     if (!pinch.current) {
-      pinch.current = { d, k: view.k }
+      pinch.current = { d, k: view.k, angle, roll: cam.roll }
       return
     }
+
+    if (mode === 'orbit') {
+      // Pinch dollies the camera; twisting two fingers rolls it.
+      let twist = angle - pinch.current.angle
+      while (twist > Math.PI) twist -= Math.PI * 2
+      while (twist < -Math.PI) twist += Math.PI * 2
+      setCam(
+        clampCamera({
+          ...cam,
+          dist: (cam.dist * pinch.current.d) / Math.max(1, d),
+          roll: pinch.current.roll + twist,
+        }),
+      )
+      return
+    }
+
     const k = Math.min(5, Math.max(0.5, (pinch.current.k * d) / pinch.current.d))
     setView({ k, tx: view.tx + mx / k - mx / view.k, ty: view.ty + my / k - my / view.k })
   }
@@ -769,6 +1041,7 @@ function Sky({
         ref={cv}
         style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }}
         onWheel={onWheel}
+        onContextMenu={(e) => e.preventDefault()}
         onDoubleClick={onDoubleClick}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -800,8 +1073,18 @@ function Help({ colour }: { colour: string }) {
 
       <p className="label">Controls</p>
       <p>
-        Hover to name · click to open · double-click a constellation to enter its
-        orbit · scroll or pinch to zoom · drag to pan
+        Hover to name · click to open · drag a body to move it · double-click a
+        constellation to enter its orbit · scroll or pinch to zoom · drag to pan
+      </p>
+      <p>
+        <strong>In orbit:</strong> drag empty space to rotate · shift-drag or
+        right-drag to roll · two-finger twist to roll on touch · scroll or pinch
+        to move the camera closer
+      </p>
+      <p>
+        <strong>Timeline:</strong> the horizontal axis is when the evidence was
+        published, not when a file was written. Items with no dated source sit in
+        the undated gutter rather than being given a position they have not earned.
       </p>
 
       <p className="label">Elsewhere</p>
