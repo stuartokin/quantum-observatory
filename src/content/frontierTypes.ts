@@ -33,6 +33,7 @@ export interface FrontierItem {
   id: string
   title: string
   summary?: string
+  plain?: string
   pillar: 'ai' | 'quantum' | 'materials' | 'energy' | 'cyber'
   readiness: Readiness
   cluster?: string
