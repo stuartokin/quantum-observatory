@@ -14,20 +14,29 @@ import {
   type Node,
   type Glyph,
 } from './tower'
-import { drawGlyph } from './glyphs'
+import { drawBody, drawGlyph } from './glyphs'
 import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
 import { Frame, type FrameState } from '../../components/Frame'
 import { Toolbar } from '../../components/Toolbar'
 
-const PILLAR: FrontierItem['pillar'] = 'quantum'
+/** Galaxies. Only quantum has data; the rest are declared so the switch exists
+ *  and the shape of the eventual map is honest. */
+const GALAXIES: { id: FrontierItem['pillar']; label: string }[] = [
+  { id: 'quantum', label: 'Quantum' },
+  { id: 'cyber', label: 'Cyber' },
+  { id: 'ai', label: 'AI' },
+  { id: 'materials', label: 'Materials' },
+  { id: 'energy', label: 'Energy' },
+]
 type Scale = { label: string; levels: Record<Readiness, string> }
 const SCALES = scales as unknown as Record<string, Scale | undefined>
 type Offsets = Record<string, { dx: number; dy: number }>
 type Mode = 'tower' | 'orbit'
 
 export function Board() {
-  const colour = PILLAR_SPECTRUM[PILLAR].colour
+  const [galaxy, setGalaxy] = useState<FrontierItem['pillar']>('quantum')
+  const colour = PILLAR_SPECTRUM[galaxy].colour
 
   const [selected, setSelected] = useState<string | null>(null)
   const [view, setView] = useState({ k: 1, tx: 0, ty: 0 })
@@ -56,8 +65,8 @@ export function Board() {
   const zOf = (k: string) => 30 + order.indexOf(k)
 
   const pool = useMemo(
-    () => allFrontier.filter((i) => i.pillar === PILLAR && i.status !== 'archived'),
-    [],
+    () => allFrontier.filter((i) => i.pillar === galaxy && i.status !== 'archived'),
+    [galaxy],
   )
 
   const actors = useMemo(() => {
@@ -125,6 +134,27 @@ export function Board() {
       <header className="board-head">
         <div className="board-title">
           <span className="wordmark">Horizon Q</span>
+          <span className="board-title__sep">·</span>
+          <select
+            className="galaxy-picker"
+            value={galaxy}
+            onChange={(e) => {
+              setGalaxy(e.target.value as FrontierItem['pillar'])
+              leaveOrbit()
+              setSelected(null)
+            }}
+            style={{ color: colour }}
+            aria-label="Galaxy"
+          >
+            {GALAXIES.map((g) => {
+              const n = allFrontier.filter((i) => i.pillar === g.id).length
+              return (
+                <option key={g.id} value={g.id} disabled={n === 0}>
+                  {g.label}{n === 0 ? ' — empty' : ` (${n})`}
+                </option>
+              )
+            })}
+          </select>
           <span className="board-title__sep">·</span>
           <h2>
             {mode === 'orbit' && focusCon
@@ -280,16 +310,14 @@ function GlyphMark({ glyph, colour }: { glyph: Glyph; colour: string }) {
     const c = ref.current
     if (!c) return
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    c.width = 18 * dpr
-    c.height = 18 * dpr
+    c.width = 20 * dpr
+    c.height = 20 * dpr
     const g = c.getContext('2d')!
     g.setTransform(dpr, 0, 0, dpr, 0, 0)
-    g.strokeStyle = colour
-    g.fillStyle = colour
     g.lineWidth = 1.1
-    drawGlyph(g, glyph, 9, 9, 5, false)
+    drawGlyph(g, glyph, 10, 10, 5, colour)
   }, [glyph, colour])
-  return <canvas ref={ref} style={{ width: 18, height: 18, flex: '0 0 auto' }} aria-hidden="true" />
+  return <canvas ref={ref} style={{ width: 20, height: 20, flex: '0 0 auto' }} aria-hidden="true" />
 }
 
 /* ---------------------------------------------------------------- */
@@ -332,6 +360,10 @@ function Sky({
 
   /** Animated positions. Nodes ease between tower and orbit rather than jumping. */
   const anim = useRef(new Map<string, { x: number; y: number }>())
+  /** Bodies the reader has moved by hand. These win over any computed target,
+   *  so rearranging to read a label is never undone by the layout. */
+  const manual = useRef(new Map<string, { x: number; y: number }>())
+  const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
   const stars = useRef(
@@ -475,10 +507,12 @@ function Sky({
 
       // Ease every node toward its target — this is the tower/orbit transition.
       for (const n of nodes) {
-        const tgt = targets.get(n.id) ?? { x: n.x, y: n.y }
+        const held = manual.current.get(n.id)
+        const tgt = held ?? targets.get(n.id) ?? { x: n.x, y: n.y }
         const a = anim.current.get(n.id) ?? { x: n.x, y: n.y }
-        a.x += (tgt.x - a.x) * (reduced ? 1 : 0.09)
-        a.y += (tgt.y - a.y) * (reduced ? 1 : 0.09)
+        const speed = nodeDrag.current?.id === n.id ? 1 : reduced ? 1 : 0.09
+        a.x += (tgt.x - a.x) * speed
+        a.y += (tgt.y - a.y) * speed
         anim.current.set(n.id, a)
       }
       const at = (n: Node) => anim.current.get(n.id) ?? { x: n.x, y: n.y }
@@ -529,14 +563,28 @@ function Sky({
         }
       } else {
         // Orbit: readiness becomes concentric rings, so the reading survives.
+        // Rings, with their names on a single lower-left spoke rather than
+        // stacked through the centre where the bodies are.
         LEVELS.forEach((lvl, i) => {
           const radius = 0.075 + (i / (LEVELS.length - 1)) * 0.33
-          g.strokeStyle = 'rgba(255,255,255,0.05)'
+          const rx = Math.abs(X(0.5 + radius) - X(0.5))
+          const ry = Math.abs(Y(0.5 + radius * 0.82) - Y(0.5))
+          g.strokeStyle = 'rgba(255,255,255,0.055)'
           g.beginPath()
-          g.ellipse(X(0.5), Y(0.5), Math.abs(X(0.5 + radius) - X(0.5)), Math.abs(Y(0.5 + radius * 0.82) - Y(0.5)), 0, 0, Math.PI * 2)
+          g.ellipse(X(0.5), Y(0.5), rx, ry, 0, 0, Math.PI * 2)
           g.stroke()
-          g.fillStyle = 'rgba(134,151,176,0.75)'
-          g.fillText(lvl.toUpperCase(), X(0.5) + 6, Y(0.5 + radius * 0.82) - 5)
+
+          const a = Math.PI * 0.78
+          const lx = X(0.5) + Math.cos(a) * rx
+          const ly = Y(0.5) + Math.sin(a) * ry
+          const txt = lvl.toUpperCase()
+          const w = g.measureText(txt).width
+          g.globalAlpha = 0.85
+          g.fillStyle = '#070B14'
+          g.fillRect(lx - w - 8, ly - 9, w + 8, 13)
+          g.globalAlpha = 1
+          g.fillStyle = 'rgba(134,151,176,0.9)'
+          g.fillText(txt, lx - w - 4, ly + 1)
         })
         g.globalAlpha = 0.5
         g.fillStyle = colour
@@ -592,12 +640,9 @@ function Sky({
         const off = mode === 'orbit' && n.constellation !== focusCon ? 0.12 : 1
         const fade = (dimmed && !sel ? 0.3 : 1) * off
         g.shadowColor = colour
-        g.shadowBlur = n.sourced ? 14 + n.weight * 10 : 6
-        g.lineWidth = 1.4
-        g.strokeStyle = colour
-        g.fillStyle = colour
-        g.globalAlpha = (n.sourced ? 0.5 + n.weight * 0.5 : 0.45) * fade
-        drawGlyph(g, n.glyph, px, py, r, n.sourced)
+        g.shadowBlur = n.sourced ? 16 + n.weight * 12 : 5
+        g.globalAlpha = (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) * fade
+        drawBody(g, n.glyph, px, py, r, colour, n.sourced)
         g.shadowBlur = 0
 
         if (sel || hov) {
@@ -673,11 +718,26 @@ function Sky({
   }
 
   function onPointerDown(e: React.PointerEvent) {
-    drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
+    const best = nearest(e.clientX, e.clientY)
+    if (best && best.d < 0.028) {
+      const p = anim.current.get(best.n.id) ?? { x: best.n.x, y: best.n.y }
+      nodeDrag.current = { id: best.n.id, ox: e.clientX, oy: e.clientY, sx: p.x, sy: p.y }
+    } else {
+      drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
+    }
     ;(e.target as Element).setPointerCapture?.(e.pointerId)
   }
 
   function onPointerMove(e: React.PointerEvent) {
+    const nd = nodeDrag.current
+    if (nd) {
+      const r = cv.current!.getBoundingClientRect()
+      manual.current.set(nd.id, {
+        x: nd.sx + (e.clientX - nd.ox) / cur.current.k / (r.width - 124),
+        y: nd.sy + (e.clientY - nd.oy) / cur.current.k / (r.height - 30),
+      })
+      return
+    }
     const d = drag.current
     if (!d) {
       const best = nearest(e.clientX, e.clientY)
@@ -693,12 +753,24 @@ function Sky({
   }
 
   function onPointerUp(e: React.PointerEvent) {
+    const nd = nodeDrag.current
+    nodeDrag.current = null
+    if (nd) {
+      // A tap rather than a drag: select it, and do not pin it.
+      if (Math.hypot(e.clientX - nd.ox, e.clientY - nd.oy) < 4) {
+        manual.current.delete(nd.id)
+        onSelect(nd.id)
+      }
+      return
+    }
     const d = drag.current
     drag.current = null
     if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 4) return
     const best = nearest(e.clientX, e.clientY)
     onSelect(best && best.d < 0.03 ? best.n.id : null)
   }
+
+  useEffect(() => { manual.current.clear() }, [mode, focusCon])
 
   function onDoubleClick(e: React.MouseEvent) {
     const best = nearest(e.clientX, e.clientY)
