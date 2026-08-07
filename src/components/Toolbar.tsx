@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * The single toolbar. Draggable, and the home for every minimised window.
- * Two floating bars competing for the same corner was one too many.
+ * The single toolbar. Moveable and hideable — nothing more. It does not resize
+ * and does not change shape; a control bar that needs configuring is a control
+ * bar in the way.
  *
- * The drag runs through the DOM and commits to state once on release.
+ * The drag runs through the DOM and commits to state once on release, so
+ * moving it never re-renders the canvas beneath.
  */
 
 export interface ToolbarButton {
@@ -18,13 +20,14 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
   const ref = useRef<HTMLDivElement>(null)
   const drag = useRef<{ ox: number; oy: number; x: number; y: number } | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
+  const [hidden, setHidden] = useState(false)
 
   useEffect(() => {
     const move = (e: PointerEvent) => {
       const d = drag.current
       const el = ref.current
       if (!d || !el) return
-      el.style.left = `${Math.max(4, Math.min(window.innerWidth - 140, d.x + e.clientX - d.ox))}px`
+      el.style.left = `${Math.max(4, Math.min(window.innerWidth - 120, d.x + e.clientX - d.ox))}px`
       el.style.top = `${Math.max(4, Math.min(window.innerHeight - 44, d.y + e.clientY - d.oy))}px`
       el.style.transform = 'none'
     }
@@ -52,12 +55,21 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
     drag.current = { ox: e.clientX, oy: e.clientY, x: r.left, y: r.top }
   }
 
+  const style = pos ? { left: pos.x, top: pos.y, transform: 'none' } : undefined
+
+  if (hidden) {
+    return (
+      <div ref={ref} className="toolbar toolbar--hidden" style={style}>
+        <span className="frame__grip" onPointerDown={begin} title="Drag" aria-hidden="true" />
+        <button onClick={() => setHidden(false)} title="Show toolbar" aria-label="Show toolbar">
+          ▸
+        </button>
+      </div>
+    )
+  }
+
   return (
-    <div
-      ref={ref}
-      className="toolbar"
-      style={pos ? { left: pos.x, top: pos.y, transform: 'none' } : undefined}
-    >
+    <div ref={ref} className="toolbar" style={style}>
       <span className="frame__grip" onPointerDown={begin} title="Drag" aria-hidden="true" />
       {buttons.map((b) => (
         <button
@@ -69,6 +81,14 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
           {b.label}
         </button>
       ))}
+      <button
+        className="toolbar__hide"
+        onClick={() => setHidden(true)}
+        title="Hide toolbar"
+        aria-label="Hide toolbar"
+      >
+        ×
+      </button>
     </div>
   )
 }

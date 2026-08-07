@@ -15,7 +15,7 @@ import {
   type Glyph,
 } from './tower'
 import { drawBody, drawGlyph } from './glyphs'
-import { layoutTimeline, yearFraction } from './timeline'
+import { layoutTimeline, yearFraction, GUTTER } from './timeline'
 import {
   DEFAULT_CAMERA,
   clampCamera,
@@ -40,6 +40,50 @@ const GALAXIES: { id: FrontierItem['pillar']; label: string }[] = [
 type Scale = { label: string; levels: Record<Readiness, string> }
 const SCALES = scales as unknown as Record<string, Scale | undefined>
 type Offsets = Record<string, { dx: number; dy: number }>
+
+/**
+ * Each actor gets a hue shifted from the galaxy's own line, so who did the work
+ * is legible at a glance. Shift only — everything stays recognisably one galaxy.
+ */
+function shiftHue(hex: string, deg: number): string {
+  const n = parseInt(hex.slice(1), 16)
+  let r = ((n >> 16) & 255) / 255
+  let g = ((n >> 8) & 255) / 255
+  let b = (n & 255) / 255
+  const mx = Math.max(r, g, b)
+  const mn = Math.min(r, g, b)
+  let h = 0
+  const l = (mx + mn) / 2
+  const d = mx - mn
+  const sat = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1))
+  if (d !== 0) {
+    if (mx === r) h = ((g - b) / d) % 6
+    else if (mx === g) h = (b - r) / d + 2
+    else h = (r - g) / d + 4
+  }
+  h = (h * 60 + deg + 360) % 360
+  const c = (1 - Math.abs(2 * l - 1)) * sat
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
+  const m = l - c / 2
+  const seg = Math.floor(h / 60)
+  const t: [number, number, number] =
+    seg === 0 ? [c, x, 0] : seg === 1 ? [x, c, 0] : seg === 2 ? [0, c, x]
+    : seg === 3 ? [0, x, c] : seg === 4 ? [x, 0, c] : [c, 0, x]
+  const f = (v: number) => Math.round((v + m) * 255)
+  return `#${[f(t[0]), f(t[1]), f(t[2])].map((v) => v.toString(16).padStart(2, '0')).join('')}`
+}
+
+function actorHash(a: string): number {
+  let h = 2166136261
+  for (let i = 0; i < a.length; i++) { h ^= a.charCodeAt(i); h = Math.imul(h, 16777619) }
+  return (h >>> 0) % 1000 / 1000
+}
+
+/** ±34 degrees around the galaxy hue. Distinct, never a different galaxy. */
+export function actorColour(base: string, actor?: string): string {
+  if (!actor) return base
+  return shiftHue(base, (actorHash(actor) - 0.5) * 68)
+}
 type Mode = 'tower' | 'orbit'
 
 export function Board() {
@@ -144,7 +188,16 @@ export function Board() {
       },
     },
     { key: 'filters', label: 'Filters', active: !frames.filters.docked, onClick: toggle('filters') },
-    { key: 'actors', label: 'Actors', active: !frames.actors.docked, onClick: toggle('actors') },
+    ...(timeline
+      ? []
+      : [
+          {
+            key: 'actors',
+            label: 'Actors',
+            active: !frames.actors.docked,
+            onClick: toggle('actors'),
+          },
+        ]),
     { key: 'help', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     { key: 'reset', label: 'Reset', onClick: () => setView({ k: 1, tx: 0, ty: 0 }) },
   ]
@@ -271,6 +324,7 @@ export function Board() {
         </fieldset>
       </Frame>
 
+      {!timeline && (
       <Frame
         title="Actors"
         state={frames.actors}
@@ -287,7 +341,7 @@ export function Board() {
                 aria-pressed={actorFilter === a}
                 onClick={() => setActorFilter(actorFilter === a ? null : a)}
               >
-                <GlyphMark glyph={glyphFor(a)} colour={colour} />
+                <GlyphMark glyph={glyphFor(a)} colour={actorColour(colour, a)} />
                 <span>{a}</span>
                 <em>{n}</em>
               </button>
@@ -296,6 +350,7 @@ export function Board() {
           {actors.length === 0 && <li className="label">No actors recorded yet.</li>}
         </ul>
       </Frame>
+      )}
 
       <Frame
         title="Help"
@@ -400,6 +455,8 @@ function Sky({
   const manual = useRef(new Map<string, { x: number; y: number }>())
   /** Perspective scale per node while in orbit — drives size and depth fade. */
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
+  /** Live timeline projection, so hit testing uses the same maths as drawing. */
+  const tlProject = useRef<{ TX: (x: number) => number; TY: (y: number) => number } | null>(null)
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
@@ -539,81 +596,83 @@ function Sky({
 
       // ---------------- TIMELINE ----------------
       if (tl) {
-        const L = 116
-        const R = 24
-        const TX = (x: number) => L + (x * (W - L - R) + v.tx) * v.k
-        const TY = (y: number) => 34 + (y * (H - 74) + v.ty) * v.k
+        const AXIS = 104          // reserved for readiness names; marks never enter
+        const R = 18
+        const TX = (x: number) => AXIS + (x * (W - AXIS - R) + v.tx) * v.k
+        const TY = (y: number) => 40 + (y * (H - 78) + v.ty) * v.k
+        tlProject.current = { TX, TY }
 
-        // Readiness bands — the same y axis as the galaxy, deliberately.
         g.font = '11px ui-monospace, monospace'
-        LEVELS.forEach((lvl, i) => {
-          const y = TY((i + 0.5) / LEVELS.length)
-          g.strokeStyle = 'rgba(255,255,255,0.045)'
-          g.beginPath()
-          g.moveTo(0, y)
-          g.lineTo(W, y)
-          g.stroke()
-          g.fillStyle = 'rgba(134,151,176,0.85)'
-          g.fillText(lvl.toUpperCase(), 8, y - 6)
-        })
 
-        // Year gridlines
+        // Year gridlines first, so nothing is drawn over a mark.
         for (const yr of tl.years) {
           const fx = TX(yearFraction(yr, tl.from, tl.to))
-          if (fx < L - 40 || fx > W) continue
+          if (fx < AXIS || fx > W) continue
           g.strokeStyle = 'rgba(255,255,255,0.05)'
           g.beginPath()
-          g.moveTo(fx, 20)
-          g.lineTo(fx, H - 8)
+          g.moveTo(fx, 24)
+          g.lineTo(fx, H - 6)
           g.stroke()
           g.fillStyle = 'rgba(134,151,176,0.75)'
-          g.fillText(String(yr), fx + 4, 16)
+          g.fillText(String(yr), fx + 5, 20)
         }
 
-        // Undated gutter — items with no real source date. Saying so beats
-        // inventing a position on a time axis.
+        LEVELS.forEach((lvl, i) => {
+          const y = TY((i + 0.5) / LEVELS.length)
+          g.strokeStyle = 'rgba(255,255,255,0.04)'
+          g.beginPath()
+          g.moveTo(AXIS, y)
+          g.lineTo(W, y)
+          g.stroke()
+        })
+
+        // Undated gutter, inside the plot so its marks stay visible and clickable.
+        const gEdge = TX(GUTTER - 0.008)
         if (tl.undated > 0) {
-          const gx = TX(-0.02)
-          g.strokeStyle = 'rgba(255,255,255,0.08)'
+          g.strokeStyle = 'rgba(255,255,255,0.07)'
           g.setLineDash([2, 4])
           g.beginPath()
-          g.moveTo(gx, 20)
-          g.lineTo(gx, H - 8)
+          g.moveTo(gEdge, 24)
+          g.lineTo(gEdge, H - 6)
           g.stroke()
           g.setLineDash([])
           g.fillStyle = 'rgba(134,151,176,0.7)'
-          g.fillText(`UNDATED · ${tl.undated}`, TX(-0.115), 16)
+          g.fillText(`NO DATED SOURCE · ${tl.undated}`, AXIS + 4, 20)
         }
 
         const ordered = [...tl.marks].sort(
           (a, b) =>
             Number(a.id === selected) - Number(b.id === selected) ||
             Number(a.id === hoverRef.current) - Number(b.id === hoverRef.current) ||
-            a.r - b.r,
+            a.importance - b.importance,
         )
         const dim = selected !== null
+        const placed: { x: number; y: number; w: number }[] = []
 
         for (const m of ordered) {
           const px = TX(m.x)
           const py = TY(m.y)
+          if (px < AXIS - 20 || px > W + 20) continue
           const sel = selected === m.id
           const hov = hoverRef.current === m.id
           const rr = m.r * (sel ? 1.5 : hov ? 1.2 : 1)
+          const tint = actorColour(colour, undefined)
 
           if (m.attention > 0.02 && !reduced) {
             const ph = (t * 0.45 + m.x * 5) % 1
             g.globalAlpha = (1 - ph) * 0.5 * m.attention
-            g.strokeStyle = colour
+            g.strokeStyle = tint
             g.lineWidth = 1.4
             g.beginPath()
             g.arc(px, py, rr + ph * 22, 0, Math.PI * 2)
             g.stroke()
           }
 
-          g.globalAlpha = (dim && !sel ? 0.28 : 1) * (m.sourced ? 1 : 0.5)
-          g.shadowColor = colour
-          g.shadowBlur = m.sourced ? 12 : 0
-          g.fillStyle = m.sourced ? colour : 'rgba(120,132,158,0.9)'
+          // Importance reads as size, brightness and glow together.
+          g.globalAlpha = (dim && !sel ? 0.25 : 1) * (0.4 + m.importance * 0.6)
+          g.shadowColor = tint
+          g.shadowBlur = 4 + m.importance * 16
+          g.fillStyle = m.sourced ? tint : 'rgba(120,132,158,0.95)'
           g.beginPath()
           g.arc(px, py, rr, 0, Math.PI * 2)
           g.fill()
@@ -621,34 +680,60 @@ function Sky({
 
           if (sel || hov) {
             g.globalAlpha = 1
-            g.strokeStyle = colour
+            g.strokeStyle = tint
             g.lineWidth = 1.4
             g.beginPath()
-            g.arc(px, py, rr + 7, 0, Math.PI * 2)
+            g.arc(px, py, rr + 8, 0, Math.PI * 2)
             g.stroke()
           }
 
-          if (sel || hov || m.sourced || m.attention > 0.1) {
+          // Labels: the most important first, and only where there is room.
+          const wantLabel = sel || hov || m.importance > 0.55
+          if (wantLabel) {
             const text = m.label
-            const w = g.measureText(text).width
-            const lx = Math.min(W - w - 8, px + rr + 7)
-            const ly = py + 4
-            if (sel || hov) {
-              g.globalAlpha = 0.92
-              g.fillStyle = '#0D1421'
-              g.beginPath()
-              g.roundRect(lx - 5, ly - 11, w + 10, 16, 2)
-              g.fill()
-              g.globalAlpha = 0.5
-              g.strokeStyle = colour
-              g.lineWidth = 1
-              g.stroke()
+            const tw = g.measureText(text).width
+            let lx = px + rr + 7
+            if (lx + tw > W - 6) lx = px - rr - 7 - tw
+            lx = Math.max(AXIS + 4, lx)
+            let ly = py + 4
+            let guard = 0
+            while (
+              guard++ < 12 &&
+              placed.some(
+                (o) => Math.abs(o.y - ly) < 14 && !(lx + tw < o.x - 4 || lx > o.x + o.w + 4),
+              )
+            ) {
+              ly += 14
             }
-            g.globalAlpha = sel || hov ? 1 : dim ? 0.3 : m.sourced ? 0.9 : 0.45
-            g.fillStyle = m.sourced || sel || hov ? '#E6EDF7' : '#8697B0'
-            g.fillText(text, lx, ly)
+            if (guard < 12 || sel || hov) {
+              placed.push({ x: lx, y: ly, w: tw })
+              if (sel || hov) {
+                g.globalAlpha = 0.92
+                g.fillStyle = '#0D1421'
+                g.beginPath()
+                g.roundRect(lx - 5, ly - 11, tw + 10, 16, 2)
+                g.fill()
+                g.globalAlpha = 0.5
+                g.strokeStyle = tint
+                g.lineWidth = 1
+                g.stroke()
+              }
+              g.globalAlpha = sel || hov ? 1 : dim ? 0.3 : 0.4 + m.importance * 0.55
+              g.fillStyle = sel || hov || m.sourced ? '#E6EDF7' : '#8697B0'
+              g.fillText(text, lx, ly)
+            }
           }
         }
+
+        // Readiness names last, on an opaque strip, so no label can cross them.
+        g.globalAlpha = 1
+        g.fillStyle = '#070B14'
+        g.fillRect(0, 0, AXIS - 2, H)
+        LEVELS.forEach((lvl, i) => {
+          const y = TY((i + 0.5) / LEVELS.length)
+          g.fillStyle = 'rgba(134,151,176,0.9)'
+          g.fillText(lvl.toUpperCase(), 8, y + 4)
+        })
         g.globalAlpha = 1
         raf = requestAnimationFrame(safeDraw)
         return
@@ -820,7 +905,7 @@ function Sky({
         g.shadowColor = colour
         g.shadowBlur = n.sourced ? 16 + n.weight * 12 : 5
         g.globalAlpha = (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) * fade
-        drawBody(g, n.glyph, px, py, r, colour, n.sourced)
+        drawBody(g, n.glyph, px, py, r, actorColour(colour, n.actor), n.sourced)
         g.shadowBlur = 0
 
         if (sel || hov) {
@@ -888,6 +973,18 @@ function Sky({
     }
   }
 
+  const nearestMark = (cx: number, cy: number): { id: string; d: number } | null => {
+    if (!tl || !tlProject.current) return null
+    const r = cv.current!.getBoundingClientRect()
+    const { TX, TY } = tlProject.current
+    let best: { id: string; d: number } | null = null
+    for (const m of tl.marks) {
+      const d = Math.hypot(TX(m.x) - (cx - r.left), TY(m.y) - (cy - r.top))
+      if (!best || d < best.d) best = { id: m.id, d }
+    }
+    return best
+  }
+
   const nearest = (cx: number, cy: number) => {
     const w = toWorld(cx, cy)
     let best: { n: Node; d: number } | null = null
@@ -912,6 +1009,12 @@ function Sky({
   }
 
   function onPointerDown(e: React.PointerEvent) {
+    if (tl) {
+      // Timeline pans only; marks are selected on release.
+      drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
+      ;(e.target as Element).setPointerCapture?.(e.pointerId)
+      return
+    }
     const best = nearest(e.clientX, e.clientY)
     if (best && best.d < 0.028) {
       const p = anim.current.get(best.n.id) ?? { x: best.n.x, y: best.n.y }
@@ -957,6 +1060,12 @@ function Sky({
     }
     const d = drag.current
     if (!d) {
+      if (tl) {
+        const bm = nearestMark(e.clientX, e.clientY)
+        const id = bm && bm.d < 16 ? bm.id : null
+        if (id !== hoverRef.current) setHover(id)
+        return
+      }
       const best = nearest(e.clientX, e.clientY)
       const id = best && best.d < 0.022 ? best.n.id : null
       if (id !== hoverRef.current) setHover(id)
@@ -988,6 +1097,11 @@ function Sky({
     const d = drag.current
     drag.current = null
     if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 4) return
+    if (tl) {
+      const bm = nearestMark(e.clientX, e.clientY)
+      onSelect(bm && bm.d < 18 ? bm.id : null)
+      return
+    }
     const best = nearest(e.clientX, e.clientY)
     onSelect(best && best.d < 0.03 ? best.n.id : null)
   }
@@ -995,6 +1109,7 @@ function Sky({
   useEffect(() => { manual.current.clear() }, [mode, focusCon])
 
   function onDoubleClick(e: React.MouseEvent) {
+    if (tl) return
     const best = nearest(e.clientX, e.clientY)
     if (mode === 'orbit' || !best || best.d > 0.09) return onLeaveOrbit()
     onEnterOrbit(best.n.constellation)
@@ -1108,6 +1223,30 @@ function Help({ colour }: { colour: string }) {
   )
 }
 
+/**
+ * Plain English, derived rather than authored — so it is right for every item
+ * without 56 hand-written paragraphs going stale. Says what the readiness and
+ * confidence actually mean for someone planning around this.
+ */
+const PLAIN_READINESS: Record<string, string> = {
+  emerging:
+    'Someone has proposed this. Nobody independent has reproduced it. Treat it as a possibility to watch, not something to plan around.',
+  experimental:
+    'It has worked in a lab, at least once, outside the group that proposed it. It is a long way from anything you could buy or deploy.',
+  demonstrated:
+    'It works at a scale that means something, or a standard now exists for it. Real, but not yet something most organisations have.',
+  adopted:
+    'It is shipping in named products, or sits on a published roadmap with dates. If this matters to you, it is time to plan.',
+  mainstream:
+    'This is the default. The interesting question is no longer who has it, but who does not.',
+}
+
+const PLAIN_CONFIDENCE: Record<string, string> = {
+  high: 'Backed by a peer-reviewed paper or a formal standard, checked recently.',
+  medium: 'Backed by a preprint or a supplier\u2019s own technical announcement, or the check is getting old.',
+  low: 'One source, contested, or the evidence has not been re-checked in a year. Verify before relying on it.',
+}
+
 function Detail({ item, definition }: { item: FrontierItem; definition?: string }) {
   const colour = PILLAR_SPECTRUM[item.pillar].colour
   const needsSource = item.evidence.claim.startsWith('NEEDS PRIMARY SOURCE')
@@ -1126,11 +1265,20 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
 
       <h3>{item.title}</h3>
       {item.summary && <p>{item.summary}</p>}
-      {definition && (
-        <p className="readiness-def">
-          <strong>{item.readiness}</strong> in this field means: {definition}
+      <div className="plain">
+        <span className="label">What this means</span>
+        <p>{PLAIN_READINESS[item.readiness]}</p>
+        {definition && (
+          <p className="plain__test">
+            <strong>The test used here:</strong> {definition}
+          </p>
+        )}
+        <p className="plain__conf">
+          {needsSource
+            ? 'No source has been attached yet, so nothing is being claimed about how real this is. It is on the board so the shape of the field is honest.'
+            : PLAIN_CONFIDENCE[item.confidence]}
         </p>
-      )}
+      </div>
 
       {item.metrics && item.metrics.length > 0 && (
         <dl className="metrics">

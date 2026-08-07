@@ -12,6 +12,9 @@ import { LEVELS } from './tower'
  * everything else sits in an undated gutter and says so.
  */
 
+/** Fraction of the plot width reserved for undated items, on the left. */
+export const GUTTER = 0.11
+
 export function dateOf(item: FrontierItem): Date | null {
   const candidates: string[] = []
   for (const s of item.evidence?.sources ?? []) if (s.date) candidates.push(s.date)
@@ -33,6 +36,8 @@ export interface Mark {
   dated: boolean
   sourced: boolean
   weight: number
+  /** 0–1. Drives size, brightness and whether a label is kept. */
+  importance: number
   attention: number
   label: string
   date: Date | null
@@ -58,7 +63,7 @@ export function layoutTimeline(
     ? new Date(Math.min(...known.map((d) => d.getTime())))
     : new Date(now.getFullYear() - 3, 0, 1)
 
-  const pad = (now.getTime() - first.getTime()) * 0.06
+  const pad = (now.getTime() - first.getTime()) * 0.05
   const lo = first.getTime() - pad
   const hi = now.getTime() + pad
 
@@ -70,39 +75,56 @@ export function layoutTimeline(
     const level = Math.max(0, LEVELS.indexOf(item.readiness))
     const weight = item.confidence === 'high' ? 1 : item.confidence === 'medium' ? 0.65 : 0.35
     const src = opts.sourced(item)
+    const att = opts.attention(item)
+
+    // Importance drives size, brightness and label priority. Evidence counts
+    // for most of it: a sourced claim is worth more than an unsourced topic.
+    const importance = Math.min(
+      1,
+      (src ? 0.5 : 0) + weight * 0.3 + att * 0.25 + (item.metrics?.length ? 0.15 : 0),
+    )
+
     return {
       id: item.id,
-      x: d ? (d.getTime() - lo) / (hi - lo) : -1,
+      // Dated marks live to the right of the gutter.
+      x: d ? GUTTER + ((d.getTime() - lo) / (hi - lo)) * (1 - GUTTER) : -1,
       y: (level + 0.5) / LEVELS.length,
-      r: 3.5 + weight * 6 + (src ? 1.5 : 0),
+      r: 3 + importance * 8,
       dated: d !== null,
       sourced: src,
       weight,
-      attention: opts.attention(item),
-      label: item.title.length > 34 ? item.title.slice(0, 33) + '…' : item.title,
+      importance,
+      attention: att,
+      label: item.title.length > 36 ? item.title.slice(0, 35) + '…' : item.title,
       date: d,
     }
   })
 
-  // Spread coincident marks within their band so they stay legible.
-  const seen = new Map<string, number>()
-  for (const m of marks) {
-    const key = `${Math.round(m.x * 90)}:${m.y.toFixed(3)}`
-    const n = seen.get(key) ?? 0
-    seen.set(key, n + 1)
-    m.y += (n % 5) * 0.021 - 0.042
+  // Undated items: packed into the gutter in columns, inside the plot so they
+  // are visible and clickable rather than pushed off the left edge.
+  const un = marks.filter((m) => !m.dated)
+  const perBand = new Map<number, number>()
+  for (const m of un) {
+    const band = Math.round(m.y * LEVELS.length)
+    const n = perBand.get(band) ?? 0
+    perBand.set(band, n + 1)
+    m.x = 0.012 + (n % 4) * 0.024
+    m.y += (Math.floor(n / 4) % 3) * 0.024 - 0.024
   }
 
-  // Undated marks share a gutter on the left.
-  const un = marks.filter((m) => !m.dated)
-  un.forEach((m, i) => {
-    m.x = -0.055 - (i % 3) * 0.02
-  })
+  // Dated marks: nudge coincident ones apart within their band.
+  const seen = new Map<string, number>()
+  for (const m of marks.filter((x) => x.dated)) {
+    const key = `${Math.round(m.x * 70)}:${Math.round(m.y * 100)}`
+    const n = seen.get(key) ?? 0
+    seen.set(key, n + 1)
+    m.y += (n % 4) * 0.024 - 0.036
+  }
 
   return { marks, from: new Date(lo), to: new Date(hi), years, undated: un.length }
 }
 
 export function yearFraction(year: number, from: Date, to: Date): number {
   const t = new Date(year, 0, 1).getTime()
-  return (t - from.getTime()) / (to.getTime() - from.getTime())
+  return GUTTER + ((t - from.getTime()) / (to.getTime() - from.getTime())) * (1 - GUTTER)
 }
