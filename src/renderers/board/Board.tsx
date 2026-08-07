@@ -391,34 +391,6 @@ function Sky({
     return out
   }, [byId])
 
-  const hulls = useMemo(() => {
-    if (mode === 'orbit') return []
-    const groups = new Map<string, Node[]>()
-    for (const n of nodes) {
-      if (!groups.has(n.constellation)) groups.set(n.constellation, [])
-      groups.get(n.constellation)!.push(n)
-    }
-    const out: { con: string; pts: [number, number][] }[] = []
-    const cross = (o: number[], a: number[], b: number[]) =>
-      (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
-    for (const [con, gr] of groups) {
-      if (gr.length < 3) continue
-      const p = gr
-        .map((n) => [n.x, n.y] as [number, number])
-        .sort((a, b) => a[0] - b[0] || a[1] - b[1])
-      const build = (src: [number, number][]) => {
-        const h: [number, number][] = []
-        for (const pt of src) {
-          while (h.length >= 2 && cross(h[h.length - 2], h[h.length - 1], pt) <= 0) h.pop()
-          h.push(pt)
-        }
-        h.pop()
-        return h
-      }
-      out.push({ con, pts: [...build(p), ...build([...p].reverse())] })
-    }
-    return out
-  }, [nodes, mode])
 
   /**
    * Orbit targets. Members of the focused constellation arrange in rings around
@@ -517,22 +489,7 @@ function Sky({
       }
       const at = (n: Node) => anim.current.get(n.id) ?? { x: n.x, y: n.y }
 
-      if (mode === 'tower') {
-        for (const { con, pts } of hulls) {
-          if (!activeCons.includes(con)) continue
-          g.save()
-          g.filter = 'blur(28px)'
-          g.globalAlpha = 0.12
-          g.fillStyle = colour
-          g.beginPath()
-          pts.forEach((p, i) => (i === 0 ? g.moveTo(X(p[0]), Y(p[1])) : g.lineTo(X(p[0]), Y(p[1]))))
-          g.closePath()
-          g.fill()
-          g.restore()
-        }
-      }
-
-      g.font = '10px ui-monospace, monospace'
+      g.font = '11px ui-monospace, monospace'
       g.textBaseline = 'alphabetic'
 
       if (mode === 'tower') {
@@ -574,17 +531,16 @@ function Sky({
           g.ellipse(X(0.5), Y(0.5), rx, ry, 0, 0, Math.PI * 2)
           g.stroke()
 
-          const a = Math.PI * 0.78
-          const lx = X(0.5) + Math.cos(a) * rx
-          const ly = Y(0.5) + Math.sin(a) * ry
+          const lx = X(0.5) - rx
+          const ly = Y(0.5) - 6
           const txt = lvl.toUpperCase()
           const w = g.measureText(txt).width
-          g.globalAlpha = 0.85
+          g.globalAlpha = 0.9
           g.fillStyle = '#070B14'
-          g.fillRect(lx - w - 8, ly - 9, w + 8, 13)
+          g.fillRect(lx - 3, ly - 10, w + 6, 14)
           g.globalAlpha = 1
           g.fillStyle = 'rgba(134,151,176,0.9)'
-          g.fillText(txt, lx - w - 4, ly + 1)
+          g.fillText(txt, lx, ly)
         })
         g.globalAlpha = 0.5
         g.fillStyle = colour
@@ -654,7 +610,7 @@ function Sky({
           g.stroke()
         }
 
-        const earns = n.attention > 0.1 || (n.sourced && n.weight >= 0.99)
+        const earns = n.attention > 0.1 || n.sourced
         const showLabel =
           sel || hov || (mode === 'orbit' && n.constellation === focusCon) || earns || v.k > 2.2
         if (showLabel && off > 0.5) labelQueue.push({ n, px, py, top: sel || hov })
@@ -677,7 +633,7 @@ function Sky({
           g.lineWidth = 1
           g.stroke()
         }
-        g.globalAlpha = top ? 1 : dimmed ? 0.28 : n.sourced ? 0.8 : 0.42
+        g.globalAlpha = top ? 1 : dimmed ? 0.3 : n.sourced ? 0.92 : 0.5
         g.fillStyle = top || n.sourced ? '#E6EDF7' : '#8697B0'
         g.fillText(text, lx, ly)
       }
@@ -688,7 +644,7 @@ function Sky({
 
     raf = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, hulls, targets, colour, selected, view, activeCons, mode, focusCon])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()

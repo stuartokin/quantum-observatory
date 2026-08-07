@@ -162,7 +162,7 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
       x,
       y,
       level,
-      radius: 3 + weight * 4,
+      radius: 5.5 + weight * 6.5,
       weight,
       glyph: glyphFor(item.actors?.[0]),
       actor: item.actors?.[0],

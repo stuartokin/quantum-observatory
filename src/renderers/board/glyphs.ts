@@ -50,14 +50,10 @@ export function drawBody(
   g.save()
 
   if (!sourced) {
-    // Ghost: a dashed limb, nothing filled. Known about, not claimed.
-    g.setLineDash([2.5, 3])
-    g.lineWidth = 1.1
-    g.strokeStyle = colour
-    g.beginPath()
-    g.arc(x, y, r, 0, Math.PI * 2)
-    g.stroke()
-    g.setLineDash([])
+    // A cold, unlit world. Solid so it reads as a body, muted and small so it
+    // never competes with sourced work. Dashed outlines at this size read as
+    // dirt on the screen, not as evidence status.
+    sphere(g, x, y, r * 0.68, mix(colour, '#4A5468', 0.6), 0.35)
     g.restore()
     return
   }
