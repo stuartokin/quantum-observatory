@@ -17,20 +17,16 @@ const ASSETS = 'dist/assets'
 const KB = 1024
 
 const BUDGET = {
-  entry: 60 * KB,   // document route — must stay small
-  world: 320 * KB,  // three + drei, loaded on demand only
-  css: 15 * KB,
+  entry: 90 * KB,  // the whole app: React + the canvas board, gzipped
+  css: 20 * KB,
 }
 
 const gz = (file) => gzipSync(readFileSync(join(ASSETS, file)), { level: 9 }).length
 
 const files = readdirSync(ASSETS)
 const js = files.filter((f) => f.endsWith('.js'))
-const isWorld = (f) => f.includes('three')
-
 const groups = {
-  entry: js.filter((f) => !isWorld(f)),
-  world: js.filter(isWorld),
+  entry: js,
   css: files.filter((f) => f.endsWith('.css')),
 }
 

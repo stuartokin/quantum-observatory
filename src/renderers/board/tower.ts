@@ -43,8 +43,20 @@ export const CONSTELLATION_LABEL: Record<string, string> = {
   sensing: 'Sensing',
 }
 
-/** Actor glyphs. A shape per organisation, so influence is readable at a glance. */
-export const GLYPHS = ['circle', 'square', 'triangle', 'diamond', 'pentagon', 'hexagon', 'cross'] as const
+/**
+ * Actor glyphs, drawn from the sky rather than from a shape palette. A form
+ * per organisation, so influence is readable without a legend lookup.
+ */
+export const GLYPHS = [
+  'star',      // classic five-point
+  'ringed',    // a disc with a ring
+  'binary',    // two bodies
+  'nova',      // burst of rays
+  'crescent',
+  'cluster',   // three small bodies
+  'comet',     // body with a tail
+  'pulsar',    // body with concentric rings
+] as const
 export type Glyph = (typeof GLYPHS)[number]
 
 export interface Node {
