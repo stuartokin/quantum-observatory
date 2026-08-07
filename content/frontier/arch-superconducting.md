@@ -10,10 +10,10 @@ readiness: adopted
 actors: [IBM, Google Quantum AI]
 metrics:
   - name: Nighthawk qubits
-    value: 120
+    value: '120'
     note: with 218 tunable couplers
   - name: Willow distance
-    value: 7
+    value: '7'
     note: 101 qubits, below threshold
 evidence:
   claim: Google demonstrated below-threshold surface code memory on a superconducting processor; IBM has shipped successive transmon processors on a published roadmap.
@@ -22,7 +22,7 @@ evidence:
     - url: https://www.nature.com/articles/s41586-024-08449-y
       role: primary
       publisher: Nature
-      date: 2025
+      date: '2025'
       identifier: Nature 638, 920–926 (2025)
 links:
   - to: arch-trapped-ion

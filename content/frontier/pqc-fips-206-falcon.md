@@ -10,7 +10,7 @@ readiness: demonstrated
 actors: [NIST]
 metrics:
   - name: Standard
-    value: FIPS 206
+    value: 'FIPS 206'
     note: in development
 evidence:
   claim: NIST states FALCON was selected and will be published in FIPS 206, which is in development.

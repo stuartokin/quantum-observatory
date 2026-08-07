@@ -10,11 +10,11 @@ readiness: adopted
 actors: [NIST]
 metrics:
   - name: Standard
-    value: FIPS 205
+    value: 'FIPS 205'
   - name: Published
-    value: 2024-08-13
+    value: '2024-08-13'
   - name: Basis
-    value: hash functions
+    value: 'hash functions'
     note: no lattice assumption
 evidence:
   claim: NIST published FIPS 205 on 13 August 2024, based on a different mathematical approach to ML-DSA and intended as a backup method.
@@ -23,7 +23,7 @@ evidence:
     - url: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards
       role: standard
       publisher: NIST
-      date: 2024-08-13
+      date: '2024-08-13'
 links:
   - to: pqc-fips-204
     relation: competes-with

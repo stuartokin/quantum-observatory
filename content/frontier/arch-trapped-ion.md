@@ -10,13 +10,13 @@ readiness: adopted
 actors: [Quantinuum]
 metrics:
   - name: Logical qubits
-    value: 48
+    value: '48'
     note: Helios, from 98 physical
   - name: Overhead
     value: '2:1'
     note: physical to logical
   - name: 2-qubit gate fidelity
-    value: 99.921
+    value: '99.921'
     note: per cent
 evidence:
   claim: 'Quantinuum states Helios achieved 48 logical qubits from 98 physical qubits, an error-correcting overhead of 2:1 in a commercial setting, with 99.921 per cent two-qubit gate fidelity.'
@@ -25,7 +25,7 @@ evidence:
     - url: https://www.sec.gov/Archives/edgar/data/0002110105/000162828026037917/quantinuum-sx1a.htm
       role: primary
       publisher: SEC filing
-      date: 2026
+      date: '2026'
     - url: https://www.quantinuum.com/blog/introducing-helios-the-most-accurate-quantum-computer-in-the-world
       role: vendor
       publisher: Quantinuum
@@ -40,7 +40,7 @@ links:
     relation: depends-on
 moved:
   from: demonstrated
-  on: 2026-07-02
+  'on': '2026-07-02'
 confidence: high
 status: published
 added: '2026-08-04'

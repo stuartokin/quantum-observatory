@@ -10,12 +10,12 @@ readiness: experimental
 actors: [QuEra Computing, Harvard University, MIT]
 metrics:
   - name: Protocol
-    value: 5-to-1 distillation
+    value: '5-to-1 distillation'
   - name: Code distances
-    value: d=3 and d=5
+    value: 'd=3 and d=5'
     note: colour-code logical qubits
   - name: Platform
-    value: neutral atom
+    value: 'neutral atom'
     note: QuEra Gemini
 evidence:
   claim: The first experimental demonstration of magic state distillation performed entirely on logical qubits, using distance-3 and distance-5 colour-code qubits on a neutral-atom processor, with output fidelity exceeding that of any input state.
@@ -25,7 +25,7 @@ evidence:
       role: primary
       title: Experimental demonstration of logical magic state distillation
       publisher: Nature
-      date: 2025-07-14
+      date: '2025-07-14'
       identifier: Nature 645, 620–625 (2025)
 links:
   - to: qec-below-threshold-surface-code
@@ -36,7 +36,7 @@ links:
     relation: depends-on
 moved:
   from: emerging
-  on: 2026-07-14
+  'on': '2026-07-14'
 confidence: high
 status: published
 added: '2026-08-04'

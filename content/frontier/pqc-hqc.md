@@ -10,9 +10,9 @@ readiness: demonstrated
 actors: [NIST]
 metrics:
   - name: Selected
-    value: 2025-03-11
+    value: '2025-03-11'
   - name: Basis
-    value: error-correcting codes
+    value: 'error-correcting codes'
     note: independent of lattices
 evidence:
   claim: NIST selected HQC for standardisation on 11 March 2025, reported in NIST IR 8545 on the fourth round of the PQC standardisation process.
@@ -26,7 +26,7 @@ links:
     relation: competes-with
 moved:
   from: experimental
-  on: 2026-06-11
+  'on': '2026-06-11'
 confidence: high
 status: published
 added: '2026-08-04'

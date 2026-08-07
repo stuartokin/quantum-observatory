@@ -10,16 +10,16 @@ readiness: demonstrated
 actors: [Google Quantum AI]
 metrics:
   - name: Error suppression factor
-    value: 2.14
+    value: '2.14'
     note: Λ, per two units of code distance, ±0.02
   - name: Code distance
-    value: 7
+    value: '7'
     note: 101 physical qubits
   - name: Logical error per cycle
-    value: 0.143
+    value: '0.143'
     note: per cent, ±0.003
   - name: Beyond break-even
-    value: 2.4x
+    value: '2.4x'
     note: versus best physical qubit lifetime, ±0.3
 evidence:
   claim: Two below-threshold surface code memories were demonstrated on the Willow processor; the distance-7 code showed logical error suppressed by Λ = 2.14 per two units of distance, exceeding the best physical qubit lifetime by a factor of 2.4.
@@ -29,12 +29,12 @@ evidence:
       role: primary
       title: Quantum error correction below the surface code threshold
       publisher: Nature
-      date: 2025
+      date: '2025'
       identifier: Nature 638, 920–926 (2025)
     - url: https://arxiv.org/pdf/2408.13687
       role: preprint
       publisher: arXiv
-      date: 2024-08-27
+      date: '2024-08-27'
       identifier: 'arXiv:2408.13687'
 links:
   - to: qec-qldpc-bivariate-bicycle

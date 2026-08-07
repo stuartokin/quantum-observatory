@@ -10,9 +10,9 @@ readiness: adopted
 actors: [NIST]
 metrics:
   - name: Standard
-    value: FIPS 203
+    value: 'FIPS 203'
   - name: Published
-    value: 2024-08-13
+    value: '2024-08-13'
 evidence:
   claim: NIST published FIPS 203 as a finalised standard on 13 August 2024, intended as the primary standard for general encryption.
   verified: '2026-08-04'
@@ -20,7 +20,7 @@ evidence:
     - url: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards
       role: standard
       publisher: NIST
-      date: 2024-08-13
+      date: '2024-08-13'
 links:
   - to: pqc-hqc
     relation: competes-with

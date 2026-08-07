@@ -10,7 +10,7 @@ readiness: emerging
 actors: [IBM]
 metrics:
   - name: Target
-    value: 200 logical qubits by 2029
+    value: '200 logical qubits by 2029'
     note: stated roadmap, not a demonstrated result
 evidence:
   claim: IBM has published a modular architecture based on bivariate bicycle codes, with entanglement between modules via a universal adapter planned for demonstration on its innovation roadmap.
@@ -20,7 +20,7 @@ evidence:
       role: preprint
       title: 'Tour de gross: a modular quantum computer based on bivariate bicycle codes'
       publisher: arXiv
-      date: 2025-06-03
+      date: '2025-06-03'
       identifier: 'arXiv:2506.03094'
     - url: https://www.ibm.com/quantum/blog/large-scale-ftqc
       role: vendor

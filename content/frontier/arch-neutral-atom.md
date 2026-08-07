@@ -10,7 +10,7 @@ readiness: experimental
 actors: [QuEra Computing, Harvard University, MIT]
 metrics:
   - name: Code distances
-    value: d=3, d=5
+    value: 'd=3, d=5'
     note: colour code, Gemini
 evidence:
   claim: Logical magic state distillation was demonstrated on a neutral-atom processor using dynamically reconfigurable atom transport.
@@ -19,7 +19,7 @@ evidence:
     - url: https://www.nature.com/articles/s41586-025-09367-3
       role: primary
       publisher: Nature
-      date: 2025-07-14
+      date: '2025-07-14'
       identifier: Nature 645, 620–625 (2025)
 links:
   - to: qec-magic-state-distillation
