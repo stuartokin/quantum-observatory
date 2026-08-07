@@ -63,6 +63,8 @@ export interface Node {
   id: string
   x: number
   y: number
+  /** Readiness band index. Orbit rings are keyed on this. */
+  level: number
   radius: number
   weight: number
   glyph: Glyph
@@ -91,7 +93,7 @@ export function hash(s: string): number {
 }
 
 export function glyphFor(actor?: string): Glyph {
-  if (!actor) return 'circle'
+  if (!actor) return 'star'
   return GLYPHS[Math.floor(hash(actor) * GLYPHS.length)]
 }
 
@@ -159,6 +161,7 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
       id: item.id,
       x,
       y,
+      level,
       radius: 3 + weight * 4,
       weight,
       glyph: glyphFor(item.actors?.[0]),

@@ -47,7 +47,6 @@ export function Board() {
     detail: { x: 0, y: 0, w: 400, h: 470, docked: true },
   })
   const setFrame = (k: string) => (s: FrameState) => setFrames((f) => ({ ...f, [k]: s }))
-  const show = (k: string) => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: false } }))
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const toggle = (k: string) => () =>
     setFrames((f) => ({ ...f, [k]: { ...f[k], docked: !f[k].docked } }))

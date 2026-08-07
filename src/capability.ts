@@ -1,4 +1,5 @@
-import type { InputClass, QualityTier } from './worlds/types'
+export type InputClass = 'touch' | 'pointer' | 'keyboard' | 'gamepad'
+export type Tier = 'low' | 'medium' | 'high'
 
 /** Input class drives the control scheme, not the layout. */
 export function detectInput(): InputClass {
@@ -12,7 +13,7 @@ export function detectInput(): InputClass {
  * Quality tier is measured, never assumed from user agent. A cheap frame probe
  * beats a device database that is wrong within six months.
  */
-export function detectTier(): Promise<QualityTier['name']> {
+export function detectTier(): Promise<Tier> {
   return new Promise((resolve) => {
     if (typeof window === 'undefined') return resolve('medium')
 
