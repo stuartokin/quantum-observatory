@@ -639,10 +639,22 @@ function Sky({
       }
       g.globalAlpha = 1
 
-      raf = requestAnimationFrame(draw)
+      raf = requestAnimationFrame(safeDraw)
     }
 
-    raf = requestAnimationFrame(draw)
+    // A throw inside requestAnimationFrame never reaches a React error
+    // boundary — it just stops the loop and leaves a half-drawn frame. Report
+    // it loudly and stop, rather than failing silently.
+    const safeDraw = (now: number) => {
+      try {
+        draw(now)
+      } catch (err) {
+        console.error('Board render failed:', err)
+        cancelAnimationFrame(raf)
+      }
+    }
+
+    raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
   }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon])
 

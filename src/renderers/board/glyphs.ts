@@ -30,11 +30,26 @@ function sphere(
   g.fill()
 }
 
+/**
+ * Accepts hex, shorthand hex or rgb(). The first version parsed hex only, and
+ * mixed colours were being fed back into it — which produced rgb(NaN,NaN,NaN),
+ * threw inside addColorStop, and killed the whole render loop at the first
+ * body. Everything drawn after nodes simply vanished.
+ */
+function parse(c: string): [number, number, number] {
+  if (c.startsWith('#')) {
+    const h = c.length === 4 ? c.slice(1).split('').map((x) => x + x).join('') : c.slice(1)
+    return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number]
+  }
+  const m = c.match(/-?\d+(\.\d+)?/g)
+  return (m ? m.slice(0, 3).map(Number) : [255, 255, 255]) as [number, number, number]
+}
+
 function mix(a: string, b: string, t: number) {
-  const p = (c: string) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16))
-  const [r1, g1, b1] = p(a)
-  const [r2, g2, b2] = p(b)
-  const c = (x: number, y: number) => Math.round(x + (y - x) * t)
+  const [r1, g1, b1] = parse(a)
+  const [r2, g2, b2] = parse(b)
+  const c = (x: number, y: number) =>
+    Math.max(0, Math.min(255, Math.round(x + (y - x) * t)))
   return `rgb(${c(r1, r2)},${c(g1, g2)},${c(b1, b2)})`
 }
 
