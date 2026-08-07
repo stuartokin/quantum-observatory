@@ -235,6 +235,7 @@ a:hover { text-decoration-color: currentColor; }
   letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
 .board-stats b { color: var(--ink); font-weight: 400; }
 .board-stats__move { color: var(--line-quantum); }
+.board-stats__ver { opacity: 0.55; }
 
 .tower { flex: 1 1 auto; min-height: 0; position: relative; cursor: grab; }
 .tower:active { cursor: grabbing; }

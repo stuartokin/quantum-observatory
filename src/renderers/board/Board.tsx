@@ -133,6 +133,7 @@ export function Board() {
           <span><b>{visible.length}</b> of {pool.length}</span>
           <span><b>{visible.filter(isSourced).length}</b> sourced</span>
           {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
+          <span className="board-stats__ver">v{VERSION}</span>
         </div>
       </header>
 
