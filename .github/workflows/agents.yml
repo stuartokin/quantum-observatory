@@ -50,6 +50,7 @@ jobs:
     needs: discover
     if: needs.discover.outputs.agents != '[]'
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     strategy:
       # One PR per agent. A single PR mixing agents is unreviewable.
       max-parallel: 1
