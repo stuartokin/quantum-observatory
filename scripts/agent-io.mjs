@@ -1,0 +1,141 @@
+/**
+ * Reading what an agent returned, and deciding whether it is usable.
+ *
+ * Kept in its own module because these are the two places the pipeline has
+ * repeatedly broken, and because they are testable in isolation — which the
+ * previous inline versions were not.
+ */
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+
+/** Balanced-brace scan, respecting strings and escapes. */
+export function balancedObjects(text) {
+  const out = []
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] !== '{') continue
+    let depth = 0
+    let inStr = false
+    let esc = false
+    for (let j = i; j < text.length; j++) {
+      const c = text[j]
+      if (esc) { esc = false; continue }
+      if (c === '\\') { esc = true; continue }
+      if (c === '"') { inStr = !inStr; continue }
+      if (inStr) continue
+      if (c === '{') depth++
+      else if (c === '}') {
+        depth--
+        if (depth === 0) { out.push(text.slice(i, j + 1)); i = j; break }
+      }
+    }
+  }
+  return out
+}
+
+/**
+ * With web search on, the reply is commentary interleaved with tool calls and
+ * the JSON can span several text blocks. Try each block, then the whole thing
+ * joined, and take the last object matching the output contract.
+ */
+export function extractJson(chunks) {
+  const candidates = [...[...chunks].reverse(), chunks.join('\n')]
+  for (const chunk of candidates) {
+    const cleaned = chunk.replace(/```(?:json)?/g, '')
+    for (const obj of balancedObjects(cleaned).reverse()) {
+      try {
+        const parsed = JSON.parse(obj)
+        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.files)) return parsed
+      } catch {
+        /* not this one */
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * Models wrap files in code fences, add a heading above the front matter, or
+ * leave stray whitespace. That is formatting, not misbehaviour. Normalise it
+ * rather than failing the run.
+ */
+export function normaliseFile(raw) {
+  let t = String(raw ?? '')
+  t = t.replace(/^\uFEFF/, '')
+  const fence = t.match(/^\s*```[a-zA-Z]*\n([\s\S]*?)\n```\s*$/)
+  if (fence) t = fence[1]
+  const start = t.indexOf('---')
+  if (start > 0 && !t.slice(0, start).includes('---')) t = t.slice(start)
+  t = t.trimStart()
+  if (!t.endsWith('\n')) t += '\n'
+  return t
+}
+
+/** YAML turns 2.14 into a float and dates into Date objects. Normalise both. */
+export function normaliseTypes(v) {
+  if (v instanceof Date) return v.toISOString().slice(0, 10)
+  if (Array.isArray(v)) return v.map(normaliseTypes)
+  if (v && typeof v === 'object') {
+    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, normaliseTypes(x)]))
+  }
+  return v
+}
+
+let validateItem = null
+function itemValidator(schemaPath) {
+  if (validateItem) return validateItem
+  const Ajv = require('ajv')
+  const addFormats = require('ajv-formats')
+  const ajv = new (Ajv.default ?? Ajv)({ allErrors: true, strict: false })
+  ;(addFormats.default ?? addFormats)(ajv)
+  validateItem = ajv.compile(JSON.parse(readFileSync(schemaPath, 'utf8')))
+  return validateItem
+}
+
+/**
+ * Full schema validation before anything is written, using the same validator
+ * CI uses — one definition of valid, checked at the earliest possible moment.
+ */
+/**
+ * Structural checks only — front matter present, parseable, and not claiming
+ * human review. No schema, no dependencies beyond the YAML parser, so this can
+ * be tested in isolation. It is where the pipeline has broken twice.
+ */
+export function checkStructure(text) {
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!m) return { ok: false, reason: 'no front matter' }
+
+  const yaml = require('js-yaml')
+  let data
+  try {
+    data = normaliseTypes(yaml.load(m[1]))
+  } catch (e) {
+    return { ok: false, reason: `unparseable YAML — ${String(e.message).split('\n')[0]}` }
+  }
+
+  if (!data?.id) return { ok: false, reason: 'no id field' }
+  if (!data.review) return { ok: false, reason: 'no review block' }
+  if (data.review.state === 'reviewed')
+    return { ok: false, reason: 'claims review.state: reviewed — agents may not' }
+  if (data.review.by === 'human')
+    return { ok: false, reason: 'claims review.by: human — agents may not' }
+  return { ok: true, id: data.id, data }
+}
+
+/** Structural checks, then the full schema. Same validator CI uses. */
+export function checkFile(text, schemaPath = 'content/schema/frontier.schema.json') {
+  const base = checkStructure(text)
+  if (!base.ok) return base
+  const data = base.data
+
+  const validate = itemValidator(schemaPath)
+  if (!validate(data)) {
+    const first = validate.errors
+      .slice(0, 3)
+      .map((e) => `${e.instancePath || '/'} ${e.message}`)
+      .join('; ')
+    return { ok: false, reason: `schema: ${first}` }
+  }
+  return { ok: true, id: data.id }
+}

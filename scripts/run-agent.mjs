@@ -15,9 +15,7 @@
  */
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
-import Ajv from 'ajv'
-import addFormats from 'ajv-formats'
-import yaml from 'js-yaml'
+import { extractJson, normaliseFile, checkFile } from './agent-io.mjs'
 
 const agent = process.argv[2]
 if (!agent) {
@@ -167,59 +165,6 @@ if (data.stop_reason === 'max_tokens') {
   process.exit(1)
 }
 
-/**
- * Finding the answer in the response.
- *
- * With web search on, the reply is running commentary interleaved with tool
- * calls, and the JSON object can be split across several text blocks. Trying
- * each block in isolation fails, because no single block holds the whole
- * object. So: scan for balanced braces across the joined text, respecting
- * strings and escapes, and take the last object that actually looks like our
- * output contract.
- */
-function balancedObjects(text) {
-  const out = []
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] !== '{') continue
-    let depth = 0
-    let inStr = false
-    let esc = false
-    for (let j = i; j < text.length; j++) {
-      const c = text[j]
-      if (esc) { esc = false; continue }
-      if (c === '\\') { esc = true; continue }
-      if (c === '"') { inStr = !inStr; continue }
-      if (inStr) continue
-      if (c === '{') depth++
-      else if (c === '}') {
-        depth--
-        if (depth === 0) { out.push(text.slice(i, j + 1)); i = j; break }
-      }
-    }
-  }
-  return out
-}
-
-function extractJson(chunks) {
-  // Last block first — usually the answer. Then the whole thing joined, which
-  // is what catches an object split across blocks.
-  const candidates = [...[...chunks].reverse(), chunks.join('\n')]
-  for (const chunk of candidates) {
-    const cleaned = chunk.replace(/```(?:json)?/g, '')
-    for (const obj of balancedObjects(cleaned).reverse()) {
-      try {
-        const parsed = JSON.parse(obj)
-        // Must match the output contract, so prose containing braces and any
-        // stray object the model wrote along the way are both ignored.
-        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.files)) return parsed
-      } catch {
-        /* not this one */
-      }
-    }
-  }
-  return null
-}
-
 const text = blocks.join('\n').trim()
 
 /* ---------- write ---------- */
@@ -238,78 +183,6 @@ const inScope = (p) =>
     const rx = new RegExp('^' + s.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*\*/g, '§').replace(/\*/g, '[^/]*').replace(/§/g, '.*') + '$')
     return rx.test(p)
   })
-
-/**
- * Models wrap file contents in markdown fences, add a heading above the front
- * matter, or leave stray whitespace. None of that is misbehaviour worth failing
- * a run over — it is formatting. Normalise it here rather than letting a broken
- * file reach the repository.
- */
-function normaliseFile(raw) {
-  let t = String(raw ?? '')
-  t = t.replace(/^\uFEFF/, '')
-  // Strip an outer code fence if the whole file is wrapped in one.
-  const fence = t.match(/^\s*```[a-zA-Z]*\n([\s\S]*?)\n```\s*$/)
-  if (fence) t = fence[1]
-  // Drop anything before the front matter opener.
-  const start = t.indexOf('---')
-  if (start > 0 && !t.slice(0, start).includes('---')) t = t.slice(start)
-  t = t.trimStart()
-  if (!t.endsWith('\n')) t += '\n'
-  return t
-}
-
-/**
- * Full schema validation, here, before anything is written.
- *
- * The earlier version only checked that front matter existed. That let a file
- * with an unknown field reach the board and fail at the very last gate, after
- * promotion — which is both later and harder to read than failing here.
- * Same validator CI uses, so there is one definition of valid.
- */
-const ajv = new Ajv({ allErrors: true, strict: false })
-addFormats(ajv)
-const validateItem = ajv.compile(
-  JSON.parse(readFileSync('content/schema/frontier.schema.json', 'utf8')),
-)
-
-/** YAML turns 2.14 into a float and `on` into a boolean. Normalise both. */
-function normaliseTypes(v) {
-  if (v instanceof Date) return v.toISOString().slice(0, 10)
-  if (Array.isArray(v)) return v.map(normaliseTypes)
-  if (v && typeof v === 'object') {
-    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, normaliseTypes(x)]))
-  }
-  return v
-}
-
-function checkFile(text) {
-  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!m) return { ok: false, reason: 'no front matter' }
-
-  let data
-  try {
-    data = normaliseTypes(yaml.load(m[1]))
-  } catch (e) {
-    return { ok: false, reason: `unparseable YAML — ${e.message.split('\n')[0]}` }
-  }
-
-  if (!data?.id) return { ok: false, reason: 'no id field' }
-  if (!data.review) return { ok: false, reason: 'no review block' }
-  if (data.review.state === 'reviewed')
-    return { ok: false, reason: 'claims review.state: reviewed — agents may not' }
-  if (data.review.by === 'human')
-    return { ok: false, reason: 'claims review.by: human — agents may not' }
-
-  if (!validateItem(data)) {
-    const first = validateItem.errors
-      .slice(0, 3)
-      .map((e) => `${e.instancePath || '/'} ${e.message}`)
-      .join('; ')
-    return { ok: false, reason: `schema: ${first}` }
-  }
-  return { ok: true, id: data.id }
-}
 
 const files = (out.files ?? []).slice(0, cfg.budget?.proposals ?? 6)
 const written = []
