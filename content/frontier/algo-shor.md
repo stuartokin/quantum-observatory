@@ -65,10 +65,11 @@ novelty: incremental
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Shor''s algorithm (1994) solves integer factorisation and the discrete logarithm problem in polynomial quantum time, breaking RSA, ECC, and Diffie-Hellman key exchange on any sufficiently large fault-tolerant quantum computer. The peer-reviewed baseline resource estimate (Gidney+Ekerå, *Quantum* 5, 433, 2021) puts the requirement at approximately 20 million noisy physical qubits to factor RSA-2048 in 8 hours, under realistic superconducting hardware assumptions. A 2025 preprint from Google Quantum AI (Gidney, arXiv:2505.15917) revises this to under one million qubits — a 20-fold reduction from algorithmic improvements alone. Experimental demonstrations of Shor's algorithm remain limited to factoring small numbers (15, 21) without error correction; the algorithm has not been run on cryptographically relevant inputs on any platform.

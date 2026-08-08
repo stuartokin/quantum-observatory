@@ -49,10 +49,11 @@ links:
     relation: depends-on
 origin: human
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Hardware roots of trust are the bottom of the cryptographic stack. The first FIPS 140-3 certified TPMs now use a PQC algorithm (LMS) to authenticate firmware updates and support ML-KEM/ML-DSA via field upgrade. Full combined PQC and FIPS 140-3 Level 3 validation remains in process across all major HSM vendors.

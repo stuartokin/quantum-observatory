@@ -66,10 +66,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Break-even logical fidelity — where the error-corrected logical qubit outlives the best physical qubit — is a foundational milestone for fault-tolerant quantum computing. Google's 2025 Nature paper demonstrates this on the 105-qubit Willow superconducting processor using a distance-7 surface code spanning 101 physical qubits. The logical error rate of 0.143% per cycle halves when the code distance is increased from 5 to 7, confirming exponential suppression and below-threshold operation. Real-time decoding at distance 5 achieves 63 µs average latency across one million cycles. The result does not demonstrate logical gate operations or an algorithm — those remain future work.

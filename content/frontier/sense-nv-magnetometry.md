@@ -48,10 +48,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Nitrogen-vacancy (NV) centres in diamond are point defects whose electron spin states can be initialised and read out optically at room temperature. The spin transition frequency shifts with magnetic field, making them compact, calibration-free magnetic sensors. The 2024 Tokyo Tech result achieved the highest reported room-temperature sensitivity for an NV ensemble without magnetic flux concentrators, opening a path toward ambient-condition magnetoencephalography (brain imaging).

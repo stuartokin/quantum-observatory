@@ -58,10 +58,11 @@ novelty: beyond-classical demonstration on physics simulation
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Quantum annealing encodes combinatorial optimisation and physics-simulation problems as an Ising Hamiltonian and exploits quantum tunnelling to search the energy landscape. D-Wave has operated cloud-accessible superconducting annealers commercially since 2011, scaling to ~5,000 qubits on the Advantage and Advantage2 systems.

@@ -57,10 +57,11 @@ confidence: high
 status: published
 origin: human
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Cat qubits encode quantum information in superpositions of coherent states of a microwave cavity. The nonlinear dissipation that stabilises the encoding strongly suppresses bit-flip errors, making only phase-flip errors the dominant noise channel. A simple classical repetition code — much cheaper in hardware than the surface code — can then correct the remaining phase flips.

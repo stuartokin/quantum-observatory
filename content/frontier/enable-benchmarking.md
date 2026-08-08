@@ -46,10 +46,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Cross-platform benchmarking provides the measurement science needed to compare quantum processors honestly. Without it, vendors publish incomparable numbers and users cannot choose between systems. The 2025 Nature Reviews Physics survey by Proctor et al. (Sandia National Laboratories) is the field's current reference: it classifies benchmarks by what they actually measure, critiques existing approaches, and maps the open problems. No formal standard body has yet ratified a cross-platform benchmark suite.

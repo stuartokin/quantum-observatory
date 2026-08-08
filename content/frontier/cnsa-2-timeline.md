@@ -52,10 +52,11 @@ moved:
   from: emerging
   on: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 CNSA 2.0 is the US government's most operationally specific quantum-migration mandate. It names algorithms, product categories, and calendar dates. The 2030 deadline for networking equipment is already driving vendor product roadmaps. Evidence is raised to E4: this is a formal published government technical advisory with clear, enforceable dates — not a proposal. Readiness correctly sits at adopted: it is on published migration roadmaps and driving procurement requirements.

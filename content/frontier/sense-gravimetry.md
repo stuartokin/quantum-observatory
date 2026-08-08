@@ -39,10 +39,11 @@ horizon: 2
 novelty: 'First below-SQL gravimetry with entangled BEC atoms'
 priority: P2
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Quantum gravimetry uses cold-atom interferometry to measure local gravitational acceleration absolutely — without the drift that accumulates in spring-based relative gravimeters. In the Cassens et al. 2025 experiment at Leibniz Universität Hannover, Bose-Einstein condensates were entangled using spin dynamics before entering a Mach-Zehnder interferometer sensitive to gravitational acceleration. The sensitivity of −1.7 dB below the standard quantum limit is the first demonstration of entanglement-enhanced sensitivity in a gravity measurement using a momentum-state interferometer. Delta-kick collimation minimises atom loss and improves scalability toward very-long-baseline atom interferometers proposed for dark-matter detection and gravitational-wave sensing.

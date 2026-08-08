@@ -61,10 +61,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 The Micius satellite (launched August 2016, ~500 km LEO) was the first platform to demonstrate QKD across intercontinental distances. Liao et al. (2017) showed decoy-state QKD to the Xinglong ground station over distances from 645 km to 1,200 km, with key rates exceeding 1 kbps — vastly more efficient than any fibre alternative at those distances. The experiment ran on 23 different days, confirming operational reliability across varied atmospheric conditions.

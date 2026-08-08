@@ -46,10 +46,11 @@ horizon: 1
 novelty: 'First Common Criteria-certified protection profile for QKD modules'
 priority: P2
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Quantum key distribution encodes encryption keys in single photons whose quantum states cannot be copied without detection. The BB84 prepare-and-measure protocol remains the most widely deployed variant. QKD systems are shipping commercially and deployed in national test networks in China, Japan, and Europe. ETSI ISG QKD published GS QKD 016 V2.1.1 in January 2024 — the first QKD specification registered under Common Criteria (BSI-CC-PP-0120-2024), evaluated at EAL4 augmented with AVA_VAN.5 and ALC_DVS.2. This is a standardisation milestone that anchors the 'demonstrated' readiness rating. Note important limitations: QKD secures point-to-point links but requires trusted relay nodes over long distances and specialised optical hardware. It does not replace post-quantum cryptography for most use cases and is distinct from it.

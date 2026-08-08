@@ -65,10 +65,11 @@ novelty: incremental
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 A cryptographically relevant quantum computer (CRQC) is a fault-tolerant machine capable of running Shor''s algorithm to break RSA-2048 or ECC-256 in a practically relevant timeframe. No such machine exists as of mid-2026. The Global Risk Institute Quantum Threat Timeline Report 2025 surveyed 26 international experts and found the probability of a CRQC within 10 years now rated at 28–49%, the highest figure in the survey's seven-year history. US policy response is embodied in NIST IR 8547, which proposes deprecating RSA and elliptic-curve algorithms for federal systems by 2030 and disallowing them entirely by 2035. The migration window implied by these two timelines — expert probability rising and policy deadlines fixed — is the primary driver of urgency across the migration constellation.

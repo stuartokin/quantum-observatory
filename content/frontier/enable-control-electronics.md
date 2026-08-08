@@ -56,10 +56,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Superconducting qubits live inside dilution refrigerators cooled to millikelvin temperatures. Controlling them has traditionally required thousands of cables routed from room-temperature electronics — a wiring problem that grows worse as qubit counts increase. One solution is to place the control electronics inside the refrigerator itself. IBM Research demonstrated a 14 nm CMOS chip that operates at 4 K, generating the microwave pulses needed to control transmon qubits and successfully performing a two-qubit gate. The chip consumed just 23 mW per qubit and achieved gate errors comparable to room-temperature control systems, showing that cryogenic integration is feasible.

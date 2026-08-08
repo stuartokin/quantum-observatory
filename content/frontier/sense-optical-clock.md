@@ -42,10 +42,11 @@ horizon: 1
 novelty: 'First sea trial of laser-cooled optical atomic clocks'
 priority: P2
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Optical atomic clocks achieve fractional frequency stabilities at the 10⁻¹⁷ level — roughly 100-fold superior to the microwave caesium standards that underpin GPS and telecommunications networks. The drawback has been size, complexity, and sensitivity to vibration. Hilton et al. (University of Adelaide / DSTG / AFRL, Nature Communications 2025) deployed three independent optical clock designs — each using different laser-cooling and atomic-transition principles — aboard a Royal Australian Navy vessel for three weeks of unsupervised operation during the RIMPAC 2022 international exercise in Hawaiian waters. All three provided stable outputs across optical, microwave, and radio-frequency domains, with performance orders of magnitude beyond the best commercial alternatives at short and medium timescales. This is the first sea demonstration of laser-cooled optical clocks and a direct step toward GPS-independent precision navigation, telecommunications synchronisation, and geodetic applications.

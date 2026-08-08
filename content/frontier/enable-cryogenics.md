@@ -50,10 +50,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Dilution refrigerators are the enabling infrastructure for superconducting qubit platforms. The ETH Zurich 2019 study — a systematic engineering measurement rather than a physics experiment — characterises how passive conduction and active signal dissipation through coaxial cables load each temperature stage of a commercial dilution refrigerator. It validates a thermally optimised design capable of hosting ~50 qubits at 14 mK, with ~150 qubits estimated to be feasible before the physical cabling volume becomes the binding constraint. The paper remains the canonical engineering reference for cryogenic wiring design at processor scale.

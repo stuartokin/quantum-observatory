@@ -49,10 +49,11 @@ links:
     relation: enables
 origin: human
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 A CBOM answers the question every PQC migration starts with: what cryptography are we actually running? CycloneDX v1.6 formalised the format; NIST SP 1800-38B showed organisations how to generate one.

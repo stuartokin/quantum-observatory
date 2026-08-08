@@ -45,10 +45,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Rydberg RF sensing uses electromagnetically induced transparency (EIT) to read out the spin state of highly excited atoms in a glass vapour cell. The cell acts as an all-dielectric, self-calibrating receiver whose sensitivity is tied to fundamental atomic transition frequencies rather than to an engineered antenna. NIST's 2024 review covers SI traceability, sensitivity limits, and applications including voltage standards and communications receivers, consolidating work from multiple experimental groups.

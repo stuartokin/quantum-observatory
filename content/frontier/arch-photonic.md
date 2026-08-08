@@ -66,10 +66,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Photonic quantum computing uses photons — particles of light — as qubits. Their insensitivity to thermal noise means no dilution refrigerator is needed, which matters enormously for scaling. The fundamental obstacle is that photons do not naturally interact, so entangling two photonic qubits requires probabilistic techniques or ancilla photons. PsiQuantum's May 2025 Nature paper reported the first manufacturable platform: a chipset built in GlobalFoundries' commercial 300mm silicon-photonics process, demonstrating component fidelities above 99% for single-qubit operations, fusion gates, and 42-metre chip-to-chip links. All fidelities are conditional on detecting a photon — optical loss remains the main engineering challenge for scale-up. The result is a component demonstration, not a working quantum processor; fault-tolerant logical computation in this modality has not yet been shown.

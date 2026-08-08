@@ -55,10 +55,11 @@ moved:
   from: demonstrated
   on: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Cryptographic discovery is the unglamorous prerequisite for every quantum migration: you cannot replace what you cannot find. The CISA September 2024 strategy mandates pilot deployment of automated tools across US civilian agencies. NIST SP 1800-38B is honest that most required data items cannot yet be collected automatically. Readiness is revised from demonstrated to experimental — the tools exist and are being piloted, but routine enterprise-scale deployment is not established. Evidence is E2: the sources describe prototype demonstrations and a federal strategy document, not a peer-reviewed experimental result.
