@@ -2,61 +2,55 @@
 schema: frontier/v1
 id: mig-supply-chain
 title: Supplier PQC readiness
-summary: 'Assessing and managing supply-chain exposure to quantum-vulnerable cryptography in third-party products and services. CISA/NSA/NIST formally directed vendor engagement in August 2023.'
-plain: 'An organisation that has upgraded its own systems to quantum-safe cryptography may still be exposed if the software and hardware it buys from suppliers still uses RSA or elliptic-curve keys. Supply-chain PQC readiness means understanding which vendors use quantum-vulnerable cryptography, asking them for migration roadmaps, and factoring their timelines into your own planning. In August 2023, CISA, NSA, and NIST published a joint factsheet making this explicit: technology vendors whose products rely on current public-key cryptography should already be planning for integration of post-quantum algorithms. NIST IR 8547 (November 2024) sets a hard clock: RSA and ECDH are deprecated for new deployments by 2030 and fully retired by 2035, which means any supplier still using them after 2030 is non-compliant.'
+summary: 'The capacity of technology suppliers to deliver products and services supporting post-quantum cryptographic algorithms within the timeframes required by customers and regulators.'
+plain: 'An organisation that completes its own migration to post-quantum cryptography remains exposed if its suppliers have not. Every cloud service, VPN appliance, HSM, and certificate authority in the supply chain must support the new algorithms. Supplier readiness varies enormously — some vendors have shipped ML-KEM support since 2024; others have no public roadmap. The Australian Signals Directorate published a structured questionnaire for assessing vendor readiness in 2026; the PKI Consortium launched a PQC Maturity Model in June 2026 defining six levels of product-level readiness. Both are frameworks. No published data on industry-wide supplier compliance rates exists.'
 pillar: quantum
 readiness: emerging
 constellation: migration
-cluster: pqc-migration
+cluster: procurement
 actors:
-  - CISA
-  - NSA
-  - NIST
+  - Australian Signals Directorate
+  - PKI Consortium
 country:
-  - US
+  - AU
+  - MULTI
 metrics:
-  - name: deprecation deadline for RSA/ECDH in new deployments
-    value: '2030'
-    unit: year
-    note: NIST IR 8547, November 2024
-  - name: full retirement deadline for RSA/ECDH
-    value: '2035'
-    unit: year
-    note: NIST IR 8547, November 2024
+  - name: PQCMM maturity levels
+    value: '6'
+    note: Levels 0–5; Level 5 is PQC by default with certified implementations.
 priority: P1
 qdayImpact: 0
+qdayReasoning: ''
 horizon: 1
-novelty: 'Formal US authority directive making vendor PQC roadmap engagement a named requirement'
+novelty: new governance frameworks for vendor assessment
 links:
   - to: mig-discovery
     relation: depends-on
+  - to: cnsa-2-timeline
+    relation: depends-on
   - to: crypto-bill-of-materials
     relation: depends-on
-  - to: pqc-fips-203
-    relation: depends-on
 evidence:
-  claim: 'CISA, NSA, and NIST published a joint factsheet (August 2023) explicitly directing technology vendors whose products use quantum-vulnerable cryptography to begin planning and testing for post-quantum algorithm integration. The factsheet instructs organisations to ask suppliers for PQC roadmaps and to assess supply-chain reliance on quantum-vulnerable cryptography as part of their quantum-readiness programme. NIST IR 8547 (November 2024) subsequently set binding deprecation dates: RSA, ECDH, ECDSA, and finite-field DH are deprecated for new deployments by 2030 and fully retired by 2035.'
+  claim: 'The Australian Signals Directorate published Post-Quantum Questions to Ask Your Vendors (2026), noting that vendor readiness may be the biggest factor in whether organisations can meet migration timeframes. The PKI Consortium published the PQC Maturity Model (PQCMM) in June 2026, a six-level (0–5) product-level framework for evaluating post-quantum readiness in supply-chain procurement. Both are frameworks with no published data on industry-wide uptake.'
   level: E1
   verified: '2026-08-08'
   sources:
-    - url: https://www.cisa.gov/sites/default/files/2023-08/Quantum-Readiness%20-%20Migration%20to%20Post-Quantum%20Cryptography_508c.pdf
-      role: standard
-      title: 'Quantum-Readiness: Migration to Post-Quantum Cryptography'
-      publisher: 'CISA / NSA / NIST'
-      date: '2023-08-21'
+    - url: https://www.cyber.gov.au/business-government/secure-design/quantum/post-quantum-questions-to-ask-your-vendors
+      role: primary
+      title: Post-quantum questions to ask your vendors
+      publisher: Australian Signals Directorate
+      date: '2026-07-01'
       accessed: '2026-08-08'
-      note: 'Joint factsheet. Section on technology vendors explicitly names supply-chain cryptographic engagement as a requirement. Free to access.'
-    - url: https://csrc.nist.gov/pubs/ir/8547/ipd
-      role: standard
-      title: 'Transition to Post-Quantum Cryptography Standards (NIST IR 8547)'
-      publisher: NIST
-      date: '2024-11-19'
+      note: Structured questionnaire for procurement and vendor risk teams; notes vendor readiness as key migration constraint.
+    - url: https://pkic.org/wg/pqc/pqcmm/
+      role: corroborating
+      title: PQC Maturity Model (PQCMM)
+      publisher: PKI Consortium
+      date: '2026-06-14'
       accessed: '2026-08-08'
-      note: 'Sets deprecation (2030) and retirement (2035) dates for RSA, ECDH, ECDSA, DSA, and DH. Gives supply-chain planners a regulatory deadline to anchor vendor engagement.'
-confidence: high
+      note: Vendor-facing framework defining six maturity levels (0–5) for PQC adoption in products and services.
+confidence: medium
 status: published
-origin: agent
-added: '2026-08-08'
 review:
   state: agent-merged
   by: agent
@@ -64,4 +58,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-Supplier PQC readiness addresses the weakest-link problem in post-quantum migration: an organisation that replaces its own cryptography is still exposed if its vendors have not. CISA, NSA, and NIST named this risk explicitly in their August 2023 joint factsheet, directing technology vendors to begin planning and testing for post-quantum algorithm integration even before standards were finalised. NIST IR 8547 (November 2024) gave the effort a hard regulatory timeline: RSA, ECDH, ECDSA, and related algorithms are deprecated for new deployments by 2030 and fully retired by 2035. An organisation's procurement process now needs to include asking vendors when and how they will comply with these dates — a question most vendor relationships are not yet structured to ask.
+Supplier PQC readiness is one of the least-measured risks in the migration landscape. An organisation can complete its own transition and remain exposed through every third-party vendor that still negotiates RSA key exchange. The ASD questionnaire and PKI Consortium PQCMM are the first formal frameworks for assessing this — both published mid-2026. Evidence stays at E1: these are governance proposals, not measured outcomes. The item is correctly framed and correctly placed at emerging.

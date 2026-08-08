@@ -2,69 +2,60 @@
 schema: frontier/v1
 id: algo-shor
 title: Shor factoring at scale
-summary: 'Shor''s algorithm can factor RSA-2048 integers and solve P-256 discrete logarithms, but requires fault-tolerant hardware not yet built. Resource estimates have fallen two orders of magnitude since 2019.'
-plain: 'Shor''s algorithm is a quantum recipe that can break the RSA and elliptic-curve encryption protecting most of the internet — but only if run on a very large, very reliable quantum computer. No such machine exists yet. What has changed rapidly is how large "very large" needs to be. In 2021, the best estimate required 20 million physical qubits. By May 2025, Craig Gidney (Google) cut that to under one million for a superconducting machine. In March 2026, a team at Oratomic and Caltech showed that a neutral-atom machine with as few as 10,000 physical qubits could in principle run the algorithm at cryptographically relevant scale, assuming engineering targets not yet demonstrated. These are theoretical resource estimates, not demonstrations of factoring large numbers.'
+summary: 'Shor''s algorithm factors large integers exponentially faster than classical methods, threatening RSA and ECC. No quantum computer has run it at cryptographically relevant scale; the best resource estimate now places that bar below one million physical qubits.'
+plain: 'Peter Shor''s 1994 algorithm finds the prime factors of a large number exponentially faster than any known classical method. Breaking RSA-2048 — the encryption used across the internet — would require running it on a very large, very reliable quantum computer. The best current estimate (Gidney, 2025) puts that at under one million physical qubits running for less than a week, which is 20 times fewer qubits than the 2019 estimate. Real quantum computers have so far only factored integers up to 35 without mathematical shortcuts.'
 pillar: quantum
 readiness: emerging
 constellation: algorithms
-cluster: cryptanalytic-threat
+cluster: cryptanalysis
 actors:
-  - Oratomic
-  - Caltech
-  - UC Berkeley
   - Google Quantum AI
 country:
   - US
 metrics:
-  - name: physical qubits for RSA-2048 (superconducting, surface code)
+  - name: 'largest integer factored on real hardware (no shortcuts)'
+    value: '35'
+    note: Integers 15, 21 and 35 factored on real devices; beyond 35 poses substantial experimental challenges.
+  - name: estimated physical qubits for RSA-2048 (Gidney 2025)
     value: '<1000000'
     unit: physical qubits
-    note: Gidney 2025 estimate; assumes 0.1% gate error, 1 µs cycle time
-  - name: physical qubits for P-256 ECDLP (neutral atom, high-rate codes)
-    value: '~10000'
-    unit: physical qubits
-    note: Cain et al. 2026 theoretical minimum; runtime days at 26k qubits
-  - name: estimated runtime for P-256 at 26k qubits
-    value: 'few days'
-    unit: runtime
-    note: Cain et al. 2026, under plausible engineering assumptions
+    note: 'Assumes 0.1% gate error rate, surface code, 1 µs cycle time; runtime under one week.'
 priority: P0
 qdayImpact: 2
-qdayReasoning: 'Resource estimates for cryptanalytically relevant Shor''s algorithm have fallen by two orders of magnitude in five years (20M qubits in 2021 → <1M in 2025 → ~10k for neutral atoms in 2026). Each reduction compresses the engineering gap between current hardware and a CRQC. The 2026 Cain et al. estimate assumes high-rate qLDPC codes and non-local connectivity not yet achieved at scale, so it is a theoretical floor rather than a near-term engineering target. The trajectory nonetheless materially shortens the credible timeline if hardware progress continues at recent rates. Impact scored +2 rather than +3 because the estimates remain theoretical — no large-number factoring has been demonstrated.'
+qdayReasoning: 'The 2025 Gidney resource estimate reduces the physical qubit threshold for breaking RSA-2048 by 20× relative to 2019. This does not advance hardware timelines directly, but lowers the engineering bar and narrows the gap between roadmap machines and cryptographic relevance. The Global Risk Institute 2024 survey already reflects this acceleration: probability of CRQC within 10 years rose from 17–31% (2023) to 19–34% (2024). Scored +2 rather than +3 because no hardware milestone accompanied the algorithmic improvement.'
 horizon: 3
-novelty: 'Resource estimates fell 2 orders of magnitude 2021–2026; 10k neutral-atom qubits proposed as theoretical minimum'
+novelty: major reduction in resource estimate
 links:
   - to: crqc
     relation: evidence-for
-  - to: arch-neutral-atom
-    relation: depends-on
-  - to: qec-qldpc-bivariate-bicycle
+  - to: algo-resource-estimation
+    relation: enables
+  - to: qec-below-threshold-surface-code
     relation: depends-on
 evidence:
-  claim: 'Gidney (arXiv:2505.15917, 2025) estimates RSA-2048 can be factored in under a week by a quantum computer with fewer than one million noisy superconducting qubits, reducing the 2021 estimate of 20 million by over 20x. Cain et al. (arXiv:2603.28627, 2026) show that by using high-rate qLDPC codes and non-local neutral-atom connectivity, the physical qubit minimum for cryptographically relevant Shor''s algorithm falls to approximately 10,000, with P-256 discrete logarithms solvable in days at 26,000 qubits. Both are theoretical resource estimates; no RSA-relevant factoring has been demonstrated on hardware.'
+  claim: 'Gidney (2025, arXiv 2505.15917) estimates that a 2048-bit RSA integer can be factored in less than a week by a quantum computer with fewer than one million noisy physical qubits — a 20× reduction from the 2019 Gidney–Ekerå estimate of 20 million qubits. Real hardware demonstrations have factored integers only up to 35 without mathematical shortcuts; integers beyond 35 pose substantial experimental challenges.'
   level: E3
   verified: '2026-08-08'
   sources:
     - url: https://arxiv.org/abs/2505.15917
-      role: primary
-      title: 'How to factor 2048 bit RSA integers with less than a million noisy qubits'
+      role: preprint
+      title: How to factor 2048 bit RSA integers with less than a million noisy qubits
       publisher: arXiv
       date: '2025-05-21'
-      identifier: 'arXiv:2505.15917'
+      identifier: arXiv:2505.15917
       accessed: '2026-08-08'
-      note: 'Craig Gidney (Google). Updates Gidney+Ekerå 2021. Same hardware assumptions (0.1% error, 1 µs cycle), qubit count reduced 20x via approximate residue arithmetic and yoked surface codes.'
-    - url: https://arxiv.org/abs/2603.28627
-      role: preprint
-      title: 'Shor''s algorithm is possible with as few as 10,000 reconfigurable atomic qubits'
-      publisher: arXiv
-      date: '2026-03-31'
-      identifier: 'arXiv:2603.28627'
+      note: 'Craig Gidney, Google Quantum AI. Reduces Toffoli count by >100× vs Chevignard 2024; same physical assumptions as GE 2019.'
+    - url: https://www.mdpi.com/2227-7390/11/19/4222
+      role: corroborating
+      title: Large-Scale Simulation of Shor''s Quantum Factoring Algorithm
+      publisher: Mathematics (MDPI)
+      date: '2023-10-09'
+      identifier: 'Mathematics 11(19), 4222'
+      doi: 10.3390/math11194222
       accessed: '2026-08-08'
-      note: 'Cain, Xu et al. (Oratomic/Caltech/UC Berkeley). Theoretical resource estimate using high-rate qLDPC codes and neutral-atom non-local connectivity. Not peer-reviewed at time of access.'
+      note: Confirms hardware demonstrations reach 35; beyond 35 poses substantial experimental challenges.
 confidence: high
 status: published
-origin: agent
-added: '2026-08-08'
 review:
   state: agent-merged
   by: agent
@@ -72,4 +63,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-Shor's algorithm is the quantum procedure that would break RSA and elliptic-curve encryption if run at scale. The algorithm itself is proven; the question is how many physical qubits a machine needs. That number has fallen sharply: from an estimated 20 million in 2021, to under one million (Gidney, 2025) for a superconducting architecture, to a theoretical floor of roughly 10,000 for a neutral-atom machine using advanced error-correcting codes (Cain et al., 2026). Both the 2025 and 2026 figures are paper estimates against hardware that does not yet exist at that scale — no device has factored a number large enough to threaten real cryptography. The significance is the trajectory: engineering targets are moving closer to what current hardware can plausibly reach within a decade.
+Shor's algorithm is the quantum threat that drives the entire post-quantum cryptography migration. It factors large integers exponentially faster than classical computers, which would break RSA and elliptic-curve cryptography if run at scale. Real hardware has only managed numbers up to 35 without mathematical shortcuts. The 2025 Gidney preprint is the most current authoritative resource estimate: under one million physical qubits, under one week — 20 times fewer qubits than the 2019 estimate, achieved through approximate modular arithmetic and denser qubit storage. The hardware to run this does not yet exist.
