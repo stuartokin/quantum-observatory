@@ -87,62 +87,82 @@ for (const { path, data } of all) {
 /* ---- Rules 2 and 3: agent commits only ---- */
 
 if (agent) {
-  const base = process.env.BASE_REF || 'origin/main'
-  let changed = []
-  try {
-    changed = execSync(`git diff --name-only ${base}...HEAD`, { encoding: 'utf8' })
-      .split('\n')
-      .filter(Boolean)
-  } catch {
-    console.warn('Could not diff against base; checking all files instead.')
-    changed = all.map((i) => i.path)
-  }
+  /**
+   * Which files did this agent actually write?
+   *
+   * The runner records them. That is authoritative and needs no git history.
+   * A diff against origin/main is the fallback, and if neither is available we
+   * check nothing agent-specific — because the previous behaviour, checking
+   * every file on the board, reported dozens of human-reviewed items as agent
+   * forgeries. A gate that cries wolf is a gate that gets ignored.
+   */
+  let changed = null
 
-  for (const path of changed) {
-    if (!path.endsWith('.md')) continue
-    const item = all.find((i) => i.path === path)
-    if (!item) continue
-
-    // Rule 2 — the core safeguard.
-    if (item.data?.review?.state === 'reviewed') {
-      errors.push(
-        `${path}: agent "${agent}" wrote review.state: reviewed. ` +
-          `Agents may only write agent-merged. Only a human marks something reviewed.`,
+  if (existsSync('.agent-run/written.txt')) {
+    changed = readFileSync('.agent-run/written.txt', 'utf8').split('\n').filter(Boolean)
+    console.log(`  scope: ${changed.length} file(s) written by ${agent}`)
+  } else {
+    const base = process.env.BASE_REF || 'origin/main'
+    try {
+      changed = execSync(`git diff --name-only ${base}...HEAD`, { encoding: 'utf8' })
+        .split('\n')
+        .filter(Boolean)
+      console.log(`  scope: ${changed.length} file(s) changed against ${base}`)
+    } catch {
+      console.warn(
+        `  Could not determine which files ${agent} wrote — no .agent-run/written.txt\n` +
+          '  and no merge base. Skipping the agent-specific checks rather than\n' +
+          '  reporting every file on the board as an agent change.',
       )
     }
-    if (item.data?.review?.by === 'human') {
-      errors.push(`${path}: agent "${agent}" claimed review.by: human.`)
-    }
+  }
 
-    // Rule 3 — professional risk, not technical risk. No label fixes this.
-    const hay = item.body.toLowerCase()
-    for (const term of ESCALATE) {
-      if (hay.includes(term)) {
+  if (changed) {
+    for (const path of changed) {
+      if (!path.endsWith('.md')) continue
+      const item = all.find((i) => i.path === path)
+      if (!item) continue
+
+      // Rule 2 — the core safeguard.
+      if (item.data?.review?.state === 'reviewed') {
         errors.push(
-          `${path}: mentions "${term}". Agents may not auto-merge anything naming ` +
-            `Ofgem, a live consultation or a regulatory position. This needs a human.`,
+          `${path}: agent "${agent}" wrote review.state: reviewed. ` +
+            `Agents may only write agent-merged. Only a human marks something reviewed.`,
         )
+      }
+      if (item.data?.review?.by === 'human') {
+        errors.push(`${path}: agent "${agent}" claimed review.by: human.`)
+      }
+
+      // Rule 3 — professional risk, not technical risk. No label fixes this.
+      const hay = item.body.toLowerCase()
+      for (const term of ESCALATE) {
+        if (hay.includes(term)) {
+          errors.push(
+            `${path}: mentions "${term}". Agents may not auto-merge anything naming ` +
+              `Ofgem, a live consultation or a regulatory position. This needs a human.`,
+          )
+        }
       }
     }
 
-    // Deletions are handled by the diff below, not here.
-  }
-
-  // Rule 3b — agents propose removals, humans action them.
-  try {
-    const deleted = execSync(`git diff --diff-filter=D --name-only ${base}...HEAD`, {
-      encoding: 'utf8',
-    })
-      .split('\n')
-      .filter((p) => p.startsWith('content/frontier/') && p.endsWith('.md'))
-    for (const d of deleted) {
-      errors.push(
-        `${d}: agent "${agent}" deleted a published item. Agents propose removals; ` +
-          `humans action them. A quiet deletion is how something vanishes unnoticed.`,
-      )
+    // Rule 3b — agents propose removals, humans action them.
+    try {
+      const base = process.env.BASE_REF || 'origin/main'
+      const deleted = execSync(`git diff --diff-filter=D --name-only ${base}...HEAD`, {
+        encoding: 'utf8',
+      })
+        .split('\n')
+        .filter((p) => p.startsWith('content/frontier/') && p.endsWith('.md'))
+      for (const d of deleted) {
+        errors.push(
+          `${d}: agent "${agent}" deleted a published item. Agents propose removals; ` +
+            `humans action them.`,
+        )
+      }
+    } catch {
+      /* no usable history; the write-scope gate still covers deletions */
     }
-  } catch {
-    /* no base to diff against */
   }
 }
 

@@ -316,6 +316,11 @@ const pr = [
 mkdirSync('.agent-run', { recursive: true })
 writeFileSync('.agent-run/pr-body.md', pr)
 writeFileSync('.agent-run/count.txt', String(written.length))
+// Exactly what this agent wrote. The provenance gate uses this rather than a
+// git diff: a shallow clone has no merge base, and falling back to "check
+// everything" made the gate blame the agent for files a human had reviewed
+// months earlier.
+writeFileSync('.agent-run/written.txt', written.join('\n'))
 
 console.log(`${agent}: ${written.length} file(s) proposed`)
 for (const p of written) console.log('  ' + p)
