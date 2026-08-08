@@ -2,58 +2,46 @@
 schema: frontier/v1
 id: algo-grover
 title: Grover search
-summary: Grover's algorithm provides a quadratic quantum speedup for searching unstructured databases and has been demonstrated on multiple hardware platforms.
-plain: Grover's algorithm is a quantum procedure that finds a specific item in an unsorted list roughly quadratically faster than any classical method — searching a million items takes about a thousand steps instead of a million. It has been run successfully on small quantum processors, but scaling it to database sizes where the speedup matters in practice still requires far more reliable, fault-tolerant machines than exist today.
+summary: 'Quantum search algorithm offering quadratic speedup over classical unstructured search, demonstrated with better-than-classical success probability on IBM superconducting hardware using error detection and dynamical decoupling.'
+plain: 'Grover''s algorithm lets a quantum computer find a needle in a haystack database in roughly the square root of the number of steps a classical computer would need. It has been run on real quantum hardware and shown to beat classical computers — though only on small problem sizes so far. Its main practical relevance is that it would halve the effective key length of symmetric encryption (e.g. AES-128 becomes as hard as AES-64 against a quantum attacker), which is why NIST built it into its post-quantum security level definitions.'
 pillar: quantum
 readiness: demonstrated
 constellation: algorithms
 actors:
-  - Silicon Quantum Computing Pty Ltd
-  - UNSW Sydney
+  - 'University of Southern California'
 country:
-  - AU
+  - US
 metrics:
-  - name: success probability
-    value: "~95"
-    unit: "%"
-    note: Three-qubit Grover search on a four-qubit silicon processor; all gates above the fault-tolerant threshold
-  - name: single-qubit gate fidelity
-    value: ">99.9"
-    unit: "%"
-  - name: two-qubit CZ gate fidelity (best pair)
-    value: "99.65 ± 0.35"
-    unit: "%"
-links:
-  - to: arch-silicon-spin
-    relation: evidence-for
-  - to: qec-error-correction-threshold
-    relation: depends-on
+  - name: 'Maximum qubits with better-than-classical success probability'
+    value: '5'
+    unit: qubits
+    note: 'On IBM transmon hardware; 99.5% success at 2 qubits with [[4,2,2]] QED code'
+priority: P1
+qdayImpact: 1
+qdayReasoning: 'Grover search at scale would halve the effective security of symmetric ciphers. Demonstrated only at 5 qubits — far from cryptographically relevant scale. Directly informs NIST PQC security category definitions (Category 1 = AES-128 Grover hardness) and so sets the bar for PQC migration urgency, giving it a marginal positive impact on Q-Day framing without constituting a near-term threat.'
+horizon: 2
+novelty: 'Better-than-classical performance demonstrated with error detection'
 evidence:
-  claim: A four-qubit silicon processor with all control fidelities above the fault-tolerant threshold demonstrated a three-qubit Grover search algorithm with approximately 95% probability of finding the marked state — one of the most successful implementations to date.
+  claim: 'Pokharel and Lidar (2024) report better-than-classical success probabilities for a complete Grover search algorithm on up to 5 qubits using two IBM superconducting transmon platforms, achieving 99.5% success probability at 2 qubits via the [[4,2,2]] quantum error-detection code and dynamical decoupling. This is the first demonstration of quantum algorithmic breakeven via quantum error detection for Grover search.'
   level: E4
   verified: '2026-08-08'
   sources:
-    - url: https://www.nature.com/articles/s41565-024-01853-5
+    - url: 'https://www.nature.com/articles/s41534-023-00794-6'
       role: primary
-      title: "Grover's algorithm in a four-qubit silicon processor above the fault-tolerant threshold"
-      publisher: Nature Nanotechnology
-      date: '2025-02-20'
-      doi: 10.1038/s41565-024-01853-5
-      identifier: Nature Nanotechnology (2025)
+      title: 'Better-than-classical Grover search via quantum error detection and suppression'
+      publisher: 'npj Quantum Information'
+      date: '2024-02-20'
+      identifier: 'npj Quantum Information 10, 23 (2024)'
+      doi: 10.1038/s41534-023-00794-6
       accessed: '2026-08-08'
-    - url: https://arxiv.org/abs/2404.08741
-      role: preprint
-      title: "Grover's algorithm in a four-qubit silicon processor above the fault-tolerant threshold"
-      publisher: arXiv
-      date: '2024-04-12'
-      identifier: arXiv:2404.08741
-      accessed: '2026-08-08'
+      note: 'Peer-reviewed. Preprint arXiv:2211.04543 submitted November 2022.'
+links:
+  - to: crqc
+    relation: evidence-for
+  - to: algo-resource-estimation
+    relation: enables
 confidence: high
 status: published
-priority: P2
-qdayImpact: 0
-horizon: 2
-novelty: first above-threshold multi-qubit algorithm in silicon
 origin: agent
 added: '2026-08-08'
 review:
@@ -63,4 +51,6 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-Grover's algorithm is a quantum search procedure with a proven quadratic speedup over classical search in unstructured databases. A 2025 peer-reviewed study from Silicon Quantum Computing and UNSW Sydney demonstrated a three-qubit Grover search on a four-qubit phosphorus-in-silicon processor, achieving approximately 95% success probability with every gate fidelity above the fault-tolerant threshold — including single-qubit fidelities above 99.9% and CZ gate fidelities above 99%. This is among the highest-fidelity multi-qubit algorithm demonstrations to date in silicon spin qubits. The result is a hardware milestone, not a practical database search: the problem size (three qubits, eight entries) is trivial classically, and scaling Grover to cryptographically meaningful search spaces would require millions of fault-tolerant logical qubits.
+Grover's algorithm provides a provable quantum speedup for unstructured database search, requiring O(√N) oracle queries versus O(N) classically. Its cryptographic significance is that it halves the effective bit-security of symmetric ciphers — AES-128 has ~64 bits of quantum security rather than 128 — which defines NIST's post-quantum security categories.
+
+The 2024 peer-reviewed result from the University of Southern California demonstrated better-than-classical success probability on up to 5 physical qubits using IBM quantum hardware, with 99.5% success at 2 qubits using the [[4,2,2]] error-detection code. This constitutes algorithmic breakeven via quantum error detection. Larger demonstrations exist but have not achieved better-than-classical performance at scale.
