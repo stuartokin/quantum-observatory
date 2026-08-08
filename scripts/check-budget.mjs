@@ -22,15 +22,34 @@ const ASSETS = 'dist/assets'
 const KB = 1024
 
 /**
- * app     React and react-dom are about 45 KB gzipped, front-matter pulls in
- *         js-yaml for another ~30, and the canvas board is a large component.
- *         80 KB is the honest ceiling; growth beyond it means new code or a new
- *         dependency, and either deserves a look.
+ * app     Raised from 80 to 92 KB on 8 Aug 2026, for v0.19–v0.20.
+ *
+ *         Accounted for, because "it grew a bit" is how a budget becomes
+ *         decoration. No dependency was added. The growth is five new modules
+ *         and a much larger board component:
+ *
+ *           Panels.tsx           news, teaser, Q-Day bar and panel
+ *           MiniOrbit.tsx        the live rotating constellation
+ *           news.ts              weekly change history derived from the board
+ *           forecast.ts          the Q-Day object and its loader
+ *           constellationPalette per-constellation hues
+ *           Board.tsx            filters, year filter, timeline legend,
+ *                                scrollbar, zoom-to-fit, provenance rendering
+ *
+ *         THE NEXT INCREASE SHOULD NOT BE A NUMBER.
+ *
+ *         About 30 KB gzipped of this is js-yaml, pulled in by front-matter to
+ *         parse content in the browser. Every visitor downloads a YAML parser
+ *         to read files that were fixed at build time. Moving that parse into
+ *         a Vite plugin would cut roughly a third of the application bundle —
+ *         far more than any future raise would concede. Do that instead.
+ *
  * content The frontier items. Grows as agents fill the board, which is the
- *         point, so the ceiling is generous.
+ *         point, so the ceiling is generous. At ~200 items it should move to a
+ *         JSON file fetched at runtime rather than bundled.
  */
 const BUDGET = {
-  app: 80 * KB,
+  app: 92 * KB,
   content: 220 * KB,
   css: 20 * KB,
 }
