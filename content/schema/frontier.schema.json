@@ -295,7 +295,7 @@
     },
     "novelty": {
       "type": "string",
-      "maxLength": 60,
+      "maxLength": 140,
       "description": "Free tag, not a scored axis. e.g. major breakthrough, new architecture, incremental."
     },
     "horizon": {

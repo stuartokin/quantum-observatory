@@ -267,3 +267,22 @@ summary: 'Quantum sensors: magnetometers, atomic clocks: timing assurance'
 Quote the value if it contains a colon, a `#`, or begins with any of
 `% & * ! | > @ \` [ {`. Quote every number and date. When in doubt, quote it —
 single quotes cost nothing and never hurt.
+
+## Never use backslash escapes in YAML
+
+YAML is not JSON. Inside single quotes an apostrophe is escaped by **doubling
+it**, and a backslash means nothing at all:
+
+```yaml
+# breaks — the string ends at the backslash and the rest is garbage
+summary: 'Shor\'s algorithm breaks RSA'
+
+# correct
+summary: 'Shor''s algorithm breaks RSA'
+
+# also correct, and easier — avoid the apostrophe
+summary: 'The Shor algorithm breaks RSA'
+```
+
+The same applies to `\n`, `\t` and `\"`. If a value needs a line break, use a
+block scalar with `|`. If it needs quotes inside, double them.

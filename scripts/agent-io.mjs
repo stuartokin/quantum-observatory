@@ -120,7 +120,15 @@ export function normaliseFile(raw) {
         const [, head, rawValue] = m
         const value = rawValue.trim()
         if (!value) return line
-        if (/^['"]/.test(value)) return line          // already quoted
+        // A quoted value can still be broken. YAML escapes an apostrophe
+        // inside single quotes by doubling it, never with a backslash, so
+        // 'Shor\'s algorithm' terminates early and the rest of the line
+        // becomes nonsense. Models write the backslash form constantly.
+        if (/^'/.test(value)) {
+          if (!value.includes("\\'")) return line
+          return head + value.replace(/\\'/g, "''")
+        }
+        if (/^"/.test(value)) return line             // already quoted
         if (/^[[{]/.test(value)) return line          // a flow collection
         const needsQuote = /: /.test(value) || value.endsWith(':') || RISKY.test(value)
         if (!needsQuote) return line

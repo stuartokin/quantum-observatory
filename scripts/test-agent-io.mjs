@@ -77,6 +77,27 @@ t('  nested value repaired', quoted.includes("claim: 'The paper reports: a tenfo
 t('  flow sequence untouched', quoted.includes('actors: [IBM, Google Quantum AI]'))
 t('  body untouched', quoted.includes('Body: colons here must be left alone.'))
 t('  mapping keys untouched', /^evidence:$/m.test(quoted))
+
+// YAML doubles an apostrophe inside single quotes; it has no backslash escape.
+// Models write the backslash form constantly, and it terminates the string.
+const escaped = [
+  '---',
+  'id: algo-shor',
+  "summary: 'Shor\\'s algorithm breaks RSA.'",
+  'evidence:',
+  "  claim: 'The paper\\'s result is tenfold.'",
+  'review:',
+  '  state: agent-merged',
+  '---',
+  '',
+  "Body with Shor's apostrophe.",
+  '',
+].join('\n')
+const unescaped = normaliseFile(escaped)
+t('backslash apostrophe repaired', unescaped.includes("summary: 'Shor''s algorithm breaks RSA.'"))
+t('  nested value repaired', unescaped.includes("claim: 'The paper''s result is tenfold.'"))
+t('  no backslash escapes remain', !(unescaped.match(FRONT_MATTER)?.[1] ?? '').includes("\\'"))
+t('  body untouched', unescaped.includes("Body with Shor's apostrophe."))
 t('trailing newline added', normaliseFile('---\nid: a\n---\nbody').endsWith('\n'))
 
 const split = [
