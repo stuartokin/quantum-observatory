@@ -5,7 +5,14 @@ import { resolve } from 'node:path'
 export default defineConfig({
   plugins: [react()],
   // Content lives outside /src so agents have one obvious place to write.
-  resolve: { alias: { '/content': resolve(__dirname, 'content') } },
+  resolve: {
+    alias: {
+      '/content': resolve(__dirname, 'content'),
+      // Help renders the agents' own source register rather than a copy of it,
+      // so the two cannot drift apart.
+      '/agents': resolve(__dirname, 'agents'),
+    },
+  },
   build: {
     // Content is bundled at build time, so the entry chunk grows with every
     // item the agents add. Splitting it out keeps two honest measurements:

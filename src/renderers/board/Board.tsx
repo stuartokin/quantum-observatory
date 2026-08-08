@@ -31,6 +31,8 @@ import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
 import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
+import { RELEASES } from '../../releases'
+import sourceRegister from '/agents/_sources.md?raw'
 import { Toolbar } from '../../components/Toolbar'
 
 /** Galaxies. Only quantum has data; the rest are declared so the switch exists
@@ -588,7 +590,7 @@ export function Board() {
         z={zOf('help')}
         onFocus={raise('help')}
       >
-        <Help colour={colour} />
+        <Help colour={colour} pool={pool} />
       </Frame>
 
       {item && (
@@ -1760,67 +1762,279 @@ function Sky({
 
 /* ---------------------------------------------------------------- */
 
-function Help({ colour }: { colour: string }) {
+/** One collapsible section. Open state is lifted so "expand all" can drive it. */
+function Section({
+  id,
+  title,
+  open,
+  onToggle,
+  children,
+}: {
+  id: string
+  title: string
+  open: boolean
+  onToggle: (id: string) => void
+  children: React.ReactNode
+}) {
+  return (
+    <section className="help-section" data-open={open || undefined}>
+      <button className="help-section__head" onClick={() => onToggle(id)} aria-expanded={open}>
+        <span className="help-section__caret" aria-hidden="true">
+          {open ? '▾' : '▸'}
+        </span>
+        {title}
+      </button>
+      {open && <div className="help-section__body">{children}</div>}
+    </section>
+  )
+}
+
+/**
+ * The source register, rendered from the agents' own file.
+ *
+ * Not a copy. A second list of sources maintained beside the first would
+ * disagree with it within a month, and the version shown to a reader would be
+ * the one nobody was updating.
+ */
+function SourceRegister() {
+  const blocks = useMemo(() => {
+    const out: { heading: string; lines: string[] }[] = []
+    let current: { heading: string; lines: string[] } | null = null
+    for (const raw of sourceRegister.split('\n')) {
+      const line = raw.trim()
+      if (!line || line === '---') continue
+      const h = line.match(/^#{2,3}\s+(.*)$/)
+      if (h) {
+        current = { heading: h[1], lines: [] }
+        out.push(current)
+        continue
+      }
+      if (!current) continue
+      if (line.startsWith('#')) continue
+      current.lines.push(line.replace(/^[-*]\s*/, ''))
+    }
+    return out.filter((b) => b.lines.length)
+  }, [])
+
+  const linkify = (line: string) => {
+    const m = line.match(/^(.*?)\s*[—-]?\s*(https?:\/\/\S+)$/)
+    if (!m) return <span>{line.replace(/\*\*/g, '')}</span>
+    return (
+      <a href={m[2]} target="_blank" rel="noopener noreferrer">
+        {m[1].replace(/\*\*/g, '') || m[2]}
+      </a>
+    )
+  }
+
+  return (
+    <div className="register">
+      {blocks.map((b) => (
+        <div key={b.heading}>
+          <span className="label">{b.heading}</span>
+          <ul>
+            {b.lines.map((l, i) => (
+              <li key={i}>{linkify(l)}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
+  const [open, setOpen] = useState<Set<string>>(new Set(['reading']))
+  const toggle = (id: string) =>
+    setOpen((s) => {
+      const n = new Set(s)
+      n.has(id) ? n.delete(id) : n.add(id)
+      return n
+    })
+
+  const SECTIONS = ['reading', 'controls', 'provenance', 'sources', 'versions', 'elsewhere']
+  const allOpen = SECTIONS.every((id) => open.has(id))
+
+  /** Counted from the board, never written down — a typed figure ages badly. */
+  const stats = useMemo(() => {
+    const level = new Map<string, number>()
+    const state = new Map<string, number>()
+    for (const i of pool) {
+      const l = i.evidence?.level ?? 'unrated'
+      level.set(l, (level.get(l) ?? 0) + 1)
+      const st = i.review?.state ?? 'unknown'
+      state.set(st, (state.get(st) ?? 0) + 1)
+    }
+    return {
+      total: pool.length,
+      sourced: pool.filter(
+        (i) => i.status === 'published' && !i.evidence.claim.startsWith('NEEDS PRIMARY SOURCE'),
+      ).length,
+      level: [...level.entries()].sort(),
+      state: [...state.entries()].sort(),
+      constellations: new Set(pool.map((i) => i.constellation)).size,
+    }
+  }, [pool])
+
   return (
     <div className="help">
-      <p>
-        A map of how close developments in quantum computing, post-quantum
-        cryptography, communications and sensing are to being real. Position is
-        readiness, not date.
-      </p>
+      <div className="help-toolbar">
+        <button onClick={() => setOpen(allOpen ? new Set() : new Set(SECTIONS))}>
+          {allOpen ? 'Collapse all' : 'Expand all'}
+        </button>
+      </div>
 
-      <dl className="help-key">
-        <div><dt><GlyphMark glyph="star" colour={colour} /></dt><dd>Filled — carries a verified primary source</dd></div>
-        <div><dt><GlyphMark glyph="pulsar" colour={colour} /></dt><dd>Hollow — a topic with no source yet. Not a claim</dd></div>
-        <div>
-          <dt><GlyphMark glyph="comet" colour={colour} /></dt>
-          <dd>
-            Shape is the organisation behind it. Colour is the constellation.
-            Nothing on the board represents an organisation itself — every body
-            is a development.
-          </dd>
-        </div>
-      </dl>
+      <Section id="reading" title="Reading the board" open={open.has('reading')} onToggle={toggle}>
+        <p>
+          A map of how close developments in quantum computing, post-quantum
+          cryptography, communications and sensing are to being real. Position is
+          readiness, not date.
+        </p>
+        <dl className="help-key">
+          <div>
+            <dt><GlyphMark glyph="star" colour={colour} /></dt>
+            <dd>Filled — carries a verified primary source</dd>
+          </div>
+          <div>
+            <dt><GlyphMark glyph="pulsar" colour={colour} /></dt>
+            <dd>Hollow — a topic with no source yet. Not a claim</dd>
+          </div>
+          <div>
+            <dt><GlyphMark glyph="comet" colour={colour} /></dt>
+            <dd>
+              Shape is the organisation behind it. Colour is the constellation.
+              Nothing on the board represents an organisation itself — every body
+              is a development.
+            </dd>
+          </div>
+        </dl>
+        <p>
+          <strong>Timeline:</strong> the horizontal axis is when the evidence was
+          published, not when a file was written. Items with no dated source sit
+          in the undated gutter rather than being given a position they have not
+          earned.
+        </p>
+      </Section>
 
-      <p>
-        A <strong>dashed amber ring</strong> means a research agent published
-        that entry and no human has read it yet. Its sources are real, but
-        nobody has confirmed the judgement. Open it to see when it was
-        published and by which agent.
-      </p>
+      <Section id="controls" title="Controls" open={open.has('controls')} onToggle={toggle}>
+        <p>
+          Hover to name · click to open · drag a body to move it · double-click a
+          constellation to enter its orbit · scroll or pinch to zoom · drag to pan
+        </p>
+        <p>
+          <strong>In orbit:</strong> drag empty space to rotate · shift-drag or
+          right-drag to roll · two-finger twist to roll on touch · scroll or pinch
+          to move the camera closer. The sky drifts on its own when left alone,
+          and a body you have moved eases back into its orbit.
+        </p>
+        <p>
+          <strong>Frames:</strong> drag the title bar to move · the corner to
+          resize · the caret to minimise. The toolbar has a grip on each end:
+          drag the left to move it, click it to collapse, drag the right to
+          resize until it reduces to icons.
+        </p>
+        <p>Double-click the page title for the Q-Day forecast and its change history.</p>
+      </Section>
 
-      <p className="label">Controls</p>
-      <p>
-        Hover to name · click to open · drag a body to move it · double-click a
-        constellation to enter its orbit · scroll or pinch to zoom · drag to pan
-      </p>
-      <p>
-        <strong>In orbit:</strong> drag empty space to rotate · shift-drag or
-        right-drag to roll · two-finger twist to roll on touch · scroll or pinch
-        to move the camera closer
-      </p>
-      <p>
-        <strong>Timeline:</strong> the horizontal axis is when the evidence was
-        published, not when a file was written. Items with no dated source sit in
-        the undated gutter rather than being given a position they have not earned.
-      </p>
+      <Section id="provenance" title="Who wrote this" open={open.has('provenance')} onToggle={toggle}>
+        <p>
+          Research agents publish to this board without a human reading it first.
+          That is a deliberate trade, and it rests on every entry saying so.
+        </p>
+        <p>
+          A <strong>dashed amber ring</strong> means an agent published that entry
+          and nobody has read it. Its sources are real and were checked by the
+          agent; the judgement has not been confirmed. Open it to see when, and by
+          which agent.
+        </p>
+        <p>
+          <strong>Agent-checked</strong> means a second agent opened the sources
+          and tested the claim against them. That agent can only ever make an
+          entry more cautious, never more confident — anything that would raise a
+          level goes to a person instead. It is still not a person having read it.
+        </p>
 
-      <p className="label">Elsewhere</p>
-      <ul className="help-links">
-        {articles.map((a) => (
-          <li key={a.id}>
-            {a.url ? (
-              <a href={a.url} target="_blank" rel="noopener noreferrer">{a.title}</a>
-            ) : (
-              a.title
+        <span className="label">Where the board stands</span>
+        <dl className="metrics">
+          <div><dt>Items</dt><dd>{stats.total}</dd></div>
+          <div><dt>Sourced</dt><dd>{stats.sourced}</dd></div>
+          <div><dt>Constellations</dt><dd>{stats.constellations}</dd></div>
+          {stats.level.map(([k, v]) => (
+            <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+          {stats.state.map(([k, v]) => (
+            <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+        </dl>
+      </Section>
+
+      <Section id="sources" title="Where the agents look" open={open.has('sources')} onToggle={toggle}>
+        <p>
+          The register below is the agents&rsquo; own, rendered from the file they
+          read. They work it in tier order before searching freely.
+        </p>
+        <p>
+          <strong>The source type sets the evidence level, never the author.</strong>{' '}
+          A peer-reviewed paper from a large vendor is E4; a blog post from the
+          same vendor is E2, exactly as a blog post from a two-person startup is.
+          At least half of each run must come from outside the five largest
+          programmes — not because their work is weak, but because a board that
+          follows attention has stopped looking.
+        </p>
+        <SourceRegister />
+      </Section>
+
+      <Section id="versions" title="What changed, by version" open={open.has('versions')} onToggle={toggle}>
+        <p className="label">The last {RELEASES.length} releases</p>
+        {RELEASES.map((r) => (
+          <details key={r.version} className="release">
+            <summary>
+              <strong>v{r.version}</strong>
+              <em>{r.date}</em>
+              <span>{r.headline}</span>
+            </summary>
+            {r.ui && (
+              <>
+                <span className="label">Interface</span>
+                <ul>{r.ui.map((l, i) => <li key={i}>{l}</li>)}</ul>
+              </>
             )}
-          </li>
+            {r.agents && (
+              <>
+                <span className="label">Agents and content</span>
+                <ul>{r.agents.map((l, i) => <li key={i}>{l}</li>)}</ul>
+              </>
+            )}
+            {r.content && (
+              <>
+                <span className="label">Content</span>
+                <ul>{r.content.map((l, i) => <li key={i}>{l}</li>)}</ul>
+              </>
+            )}
+          </details>
         ))}
-      </ul>
+        <p className="filter-group__note">
+          Content figures are counted from the board as it stands, not recorded
+          here. A number typed into a changelog is wrong within a week.
+        </p>
+      </Section>
+
+      <Section id="elsewhere" title="Elsewhere" open={open.has('elsewhere')} onToggle={toggle}>
+        <ul className="help-links">
+          {articles.map((a) => (
+            <li key={a.id}>
+              {a.url ? (
+                <a href={a.url} target="_blank" rel="noopener noreferrer">{a.title}</a>
+              ) : (
+                a.title
+              )}
+            </li>
+          ))}
+        </ul>
+      </Section>
 
       <p className="disclaimer">
         Written in a personal capacity. Views expressed here are my own and do not
-        represent the position of Ofgem or any organisation I advise.
+        represent those of my employer.
       </p>
     </div>
   )

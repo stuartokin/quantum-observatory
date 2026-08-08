@@ -320,3 +320,49 @@
 }
 
 .filter-mark { display: inline-flex; flex: 0 0 auto; }
+
+/* ---------- Help ---------- */
+
+.help-toolbar { display: flex; justify-content: flex-end; margin-bottom: var(--gap-s); }
+.help-toolbar button {
+  background: transparent; border: 1px solid var(--hairline);
+  border-radius: var(--radius); color: var(--ink-faint); cursor: pointer;
+  font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 4px 10px; min-height: 0;
+}
+.help-toolbar button:hover { color: var(--ink); }
+
+.help-section + .help-section { border-top: 1px solid var(--hairline); }
+.help-section__head {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--ink-muted); text-align: left;
+  font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 10px 0;
+}
+.help-section__head:hover { color: var(--ink); }
+.help-section[data-open] .help-section__head { color: var(--ink); }
+.help-section__caret { opacity: 0.6; width: 10px; }
+.help-section__body { padding: 0 0 var(--gap-m) 18px; }
+.help-section__body > p { margin-bottom: var(--gap-s); }
+
+.release { border-left: 2px solid var(--hairline); padding-left: 10px; margin-bottom: 8px; }
+.release summary {
+  cursor: pointer; display: grid; gap: 2px; padding: 4px 0;
+  font-size: var(--step--1); color: var(--ink-muted);
+}
+.release summary strong { font-family: var(--mono); color: var(--ink); font-weight: 400; }
+.release summary em {
+  font-style: normal; font-family: var(--mono); font-size: 0.6rem;
+  color: var(--ink-faint); letter-spacing: 0.08em;
+}
+.release[open] summary { color: var(--ink); }
+.release ul { margin: 4px 0 10px; padding-left: 16px; }
+.release li { font-size: var(--step--1); line-height: 1.55; margin-bottom: 5px; color: var(--ink-muted); }
+
+.register > div { margin-bottom: var(--gap-m); }
+.register ul { list-style: none; margin: 5px 0 0; padding: 0; }
+.register li {
+  font-size: var(--step--1); line-height: 1.5; margin-bottom: 4px;
+  color: var(--ink-muted); overflow-wrap: anywhere;
+}

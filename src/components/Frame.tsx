@@ -209,7 +209,7 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
       docked: !wide,
     },
     filters: { x: 24, y: 110, w: 288, h: Math.min(620, h - 190), docked: true },
-    help: { x: 70, y: 130, w: 460, h: 480, docked: true },
+    help: { x: 70, y: 96, w: 520, h: Math.min(700, h - 160), docked: true },
     detail: { x: Math.max(16, w - 424), y: 96, w: 400, h: 470, docked: true },
     qday: { x: 24, y: top + 16, w: 380, h: Math.max(360, h - top - 120), docked: true },
   }
