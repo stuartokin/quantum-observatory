@@ -1,12 +1,20 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches: [main]
+  pull_request:
+    # Agent branches are gated inside the agent job itself — validate,
+    # provenance, escalation and scope all run there, before the pull request
+    # exists. Running them again here adds nothing, and a bot-authored PR sits
+    # awaiting manual approval, which blocks the merge.
+    branches-ignore:
+      - 'agent/**'
 
 jobs:
   gates:
+    # Belt and braces: skip anything the bot raised, however it was branched.
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,26 +26,20 @@ jobs:
 
       - run: npm install
 
-      # Gate 1 — schema
+      - name: Self-test the agent IO layer
+        run: npm run test:agent
+
       - name: Validate content
         run: npm run validate
 
-      # Types
+      - name: Provenance
+        run: npm run provenance
+
       - name: Typecheck
         run: npx tsc --noEmit
 
       - name: Build
         run: npx vite build
 
-      # Gate 2 — performance budget. A 3D site that fails this is not shippable.
       - name: Performance budget
         run: npm run budget
-
-      # Gate 3 — write scope, agent PRs only
-      - name: Agent write scope
-        if: startsWith(github.head_ref, 'agent/')
-        run: |
-          AGENT="${GITHUB_HEAD_REF#agent/}"
-          AGENT="${AGENT%%/*}"
-          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          node scripts/check-scope.mjs "$AGENT" $FILES
