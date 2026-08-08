@@ -128,6 +128,12 @@ const body = {
   system: prompt,
   messages: [{ role: 'user', content: context }],
   tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: cfg.budget?.searches ?? 25 }],
+  // Streaming, not because we display tokens as they arrive, but because
+  // Node's built-in fetch gives up if response headers take more than five
+  // minutes. A research run with 45 searches routinely exceeds that. Streaming
+  // returns headers immediately, so the timeout cannot fire — and it lets the
+  // log show progress rather than five silent minutes.
+  stream: true,
 }
 
 const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -145,16 +151,81 @@ if (!res.ok) {
   process.exit(1)
 }
 
-const data = await res.json()
+/* ---------- read the stream ---------- */
 
-// Keep the whole response. When something goes wrong the raw output is the
-// only evidence of what the agent actually did, and losing it costs a rerun.
+const blocks = []
+let current = null
+let stopReason = null
+let searches = 0
+let lastTick = Date.now()
+
+const decoder = new TextDecoder()
+let buffer = ''
+
+for await (const chunk of res.body) {
+  buffer += decoder.decode(chunk, { stream: true })
+  const lines = buffer.split('\n')
+  buffer = lines.pop() ?? ''
+
+  for (const line of lines) {
+    if (!line.startsWith('data:')) continue
+    const payload = line.slice(5).trim()
+    if (!payload || payload === '[DONE]') continue
+
+    let ev
+    try {
+      ev = JSON.parse(payload)
+    } catch {
+      continue
+    }
+
+    switch (ev.type) {
+      case 'content_block_start':
+        if (ev.content_block?.type === 'text') current = ''
+        else if (ev.content_block?.type === 'server_tool_use') {
+          searches++
+          process.stdout.write(`\r  searching… ${searches}`)
+        }
+        break
+
+      case 'content_block_delta':
+        if (ev.delta?.type === 'text_delta' && current !== null) {
+          current += ev.delta.text
+          // Something on the log every 15 seconds, so a long run does not look
+          // like a hung one.
+          if (Date.now() - lastTick > 15000) {
+            lastTick = Date.now()
+            process.stdout.write(`\r  writing… ${current.length} chars, ${searches} searches`)
+          }
+        }
+        break
+
+      case 'content_block_stop':
+        if (current !== null) {
+          blocks.push(current)
+          current = null
+        }
+        break
+
+      case 'message_delta':
+        if (ev.delta?.stop_reason) stopReason = ev.delta.stop_reason
+        break
+
+      case 'error':
+        console.error('\nStream error:', JSON.stringify(ev.error))
+        process.exit(1)
+    }
+  }
+}
+if (current !== null) blocks.push(current)
+console.log(`\n  ${searches} search(es), ${blocks.length} text block(s)`)
+
+// Keep everything. When something goes wrong the raw output is the only
+// evidence of what the agent actually did, and losing it costs a rerun.
 mkdirSync('.agent-run', { recursive: true })
-writeFileSync('.agent-run/raw.json', JSON.stringify(data, null, 2))
+writeFileSync('.agent-run/raw.json', JSON.stringify({ stopReason, searches, blocks }, null, 2))
 
-const blocks = data.content.filter((b) => b.type === 'text').map((b) => b.text)
-
-if (data.stop_reason === 'max_tokens') {
+if (stopReason === 'max_tokens') {
   console.error(
     'The agent hit its output limit before finishing. Nothing was written.\n' +
       `Lower "budget.proposals" in ${dir}/agent.json, or raise "maxTokens".\n` +
