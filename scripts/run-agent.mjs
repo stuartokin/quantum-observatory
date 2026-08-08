@@ -307,7 +307,28 @@ function section(title, rows, render) {
   return ['', `## ${title}`, ...rows.map(render)]
 }
 
+/**
+ * The agent writes its summary before the runner has rejected anything, so a
+ * run that claimed five items and delivered three reads as if all five landed.
+ * That is misleading in the one artefact reviewed weekly, so correct it in
+ * place rather than leaving the two accounts to disagree.
+ */
+const mismatch =
+  rejected.length > 0
+    ? [
+        '',
+        `> **Correction:** the summary below was written before validation. ` +
+          `**${written.length} of ${files.length}** proposed files were written; ` +
+          `${rejected.length} were discarded and are listed at the end. Any count ` +
+          `in the summary refers to what was attempted, not to what is on the board.`,
+        '',
+      ]
+    : []
+
 const pr = [
+  `**${written.length} item(s) published${rejected.length ? `, ${rejected.length} discarded` : ''}.**`,
+  ...mismatch,
+  '',
   out.summary ?? '',
   '',
   '## Checklist',
@@ -337,7 +358,9 @@ const pr = [
        ...rejected.map((r) => `- \`${r.path}\` — ${r.reason}`)]
     : []),
   '',
-  `_Published by the ${agent} agent, without human review._`,
+  '',
+  `_Published by the ${agent} agent, without human review. ` +
+    `${written.length} item(s) on the board._`,
 ].join('\n')
 
 mkdirSync('.agent-run', { recursive: true })

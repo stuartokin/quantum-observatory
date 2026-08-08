@@ -286,3 +286,39 @@ summary: 'The Shor algorithm breaks RSA'
 
 The same applies to `\n`, `\t` and `\"`. If a value needs a line break, use a
 block scalar with `|`. If it needs quotes inside, double them.
+
+## Do not state totals in your summary
+
+Your summary is written before the runner validates anything. A file with a
+malformed field is discarded after you have already described it, and a summary
+claiming "five items sourced" above three published items is worse than no
+summary — it is a false account in the artefact a human reads weekly.
+
+Describe **what you did and what you found**, not how many files survived:
+
+- Good: "Sourced the sensing constellation from peer-reviewed experimental
+  papers, raising evidence levels from E1. Readiness re-examined and held at
+  experimental for NV magnetometry and inertial navigation."
+- Bad: "Five items sourced. The sensing constellation now has five fewer hollow
+  nodes."
+
+The runner reports the real counts. Leave them to it.
+
+## Reviews are not experiments
+
+A review article, survey or roadmap paper summarises other people's work. It is
+useful and it is **not** an experimental result, however prestigious the journal.
+
+| Source | Highest level it supports |
+| --- | --- |
+| Peer-reviewed experimental paper | E4, or E5 with independent replication |
+| Preprint of an experiment | E3 |
+| **Review or survey article** | **E3** |
+| Formal standard | E4 |
+| Vendor technical document | E2 |
+| Roadmap, whitepaper, press release | E2 at most |
+
+If a review article is your only source, cite it at **E3** and say in the claim
+that the evidence is a review rather than a primary experiment. Better still,
+follow its citations to the experiment it describes and cite that instead —
+that is what a review is for.
