@@ -89,3 +89,54 @@
 @media (max-width: 1100px) {
   .qday__central, .qday__state { display: none; }
 }
+
+/* ---------- Mini constellation ---------- */
+
+.mini {
+  position: relative;
+  height: 46%;
+  min-height: 130px;
+  margin: -4px -8px 10px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.mini canvas { width: 100%; height: 100%; display: block; }
+.mini:hover { background: rgb(255 255 255 / 0.02); }
+
+.mini__label {
+  position: absolute; left: 8px; top: 6px;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.mini__hint {
+  position: absolute; right: 8px; bottom: 6px;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-faint); opacity: 0;
+  transition: opacity 140ms ease;
+}
+.mini:hover .mini__hint { opacity: 1; }
+
+/* ---------- Toolbar: wraps, compacts, never hides a function ---------- */
+
+.toolbar {
+  flex-wrap: wrap;
+  max-width: min(94vw, 900px);
+  justify-content: center;
+  row-gap: 2px;
+}
+.toolbar[data-collapsed] { padding: 5px 8px; }
+.toolbar[data-compact] button {
+  padding: 7px 10px;
+  min-width: 34px;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+}
+.toolbar .frame__grip {
+  cursor: grab;
+  padding: 4px;
+  margin: 0 4px 0 2px;
+  box-sizing: content-box;
+}
+.toolbar .frame__grip:active { cursor: grabbing; }
+.toolbar .frame__grip:hover { opacity: 1; color: var(--ink); }

@@ -27,6 +27,7 @@ import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
 import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
 import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
+import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
 import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
 import { Toolbar } from '../../components/Toolbar'
@@ -152,6 +153,8 @@ export function Board() {
   const item = selected ? pool.find((i) => i.id === selected) ?? null : null
   const news = useMemo(() => buildNews(pool), [pool])
   const teaserEntries = useMemo(() => headlines(news), [news])
+  const changedCon = useMemo(() => mostChanged(teaserEntries), [teaserEntries])
+  const changedIds = useMemo(() => new Set(teaserEntries.map((e) => e.id)), [teaserEntries])
   const forecast = useMemo(() => forecastFor(galaxy), [galaxy])
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
 
@@ -201,10 +204,11 @@ export function Board() {
 
   const buttons = [
     ...(mode === 'orbit'
-      ? [{ key: 'back', label: '← Galaxy', onClick: leaveOrbit }]
+      ? [{ key: 'back', icon: '←', label: '← Galaxy', onClick: leaveOrbit }]
       : []),
     {
       key: 'timeline',
+      icon: timeline ? '✦' : '◷',
       label: timeline ? 'Galaxy view' : 'Timeline',
       active: timeline,
       onClick: () => {
@@ -214,7 +218,7 @@ export function Board() {
         setView({ k: 1, tx: 0, ty: 0 })
       },
     },
-    { key: 'filters', label: 'Filters', active: !frames.filters.docked, onClick: toggle('filters') },
+    { key: 'filters', icon: '⌗', label: 'Filters', active: !frames.filters.docked, onClick: toggle('filters') },
     ...(timeline
       ? []
       : [
@@ -225,12 +229,13 @@ export function Board() {
             onClick: toggle('actors'),
           },
         ]),
-    { key: 'news', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
-    { key: 'teaser', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
-    { key: 'qday', label: 'Q-Day', active: !frames.qday.docked, onClick: toggle('qday') },
-    { key: 'help', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
+    { key: 'news', icon: '◰', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
+    { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
+    { key: 'qday', icon: 'Q', label: 'Q-Day', active: !frames.qday.docked, onClick: toggle('qday') },
+    { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     {
       key: 'reset',
+      icon: '⟲',
       label: 'Reset',
       onClick: () => {
         setView({ k: 1, tx: 0, ty: 0 })
@@ -344,6 +349,14 @@ export function Board() {
         z={zOf('teaser')}
         onFocus={raise('teaser')}
       >
+        {changedCon && (
+          <MiniOrbit
+            constellation={changedCon}
+            colour={colour}
+            highlight={changedIds}
+            onOpen={() => { setTimeline(false); enterOrbit(changedCon) }}
+          />
+        )}
         <Teaser
           entries={teaserEntries}
           colour={colour}
@@ -576,6 +589,15 @@ function Sky({
   const manual = useRef(new Map<string, { x: number; y: number; releasedAt: number }>())
   /** Auto-rotation pauses while the reader is interacting, then resumes. */
   const idleSince = useRef(Date.now())
+  /**
+   * Accumulated drift, kept OUT of React state.
+   *
+   * Setting camera state each frame re-ran the effect, cancelled the animation
+   * frame and started a new one — sixty times a second, fighting itself. The
+   * spin is added to the camera at projection time instead, and only folded
+   * back into state when the reader takes hold of it.
+   */
+  const spin = useRef(0)
   /** Perspective scale per node while in orbit — drives size and depth fade. */
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   /** Live timeline projection, so hit testing uses the same maths as drawing. */
@@ -724,15 +746,13 @@ function Sky({
       last = now
 
       // Slow drift around the tilt axis. Barely perceptible frame to frame,
-      // clearly moving if you look away and back — the sky should feel alive
-      // without ever demanding attention.
+      // clearly moved if you look away and back.
       if (mode === 'orbit' && !reduced && !camDrag.current && !nodeDrag.current) {
         const idleFor = (now - idleSince.current) / 1000
-        if (idleFor > 2) {
-          const ease = Math.min(1, (idleFor - 2) / 3)
-          setCam({ ...cam, yaw: cam.yaw + 0.00022 * dt * 1000 * ease })
-        }
+        const ease = Math.min(1, Math.max(0, (idleFor - 1.5) / 2.5))
+        spin.current += 0.09 * dt * ease
       }
+      const liveCam = { ...cam, yaw: cam.yaw + spin.current }
 
       const e = reduced ? 1 : 0.16
       cur.current.k += (view.k - cur.current.k) * e
@@ -962,7 +982,7 @@ function Sky({
         const ring = orbit3d.get(n.id)
         let projected: { x: number; y: number } | null = null
         if (mode === 'orbit' && ring && !held) {
-          const q = project(ringPosition(ring.angle, ring.radius, ring.lift), cam)
+          const q = project(ringPosition(ring.angle, ring.radius, ring.lift), liveCam)
           depthOf.current.set(n.id, { scale: q.scale, depth: q.depth })
           projected = { x: q.sx, y: q.sy }
         }
@@ -1020,13 +1040,37 @@ function Sky({
         // exactly the thing you are trying to read.
         const zoomFade = Math.max(0, Math.min(1, (1.7 - v.k) / 0.5))
         if (zoomFade > 0.02) {
-          CONSTELLATIONS.forEach((c) => {
+          // Nine names across a narrow frame will not fit on one line, and
+          // running them together is worse than showing fewer. Stagger onto two
+          // rows, truncate to the lane, and drop any that still collide.
+          const laneW = (W - PAD) / CONSTELLATIONS.length
+          const placedNames: { x: number; w: number; row: number }[] = []
+          CONSTELLATIONS.forEach((c, i) => {
             if (!activeCons.includes(c)) return
             const cx = X(CONSTELLATION_HOME[c] ?? 0.5)
+            if (cx < PAD - 40 || cx > W + 40) return
+
+            let label = CONSTELLATION_LABEL[c].toUpperCase()
+            let tw = g.measureText(label).width
+            const budget = laneW * 1.7
+            while (tw > budget && label.length > 4) {
+              label = label.slice(0, -2)
+              tw = g.measureText(label + '…').width
+            }
+            if (label !== CONSTELLATION_LABEL[c].toUpperCase()) label += '…'
+            tw = g.measureText(label).width
+
+            const row = i % 2
+            const x = cx - tw / 2
+            const clash = placedNames.some(
+              (o) => o.row === row && !(x + tw < o.x - 6 || x > o.x + o.w + 6),
+            )
+            if (clash) return
+            placedNames.push({ x, w: tw, row })
+
             g.fillStyle = colour
-            g.globalAlpha = 0.8 * zoomFade
-            const label = CONSTELLATION_LABEL[c].toUpperCase()
-            g.fillText(label, cx - g.measureText(label).width / 2, 22)
+            g.globalAlpha = (row === 0 ? 0.85 : 0.6) * zoomFade
+            g.fillText(label, Math.max(4, x), 18 + row * 13)
             g.globalAlpha = 1
           })
         }
@@ -1040,7 +1084,7 @@ function Sky({
           g.beginPath()
           for (let k = 0; k <= 72; k++) {
             const a = (k / 72) * Math.PI * 2
-            const q = project(ringPosition(a, radius, 0), cam)
+            const q = project(ringPosition(a, radius, 0), liveCam)
             const sx = X(q.sx)
             const sy = Y(q.sy)
             if (k === 0) g.moveTo(sx, sy)
@@ -1048,7 +1092,7 @@ function Sky({
           }
           g.stroke()
 
-          const q = project(ringPosition(Math.PI, radius, 0), cam)
+          const q = project(ringPosition(Math.PI, radius, 0), liveCam)
           const txt = lvl.toUpperCase()
           const w = g.measureText(txt).width
           g.globalAlpha = 0.9
@@ -1059,7 +1103,7 @@ function Sky({
           g.fillText(txt, X(q.sx) - w - 5, Y(q.sy) - 5)
         })
 
-        const c0 = project({ x: 0, y: 0, z: 0 }, cam)
+        const c0 = project({ x: 0, y: 0, z: 0 }, liveCam)
         g.globalAlpha = 0.55
         g.fillStyle = colour
         g.beginPath()
@@ -1097,6 +1141,9 @@ function Sky({
         )
       })
       const dimmed = selected !== null
+      // With little room, only the highest-ranked items keep a label.
+      const roomy = W * H > 520000
+      const labelFloor = roomy ? 2 : 2.8
       const labelQueue: { n: Node; px: number; py: number; top: boolean }[] = []
 
       for (const n of ordered) {
@@ -1156,10 +1203,19 @@ function Sky({
           g.stroke()
         }
 
-        const earns = n.attention > 0.1 || n.sourced
-        const showLabel =
-          sel || hov || (mode === 'orbit' && n.constellation === focusCon) || earns || v.k > 2.2
-        if (showLabel && off > 0.5) labelQueue.push({ n, px, py, top: sel || hov })
+        // How many labels the frame can carry, rather than how many items
+        // deserve one. Thirty-three sourced items in a narrow panel is a wall
+        // of text; the same board full-screen can carry them all.
+        const capacity = Math.max(4, Math.floor((W * H) / 26000))
+        const inFocus = mode === 'orbit' && n.constellation === focusCon
+        const earns =
+          n.attention > 0.15 ||
+          (n.sourced && n.rank >= labelFloor) ||
+          v.k > 2.2
+        const showLabel = sel || hov || inFocus || earns
+        if (showLabel && off > 0.5 && (labelQueue.length < capacity || sel || hov || inFocus)) {
+          labelQueue.push({ n, px, py, top: sel || hov })
+        }
       }
       g.globalAlpha = 1
 
@@ -1262,10 +1318,15 @@ function Sky({
       nodeDrag.current = { id: best.n.id, ox: e.clientX, oy: e.clientY, sx: p.x, sy: p.y }
     } else if (mode === 'orbit') {
       // Empty space in orbit rotates the camera. Shift or right-button rolls.
+      // Fold the accumulated drift into the camera before dragging, so
+      // grabbing it does not snap back to where the spin started.
+      const yawNow = cam.yaw + spin.current
+      spin.current = 0
+      setCam({ ...cam, yaw: yawNow })
       camDrag.current = {
         x: e.clientX,
         y: e.clientY,
-        yaw: cam.yaw,
+        yaw: yawNow,
         pitch: cam.pitch,
         roll: cam.roll,
         rollMode: e.shiftKey || e.button === 2,
@@ -1351,7 +1412,11 @@ function Sky({
     onSelect(best && best.d < 0.03 ? best.n.id : null)
   }
 
-  useEffect(() => { manual.current.clear() }, [mode, focusCon])
+  useEffect(() => {
+    manual.current.clear()
+    spin.current = 0
+    idleSince.current = Date.now()
+  }, [mode, focusCon])
 
   function onDoubleClick(e: React.MouseEvent) {
     if (tl) return
