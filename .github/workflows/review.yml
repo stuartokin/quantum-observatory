@@ -1,0 +1,57 @@
+name: Review
+
+# Confirming or vetoing agent output should be one click, not eleven file edits.
+# Dispatch this from the Actions tab.
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'What to do'
+        required: true
+        type: choice
+        options:
+          - mark-reviewed
+          - veto
+        default: mark-reviewed
+      ids:
+        description: 'Item ids, comma separated. Blank with mark-reviewed = everything unreviewed.'
+        required: false
+        type: string
+      note:
+        description: 'Optional note recorded against the change'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+
+      - name: Apply
+        run: |
+          node scripts/review.mjs "${{ inputs.action }}" "${{ inputs.ids }}" "${{ inputs.note }}"
+
+      - name: Validate
+        run: npm run validate && npm run provenance
+
+      - name: Commit
+        run: |
+          if git diff --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git config user.name "stuartokin"
+          git config user.email "stuartokin@users.noreply.github.com"
+          git add content/frontier
+          git commit -m "review: ${{ inputs.action }}$( [ -n '${{ inputs.ids }}' ] && echo ' — ${{ inputs.ids }}' )"
+          git push origin main
