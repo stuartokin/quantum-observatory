@@ -290,14 +290,13 @@ export function Board() {
           <span className="wordmark" style={{ flex: '0 0 auto' }}>Horizon Q</span>
           <select
             className="galaxy-picker"
-            style={{ flex: '0 0 auto' }}
             value={galaxy}
             onChange={(e) => {
               setGalaxy(e.target.value as FrontierItem['pillar'])
               leaveOrbit()
               setSelected(null)
             }}
-            style={{ color: colour }}
+            style={{ color: colour, flex: '0 0 auto' }}
             aria-label="Galaxy"
           >
             {GALAXIES.map((g) => {
