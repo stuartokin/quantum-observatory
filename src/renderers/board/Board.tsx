@@ -3,6 +3,7 @@ import { allFrontier } from '../../content/frontier'
 import { items as articles } from '../../content/loader'
 import type { FrontierItem, Readiness } from '../../content/frontierTypes'
 import { PILLAR_SPECTRUM } from '../../palette'
+import { constellationColour, constellationMuted } from '../../constellationPalette'
 import {
   LEVELS,
   CONSTELLATIONS,
@@ -15,7 +16,7 @@ import {
   type Glyph,
 } from './tower'
 import { drawBody, drawGlyph } from './glyphs'
-import { layoutTimeline, yearFraction, GUTTER } from './timeline'
+import { layoutTimeline, yearFraction, GUTTER, dateOf } from './timeline'
 import {
   DEFAULT_CAMERA,
   clampCamera,
@@ -101,6 +102,9 @@ export function Board() {
   const [cam, setCam] = useState<Camera>(DEFAULT_CAMERA)
   const [focusCon, setFocusCon] = useState<string | null>(null)
   const [statsOpen, setStatsOpen] = useState(false)
+  /** Years excluded from view. Filtering time frees space in both views. */
+  const [hiddenYears, setHiddenYears] = useState<Set<number>>(new Set())
+  const [showLegend, setShowLegend] = useState(true)
   /** Below roughly 13 inches the figures move behind an icon rather than going. */
   const [narrow, setNarrow] = useState(
     typeof window !== 'undefined' ? window.innerWidth < 1180 : false,
@@ -122,6 +126,10 @@ export function Board() {
     defaultLayout(window.innerWidth, window.innerHeight),
   )
   const setFrame = (k: string) => (s: FrameState) => setFrames((f) => ({ ...f, [k]: s }))
+  const openQDay = () => {
+    setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
+    setOrder((o) => [...o.filter((x) => x !== 'qday'), 'qday'])
+  }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
     'galaxy', 'teaser', 'news', 'filters', 'actors', 'help', 'qday', 'detail',
@@ -156,6 +164,14 @@ export function Board() {
     () =>
       pool.filter(
         (i) =>
+          (() => {
+            if (hiddenYears.size === 0) return true
+            const d = dateOf(i)
+            // Undated items are never hidden by a year filter — they have no
+            // year to disagree with, and dropping them would quietly shrink
+            // the board without saying so.
+            return !d || !hiddenYears.has(d.getFullYear())
+          })() &&
           cons.includes(i.constellation ?? '') &&
           levels.includes(i.readiness) &&
           (!actorFilter || (i.actors ?? []).includes(actorFilter)) &&
@@ -166,6 +182,16 @@ export function Board() {
 
   const nodes = useMemo(() => layout(visible, { offsets: {} as Offsets }), [visible])
   const item = selected ? pool.find((i) => i.id === selected) ?? null : null
+  /** Every year the board has evidence for, ascending. */
+  const years = useMemo(() => {
+    const set = new Set<number>()
+    for (const i of pool) {
+      const d = dateOf(i)
+      if (d) set.add(d.getFullYear())
+    }
+    return [...set].sort((a, b) => a - b)
+  }, [pool])
+
   const news = useMemo(() => buildNews(pool), [pool])
   const teaserEntries = useMemo(() => headlines(news), [news])
   const changedCon = useMemo(() => mostChanged(teaserEntries), [teaserEntries])
@@ -246,7 +272,15 @@ export function Board() {
         ]),
     { key: 'news', icon: '◰', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
-    { key: 'qday', icon: 'Q', label: 'Q-Day', active: !frames.qday.docked, onClick: toggle('qday') },
+    ...(timeline
+      ? [{
+          key: 'legend',
+          icon: '◑',
+          label: 'Legend',
+          active: showLegend,
+          onClick: () => setShowLegend((v) => !v),
+        }]
+      : []),
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     {
       key: 'reset',
@@ -323,7 +357,10 @@ export function Board() {
           {/* Truncates to nothing rather than wrapping. With the Q-Day bar and
               the figures both present, this is the element that must give. */}
           <h2
+            onDoubleClick={openQDay}
+            title="Double-click for the Q-Day forecast"
             style={{
+              cursor: 'pointer',
               flex: '1 1 0',
               minWidth: 0,
               overflow: 'hidden',
@@ -354,14 +391,7 @@ export function Board() {
           className="board-right"
           style={{ display: 'flex', alignItems: 'center', gap: 12, flex: '0 0 auto', position: 'relative' }}
         >
-          <QDayBar
-            forecast={forecast}
-            colour={colour}
-            onOpen={() => {
-              raise('qday')()
-              setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
-            }}
-          />
+          <QDayBar forecast={forecast} colour={colour} onOpen={openQDay} />
 
           {narrow && (
             <button
@@ -446,6 +476,7 @@ export function Board() {
         onResized={bump}
         minWidth={360}
         minHeight={260}
+        flush
       >
         <Sky
           nodes={nodes}
@@ -464,6 +495,8 @@ export function Board() {
           setCam={setCam}
           resizeTick={resizeTick}
           forecast={forecast}
+          showLegend={showLegend}
+          pool={pool}
         />
       </Frame>
 
@@ -525,55 +558,34 @@ export function Board() {
         z={zOf('filters')}
         onFocus={raise('filters')}
       >
-        <button
-          className="frame__reset"
-          onClick={() => {
-            if (allOn) { setCons([]); setLevels([]) }
-            else { setCons([...CONSTELLATIONS]); setLevels([...LEVELS]) }
+        <FilterSection
+          label="Constellations"
+          all={CONSTELLATIONS as unknown as string[]}
+          selected={cons}
+          onChange={setCons}
+          swatch={(c) => constellationColour(c)}
+          render={(c) => CONSTELLATION_LABEL[c]}
+        />
+
+        <FilterSection
+          label="Readiness"
+          all={LEVELS as unknown as string[]}
+          selected={levels}
+          onChange={setLevels}
+          render={(l) => l}
+        />
+
+        <FilterSection
+          label="Years"
+          all={years.map(String)}
+          selected={years.filter((y) => !hiddenYears.has(y)).map(String)}
+          onChange={(next) => {
+            const keep = new Set(next.map(Number))
+            setHiddenYears(new Set(years.filter((y) => !keep.has(y))))
           }}
-        >
-          {allOn ? 'Select none' : 'Select all'}
-        </button>
-
-        <fieldset>
-          <legend>Constellations</legend>
-          {CONSTELLATIONS.map((c) => (
-            <label key={c}>
-              <input
-                type="checkbox"
-                checked={cons.includes(c)}
-                onChange={() =>
-                  setCons((v) => (v.includes(c) ? v.filter((x) => x !== c) : [...v, c]))
-                }
-              />
-              {CONSTELLATION_LABEL[c]}
-            </label>
-          ))}
-        </fieldset>
-
-        <fieldset>
-          <legend>Readiness</legend>
-          {LEVELS.map((l) => (
-            <label key={l}>
-              <input
-                type="checkbox"
-                checked={levels.includes(l)}
-                onChange={() =>
-                  setLevels((v) => (v.includes(l) ? v.filter((x) => x !== l) : [...v, l]))
-                }
-              />
-              {l}
-            </label>
-          ))}
-        </fieldset>
-
-        <fieldset>
-          <legend>Evidence</legend>
-          <label>
-            <input type="checkbox" checked={sourcedOnly} onChange={() => setSourcedOnly((v) => !v)} />
-            Sourced only
-          </label>
-        </fieldset>
+          render={(y) => y}
+          note="Undated items are never hidden by a year filter."
+        />
       </Frame>
 
       {!timeline && (
@@ -673,6 +685,8 @@ function Sky({
   setCam,
   resizeTick,
   forecast,
+  showLegend,
+  pool,
 }: {
   nodes: Node[]
   colour: string
@@ -690,6 +704,8 @@ function Sky({
   setCam: (c: Camera) => void
   resizeTick: number
   forecast?: Forecast
+  showLegend: boolean
+  pool: FrontierItem[]
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -736,6 +752,11 @@ function Sky({
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   /** Live timeline projection, so hit testing uses the same maths as drawing. */
   const tlProject = useRef<{ TX: (x: number) => number; TY: (y: number) => number } | null>(null)
+  /** Geometry of the timeline scrollbar, so a pointer can hit it. */
+  const scrollTrack = useRef<
+    { x: number; w: number; y: number; visibleFrac: number; span: number } | null
+  >(null)
+  const barDrag = useRef<{ ox: number; tx: number } | null>(null)
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
@@ -1000,8 +1021,13 @@ function Sky({
           if (px < AXIS - 20 || px > W + 20) continue
           const sel = selected === m.id
           const hov = hoverRef.current === m.id
-          const rr = m.r * (sel ? 1.5 : hov ? 1.2 : 1)
-          const tint = actorColour(colour, undefined)
+          const rr = m.r * (0.75 + m.importance * 0.7) * (sel ? 1.5 : hov ? 1.2 : 1)
+          // Same hue system as the galaxy, so a body is recognisably the same
+          // body in both views.
+          const item = pool.find((i) => i.id === m.id)
+          const tint = m.sourced
+            ? constellationColour(item?.constellation)
+            : constellationMuted(item?.constellation)
 
           if (m.attention > 0.02 && !reduced) {
             const ph = (t * 0.45 + m.x * 5) % 1
@@ -1044,7 +1070,10 @@ function Sky({
           }
 
           // Labels: the most important first, and only where there is room.
-          const wantLabel = sel || hov || m.importance > 0.55
+          // The threshold falls as you zoom in, so the detail arrives when you
+          // ask for it rather than all at once.
+          const labelCut = v.k > 2.4 ? 0.2 : v.k > 1.5 ? 0.45 : 0.72
+          const wantLabel = sel || hov || m.importance > labelCut
           if (wantLabel) {
             const text = m.label
             const tw = g.measureText(text).width
@@ -1079,6 +1108,62 @@ function Sky({
               g.fillText(text, lx, ly)
             }
           }
+        }
+
+        // A horizontal bar for the time axis. Dragging the plot works, but on
+        // a long axis you want to know where you are as well as move.
+        {
+          const span = 1 - GUTTER
+          const visibleFrac = Math.min(1, 1 / v.k)
+          const offset = Math.max(0, Math.min(1 - visibleFrac, -v.tx / Math.max(0.001, span)))
+          const trackX = AXIS + 6
+          const trackW = W - AXIS - 18
+          const y = H - 4
+          g.globalAlpha = 0.16
+          g.strokeStyle = '#8697B0'
+          g.lineWidth = 3
+          g.beginPath()
+          g.moveTo(trackX, y)
+          g.lineTo(trackX + trackW, y)
+          g.stroke()
+          g.globalAlpha = 0.65
+          g.strokeStyle = colour
+          g.beginPath()
+          g.moveTo(trackX + offset * trackW, y)
+          g.lineTo(trackX + Math.min(1, offset + visibleFrac) * trackW, y)
+          g.stroke()
+          g.globalAlpha = 1
+          scrollTrack.current = { x: trackX, w: trackW, y, visibleFrac, span }
+        }
+
+        // Category legend, bottom right. Small, and dismissible from the
+        // toolbar when it is in the way.
+        if (showLegend) {
+          const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
+          const lh = 13
+          const boxW = 132
+          const boxH = entries.length * lh + 12
+          const bx = W - boxW - 10
+          const by = H - boxH - 10
+          g.globalAlpha = 0.9
+          g.fillStyle = '#0B1220'
+          g.beginPath()
+          g.roundRect(bx, by, boxW, boxH, 2)
+          g.fill()
+          g.globalAlpha = 0.35
+          g.strokeStyle = '#8697B0'
+          g.stroke()
+          entries.forEach((c, i) => {
+            const y = by + 12 + i * lh
+            g.globalAlpha = 1
+            g.fillStyle = constellationColour(c)
+            g.beginPath()
+            g.arc(bx + 12, y - 3, 3.2, 0, Math.PI * 2)
+            g.fill()
+            g.fillStyle = '#8697B0'
+            g.fillText(CONSTELLATION_LABEL[c], bx + 22, y)
+          })
+          g.globalAlpha = 1
         }
 
         // Readiness names last, on an opaque strip, so no label can cross them.
@@ -1212,8 +1297,8 @@ function Sky({
             if (clash) return
             placedNames.push({ x, w: tw, row })
 
-            g.fillStyle = colour
-            g.globalAlpha = (row === 0 ? 0.85 : 0.6) * zoomFade
+            g.fillStyle = constellationColour(c)
+            g.globalAlpha = (row === 0 ? 0.9 : 0.65) * zoomFade
             g.fillText(label, Math.max(4, x), 18 + row * 13)
             g.globalAlpha = 1
           })
@@ -1321,7 +1406,13 @@ function Sky({
         g.shadowColor = colour
         g.shadowBlur = n.sourced ? 16 + n.weight * 12 : 5
         g.globalAlpha = (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) * fade
-        drawBody(g, n.glyph, px, py, r, actorColour(colour, n.actor), n.sourced)
+        // Hue carries the constellation; size and brightness carry importance.
+        // Actor is a slight shift within that hue, so who did the work is
+        // legible without a second colour system competing with the first.
+        const bodyColour = n.sourced
+          ? actorColour(constellationColour(n.constellation), n.actor)
+          : constellationMuted(n.constellation)
+        drawBody(g, n.glyph, px, py, r, bodyColour, n.sourced)
         g.shadowBlur = 0
 
         // Unreviewed items carry a dashed ring wherever they appear. The label
@@ -1402,7 +1493,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, showLegend, pool, fitScale])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
@@ -1435,6 +1526,21 @@ function Sky({
     return best
   }
 
+  /**
+   * The zoom level at which the whole board is inside the frame.
+   *
+   * Below this there is nothing more to reveal, so it becomes the floor —
+   * which is also what removes the need to scroll at all.
+   */
+  const fitScale = useMemo(() => {
+    if (nodes.length === 0) return 0.35
+    const xs = nodes.map((n) => n.x)
+    const ys = nodes.map((n) => n.y)
+    const w = Math.max(0.12, Math.max(...xs) - Math.min(...xs))
+    const h = Math.max(0.12, Math.max(...ys) - Math.min(...ys))
+    return Math.max(0.18, Math.min(1, Math.min(1 / w, 1 / h) * 0.82))
+  }, [nodes])
+
   function onWheel(e: React.WheelEvent) {
     idleSince.current = performance.now()
     if (mode === 'orbit') {
@@ -1450,6 +1556,19 @@ function Sky({
 
   function onPointerDown(e: React.PointerEvent) {
     idleSince.current = performance.now()
+
+    // The scrollbar takes the pointer before the plot does.
+    const st = scrollTrack.current
+    if (tl && st) {
+      const r = cv.current!.getBoundingClientRect()
+      const py = e.clientY - r.top
+      if (Math.abs(py - st.y) < 12) {
+        barDrag.current = { ox: e.clientX, tx: view.tx }
+        ;(e.target as Element).setPointerCapture?.(e.pointerId)
+        return
+      }
+    }
+
     if (tl) {
       // Timeline pans only; marks are selected on release.
       drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
@@ -1505,6 +1624,15 @@ function Sky({
       )
       return
     }
+    const bd = barDrag.current
+    const st = scrollTrack.current
+    if (bd && st) {
+      const r = cv.current!.getBoundingClientRect()
+      const frac = (e.clientX - bd.ox) / Math.max(1, st.w)
+      setView({ ...view, tx: bd.tx - frac * st.span * cur.current.k })
+      return
+    }
+
     const d = drag.current
     if (!d) {
       if (tl) {
@@ -1717,6 +1845,75 @@ function ago(date?: string): string {
   if (days < 31) return `${days} days ago`
   if (days < 365) return `${Math.round(days / 30.44)} months ago`
   return `${(days / 365).toFixed(1)} years ago`
+}
+
+/**
+ * One filter group with its own select-all and select-none.
+ *
+ * Shared controls across three groups meant clearing constellations also
+ * cleared readiness and years, which is never what anybody wants.
+ */
+function FilterSection({
+  label,
+  all,
+  selected,
+  onChange,
+  render,
+  swatch,
+  note,
+}: {
+  label: string
+  all: string[]
+  selected: string[]
+  onChange: (next: string[]) => void
+  render: (v: string) => string
+  swatch?: (v: string) => string
+  note?: string
+}) {
+  if (all.length === 0) return null
+  const none = selected.length === 0
+  const every = selected.length === all.length
+
+  return (
+    <section className="filter-group">
+      <header>
+        <span className="label">{label}</span>
+        <span className="filter-group__actions">
+          <button onClick={() => onChange([...all])} disabled={every}>All</button>
+          <button onClick={() => onChange([])} disabled={none}>None</button>
+        </span>
+      </header>
+
+      <ul className="filter-list">
+        {all.map((v) => {
+          const on = selected.includes(v)
+          return (
+            <li key={v}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={on}
+                  onChange={() =>
+                    onChange(on ? selected.filter((x) => x !== v) : [...selected, v])
+                  }
+                />
+                {swatch && (
+                  <span
+                    className="filter-swatch"
+                    style={{ background: swatch(v), opacity: on ? 1 : 0.25 }}
+                    aria-hidden="true"
+                  />
+                )}
+                <span style={{ opacity: on ? 1 : 0.45 }}>{render(v)}</span>
+              </label>
+            </li>
+          )
+        })}
+      </ul>
+
+      {note && <p className="filter-group__note">{note}</p>}
+    </section>
+  )
 }
 
 function Detail({ item, definition }: { item: FrontierItem; definition?: string }) {

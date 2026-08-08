@@ -57,7 +57,7 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
    *
    * A threshold on the width the reader chose cannot feed back into itself.
    */
-  const compact = (width ?? Infinity) < 520 || viewport < 760
+  const compact = (width ?? Infinity) < 560 || viewport < 760
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -70,6 +70,9 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
           Math.min(window.innerWidth - 24, size.current.w + (e.clientX - size.current.ox) * 2),
         )
         el.style.width = `${w}px`
+        // Commit live, not on release. Committing at pointerup meant the bar
+        // only became icons after you let go, which reads as it not working.
+        setWidth(w)
         return
       }
 

@@ -37,6 +37,7 @@ export function Frame({
   onResized,
   minWidth = 220,
   minHeight = 140,
+  flush,
 }: {
   title: string
   state: FrameState
@@ -50,6 +51,8 @@ export function Frame({
   onResized?: () => void
   minWidth?: number
   minHeight?: number
+  /** Canvas frames own their whole box: no padding, no scrollbars. */
+  flush?: boolean
 }) {
   const ref = useRef<HTMLElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
@@ -166,7 +169,9 @@ export function Frame({
 
       {!state.minimised && (
         <>
-          <div className="frame__body">{children}</div>
+          <div className={flush ? 'frame__body frame__body--flush' : 'frame__body'}>
+            {children}
+          </div>
           <span className="frame__resize" onPointerDown={begin('resize')} aria-hidden="true" />
         </>
       )}
@@ -207,6 +212,6 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
     actors: { x: 300, y: 120, w: 260, h: 300, docked: true },
     help: { x: 70, y: 130, w: 460, h: 480, docked: true },
     detail: { x: Math.max(16, w - 424), y: 96, w: 400, h: 470, docked: true },
-    qday: { x: 24, y: h - 260, w: 340, h: 210, docked: true },
+    qday: { x: 24, y: top + 16, w: 380, h: Math.max(360, h - top - 120), docked: true },
   }
 }
