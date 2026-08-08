@@ -103,11 +103,18 @@ ${new Date().toISOString().slice(0, 10)}
 Reply with a single JSON object and nothing else — no prose, no markdown fences:
 
 {
-  "summary": "one paragraph for the pull request description",
+  "summary": "one paragraph, read weekly — make it worth reading",
   "checklist": { "question": "answer", ... },
+  "couldNotSource": [ { "id": "...", "why": "what you searched, what you rejected" } ],
+  "badlyFramed": [ { "id": "...", "why": "why this asks the wrong question" } ],
+  "applicationCandidates": [ { "what": "...", "source": "url" } ],
   "rejected": [ { "what": "...", "why": "..." } ],
   "files": [ { "path": "content/frontier/_inbox/<id>.md", "content": "<full file>" } ]
 }
+
+The lists matter as much as the files. couldNotSource and badlyFramed tell the
+reviewer where the board is weak, which is not visible from the items that
+worked. Return them even when empty.
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
 Maximum files this run: ${cfg.budget?.proposals ?? 6}
@@ -294,23 +301,43 @@ if (rejected.length) {
   console.error(`Continuing with the ${written.length} valid file(s).\n`)
 }
 
+/** Render any list the agent returned, whatever it chose to call the fields. */
+function section(title, rows, render) {
+  if (!rows || rows.length === 0) return []
+  return ['', `## ${title}`, ...rows.map(render)]
+}
+
 const pr = [
   out.summary ?? '',
   '',
   '## Checklist',
   ...Object.entries(out.checklist ?? {}).map(([q, a]) => `- **${q}** — ${a}`),
-  '',
-  '## Considered and rejected',
-  ...(out.rejected ?? []).map((r) => `- **${r.what}** — ${r.why}`),
+
+  // The agent's own reasoning. What it could not evidence, and what it thinks
+  // is badly framed, is frequently worth more than what it managed to source —
+  // and it used to be discarded entirely.
+  ...section('Could not source', out.couldNotSource ?? out.could_not_source, (r) =>
+    typeof r === 'string' ? `- ${r}` : `- **${r.id ?? r.what}** — ${r.why ?? r.reason}`,
+  ),
+  ...section('Badly framed', out.badlyFramed ?? out.badly_framed, (r) =>
+    typeof r === 'string' ? `- ${r}` : `- **${r.id ?? r.what}** — ${r.why ?? r.reason}`,
+  ),
+  ...section('Application candidates', out.applicationCandidates ?? out.application_candidates, (r) =>
+    typeof r === 'string' ? `- ${r}` : `- **${r.what ?? r.title}** — ${r.source ?? r.why ?? ''}`,
+  ),
+  ...section('Considered and rejected', out.rejected, (r) =>
+    typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.why}`,
+  ),
+
   '',
   `## Files (${written.length})`,
   ...written.map((p) => `- \`${p}\``),
   ...(rejected.length
-    ? ['', `## Rejected before writing (${rejected.length})`,
+    ? ['', `## Discarded before writing (${rejected.length})`,
        ...rejected.map((r) => `- \`${r.path}\` — ${r.reason}`)]
     : []),
   '',
-  `_Proposed by the ${agent} agent. Nothing here is published until merged._`,
+  `_Published by the ${agent} agent, without human review._`,
 ].join('\n')
 
 mkdirSync('.agent-run', { recursive: true })
