@@ -84,13 +84,13 @@ jobs:
       - name: Validate the board
         run: npm run validate
 
-      - name: Keep the raw response if anything failed
-        if: failure()
+      - name: Keep the run record
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.agent }}-raw
+          name: ${{ matrix.agent }}-run-${{ github.run_number }}
           path: .agent-run/
-          retention-days: 14
+          retention-days: 90
 
       # The runner records exactly which files it wrote, so this needs no git
       # history. BASE_REF remains only as a fallback.
@@ -168,17 +168,23 @@ jobs:
             VETO="use the Revert button on $MERGED_PR"
           fi
           TITLE="Review queue - week of $(date +%Y-%m-%d)"
-          cat > /tmp/issue-body.md <<BODY
-          ### ${{ matrix.agent }} - $COUNT item(s)
 
-          Merged and live, **not yet reviewed**.
+          # The full agent summary, not a count. This is the thing that gets
+          # read weekly, and the "could not source" reasoning is often more
+          # useful than the items that succeeded.
+          {
+            echo "## ${{ matrix.agent }} — $COUNT item(s)"
+            echo
+            echo "Merged and live, **not yet reviewed**. $MERGED_PR"
+            echo
+            echo "- Confirm: Actions → Review → \`mark-reviewed\`"
+            echo "- Veto: $VETO"
+            echo
+            echo "---"
+            echo
+            cat .agent-run/pr-body.md
+          } > /tmp/issue-body.md
 
-          $MERGED_PR
-
-          - Confirm: set \`review.state: reviewed\` with today's date
-          - Veto: $VETO
-          BODY
-          sed -i 's/^          //' /tmp/issue-body.md
           EXISTING=$(gh issue list --search "$TITLE" --state open --json number,title \
                      --jq ".[] | select(.title==\"$TITLE\") | .number" | head -1)
           if [ -n "$EXISTING" ]; then
