@@ -177,7 +177,7 @@ export function Board() {
           (!actorFilter || (i.actors ?? []).includes(actorFilter)) &&
           (!sourcedOnly || isSourced(i)),
       ),
-    [pool, cons, levels, actorFilter, sourcedOnly],
+    [pool, cons, levels, actorFilter, sourcedOnly, hiddenYears],
   )
 
   const nodes = useMemo(() => layout(visible, { offsets: {} as Offsets }), [visible])
@@ -772,11 +772,12 @@ function Sky({
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   /** Live timeline projection, so hit testing uses the same maths as drawing. */
   const tlProject = useRef<{ TX: (x: number) => number; TY: (y: number) => number } | null>(null)
-  /** Geometry of the timeline scrollbar, so a pointer can hit it. */
-  const scrollTrack = useRef<
-    { x: number; w: number; y: number; visibleFrac: number; span: number } | null
-  >(null)
-  const barDrag = useRef<{ ox: number; tx: number } | null>(null)
+  /** Scrollbar geometry, so a pointer can find them. Null when everything fits. */
+  const tracks = useRef<{
+    h: { x: number; w: number; y: number; frac: number }
+    v: { x: number; y: number; h: number; frac: number }
+  } | null>(null)
+  const barDrag = useRef<{ axis: 'h' | 'v'; o: number; t: number } | null>(null)
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
@@ -953,6 +954,62 @@ function Sky({
         spin.current += 0.09 * dt * ease
       }
       const liveCam = { ...cam, yaw: cam.yaw + spin.current }
+
+      /**
+       * Scrollbars, drawn only when something is off-screen.
+       *
+       * Dragging the plot is the primary gesture, but zoomed in a long way it
+       * stops being obvious how much lies outside the frame or where you are
+       * within it. At the fit-to-frame floor everything is visible, so they
+       * disappear entirely rather than sitting there as furniture.
+       */
+      const drawScrollbars = (leftInset: number) => {
+        tracks.current = null
+        if (cur.current.k <= fitScale * 1.03) return
+
+        const frac = Math.min(1, 1 / cur.current.k)
+        const offX = Math.max(0, Math.min(1 - frac, -cur.current.tx))
+        const offY = Math.max(0, Math.min(1 - frac, -cur.current.ty))
+        const inset = 6
+        const hx = leftInset
+        const hw = W - hx - inset - 12
+        const vy = 30
+        const vh = H - vy - inset - 14
+
+        const bar = (
+          x: number, y: number, w: number, h: number, off: number, horizontal: boolean,
+        ) => {
+          g.lineCap = 'round'
+          g.lineWidth = 3
+          g.globalAlpha = 0.15
+          g.strokeStyle = '#8697B0'
+          g.beginPath()
+          g.moveTo(x, y)
+          g.lineTo(horizontal ? x + w : x, horizontal ? y : y + h)
+          g.stroke()
+          g.globalAlpha = 0.65
+          g.strokeStyle = colour
+          g.beginPath()
+          if (horizontal) {
+            g.moveTo(x + off * w, y)
+            g.lineTo(x + Math.min(1, off + frac) * w, y)
+          } else {
+            g.moveTo(x, y + off * h)
+            g.lineTo(x, y + Math.min(1, off + frac) * h)
+          }
+          g.stroke()
+          g.globalAlpha = 1
+          g.lineCap = 'butt'
+        }
+
+        bar(hx, H - inset, hw, 0, offX, true)
+        bar(W - inset, vy, 0, vh, offY, false)
+
+        tracks.current = {
+          h: { x: hx, w: hw, y: H - inset, frac },
+          v: { x: W - inset, y: vy, h: vh, frac },
+        }
+      }
 
       const e = reduced ? 1 : 0.16
       cur.current.k += (view.k - cur.current.k) * e
@@ -1145,32 +1202,6 @@ function Sky({
           }
         }
 
-        // A horizontal bar for the time axis. Dragging the plot works, but on
-        // a long axis you want to know where you are as well as move.
-        {
-          const span = 1 - GUTTER
-          const visibleFrac = Math.min(1, 1 / v.k)
-          const offset = Math.max(0, Math.min(1 - visibleFrac, -v.tx / Math.max(0.001, span)))
-          const trackX = AXIS + 6
-          const trackW = W - AXIS - 18
-          const y = H - 4
-          g.globalAlpha = 0.16
-          g.strokeStyle = '#8697B0'
-          g.lineWidth = 3
-          g.beginPath()
-          g.moveTo(trackX, y)
-          g.lineTo(trackX + trackW, y)
-          g.stroke()
-          g.globalAlpha = 0.65
-          g.strokeStyle = colour
-          g.beginPath()
-          g.moveTo(trackX + offset * trackW, y)
-          g.lineTo(trackX + Math.min(1, offset + visibleFrac) * trackW, y)
-          g.stroke()
-          g.globalAlpha = 1
-          scrollTrack.current = { x: trackX, w: trackW, y, visibleFrac, span }
-        }
-
         // Category legend, bottom right. Small, and dismissible from the
         // toolbar when it is in the way.
         if (showLegend) {
@@ -1211,6 +1242,7 @@ function Sky({
           g.fillText(lvl.toUpperCase(), 8, y + 4)
         })
         g.globalAlpha = 1
+        drawScrollbars(110)
         raf = requestAnimationFrame(safeDraw)
         return
       }
@@ -1510,6 +1542,7 @@ function Sky({
         g.fillText(text, lx, ly)
       }
       g.globalAlpha = 1
+      drawScrollbars(6)
 
       raf = requestAnimationFrame(safeDraw)
     }
@@ -1578,13 +1611,19 @@ function Sky({
   function onPointerDown(e: React.PointerEvent) {
     idleSince.current = performance.now()
 
-    // The scrollbar takes the pointer before the plot does.
-    const st = scrollTrack.current
-    if (tl && st) {
+    // The scrollbars take the pointer before the plot does.
+    const tr = tracks.current
+    if (tr) {
       const r = cv.current!.getBoundingClientRect()
+      const px = e.clientX - r.left
       const py = e.clientY - r.top
-      if (Math.abs(py - st.y) < 12) {
-        barDrag.current = { ox: e.clientX, tx: view.tx }
+      if (Math.abs(py - tr.h.y) < 11 && px > tr.h.x - 6 && px < tr.h.x + tr.h.w + 6) {
+        barDrag.current = { axis: 'h', o: e.clientX, t: view.tx }
+        ;(e.target as Element).setPointerCapture?.(e.pointerId)
+        return
+      }
+      if (Math.abs(px - tr.v.x) < 11 && py > tr.v.y - 6 && py < tr.v.y + tr.v.h + 6) {
+        barDrag.current = { axis: 'v', o: e.clientY, t: view.ty }
         ;(e.target as Element).setPointerCapture?.(e.pointerId)
         return
       }
@@ -1646,10 +1685,17 @@ function Sky({
       return
     }
     const bd = barDrag.current
-    const st = scrollTrack.current
-    if (bd && st) {
-      const frac = (e.clientX - bd.ox) / Math.max(1, st.w)
-      setView({ ...view, tx: bd.tx - frac * st.span * cur.current.k })
+    const tr = tracks.current
+    if (bd && tr) {
+      // The thumb moves across the track; the content moves the other way, and
+      // by however much of it is off-screen.
+      if (bd.axis === 'h') {
+        const moved = (e.clientX - bd.o) / Math.max(1, tr.h.w)
+        setView({ ...view, tx: bd.t - moved })
+      } else {
+        const moved = (e.clientY - bd.o) / Math.max(1, tr.v.h)
+        setView({ ...view, ty: bd.t - moved })
+      }
       return
     }
 
