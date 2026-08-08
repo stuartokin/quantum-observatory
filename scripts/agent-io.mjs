@@ -98,6 +98,38 @@ export function normaliseFile(raw) {
     t = lines.join('\n')
   }
 
+  /**
+   * Quote scalar values that YAML would misread.
+   *
+   * "summary: Quantum sensors: magnetometers" parses the second colon as a
+   * nested key and the document fails. The agent is told to quote these, but a
+   * rule stated is not a rule obeyed, and discarding a fully researched item
+   * over one missing pair of quotes is a poor trade.
+   *
+   * Only single-line scalars are touched, and only where the value is plainly
+   * prose rather than structure.
+   */
+  const parts = t.match(/^(---\r?\n)([\s\S]*?)(\r?\n---)/)
+  if (parts) {
+    const RISKY = /^[%&*!|>@`\[{]/
+    const fixed = parts[2]
+      .split('\n')
+      .map((line) => {
+        const m = line.match(/^(\s*(?:- )?[A-Za-z_][\w-]*: )(.+)$/)
+        if (!m) return line
+        const [, head, rawValue] = m
+        const value = rawValue.trim()
+        if (!value) return line
+        if (/^['"]/.test(value)) return line          // already quoted
+        if (/^[[{]/.test(value)) return line          // a flow collection
+        const needsQuote = /: /.test(value) || value.endsWith(':') || RISKY.test(value)
+        if (!needsQuote) return line
+        return head + "'" + value.replace(/'/g, "''") + "'"
+      })
+      .join('\n')
+    t = parts[1] + fixed + parts[3] + t.slice(parts[0].length)
+  }
+
   if (!t.endsWith('\n')) t += '\n'
   return t
 }

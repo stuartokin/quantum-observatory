@@ -232,3 +232,38 @@ Card body goes here.
 
 Omitting the closing `---` is the single most common way a well-researched file
 gets discarded. The runner will try to repair it, but do not rely on that.
+
+## Field limits
+
+The schema enforces these. Exceeding one discards the file.
+
+| Field | Maximum |
+| --- | --- |
+| `title` | 90 characters |
+| `summary` | 400 |
+| `plain` | 1200 |
+| `evidence.claim` | 800 |
+| `qdayReasoning` | 700 |
+| `metrics[].note` | 200 |
+
+`plain` is the one worth spending words on — it is what a non-specialist reads.
+Two or three sentences is right; a page is not.
+
+## Quote anything containing a colon
+
+This is the most common way a well-written file fails to parse.
+
+YAML reads `a: b` as a key and a value, wherever it appears. So an unquoted
+value containing a colon followed by a space breaks the whole document:
+
+```yaml
+# breaks — "magnetometers, atomic clocks: timing" parses as a nested key
+summary: Quantum sensors: magnetometers, atomic clocks: timing assurance
+
+# correct
+summary: 'Quantum sensors: magnetometers, atomic clocks: timing assurance'
+```
+
+Quote the value if it contains a colon, a `#`, or begins with any of
+`% & * ! | > @ \` [ {`. Quote every number and date. When in doubt, quote it —
+single quotes cost nothing and never hurt.

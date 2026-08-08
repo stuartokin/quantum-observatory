@@ -54,6 +54,29 @@ t('  body survives', repaired.includes('Body paragraph'))
 t('  exactly two delimiters', (repaired.match(/^---$/gm) || []).length === 2)
 const alreadyGood = '---\nid: a\nreview:\n  state: agent-merged\n---\n\nBody.\n'
 t('correct file untouched', normaliseFile(alreadyGood) === alreadyGood)
+
+// An unquoted colon in a scalar breaks the whole document. Agents are told to
+// quote; a rule stated is not a rule obeyed, so repair it too.
+const colons = [
+  '---',
+  'id: quantum-sensing-grid',
+  'summary: Quantum sensors: magnetometers, atomic clocks: timing',
+  'evidence:',
+  '  claim: The paper reports: a tenfold improvement.',
+  'actors: [IBM, Google Quantum AI]',
+  'review:',
+  '  state: agent-merged',
+  '---',
+  '',
+  'Body: colons here must be left alone.',
+  '',
+].join('\n')
+const quoted = normaliseFile(colons)
+t('unquoted colon repaired', quoted.includes("summary: 'Quantum sensors: magnetometers, atomic clocks: timing'"))
+t('  nested value repaired', quoted.includes("claim: 'The paper reports: a tenfold improvement.'"))
+t('  flow sequence untouched', quoted.includes('actors: [IBM, Google Quantum AI]'))
+t('  body untouched', quoted.includes('Body: colons here must be left alone.'))
+t('  mapping keys untouched', /^evidence:$/m.test(quoted))
 t('trailing newline added', normaliseFile('---\nid: a\n---\nbody').endsWith('\n'))
 
 const split = [
