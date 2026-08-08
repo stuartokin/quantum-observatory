@@ -26,6 +26,7 @@ export const CONSTELLATIONS = [
   'error-correction',
   'algorithms',
   'enabling',
+  'applications',
   'pqc',
   'migration',
   'communications',
