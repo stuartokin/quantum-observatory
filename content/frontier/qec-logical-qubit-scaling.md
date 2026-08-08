@@ -54,11 +54,11 @@ moved:
   from: experimental
   on: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 The path to a fault-tolerant quantum computer requires not just one good logical qubit but many of them running in concert. Quantinuum''s February 2026 preprint is the most significant step yet: 48 to 94 logical qubits on a single 98-qubit device, all performing better encoded than unencoded. The iceberg codes they use are high-rate — they pack many logical qubits into relatively few physical qubits, which is essential for scaling. This is a preprint and has not yet been replicated by an independent group, but the experimental detail is extensive and the result sits comfortably at E3.

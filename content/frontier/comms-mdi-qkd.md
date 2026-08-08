@@ -57,11 +57,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 MDI-QKD closes the detector loophole that affected earlier QKD deployments. Rather than trusting the measurement apparatus, both communicating parties (Alice and Bob) send photons toward a central node (Charlie) that performs a Bell-state measurement. The result tells Alice and Bob whether their bits are correlated, but not what the values are — so a compromised or malicious Charlie learns nothing useful.

@@ -45,11 +45,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Grover's algorithm provides a provable quantum speedup for unstructured database search, requiring O(√N) oracle queries versus O(N) classically. Its cryptographic significance is that it halves the effective bit-security of symmetric ciphers — AES-128 has ~64 bits of quantum security rather than 128 — which defines NIST's post-quantum security categories.

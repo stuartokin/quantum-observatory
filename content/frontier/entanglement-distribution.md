@@ -62,11 +62,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., PRL 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.

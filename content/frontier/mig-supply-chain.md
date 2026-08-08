@@ -52,11 +52,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Supply chain PQC readiness is a named risk category in the joint CISA/NSA/NIST factsheet and in NCSC''s March 2025 migration guidance. No empirical study of actual supplier readiness rates exists. This item is correctly at E2: authoritative guidance, not measured data. Raising it requires published measurement.

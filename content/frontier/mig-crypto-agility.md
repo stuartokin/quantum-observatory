@@ -46,11 +46,11 @@ links:
     relation: enables
 origin: human
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Crypto-agility is not a feature — it is an architectural property that must be designed in from the start. NIST IR 8547 has set hard dates: deprecated 2030, disallowed 2035. Systems without agility face a forced rebuild.

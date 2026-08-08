@@ -70,11 +70,11 @@ links:
     relation: enables
 origin: human
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 The error correction threshold is the boundary below which quantum error correction actually helps. Google Willow crossed it in 2024 on superconducting hardware; a second independent team confirmed it in 2025. Both use surface codes. The result is a necessary but far-from-sufficient step toward a fault-tolerant quantum computer.

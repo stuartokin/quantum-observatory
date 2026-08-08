@@ -70,11 +70,11 @@ novelty: foundry-compatible >99% fidelity
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Silicon spin qubits confine individual electrons (or holes) in electrostatically defined quantum dots in silicon or silicon-germanium heterostructures, using spin states as |0⟩ and |1⟩. The platform is attractive for scalability because it is compatible with existing CMOS manufacturing.

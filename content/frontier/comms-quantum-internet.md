@@ -54,11 +54,11 @@ moved:
   on: '2026-08-08'
 priority: P2
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 The quantum internet distributes entanglement between remote nodes, enabling quantum-secure communication and distributed quantum computation. Knaut et al. (Harvard / AWS, Nature 2024) demonstrated the first entanglement of two quantum memory nodes — silicon-vacancy centres in nanophotonic diamond cavities — through 35 km of deployed Boston-area telecom fibre. Quantum frequency conversion shifted photons to 1350 nm for low-loss transmission; nuclear spin qubits provided second-long entanglement storage with integrated error detection. Readiness is corrected from 'emerging' to 'experimental': this is a replicated physics result (the same group also showed 40 km spool performance), but the work remains far from a useful network — two nodes, single link, no routing, no repeaters.

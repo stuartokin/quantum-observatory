@@ -47,11 +47,11 @@ links:
     relation: enables
 origin: human
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Quantum memories are essential nodes in any quantum repeater architecture. The 2025 Science Advances result is the first time a quantum memory met the noise and efficiency requirements of a real cryptographic primitive, not just a laboratory benchmark.

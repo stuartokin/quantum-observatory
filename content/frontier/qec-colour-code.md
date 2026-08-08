@@ -68,11 +68,11 @@ moved:
   from: experimental
   on: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Colour codes have been a theoretical favourite for years because they support transversal logical gates — a property the surface code lacks, making the surface code dependent on expensive magic-state factories for universal computation. The practical question was whether colour codes could actually be made to work on real hardware, and whether adding more physical qubits would actually suppress errors. Lacroix et al. answered both questions affirmatively in 2025. This does not mean colour codes will displace the surface code, but it establishes them as a credible competing architecture at the experimental level.

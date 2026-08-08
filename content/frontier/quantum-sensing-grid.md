@@ -45,11 +45,11 @@ links:
   - to: sense-grid-timing
     relation: enables
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 A peer-reviewed 2025 review from NETL identifies quantum magnetometers (powerline and transformer fault detection), chip-scale atomic clocks (grid synchronisation backup at 890 ns/day drift), and quantum gravimeters (leak detection for CCS) as near-term energy applications. Field deployment depends on solving miniaturisation and cost barriers that remain open research problems.

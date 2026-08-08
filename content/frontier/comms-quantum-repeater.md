@@ -70,11 +70,11 @@ moved:
   from: experimental
   on: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Quantum repeaters are the missing infrastructure for long-distance quantum networks. By combining heralded entanglement generation with entanglement swapping at intermediate nodes, they circumvent the exponential photon-loss barrier of optical fibre. The 2026 Nature Photonics result from USTC is the first metropolitan-scale demonstration that certifies the non-classical quality of the distributed entanglement through a Bell inequality violation, closing a loophole in earlier demonstrations that produced entanglement too noisy to certify.

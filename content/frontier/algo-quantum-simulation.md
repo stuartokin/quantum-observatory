@@ -51,11 +51,11 @@ novelty: 'first peer-reviewed beyond-classical claim for scientifically meaningf
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 The most valuable early application of quantum computers is expected to be simulating quantum physics itself — chemistry, materials, and condensed matter — where the quantum state space grows exponentially and classical computers must approximate. D-Wave published the first result in a high-profile peer-reviewed venue (Science, 2025) claiming that their annealing processor outperforms the world-class Frontier supercomputer on a specific spin-glass simulation relevant to magnetic materials research. The classical-simulability debate remains open, and all authors are D-Wave affiliated, which limits the independence of the result. Confidence is set to medium for that reason; readiness stays at experimental until independent replication.

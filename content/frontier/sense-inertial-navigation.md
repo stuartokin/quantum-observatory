@@ -62,11 +62,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Quantum inertial navigation exploits the extreme stability of cold-atom interferometers to correct the drift of classical inertial measurement units. The magnetically-launched architecture demonstrated by ONERA in 2024 is scalable to a full six-axis unit and operates without the large physical separation required by traditional atom fountains, making it a candidate for vehicle-mounted navigation in GPS-denied environments.

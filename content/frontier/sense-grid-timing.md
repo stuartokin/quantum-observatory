@@ -48,11 +48,11 @@ links:
   - to: quantum-sensing-grid
     relation: evidence-for
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 The primary source is cautionary: quantum timing cannot practically replace GPS-based grid synchronisation in the near-to-medium term. Readiness correctly stays at emerging. The paper is a preprint (E3); no independent replication has been found. The board item may be slightly badly framed — the risk being addressed is GPS spoofing vulnerability, not quantum sensing capability per se; a better frame might be "GPS-independent timing for grid protection".

@@ -66,11 +66,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Hybrid TLS key exchange combines a classical elliptic-curve key agreement (X25519) with a post-quantum key encapsulation mechanism (ML-KEM-768) in a single TLS 1.3 handshake. The session key is derived from both shared secrets, so the connection is secure as long as either algorithm remains unbroken — protecting against a future quantum computer without sacrificing security against current classical attackers if ML-KEM were to be broken.

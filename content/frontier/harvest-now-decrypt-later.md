@@ -54,11 +54,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
+  state: agent-merged
+  by: agent
   agentMergedOn: '2026-08-08'
   agent: sourcer
+  note: 'restored after an accidental bulk confirmation'
 ---
 
 Harvest-now, decrypt-later (HNDL) is the practice of capturing ciphertext today and storing it against the day when a cryptographically relevant quantum computer (CRQC) can break the key-establishment mechanism that protected it. The attack is passive and undetectable: an adversary needs only network access and storage, not any cryptanalytic capability at the time of collection.
