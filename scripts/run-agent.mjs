@@ -110,6 +110,11 @@ Reply with a single JSON object and nothing else — no prose, no markdown fence
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
 Maximum files this run: ${cfg.budget?.proposals ?? 6}
+
+Do your research first. Then reply with the JSON object and nothing after it.
+Do not narrate your reasoning in the final message — your output budget is
+finite and prose spends it. If you are running short, return fewer files
+properly formed rather than many truncated.
 If you found nothing worth proposing, return an empty files array and say so in
 the summary. A run that reports nothing is a valid run.
 `
@@ -118,7 +123,7 @@ the summary. A run that reports nothing is a valid run.
 
 const body = {
   model: cfg.model,
-  max_tokens: 16000,
+  max_tokens: cfg.maxTokens ?? 32000,
   system: prompt,
   messages: [{ role: 'user', content: context }],
   tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: cfg.budget?.searches ?? 25 }],
@@ -140,20 +145,57 @@ if (!res.ok) {
 }
 
 const data = await res.json()
-const text = data.content
-  .filter((b) => b.type === 'text')
-  .map((b) => b.text)
-  .join('\n')
-  .trim()
+
+// Keep the whole response. When something goes wrong the raw output is the
+// only evidence of what the agent actually did, and losing it costs a rerun.
+mkdirSync('.agent-run', { recursive: true })
+writeFileSync('.agent-run/raw.json', JSON.stringify(data, null, 2))
+
+const blocks = data.content.filter((b) => b.type === 'text').map((b) => b.text)
+
+if (data.stop_reason === 'max_tokens') {
+  console.error(
+    'The agent hit its output limit before finishing. Nothing was written.\n' +
+      `Lower "budget.proposals" in ${dir}/agent.json, or raise "maxTokens".\n` +
+      'Its research is preserved in .agent-run/raw.json.',
+  )
+  console.error('\nLast 2000 characters of output:\n')
+  console.error((blocks.at(-1) ?? '').slice(-2000))
+  process.exit(1)
+}
+
+/**
+ * With web search on, the response is a running commentary interleaved with
+ * tool calls, and the JSON arrives at the end. Joining every text block glues
+ * the narration onto the answer and nothing parses — so take the last complete
+ * JSON object in the response instead.
+ */
+function extractJson(chunks) {
+  for (const chunk of [...chunks].reverse()) {
+    const cleaned = chunk.replace(/```(?:json)?/g, '').trim()
+    const start = cleaned.indexOf('{')
+    const end = cleaned.lastIndexOf('}')
+    if (start === -1 || end <= start) continue
+    const candidate = cleaned.slice(start, end + 1)
+    try {
+      return JSON.parse(candidate)
+    } catch {
+      /* try the next block */
+    }
+  }
+  return null
+}
+
+const text = blocks.join('\n').trim()
 
 /* ---------- write ---------- */
 
-let out
-try {
-  out = JSON.parse(text.replace(/^```(?:json)?\n?|```$/g, '').trim())
-} catch (e) {
-  console.error('Agent did not return parseable JSON. Raw output follows.\n')
-  console.error(text.slice(0, 4000))
+const out = extractJson(blocks)
+if (!out) {
+  console.error('No parseable JSON object found in the response.')
+  console.error('Full response saved to .agent-run/raw.json\n')
+  console.error('Last 3000 characters:\n')
+  console.error(text.slice(-3000))
   process.exit(1)
 }
 

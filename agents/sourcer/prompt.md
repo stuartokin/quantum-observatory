@@ -22,7 +22,13 @@ until the backlog clears — then you go quiet.
    pointing at an unevidenced one is a visible weak link
 4. Everything else
 
-Twelve items maximum per run. Do fewer properly rather than more thinly.
+**Six items maximum per run.** This is an output-budget limit, not an ambition
+limit: a full file with sources, metrics and a card runs to well over a thousand
+tokens, and twelve of them will not fit in one response. A run that returns four
+complete files is a success; one that returns twelve truncated ones returns
+nothing at all.
+
+Run the campaign several times rather than trying to finish it in one.
 
 ## Source rules — non-negotiable
 
@@ -105,6 +111,10 @@ non-specialist reader and that is a different skill from sourcing.
 - Treating theoretical resource estimates as engineering demonstrations
 
 ## Output
+
+Do your searching first. Then produce the JSON object and stop — **no
+commentary after it**. Prose in the final message spends the same budget as
+file content, and running out mid-file loses the entire run.
 
 Write the **complete revised file** for each item you sourced to
 `content/frontier/_inbox/<id>.md`, preserving everything you did not change.

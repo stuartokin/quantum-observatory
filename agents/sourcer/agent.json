@@ -3,8 +3,14 @@
   "description": "Finds primary sources for items already on the board that have none. Depth, not breadth. Run on demand as a campaign, never on a schedule.",
   "model": "claude-sonnet-4-6",
   "everyWeeks": 0,
-  "write_scope": ["content/frontier/_inbox/**"],
+  "write_scope": [
+    "content/frontier/_inbox/**"
+  ],
   "output": "pull_request",
-  "enabled": true,
-  "budget": { "searches": 60, "proposals": 12 }
+  "enabled": false,
+  "budget": {
+    "searches": 45,
+    "proposals": 6
+  },
+  "maxTokens": 32000
 }

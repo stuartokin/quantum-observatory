@@ -3,8 +3,14 @@
   "description": "Re-checks every source, updates verification dates, decays evidence levels, and hunts independent replication to promote E4 to E5.",
   "model": "claude-sonnet-4-6",
   "everyWeeks": 4,
-  "write_scope": ["content/frontier/_inbox/**"],
+  "write_scope": [
+    "content/frontier/_inbox/**"
+  ],
   "output": "pull_request",
   "enabled": false,
-  "budget": { "searches": 30, "proposals": 8 }
+  "budget": {
+    "searches": 30,
+    "proposals": 8
+  },
+  "maxTokens": 24000
 }
