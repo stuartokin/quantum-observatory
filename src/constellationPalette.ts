@@ -12,8 +12,8 @@ import { CONSTELLATIONS } from './renderers/board/tower'
  * another. Importance is carried by size and brightness, never by hue.
  */
 
-const ARC_START = 214
-const ARC_END = 326
+const ARC_START = 205
+const ARC_END = 335
 
 const HUES: Record<string, number> = Object.fromEntries(
   (CONSTELLATIONS as readonly string[]).map((c: string, i: number) => [
@@ -26,9 +26,20 @@ export function constellationHue(id?: string): number {
   return HUES[id ?? ''] ?? 268
 }
 
+/**
+ * Neighbouring hues are only about sixteen degrees apart, which is not much to
+ * tell two adjacent lanes by. Alternating lightness along the arc doubles the
+ * separation without leaving the family or implying a ranking.
+ */
+function lightnessFor(id?: string): number {
+  const i = (CONSTELLATIONS as readonly string[]).indexOf(id ?? '')
+  return i % 2 === 0 ? 74 : 63
+}
+
 export function constellationColour(id?: string, alpha = 1): string {
   const h = constellationHue(id)
-  return alpha >= 1 ? `hsl(${h} 88% 72%)` : `hsl(${h} 88% 72% / ${alpha})`
+  const l = lightnessFor(id)
+  return alpha >= 1 ? `hsl(${h} 88% ${l}%)` : `hsl(${h} 88% ${l}% / ${alpha})`
 }
 
 /** Dimmer variant for unsourced bodies, which should read as cold. */

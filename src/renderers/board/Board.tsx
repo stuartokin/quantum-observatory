@@ -46,49 +46,8 @@ type Scale = { label: string; levels: Record<Readiness, string> }
 const SCALES = scales as unknown as Record<string, Scale | undefined>
 type Offsets = Record<string, { dx: number; dy: number }>
 
-/**
- * Each actor gets a hue shifted from the galaxy's own line, so who did the work
- * is legible at a glance. Shift only — everything stays recognisably one galaxy.
- */
-function shiftHue(hex: string, deg: number): string {
-  const n = parseInt(hex.slice(1), 16)
-  let r = ((n >> 16) & 255) / 255
-  let g = ((n >> 8) & 255) / 255
-  let b = (n & 255) / 255
-  const mx = Math.max(r, g, b)
-  const mn = Math.min(r, g, b)
-  let h = 0
-  const l = (mx + mn) / 2
-  const d = mx - mn
-  const sat = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1))
-  if (d !== 0) {
-    if (mx === r) h = ((g - b) / d) % 6
-    else if (mx === g) h = (b - r) / d + 2
-    else h = (r - g) / d + 4
-  }
-  h = (h * 60 + deg + 360) % 360
-  const c = (1 - Math.abs(2 * l - 1)) * sat
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
-  const m = l - c / 2
-  const seg = Math.floor(h / 60)
-  const t: [number, number, number] =
-    seg === 0 ? [c, x, 0] : seg === 1 ? [x, c, 0] : seg === 2 ? [0, c, x]
-    : seg === 3 ? [0, x, c] : seg === 4 ? [x, 0, c] : [c, 0, x]
-  const f = (v: number) => Math.round((v + m) * 255)
-  return `#${[f(t[0]), f(t[1]), f(t[2])].map((v) => v.toString(16).padStart(2, '0')).join('')}`
-}
 
-function actorHash(a: string): number {
-  let h = 2166136261
-  for (let i = 0; i < a.length; i++) { h ^= a.charCodeAt(i); h = Math.imul(h, 16777619) }
-  return (h >>> 0) % 1000 / 1000
-}
 
-/** ±34 degrees around the galaxy hue. Distinct, never a different galaxy. */
-export function actorColour(base: string, actor?: string): string {
-  if (!actor) return base
-  return shiftHue(base, (actorHash(actor) - 0.5) * 68)
-}
 type Mode = 'tower' | 'orbit'
 
 export function Board() {
@@ -272,15 +231,6 @@ export function Board() {
         ]),
     { key: 'news', icon: '◰', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
-    ...(timeline
-      ? [{
-          key: 'legend',
-          icon: '◑',
-          label: 'Legend',
-          active: showLegend,
-          onClick: () => setShowLegend((v) => !v),
-        }]
-      : []),
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     {
       key: 'reset',
@@ -494,6 +444,7 @@ export function Board() {
           resizeTick={resizeTick}
           forecast={forecast}
           showLegend={showLegend}
+          onToggleLegend={() => setShowLegend((v) => !v)}
           pool={pool}
         />
       </Frame>
@@ -625,7 +576,7 @@ export function Board() {
                 aria-pressed={actorFilter === a}
                 onClick={() => setActorFilter(actorFilter === a ? null : a)}
               >
-                <GlyphMark glyph={glyphFor(a)} colour={actorColour(colour, a)} />
+                <GlyphMark glyph={glyphFor(a)} colour={colour} />
                 <span>{a}</span>
                 <em>{n}</em>
               </button>
@@ -706,6 +657,7 @@ function Sky({
   resizeTick,
   forecast,
   showLegend,
+  onToggleLegend,
   pool,
 }: {
   nodes: Node[]
@@ -725,6 +677,7 @@ function Sky({
   resizeTick: number
   forecast?: Forecast
   showLegend: boolean
+  onToggleLegend: () => void
   pool: FrontierItem[]
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
@@ -778,6 +731,8 @@ function Sky({
     v: { x: number; y: number; h: number; frac: number }
   } | null>(null)
   const barDrag = useRef<{ axis: 'h' | 'v'; o: number; t: number } | null>(null)
+  /** The legend button's box, so a click can find it. */
+  const legendButton = useRef<{ x: number; y: number; s: number } | null>(null)
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
@@ -970,15 +925,23 @@ function Sky({
         const frac = Math.min(1, 1 / cur.current.k)
         const offX = Math.max(0, Math.min(1 - frac, -cur.current.tx))
         const offY = Math.max(0, Math.min(1 - frac, -cur.current.ty))
-        const inset = 6
+        // Sat at H-6 before, directly on the frame's own border, where a
+        // purple line on a purple border is no line at all.
+        const inset = 15
         const hx = leftInset
-        const hw = W - hx - inset - 12
-        const vy = 30
-        const vh = H - vy - inset - 14
+        const hw = W - hx - inset - 10
+        const vy = 32
+        const vh = H - vy - inset - 16
 
         const bar = (
           x: number, y: number, w: number, h: number, off: number, horizontal: boolean,
         ) => {
+          // A dark backing, so the track reads over starfield or plot alike.
+          g.globalAlpha = 0.55
+          g.fillStyle = '#070B14'
+          if (horizontal) g.fillRect(x - 4, y - 5, w + 8, 10)
+          else g.fillRect(x - 5, y - 4, 10, h + 8)
+
           g.lineCap = 'round'
           g.lineWidth = 3
           g.globalAlpha = 0.15
@@ -1098,12 +1061,23 @@ function Sky({
           g.fillText(`NO DATED SOURCE · ${tl.undated}`, AXIS + 4, 20)
         }
 
+        // Room for roughly one label per 5,000 square pixels at rest, more as
+        // you zoom in.
+        const labelBudget = Math.max(
+          3,
+          Math.round(((W * H) / 5000) * Math.min(3, Math.max(0.6, v.k * 0.7))),
+        )
+
         const ordered = [...tl.marks].sort(
           (a, b) =>
             Number(a.id === selected) - Number(b.id === selected) ||
             Number(a.id === hoverRef.current) - Number(b.id === hoverRef.current) ||
             a.importance - b.importance,
         )
+        // Labels are claimed most-important-first, so the budget goes to the
+        // marks worth reading rather than whichever happened to be drawn first.
+        const labelOrder = [...ordered].reverse()
+        const labelRank = new Map(labelOrder.map((m, i) => [m.id, i]))
         const dim = selected !== null
         const placed: { x: number; y: number; w: number }[] = []
 
@@ -1161,11 +1135,13 @@ function Sky({
             g.stroke()
           }
 
-          // Labels: the most important first, and only where there is room.
-          // The threshold falls as you zoom in, so the detail arrives when you
-          // ask for it rather than all at once.
-          const labelCut = v.k > 2.4 ? 0.2 : v.k > 1.5 ? 0.45 : 0.72
-          const wantLabel = sel || hov || m.importance > labelCut
+          // Labels: capped by how much room there is, not only by merit.
+          //
+          // A threshold alone was useless here — most sourced items score
+          // above 0.7, so "only the important ones" meant almost all of them.
+          // The cap rises as you zoom, so detail arrives when asked for.
+          const wantLabel =
+            sel || hov || ((labelRank.get(m.id) ?? 999) < labelBudget && m.importance > 0.35)
           if (wantLabel) {
             const text = m.label
             const tw = g.measureText(text).width
@@ -1202,34 +1178,65 @@ function Sky({
           }
         }
 
-        // Category legend, bottom right. Small, and dismissible from the
-        // toolbar when it is in the way.
-        if (showLegend) {
-          const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
-          const lh = 13
-          const boxW = 132
-          const boxH = entries.length * lh + 12
-          const bx = W - boxW - 10
-          const by = H - boxH - 10
-          g.globalAlpha = 0.9
+        // Category key, tucked behind a small button in the corner. The nine
+        // names take up real estate that the plot needs more than they do, so
+        // it is closed until asked for — and the button stays visible so it is
+        // findable without hunting through a toolbar.
+        {
+          const size = 18
+          const bx = W - size - 12
+          const by = 34
+          legendButton.current = { x: bx, y: by, s: size }
+
+          g.globalAlpha = 0.85
           g.fillStyle = '#0B1220'
           g.beginPath()
-          g.roundRect(bx, by, boxW, boxH, 2)
+          g.roundRect(bx, by, size, size, 3)
           g.fill()
-          g.globalAlpha = 0.35
-          g.strokeStyle = '#8697B0'
+          g.globalAlpha = showLegend ? 1 : 0.45
+          g.strokeStyle = colour
+          g.lineWidth = 1
           g.stroke()
-          entries.forEach((c, i) => {
-            const y = by + 12 + i * lh
-            g.globalAlpha = 1
+
+          // Three dots in the categories' own colours: the key, in miniature.
+          const sample = CONSTELLATIONS.filter((c) => activeCons.includes(c))
+          ;[0, 1, 2].forEach((i) => {
+            const c = sample[Math.floor((i * sample.length) / 3)] ?? sample[0]
+            if (!c) return
             g.fillStyle = constellationColour(c)
             g.beginPath()
-            g.arc(bx + 12, y - 3, 3.2, 0, Math.PI * 2)
+            g.arc(bx + 5 + i * 4.5, by + size / 2, 1.8, 0, Math.PI * 2)
             g.fill()
-            g.fillStyle = '#8697B0'
-            g.fillText(CONSTELLATION_LABEL[c], bx + 22, y)
           })
           g.globalAlpha = 1
+
+          if (showLegend) {
+            const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
+            const lh = 14
+            const boxW = 138
+            const boxH = entries.length * lh + 14
+            const lx = W - boxW - 12
+            const ly = by + size + 6
+            g.globalAlpha = 0.94
+            g.fillStyle = '#0B1220'
+            g.beginPath()
+            g.roundRect(lx, ly, boxW, boxH, 3)
+            g.fill()
+            g.globalAlpha = 0.3
+            g.strokeStyle = '#8697B0'
+            g.stroke()
+            entries.forEach((c, i) => {
+              const y = ly + 15 + i * lh
+              g.globalAlpha = 1
+              g.fillStyle = constellationColour(c)
+              g.beginPath()
+              g.arc(lx + 13, y - 3.5, 3.4, 0, Math.PI * 2)
+              g.fill()
+              g.fillStyle = '#A9B6C9'
+              g.fillText(CONSTELLATION_LABEL[c], lx + 24, y)
+            })
+            g.globalAlpha = 1
+          }
         }
 
         // Readiness names last, on an opaque strip, so no label can cross them.
@@ -1473,11 +1480,14 @@ function Sky({
         g.shadowColor = colour
         g.shadowBlur = n.sourced ? 16 + n.weight * 12 : 5
         g.globalAlpha = (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) * fade
-        // Hue carries the constellation; size and brightness carry importance.
-        // Actor is a slight shift within that hue, so who did the work is
-        // legible without a second colour system competing with the first.
+        // Hue carries the constellation and nothing else.
+        //
+        // Actor used to shift the hue by up to 34 degrees, but adjacent
+        // constellations are only 14 apart — so the tint scrambled the very
+        // association the colour was there to make. Actor is carried by the
+        // glyph shape, which was always the better channel for it.
         const bodyColour = n.sourced
-          ? actorColour(constellationColour(n.constellation), n.actor)
+          ? constellationColour(n.constellation)
           : constellationMuted(n.constellation)
         drawBody(g, n.glyph, px, py, r, bodyColour, n.sourced)
         g.shadowBlur = 0
@@ -1610,6 +1620,18 @@ function Sky({
 
   function onPointerDown(e: React.PointerEvent) {
     idleSince.current = performance.now()
+
+    // The legend button takes the pointer before anything else.
+    const lb = legendButton.current
+    if (tl && lb) {
+      const r = cv.current!.getBoundingClientRect()
+      const px = e.clientX - r.left
+      const py = e.clientY - r.top
+      if (px > lb.x - 3 && px < lb.x + lb.s + 3 && py > lb.y - 3 && py < lb.y + lb.s + 3) {
+        onToggleLegend()
+        return
+      }
+    }
 
     // The scrollbars take the pointer before the plot does.
     const tr = tracks.current
