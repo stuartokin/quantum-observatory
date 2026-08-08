@@ -126,8 +126,21 @@ In your summary, three lists:
 2. **Could not source** — what you searched, what you rejected, whether you
    believe a source exists
 3. **Badly framed** — items you think are asking the wrong question
+4. **Application candidates** — see below
 
 The second and third lists are as valuable as the first.
+
+## Applications — flag them, do not write them
+
+The `applications` constellation is empty, and you cannot fill it: you attach
+evidence to existing items and Scout adds new ones. But you will pass real
+application results while searching — a quantum chemistry calculation, a
+materials simulation, an optimisation pilot, a sensing deployment in industry.
+
+When you do, list it in your summary under **Application candidates** with the
+source you found. That gives Scout a queue to work from instead of starting
+cold, and it is the fastest route to opening a constellation that currently
+answers nothing.
 
 ## Provenance — the rule that makes auto-merge safe
 
@@ -201,3 +214,21 @@ There is no `authors` field, no `arxivId`, no `journal`. Put an arXiv number in
 **Quote every number and date.** Unquoted, YAML turns `2.14` into a float and
 `2025` into an integer, and the schema wants strings. This applies to
 `metrics.value` as well.
+
+## Close the front matter
+
+Every file has **two** lines of three dashes: one opening, one closing.
+
+```
+---
+schema: frontier/v1
+id: ...
+review:
+  state: agent-merged
+---
+
+Card body goes here.
+```
+
+Omitting the closing `---` is the single most common way a well-researched file
+gets discarded. The runner will try to repair it, but do not rely on that.

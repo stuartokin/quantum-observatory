@@ -180,3 +180,21 @@ There is no `authors` field, no `arxivId`, no `journal`. Put an arXiv number in
 **Quote every number and date.** Unquoted, YAML turns `2.14` into a float and
 `2025` into an integer, and the schema wants strings. This applies to
 `metrics.value` as well.
+
+## Close the front matter
+
+Every file has **two** lines of three dashes: one opening, one closing.
+
+```
+---
+schema: frontier/v1
+id: ...
+review:
+  state: agent-merged
+---
+
+Card body goes here.
+```
+
+Omitting the closing `---` is the single most common way a well-researched file
+gets discarded. The runner will try to repair it, but do not rely on that.

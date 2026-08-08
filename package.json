@@ -1,7 +1,7 @@
 {
   "name": "horizonq",
   "private": true,
-  "version": "0.17.8",
+  "version": "0.18.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,8 @@
     "scope": "node scripts/check-scope.mjs",
     "agent": "node scripts/run-agent.mjs",
     "provenance": "node scripts/check-provenance.mjs",
-    "test:agent": "node scripts/test-agent-io.mjs"
+    "test:agent": "node scripts/test-agent-io.mjs",
+    "review": "node scripts/review.mjs"
   },
   "dependencies": {
     "front-matter": "^4.0.2",

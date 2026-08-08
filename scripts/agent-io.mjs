@@ -10,6 +10,9 @@ import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 
+/** The front matter delimiters. Defined once so the check and the repair agree. */
+export const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---/
+
 /** Balanced-brace scan, respecting strings and escapes. */
 export function balancedObjects(text) {
   const out = []
@@ -68,6 +71,33 @@ export function normaliseFile(raw) {
   const start = t.indexOf('---')
   if (start > 0 && !t.slice(0, start).includes('---')) t = t.slice(start)
   t = t.trimStart()
+
+  /**
+   * Repair a missing closing delimiter.
+   *
+   * If the file opens with "---" but never closes, the front matter still ends
+   * somewhere identifiable: at the first line that is neither a field nor an
+   * indented continuation. Losing a fully sourced item over one absent line of
+   * dashes is a poor trade, so close it there.
+   */
+  if (/^---\r?\n/.test(t) && !/\n---\s*(\r?\n|$)/.test(t)) {
+    const lines = t.split('\n')
+    let end = lines.length
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i]
+      if (line === '') continue
+      const isField = /^[A-Za-z_][\w-]*:/.test(line)
+      const isIndented = /^\s+\S/.test(line)
+      const isListItem = /^\s*-\s/.test(line)
+      if (!isField && !isIndented && !isListItem) {
+        end = i
+        break
+      }
+    }
+    lines.splice(end, 0, '---', '')
+    t = lines.join('\n')
+  }
+
   if (!t.endsWith('\n')) t += '\n'
   return t
 }
@@ -103,8 +133,23 @@ function itemValidator(schemaPath) {
  * be tested in isolation. It is where the pipeline has broken twice.
  */
 export function checkStructure(text) {
-  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!m) return { ok: false, reason: 'no front matter' }
+  const m = text.match(FRONT_MATTER)
+  if (!m) {
+    // "no front matter" is a useless diagnosis when the opener is plainly
+    // there. Say which delimiter is missing, so the next fix is the right one.
+    const opens = /^---\r?\n/.test(text)
+    const closes = /\n---\s*(\r?\n|$)/.test(text)
+    if (opens && !closes) {
+      return {
+        ok: false,
+        reason: 'front matter is never closed — no "---" line after the fields',
+      }
+    }
+    if (!opens) {
+      return { ok: false, reason: 'does not start with "---" on the first line' }
+    }
+    return { ok: false, reason: 'front matter present but unmatched' }
+  }
 
   const yaml = require('js-yaml')
   let data

@@ -58,7 +58,18 @@
       "description": "Top to bottom. Things fall toward reality. Scale is defined per pillar in content/frontier/_scales.json."
     },
     "constellation": {
-      "type": "string"
+      "enum": [
+        "architectures",
+        "error-correction",
+        "algorithms",
+        "enabling",
+        "pqc",
+        "migration",
+        "communications",
+        "sensing",
+        "applications"
+      ],
+      "description": "Constrained rather than free text: a typo used to place an item in the wrong lane silently. An unknown constellation now fails the build."
     },
     "cluster": {
       "type": "string"

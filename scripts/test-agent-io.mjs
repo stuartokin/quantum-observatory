@@ -7,9 +7,7 @@
  * blocks. Both were invisible to the type checker and cost a full round trip
  * to discover. This runs in CI instead.
  */
-import { normaliseFile, extractJson, balancedObjects } from './agent-io.mjs'
-
-const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---/
+import { normaliseFile, extractJson, balancedObjects, FRONT_MATTER } from './agent-io.mjs'
 let pass = 0
 let fail = 0
 const t = (name, cond) => {
@@ -36,6 +34,26 @@ t('leading blank lines', FRONT_MATTER.test(normaliseFile('\n\n' + doc)))
 t('byte order mark', FRONT_MATTER.test(normaliseFile('\uFEFF' + doc)))
 t('CRLF line endings', FRONT_MATTER.test(normaliseFile(doc.replace(/\n/g, '\r\n'))))
 t('prose is refused', !FRONT_MATTER.test(normaliseFile('Just prose.\n')))
+
+// An unclosed front matter is a formatting slip, not a reason to discard a
+// fully sourced item. Repair it and keep the body.
+const unclosed = [
+  '---',
+  'schema: frontier/v1',
+  'id: algo-shor',
+  'review:',
+  '  state: agent-merged',
+  '',
+  'Body paragraph explaining the result.',
+  '',
+].join('\n')
+const repaired = normaliseFile(unclosed)
+t('unclosed front matter repaired', FRONT_MATTER.test(repaired))
+t('  fields survive', (repaired.match(FRONT_MATTER) || [])[1]?.includes('id: algo-shor'))
+t('  body survives', repaired.includes('Body paragraph'))
+t('  exactly two delimiters', (repaired.match(/^---$/gm) || []).length === 2)
+const alreadyGood = '---\nid: a\nreview:\n  state: agent-merged\n---\n\nBody.\n'
+t('correct file untouched', normaliseFile(alreadyGood) === alreadyGood)
 t('trailing newline added', normaliseFile('---\nid: a\n---\nbody').endsWith('\n'))
 
 const split = [
