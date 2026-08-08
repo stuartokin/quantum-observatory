@@ -281,11 +281,23 @@ export function Board() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
+          minHeight: 52,
+          overflow: 'visible',
         }}
       >
         <div
           className="board-title"
-          style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flex: '1 1 auto' }}
+          style={{
+            display: 'flex',
+            // nowrap matters: the older stylesheet wraps this, which dropped
+            // the title onto a second line and clipped it against the header.
+            flexWrap: 'nowrap',
+            alignItems: 'baseline',
+            gap: 10,
+            minWidth: 0,
+            flex: '1 1 0',
+            overflow: 'hidden',
+          }}
         >
           <span className="wordmark" style={{ flex: '0 0 auto' }}>Horizon Q</span>
           <select
@@ -308,13 +320,16 @@ export function Board() {
               )
             })}
           </select>
+          {/* Truncates to nothing rather than wrapping. With the Q-Day bar and
+              the figures both present, this is the element that must give. */}
           <h2
             style={{
-              flex: '1 1 auto',
+              flex: '1 1 0',
               minWidth: 0,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
+              lineHeight: 1.2,
             }}
           >
             {timeline
@@ -380,7 +395,8 @@ export function Board() {
                 display: 'flex',
                 flexDirection: narrow ? 'column' : 'row',
                 alignItems: narrow ? 'flex-end' : 'baseline',
-                flexWrap: 'wrap',
+                flexWrap: narrow ? 'wrap' : 'nowrap',
+                whiteSpace: 'nowrap',
                 gap: narrow ? 5 : 14,
                 fontFamily: 'var(--mono)',
                 fontSize: '0.68rem',
