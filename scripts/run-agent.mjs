@@ -15,6 +15,9 @@
  */
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
+import Ajv from 'ajv'
+import addFormats from 'ajv-formats'
+import yaml from 'js-yaml'
 
 const agent = process.argv[2]
 if (!agent) {
@@ -225,17 +228,56 @@ function normaliseFile(raw) {
   return t
 }
 
-/** Front matter must be present and parseable before anything is written. */
-function frontMatterOf(text) {
+/**
+ * Full schema validation, here, before anything is written.
+ *
+ * The earlier version only checked that front matter existed. That let a file
+ * with an unknown field reach the board and fail at the very last gate, after
+ * promotion — which is both later and harder to read than failing here.
+ * Same validator CI uses, so there is one definition of valid.
+ */
+const ajv = new Ajv({ allErrors: true, strict: false })
+addFormats(ajv)
+const validateItem = ajv.compile(
+  JSON.parse(readFileSync('content/schema/frontier.schema.json', 'utf8')),
+)
+
+/** YAML turns 2.14 into a float and `on` into a boolean. Normalise both. */
+function normaliseTypes(v) {
+  if (v instanceof Date) return v.toISOString().slice(0, 10)
+  if (Array.isArray(v)) return v.map(normaliseTypes)
+  if (v && typeof v === 'object') {
+    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, normaliseTypes(x)]))
+  }
+  return v
+}
+
+function checkFile(text) {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!m) return { ok: false, reason: 'no front matter' }
-  const fm = m[1]
-  const id = (fm.match(/^id:\s*(\S+)$/m) || [])[1]
-  if (!id) return { ok: false, reason: 'no id field' }
-  if (!/^review:/m.test(fm)) return { ok: false, reason: 'no review block' }
-  if (/^\s*state:\s*reviewed/m.test(fm))
+
+  let data
+  try {
+    data = normaliseTypes(yaml.load(m[1]))
+  } catch (e) {
+    return { ok: false, reason: `unparseable YAML — ${e.message.split('\n')[0]}` }
+  }
+
+  if (!data?.id) return { ok: false, reason: 'no id field' }
+  if (!data.review) return { ok: false, reason: 'no review block' }
+  if (data.review.state === 'reviewed')
     return { ok: false, reason: 'claims review.state: reviewed — agents may not' }
-  return { ok: true, id }
+  if (data.review.by === 'human')
+    return { ok: false, reason: 'claims review.by: human — agents may not' }
+
+  if (!validateItem(data)) {
+    const first = validateItem.errors
+      .slice(0, 3)
+      .map((e) => `${e.instancePath || '/'} ${e.message}`)
+      .join('; ')
+    return { ok: false, reason: `schema: ${first}` }
+  }
+  return { ok: true, id: data.id }
 }
 
 const files = (out.files ?? []).slice(0, cfg.budget?.proposals ?? 6)
@@ -251,7 +293,7 @@ for (const f of files) {
   }
 
   const content = normaliseFile(f.content)
-  const check = frontMatterOf(content)
+  const check = checkFile(content)
   if (!check.ok) {
     rejected.push({ path: f.path, reason: check.reason, head: content.slice(0, 240) })
     continue

@@ -177,3 +177,27 @@ runner rejects anything that does not start with `---` and the file is lost.
 
 End it with a newline. Nothing after the closing front matter except the card
 body.
+
+## Source fields — these exactly, no others
+
+The schema rejects unknown fields, and a file with one is discarded. Each entry
+in `evidence.sources` may use only:
+
+```yaml
+- url: https://...          # required
+  role: primary             # required: primary | preprint | standard | vendor | corroborating
+  title: ...
+  publisher: ...
+  date: '2025-07-14'        # quote it, or YAML reads it as a date object
+  identifier: 'Nature 645, 620-625 (2025)'
+  doi: 10.1038/s41586-025-09367-3
+  accessed: '2026-08-07'
+  note: ...
+```
+
+There is no `authors` field, no `arxivId`, no `journal`. Put an arXiv number in
+`identifier`, the journal in `publisher`, and anything else in `note`.
+
+**Quote every number and date.** Unquoted, YAML turns `2.14` into a float and
+`2025` into an integer, and the schema wants strings. This applies to
+`metrics.value` as well.
