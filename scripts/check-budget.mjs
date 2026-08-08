@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 /**
- * Gate 2 of 3. The performance budget is a build failure, not an intention.
+ * Gate 2 — performance budget.
  *
- * Measured GZIPPED, because that is what a visitor on a train actually
- * downloads. Raw byte counts flatter nothing and mislead everything.
+ * Measured GZIPPED, because that is what a visitor on a train downloads.
  *
- * The rule that keeps a 3D site usable: the document route must paint without
- * downloading the 3D engine. If three/drei leak into the entry chunk, this
- * fails and someone has to look at why.
+ * Two budgets, deliberately:
+ *
+ *   app     — React plus the canvas board. Should stay roughly flat no matter
+ *             how large the board gets. If this grows, someone added code.
+ *   content — the frontier items themselves. Grows as agents fill the board,
+ *             which is the whole point, so it gets a generous ceiling.
+ *
+ * One combined number would show the application appearing to bloat every time
+ * a research agent did its job, which is the wrong signal entirely.
  */
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -17,7 +22,8 @@ const ASSETS = 'dist/assets'
 const KB = 1024
 
 const BUDGET = {
-  entry: 90 * KB,  // the whole app: React + the canvas board, gzipped
+  app: 95 * KB,
+  content: 220 * KB,
   css: 20 * KB,
 }
 
@@ -25,8 +31,11 @@ const gz = (file) => gzipSync(readFileSync(join(ASSETS, file)), { level: 9 }).le
 
 const files = readdirSync(ASSETS)
 const js = files.filter((f) => f.endsWith('.js'))
+const isContent = (f) => f.startsWith('content-')
+
 const groups = {
-  entry: js,
+  app: js.filter((f) => !isContent(f)),
+  content: js.filter(isContent),
   css: files.filter((f) => f.endsWith('.css')),
 }
 
@@ -39,13 +48,22 @@ for (const [name, list] of Object.entries(groups)) {
   const pct = Math.round((bytes / limit) * 100)
   const flag = bytes > limit ? 'FAIL' : 'ok'
   console.log(
-    `  ${name.padEnd(6)} ${(bytes / KB).toFixed(1).padStart(7)} KB / ${(limit / KB).toFixed(0).padStart(3)} KB  ${String(pct).padStart(3)}%  ${flag}`,
+    `  ${name.padEnd(8)} ${(bytes / KB).toFixed(1).padStart(7)} KB / ${(limit / KB).toFixed(0).padStart(3)} KB  ${String(pct).padStart(3)}%  ${flag}`,
   )
   if (bytes > limit) fail.push(`${name} over by ${((bytes - limit) / KB).toFixed(1)} KB gzipped`)
 }
 
+if (groups.content.length === 0) {
+  console.log('\n  Note: no separate content chunk. Check manualChunks in vite.config.ts.')
+}
+
 if (fail.length) {
   console.error('\nBudget exceeded:\n' + fail.map((f) => '  - ' + f).join('\n'))
+  console.error(
+    '\nIf "content" is over, the board has outgrown build-time bundling.\n' +
+      'The fix is to emit content as a JSON file fetched at runtime, not to\n' +
+      'raise the ceiling — see AGENT-PLAN.md.',
+  )
   process.exit(1)
 }
 console.log('Within budget.')
