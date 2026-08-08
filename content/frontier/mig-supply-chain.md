@@ -2,55 +2,55 @@
 schema: frontier/v1
 id: mig-supply-chain
 title: Supplier PQC readiness
-summary: 'The capacity of technology suppliers to deliver products and services supporting post-quantum cryptographic algorithms within the timeframes required by customers and regulators.'
-plain: 'An organisation that completes its own migration to post-quantum cryptography remains exposed if its suppliers have not. Every cloud service, VPN appliance, HSM, and certificate authority in the supply chain must support the new algorithms. Supplier readiness varies enormously — some vendors have shipped ML-KEM support since 2024; others have no public roadmap. The Australian Signals Directorate published a structured questionnaire for assessing vendor readiness in 2026; the PKI Consortium launched a PQC Maturity Model in June 2026 defining six levels of product-level readiness. Both are frameworks. No published data on industry-wide supplier compliance rates exists.'
+summary: 'How prepared technology suppliers are to deliver post-quantum cryptography in their products. CISA, NSA, and NIST identify supply chain PQC readiness as a distinct risk category; no empirical survey of actual supplier readiness rates has been published.'
+plain: 'Most organisations rely on technology suppliers for cryptographic components they do not write themselves — hardware vendors, software providers, cloud platforms, firmware makers. When those suppliers have not migrated to post-quantum cryptography, the buying organisation''s migration stalls regardless of its own internal progress. CISA, NSA, and NIST published joint guidance in 2023 explicitly naming supply chain PQC readiness as a risk management requirement: organisations must assess their supply chain for quantum exposure, engage vendors directly, and understand vendor responsibilities. The NCSC confirmed in its March 2025 migration guidance that quantum readiness depends on supplier readiness. No published empirical study measures how many suppliers have actually prepared; the evidence base is authoritative guidance, not measured data — reflected in the E2 level.'
 pillar: quantum
 readiness: emerging
 constellation: migration
-cluster: procurement
+cluster: 'supply chain'
 actors:
-  - Australian Signals Directorate
-  - PKI Consortium
+  - CISA
+  - NSA
+  - NIST
+  - NCSC
 country:
-  - AU
-  - MULTI
-metrics:
-  - name: PQCMM maturity levels
-    value: '6'
-    note: Levels 0–5; Level 5 is PQC by default with certified implementations.
-priority: P1
-qdayImpact: 0
-qdayReasoning: ''
-horizon: 1
-novelty: new governance frameworks for vendor assessment
+  - US
+  - GB
+metrics: []
 links:
   - to: mig-discovery
     relation: depends-on
-  - to: cnsa-2-timeline
-    relation: depends-on
   - to: crypto-bill-of-materials
     relation: depends-on
+  - to: mig-crypto-agility
+    relation: enables
+priority: P1
+qdayImpact: 0
+horizon: 1
+novelty: 'National authority guidance establishing supply chain as a named quantum risk management category'
 evidence:
-  claim: 'The Australian Signals Directorate published Post-Quantum Questions to Ask Your Vendors (2026), noting that vendor readiness may be the biggest factor in whether organisations can meet migration timeframes. The PKI Consortium published the PQC Maturity Model (PQCMM) in June 2026, a six-level (0–5) product-level framework for evaluating post-quantum readiness in supply-chain procurement. Both are frameworks with no published data on industry-wide uptake.'
-  level: E1
+  claim: 'CISA, NSA, and NIST jointly published a quantum-readiness factsheet that names supply chain assessment, technology vendor engagement, and vendor responsibilities as explicit guidance sections. The NCSC March 2025 PQC migration timeline guidance states that an organisation''s quantum readiness depends on its supply chain and supplier readiness. Neither document provides empirical measurement of current supplier readiness rates; both establish this as a formal risk management requirement.'
   verified: '2026-08-08'
+  level: E2
   sources:
-    - url: https://www.cyber.gov.au/business-government/secure-design/quantum/post-quantum-questions-to-ask-your-vendors
+    - url: https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography
       role: primary
-      title: Post-quantum questions to ask your vendors
-      publisher: Australian Signals Directorate
-      date: '2026-07-01'
+      title: 'Quantum-Readiness: Migration to Post-Quantum Cryptography'
+      publisher: 'CISA / NSA / NIST'
+      date: '2023-08-01'
       accessed: '2026-08-08'
-      note: Structured questionnaire for procurement and vendor risk teams; notes vendor readiness as key migration constraint.
-    - url: https://pkic.org/wg/pqc/pqcmm/
+      note: 'Joint national authority factsheet. Supply chain assessment, vendor engagement, and vendor responsibilities are named sections. Not a peer-reviewed experiment; E2 ceiling.'
+    - url: https://www.ncsc.gov.uk/guidance/pqc-migration-timelines
       role: corroborating
-      title: PQC Maturity Model (PQCMM)
-      publisher: PKI Consortium
-      date: '2026-06-14'
+      title: 'Timelines for migration to post-quantum cryptography'
+      publisher: 'NCSC (UK)'
+      date: '2025-03-01'
       accessed: '2026-08-08'
-      note: Vendor-facing framework defining six maturity levels (0–5) for PQC adoption in products and services.
+      note: 'NCSC March 2025. States organisational quantum readiness depends on supply chain and supplier readiness.'
 confidence: medium
 status: published
+origin: agent
+added: '2026-08-08'
 review:
   state: agent-merged
   by: agent
@@ -58,4 +58,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-Supplier PQC readiness is one of the least-measured risks in the migration landscape. An organisation can complete its own transition and remain exposed through every third-party vendor that still negotiates RSA key exchange. The ASD questionnaire and PKI Consortium PQCMM are the first formal frameworks for assessing this — both published mid-2026. Evidence stays at E1: these are governance proposals, not measured outcomes. The item is correctly framed and correctly placed at emerging.
+Supply chain PQC readiness is a named risk category in the joint CISA/NSA/NIST factsheet and in NCSC''s March 2025 migration guidance. No empirical study of actual supplier readiness rates exists. This item is correctly at E2: authoritative guidance, not measured data. Raising it requires published measurement.
