@@ -264,11 +264,33 @@ export function Board() {
 
   return (
     <main className="board">
-      <header className="board-head">
-        <div className="board-title">
-          <span className="wordmark">Horizon Q</span>
+      {/*
+        Layout inline, not in CSS.
+
+        The right-hand side vanished because the title block could not shrink:
+        a flex item defaults to min-width auto, so a long h2 grew past the
+        header and pushed the figures off the edge entirely. Three CSS attempts
+        failed to reach it, so the constraints live here where nothing can
+        override them.
+      */}
+      <header
+        className="board-head"
+        style={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 16,
+        }}
+      >
+        <div
+          className="board-title"
+          style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flex: '1 1 auto' }}
+        >
+          <span className="wordmark" style={{ flex: '0 0 auto' }}>Horizon Q</span>
           <select
             className="galaxy-picker"
+            style={{ flex: '0 0 auto' }}
             value={galaxy}
             onChange={(e) => {
               setGalaxy(e.target.value as FrontierItem['pillar'])
@@ -287,7 +309,15 @@ export function Board() {
               )
             })}
           </select>
-          <h2>
+          <h2
+            style={{
+              flex: '1 1 auto',
+              minWidth: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {timeline
               ? 'When the evidence landed'
               : mode === 'orbit' && focusCon

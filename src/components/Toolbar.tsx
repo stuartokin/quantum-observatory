@@ -57,12 +57,16 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
       if (btns.length === 0) return
       const rows = new Set(btns.map((b) => (b as HTMLElement).offsetTop)).size
 
-      if (!compact && rows > MAX_ROWS) setCompact(true)
+      // A hard floor as well as the row test. Below this width words cannot
+      // fit whatever the wrapping does, and relying on the row count alone
+      // meant a narrow bar could sit at two rows of truncated labels forever.
+      const w = width ?? el.offsetWidth
+      if (!compact && (rows > MAX_ROWS || w < 460)) setCompact(true)
       // Returning to words needs clear room, so it cannot flicker at a
       // borderline width: only when everything already fits on one line.
-      else if (compact && rows === 1) {
+      else if (compact && rows === 1 && w > 620) {
         const natural = btns.reduce((t, b) => t + (b as HTMLElement).offsetWidth, 0)
-        if (natural * 1.9 < (width ?? el.offsetWidth)) setCompact(false)
+        if (natural * 1.9 < w) setCompact(false)
       }
     }
 
