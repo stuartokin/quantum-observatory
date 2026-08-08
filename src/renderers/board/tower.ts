@@ -38,6 +38,7 @@ export const CONSTELLATION_LABEL: Record<string, string> = {
   'error-correction': 'Error correction',
   algorithms: 'Algorithms',
   enabling: 'Enabling stack',
+  applications: 'Applications',
   pqc: 'PQC algorithms',
   migration: 'Migration',
   communications: 'Communications',
