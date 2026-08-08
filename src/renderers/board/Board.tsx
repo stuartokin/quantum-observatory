@@ -584,6 +584,11 @@ export function Board() {
           ))}
           {actors.length === 0 && <li className="label">No actors recorded yet.</li>}
         </ul>
+        <p className="filter-group__note">
+          Every body on the board is a development, not an organisation. The
+          <em> shape</em> tells you who demonstrated it; the <em>colour</em> tells
+          you which constellation it belongs to. Click a name to show only its work.
+        </p>
       </Frame>
       )}
 
@@ -1027,7 +1032,20 @@ function Sky({
           if (px < AXIS - 20 || px > W + 20) continue
           const sel = selected === m.id
           const hov = hoverRef.current === m.id
-          const rr = m.r * (0.75 + m.importance * 0.7) * (sel ? 1.5 : hov ? 1.2 : 1)
+          /**
+           * Size from evidence and priority, which are discrete and genuinely
+           * spread, rather than from the blended importance score — that
+           * clusters most sourced items above 0.7, so everything came out the
+           * same size. Range is now roughly 3px to 13px.
+           */
+          const evidenceWeight =
+            { E5: 1, E4: 0.82, E3: 0.6, E2: 0.42, E1: 0.24, E0: 0.12 }[
+              item?.evidence?.level ?? 'E1'
+            ] ?? 0.24
+          const priorityWeight =
+            { P0: 1, P1: 0.78, P2: 0.5, P3: 0.28, P4: 0.14 }[item?.priority ?? 'P3'] ?? 0.28
+          const weight = evidenceWeight * 0.55 + priorityWeight * 0.45
+          const rr = (3 + weight * 10) * (sel ? 1.5 : hov ? 1.2 : 1)
           // Same hue system as the galaxy, so a body is recognisably the same
           // body in both views.
           const item = pool.find((i) => i.id === m.id)
@@ -1046,14 +1064,24 @@ function Sky({
           }
 
           // Importance reads as size, brightness and glow together.
-          g.globalAlpha = (dim && !sel ? 0.25 : 1) * (0.4 + m.importance * 0.6)
+          g.globalAlpha = (dim && !sel ? 0.25 : 1) * (0.45 + m.importance * 0.55)
           g.shadowColor = tint
-          g.shadowBlur = 4 + m.importance * 16
-          g.fillStyle = m.sourced ? tint : 'rgba(120,132,158,0.95)'
-          g.beginPath()
-          g.arc(px, py, rr, 0, Math.PI * 2)
-          g.fill()
+          g.shadowBlur = 3 + m.importance * 20
+          // The same celestial shapes as the galaxy, so a body is recognisable
+          // across both views. A field of identical discs tells you only where
+          // things are, never what they are.
+          drawBody(g, item?.actors?.[0] ? glyphFor(item.actors[0]) : 'star', px, py, rr, tint, m.sourced)
           g.shadowBlur = 0
+
+          // A ring for the things that would change an assumption.
+          if (item?.priority === 'P0' || item?.priority === 'P1') {
+            g.globalAlpha = dim && !sel ? 0.2 : 0.55
+            g.strokeStyle = tint
+            g.lineWidth = 1
+            g.beginPath()
+            g.arc(px, py, rr + 4.5, 0, Math.PI * 2)
+            g.stroke()
+          }
 
           if (unreviewed.has(m.id)) {
             g.globalAlpha = 0.75
@@ -1120,6 +1148,17 @@ function Sky({
           }
         }
 
+        // Readiness names last, on an opaque strip, so no label can cross them.
+        g.globalAlpha = 1
+        g.fillStyle = '#070B14'
+        g.fillRect(0, 0, AXIS - 2, H)
+        LEVELS.forEach((lvl, i) => {
+          const y = TY((i + 0.5) / LEVELS.length)
+          g.fillStyle = 'rgba(134,151,176,0.9)'
+          g.fillText(lvl.toUpperCase(), 8, y + 4)
+        })
+        g.globalAlpha = 1
+
         // Category key, tucked behind a small button in the corner. The nine
         // names take up real estate that the plot needs more than they do, so
         // it is closed until asked for — and the button stays visible so it is
@@ -1127,19 +1166,19 @@ function Sky({
         {
           // Bottom left. The plot crowds toward the recent years on the right,
           // and the early years are mostly empty — so the space is there.
-          const size = 18
+          const size = 22
           const bx = AXIS + 10
           const by = H - size - 12
           legendButton.current = { x: bx, y: by, s: size }
 
-          g.globalAlpha = 0.85
+          g.globalAlpha = 0.92
           g.fillStyle = '#0B1220'
           g.beginPath()
           g.roundRect(bx, by, size, size, 3)
           g.fill()
-          g.globalAlpha = showLegend ? 1 : 0.45
+          g.globalAlpha = showLegend ? 0.95 : 0.6
           g.strokeStyle = colour
-          g.lineWidth = 1
+          g.lineWidth = 1.2
           g.stroke()
 
           // Three dots in the categories' own colours: the key, in miniature.
@@ -1183,16 +1222,6 @@ function Sky({
           }
         }
 
-        // Readiness names last, on an opaque strip, so no label can cross them.
-        g.globalAlpha = 1
-        g.fillStyle = '#070B14'
-        g.fillRect(0, 0, AXIS - 2, H)
-        LEVELS.forEach((lvl, i) => {
-          const y = TY((i + 0.5) / LEVELS.length)
-          g.fillStyle = 'rgba(134,151,176,0.9)'
-          g.fillText(lvl.toUpperCase(), 8, y + 4)
-        })
-        g.globalAlpha = 1
         raf = requestAnimationFrame(safeDraw)
         return
       }
@@ -1432,7 +1461,12 @@ function Sky({
         const bodyColour = n.sourced
           ? constellationColour(n.constellation)
           : constellationMuted(n.constellation)
-        drawBody(g, n.glyph, px, py, r, bodyColour, n.sourced)
+        // Derive the glyph from the actor here rather than trusting whatever
+        // was baked into the node — otherwise the shape on the board and the
+        // shape in the Actors panel are computed by different routes and drift
+        // apart, which is exactly what "the icons are mixed up" looks like.
+        const glyph = n.actor ? glyphFor(n.actor) : n.glyph
+        drawBody(g, glyph, px, py, r, bodyColour, n.sourced)
         g.shadowBlur = 0
 
         // Unreviewed items carry a dashed ring wherever they appear. The label
@@ -1762,7 +1796,14 @@ function Help({ colour }: { colour: string }) {
       <dl className="help-key">
         <div><dt><GlyphMark glyph="star" colour={colour} /></dt><dd>Filled — carries a verified primary source</dd></div>
         <div><dt><GlyphMark glyph="pulsar" colour={colour} /></dt><dd>Hollow — a topic with no source yet. Not a claim</dd></div>
-        <div><dt><GlyphMark glyph="comet" colour={colour} /></dt><dd>The shape is the organisation behind it</dd></div>
+        <div>
+          <dt><GlyphMark glyph="comet" colour={colour} /></dt>
+          <dd>
+            Shape is the organisation behind it. Colour is the constellation.
+            Nothing on the board represents an organisation itself — every body
+            is a development.
+          </dd>
+        </div>
       </dl>
 
       <p>
