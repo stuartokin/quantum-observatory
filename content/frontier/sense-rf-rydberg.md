@@ -24,7 +24,7 @@ horizon: 2
 priority: P2
 qdayImpact: 0
 evidence:
-  level: E4
+  level: E3
   claim: NIST demonstrated Rydberg-atom electrometry in room-temperature vapour cells as SI-traceable field probes covering DC to THz; reviewed in Nature Reviews Physics (2024).
   verified: '2026-08-08'
   sources:
