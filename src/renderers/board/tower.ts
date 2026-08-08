@@ -128,13 +128,14 @@ export interface LayoutOpts {
 /** Where each constellation sits. Organic positions, not a rigid grid — a
  *  spreadsheet of columns is what made the first version read as a chart. */
 export const CONSTELLATION_HOME: Record<string, number> = {
-  architectures: 0.10,
-  'error-correction': 0.235,
-  enabling: 0.365,
-  algorithms: 0.49,
-  pqc: 0.625,
-  migration: 0.745,
-  communications: 0.865,
+  architectures: 0.085,
+  'error-correction': 0.205,
+  algorithms: 0.325,
+  enabling: 0.44,
+  applications: 0.55,
+  pqc: 0.66,
+  migration: 0.765,
+  communications: 0.875,
   sensing: 0.965,
 }
 
