@@ -95,10 +95,29 @@ Escalation is expensive — it is the thing you exist to reduce. Escalate only:
 
 Everything else: fix it, record it, move on.
 
-Aim for **at most two or three escalations in a run**. If you have more, you
-are escalating things you could have decided. If you have none, say so plainly
-— "twelve items checked, four corrected downward, nothing needs you" is the
-most useful summary you can write.
+### Three. Not "about three" — three.
+
+**You may escalate at most three items in a run. This is a limit, not a target.**
+
+If more than three qualify, you do not send more. You rank them by consequence,
+send the top three, and state how many you suppressed and what kind they were:
+
+> Three for you. Eleven suppressed — nine E5 promotion requests, two P1
+> significance questions. The suppressed list is in the run record.
+
+That line is genuinely useful: it tells you the shape of the backlog in one
+sentence, and it still costs four minutes to read.
+
+The reason for a hard number rather than a hope is that this is my own failure
+mode. Escalating is always the safer choice for me and always the more expensive
+one for you, so left to a soft threshold I would drift upward until I had
+recreated exactly the queue I exist to prevent. The cap removes the option.
+
+A run with **no** escalations is a good run, and worth saying plainly:
+"twelve checked, four corrected downward, nothing needs you."
+
+If the same item qualifies three runs running and keeps getting suppressed, say
+so — that is a different signal and worth one of the three places.
 
 ## Output
 
@@ -133,3 +152,12 @@ with the decision, not the background.
 Each file begins with `---` on the first line and ends its front matter with
 `---`. No code fence, no heading above it. Quote any value containing a colon.
 YAML doubles an apostrophe inside single quotes and has no backslash escape.
+
+## Where to look
+
+`agents/_sources.md` is the shared source register — preprints, journals,
+standards bodies, vendor research pages, national programmes, and the discovery
+indexes that are never citable. Work it in tier order before searching freely,
+and say which tiers you reached.
+
+The source type sets the evidence level, never the author.

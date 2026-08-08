@@ -73,6 +73,10 @@ function existingItems() {
 const items = existingItems()
 const schema = readFileSync('content/schema/frontier.schema.json', 'utf8')
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
+// Shared across every agent, so changing it changes all four at once.
+const sources = existsSync('agents/_sources.md')
+  ? readFileSync('agents/_sources.md', 'utf8')
+  : ''
 
 const context = `
 # Existing board — ${items.length} items
@@ -94,6 +98,10 @@ ${schema}
 ${scales}
 \`\`\`
 
+# Source register
+
+${sources || '(none)'}
+
 # Today
 
 ${new Date().toISOString().slice(0, 10)}
@@ -108,6 +116,7 @@ Reply with a single JSON object and nothing else — no prose, no markdown fence
   "couldNotSource": [ { "id": "...", "why": "what you searched, what you rejected" } ],
   "badlyFramed": [ { "id": "...", "why": "why this asks the wrong question" } ],
   "applicationCandidates": [ { "what": "...", "source": "url" } ],
+  "escalations": [ { "what": "...", "why": "what is wrong and what decision is needed" } ],
   "rejected": [ { "what": "...", "why": "..." } ],
   "files": [ { "path": "content/frontier/_inbox/<id>.md", "content": "<full file>" } ]
 }
@@ -115,6 +124,9 @@ Reply with a single JSON object and nothing else — no prose, no markdown fence
 The lists matter as much as the files. couldNotSource and badlyFramed tell the
 reviewer where the board is weak, which is not visible from the items that
 worked. Return them even when empty.
+
+The source register is at agents/_sources.md — work it in tier order before
+searching freely.
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
 Maximum files this run: ${cfg.budget?.proposals ?? 6}
@@ -346,6 +358,17 @@ const pr = [
   ...section('Application candidates', out.applicationCandidates ?? out.application_candidates, (r) =>
     typeof r === 'string' ? `- ${r}` : `- **${r.what ?? r.title}** — ${r.source ?? r.why ?? ''}`,
   ),
+  ...section(
+    'Needs you',
+    (out.escalations ?? out.needsYou ?? []).slice(0, 3),
+    (r) => (typeof r === 'string' ? `- ${r}` : `- **${r.what ?? r.id}** — ${r.why ?? r.decision}`),
+  ),
+  ...((out.escalations ?? out.needsYou ?? []).length > 3
+    ? [
+        `_${(out.escalations ?? out.needsYou).length - 3} further item(s) qualified and were ` +
+          `suppressed to keep the escalation list to three. See the run record._`,
+      ]
+    : []),
   ...section('Considered and rejected', out.rejected, (r) =>
     typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.why}`,
   ),

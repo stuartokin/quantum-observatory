@@ -92,9 +92,28 @@ Do not simply return whatever was easiest to find this week.
 
 ## Look where others are not
 
-Do not lead with IBM, Google, Microsoft, Quantinuum or IonQ. Search
-universities, national laboratories, government programmes, standards bodies,
-photonics and cryogenics suppliers, and small venture-backed groups.
+Work the source register in `agents/_sources.md` first, in tier order, then
+search for whatever it missed. Say in your summary which tiers you reached.
+
+**The source type sets the evidence level, never the author.** A peer-reviewed
+paper from Google is E4. A blog post from IBM is E2, exactly as a blog post from
+a two-person startup is. Judge the artefact.
+
+This matters because the major vendors publish some of the best work in the
+field — Willow in Nature, the qLDPC memory in Nature — and an earlier version of
+this prompt told you not to lead with them, which would have had you skipping
+the strongest papers available. That instruction was wrong and is gone.
+
+The real risk it was reaching for is different: large programmes have
+communications reach, so an open search surfaces them disproportionately, and a
+board that follows attention has stopped looking. So:
+
+> **At least half of what you propose in a run must come from outside IBM,
+> Google, Microsoft, Quantinuum and IonQ.**
+
+Universities, national laboratories, standards bodies, photonics and cryogenics
+suppliers, small venture-backed groups. If you cannot meet that in a given week,
+say so rather than padding the list.
 
 A breakthrough does not have to originate in a quantum laboratory to matter.
 Semiconductor fabrication, cryogenics, photonics and control electronics all

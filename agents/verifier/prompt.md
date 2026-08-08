@@ -342,3 +342,12 @@ citation. Note also that it lists processors, not architectures — our
 architectures constellation holds modalities. The real gaps there are
 Majorana systems, GKP encoding, rare-earth ion, molecular qubits,
 measurement-based and cluster-state computing, and analogue simulators.
+
+## Where to look
+
+`agents/_sources.md` is the shared source register — preprints, journals,
+standards bodies, vendor research pages, national programmes, and the discovery
+indexes that are never citable. Work it in tier order before searching freely,
+and say which tiers you reached.
+
+The source type sets the evidence level, never the author.
