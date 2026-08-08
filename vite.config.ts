@@ -10,13 +10,22 @@ export default defineConfig({
     // Content is bundled at build time, so the entry chunk grows with every
     // item the agents add. Splitting it out keeps two honest measurements:
     // application code, which should stay flat, and data, which is meant to
-    // grow. Mixing them means the app appears to bloat as the board fills up.
+    // grow. One combined number makes the app look like it bloats every time a
+    // research agent does its job.
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('/content/') && id.endsWith('.md')) return 'content'
-          if (id.includes('/content/frontier/_scales.json')) return 'content'
-          if (id.includes('/content/site.json')) return 'content'
+          // import.meta.glob with ?raw yields ids like
+          // "/content/frontier/x.md?raw", so match on the path, not the
+          // extension. That suffix is why the first attempt caught nothing.
+          const norm = id.split('?')[0]
+          if (
+            norm.includes('/content/frontier/') ||
+            norm.includes('/content/items/') ||
+            norm.endsWith('/content/site.json')
+          ) {
+            return 'content'
+          }
           return undefined
         },
       },

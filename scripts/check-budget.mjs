@@ -21,8 +21,16 @@ import { gzipSync } from 'node:zlib'
 const ASSETS = 'dist/assets'
 const KB = 1024
 
+/**
+ * app     React and react-dom are about 45 KB gzipped, front-matter pulls in
+ *         js-yaml for another ~30, and the canvas board is a large component.
+ *         80 KB is the honest ceiling; growth beyond it means new code or a new
+ *         dependency, and either deserves a look.
+ * content The frontier items. Grows as agents fill the board, which is the
+ *         point, so the ceiling is generous.
+ */
 const BUDGET = {
-  app: 95 * KB,
+  app: 80 * KB,
   content: 220 * KB,
   css: 20 * KB,
 }
@@ -59,11 +67,18 @@ if (groups.content.length === 0) {
 
 if (fail.length) {
   console.error('\nBudget exceeded:\n' + fail.map((f) => '  - ' + f).join('\n'))
-  console.error(
-    '\nIf "content" is over, the board has outgrown build-time bundling.\n' +
-      'The fix is to emit content as a JSON file fetched at runtime, not to\n' +
-      'raise the ceiling — see AGENT-PLAN.md.',
-  )
+  if (fail.some((f) => f.startsWith('content'))) {
+    console.error(
+      '\nContent has outgrown build-time bundling. The fix is to emit it as a\n' +
+        'JSON file fetched at runtime, not to raise the ceiling. See AGENT-PLAN.md.',
+    )
+  }
+  if (fail.some((f) => f.startsWith('app'))) {
+    console.error(
+      '\nApplication code grew. Something was added — a dependency, or a large\n' +
+        'component. Find out what before raising this number.',
+    )
+  }
   process.exit(1)
 }
 console.log('Within budget.')
