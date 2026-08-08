@@ -205,19 +205,76 @@ const inScope = (p) =>
     return rx.test(p)
   })
 
+/**
+ * Models wrap file contents in markdown fences, add a heading above the front
+ * matter, or leave stray whitespace. None of that is misbehaviour worth failing
+ * a run over — it is formatting. Normalise it here rather than letting a broken
+ * file reach the repository.
+ */
+function normaliseFile(raw) {
+  let t = String(raw ?? '')
+  t = t.replace(/^\uFEFF/, '')
+  // Strip an outer code fence if the whole file is wrapped in one.
+  const fence = t.match(/^\s*```[a-zA-Z]*\n([\s\S]*?)\n```\s*$/)
+  if (fence) t = fence[1]
+  // Drop anything before the front matter opener.
+  const start = t.indexOf('---')
+  if (start > 0 && !t.slice(0, start).includes('---')) t = t.slice(start)
+  t = t.trimStart()
+  if (!t.endsWith('\n')) t += '\n'
+  return t
+}
+
+/** Front matter must be present and parseable before anything is written. */
+function frontMatterOf(text) {
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!m) return { ok: false, reason: 'no front matter' }
+  const fm = m[1]
+  const id = (fm.match(/^id:\s*(\S+)$/m) || [])[1]
+  if (!id) return { ok: false, reason: 'no id field' }
+  if (!/^review:/m.test(fm)) return { ok: false, reason: 'no review block' }
+  if (/^\s*state:\s*reviewed/m.test(fm))
+    return { ok: false, reason: 'claims review.state: reviewed — agents may not' }
+  return { ok: true, id }
+}
+
 const files = (out.files ?? []).slice(0, cfg.budget?.proposals ?? 6)
 const written = []
+const rejected = []
 
 for (const f of files) {
   if (!inScope(f.path)) {
-    // The scope gate in CI would catch this too. Failing here is cheaper and
-    // names the agent rather than the pull request.
+    // CI would catch this too. Failing here is cheaper and names the agent
+    // rather than the pull request.
     console.error(`REFUSED: ${f.path} is outside ${agent}'s write_scope`)
     process.exit(1)
   }
+
+  const content = normaliseFile(f.content)
+  const check = frontMatterOf(content)
+  if (!check.ok) {
+    rejected.push({ path: f.path, reason: check.reason, head: content.slice(0, 240) })
+    continue
+  }
+
   mkdirSync(dirname(f.path), { recursive: true })
-  writeFileSync(f.path, f.content)
+  writeFileSync(f.path, content)
   written.push(f.path)
+}
+
+if (rejected.length) {
+  console.error(`\n${rejected.length} file(s) rejected before writing:\n`)
+  for (const r of rejected) {
+    console.error(`  ${r.path}\n    reason: ${r.reason}`)
+    console.error(`    starts: ${JSON.stringify(r.head.slice(0, 160))}\n`)
+  }
+  // A partial run is fine. Losing every good file because one was malformed
+  // is not, so carry on with whatever was valid.
+  if (written.length === 0) {
+    console.error('Nothing valid was produced. See .agent-run/raw.json.')
+    process.exit(1)
+  }
+  console.error(`Continuing with the ${written.length} valid file(s).\n`)
 }
 
 const pr = [
@@ -231,6 +288,10 @@ const pr = [
   '',
   `## Files (${written.length})`,
   ...written.map((p) => `- \`${p}\``),
+  ...(rejected.length
+    ? ['', `## Rejected before writing (${rejected.length})`,
+       ...rejected.map((r) => `- \`${r.path}\` — ${r.reason}`)]
+    : []),
   '',
   `_Proposed by the ${agent} agent. Nothing here is published until merged._`,
 ].join('\n')

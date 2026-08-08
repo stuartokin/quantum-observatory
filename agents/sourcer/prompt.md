@@ -160,3 +160,20 @@ unwritten.
 
 Never delete or archive an existing item. If you conclude something does not
 belong on the board at all, say so in your summary and leave it in place.
+
+## File format — exactly this
+
+Each entry in `files` is a complete Markdown document. It must begin with the
+front matter opener on the very first line:
+
+```
+---
+schema: frontier/v1
+id: ...
+```
+
+**No code fence around it. No heading above it. No commentary before it.** The
+runner rejects anything that does not start with `---` and the file is lost.
+
+End it with a newline. Nothing after the closing front matter except the card
+body.
