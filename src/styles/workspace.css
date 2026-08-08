@@ -140,3 +140,51 @@
 }
 .toolbar .frame__grip:active { cursor: grabbing; }
 .toolbar .frame__grip:hover { opacity: 1; color: var(--ink); }
+
+
+/* ---------- Stacking ----------
+   Order is carried by the inline z-index, which beats any stylesheet rule, so
+   the active-frame style must only change appearance. The real fix for windows
+   opening behind others was in the toolbar: toggling a frame open now also
+   raises it. */
+
+.frame[data-active='true'] { box-shadow: 0 16px 56px rgb(0 0 0 / 0.7); }
+
+/* ---------- Header ---------- */
+
+.board-head { align-items: center; gap: var(--gap-m); }
+.board-title { flex: 1 1 auto; min-width: 0; }
+.board-title h2 {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 46vw;
+}
+
+.board-right {
+  display: flex; align-items: center; gap: var(--gap-s);
+  flex: 0 0 auto; position: relative;
+}
+
+.board-stats__toggle {
+  display: none;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: transparent; border: 1px solid var(--hairline);
+  color: var(--ink-faint); cursor: pointer;
+  font-family: var(--mono); font-size: 0.72rem; font-style: italic;
+}
+.board-stats__toggle:hover { color: var(--ink); }
+
+@media (max-width: 1180px) {
+  .board-stats__toggle { display: block; }
+  .board-title h2 { display: none; }
+  .board-stats {
+    display: none;
+    position: absolute; right: 0; top: calc(100% + 8px);
+    flex-direction: column; align-items: flex-end; gap: 4px;
+    padding: var(--gap-s) var(--gap-m);
+    background: color-mix(in oklab, var(--ground-panel) 96%, transparent);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--hairline); border-radius: var(--radius);
+    box-shadow: 0 10px 36px rgb(0 0 0 / 0.6);
+    z-index: 60;
+  }
+  .board-stats[data-open] { display: flex; }
+}

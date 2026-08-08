@@ -30,15 +30,37 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
   const [collapsed, setCollapsed] = useState(false)
   const [compact, setCompact] = useState(false)
 
-  // Words while they fit; icons when they do not.
+  /**
+   * Words while they fit; icons when they do not.
+   *
+   * Measured from the rendered height rather than guessed from the viewport:
+   * a wrapping toolbar keeps its offsetWidth inside the bounds, so comparing
+   * widths never detected the overflow. If the bar needs more than two rows,
+   * or the viewport is genuinely small, drop to icons.
+   */
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const check = () => setCompact(window.innerWidth < 760 || el.offsetWidth > window.innerWidth - 40)
+
+    const check = () => {
+      if (collapsed) return
+      const row = 42
+      const rows = Math.round(el.offsetHeight / row)
+      if (!compact && (rows > 2 || window.innerWidth < 760)) setCompact(true)
+      // Only go back to words if there is comfortably room, so it cannot
+      // oscillate between the two on a borderline width.
+      else if (compact && rows <= 1 && window.innerWidth > 900) setCompact(false)
+    }
+
     check()
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
     window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [buttons.length])
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', check)
+    }
+  }, [buttons.length, compact, collapsed])
 
   useEffect(() => {
     const move = (e: PointerEvent) => {

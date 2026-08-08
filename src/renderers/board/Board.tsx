@@ -100,6 +100,7 @@ export function Board() {
   const [timeline, setTimeline] = useState(false)
   const [cam, setCam] = useState<Camera>(DEFAULT_CAMERA)
   const [focusCon, setFocusCon] = useState<string | null>(null)
+  const [statsOpen, setStatsOpen] = useState(false)
 
   const [cons, setCons] = useState<string[]>([...CONSTELLATIONS])
   const [levels, setLevels] = useState<Readiness[]>([...LEVELS])
@@ -113,18 +114,23 @@ export function Board() {
   )
   const setFrame = (k: string) => (s: FrameState) => setFrames((f) => ({ ...f, [k]: s }))
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
-  const toggle = (k: string) => () =>
-    setFrames((f) => ({ ...f, [k]: { ...f[k], docked: !f[k].docked } }))
-
-  /** Canvases inside frames need telling when their box changed. */
-  const [resizeTick, setResizeTick] = useState(0)
-  const bump = () => setResizeTick((n) => n + 1)
-
   const [order, setOrder] = useState<string[]>([
     'galaxy', 'teaser', 'news', 'filters', 'actors', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
+
+  const toggle = (k: string) => () => {
+    setFrames((f) => ({ ...f, [k]: { ...f[k], docked: !f[k].docked } }))
+    // Opening a window behind everything else is the same as not opening it.
+    setOrder((o) => [...o.filter((x) => x !== k), k])
+  }
+
+  /** Canvases inside frames need telling when their box changed. */
+  const [resizeTick, setResizeTick] = useState(0)
+  const bump = () => setResizeTick((n) => n + 1)
+
+  /** Stacking order. Last in the list is nearest the reader. */
 
   const pool = useMemo(
     () => allFrontier.filter((i) => i.pillar === galaxy && i.status !== 'archived'),
@@ -252,7 +258,6 @@ export function Board() {
       <header className="board-head">
         <div className="board-title">
           <span className="wordmark">Horizon Q</span>
-          <span className="board-title__sep">·</span>
           <select
             className="galaxy-picker"
             value={galaxy}
@@ -273,7 +278,6 @@ export function Board() {
               )
             })}
           </select>
-          <span className="board-title__sep">·</span>
           <h2>
             {timeline
               ? 'When the evidence landed'
@@ -282,31 +286,45 @@ export function Board() {
                 : 'The frontier, by how close it is to real'}
           </h2>
         </div>
-        <div className="board-stats">
-          <span><b>{visible.length}</b> of {pool.length}</span>
-          <span><b>{visible.filter(isSourced).length}</b> sourced</span>
-          {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
-          {debt.unreviewed > 0 && (
-            <span className="board-stats__unreviewed">
-              <b>{debt.unreviewed}</b> unreviewed
-            </span>
-          )}
-          {debt.weeks !== undefined && (
-            <span className={debt.weeks >= 8 ? 'board-stats__stale' : undefined}>
-              reviewed <b>{debt.weeks}w</b> ago
-            </span>
-          )}
-          <span className="board-stats__ver">v{VERSION}</span>
-        </div>
 
-        <QDayBar
-          forecast={forecast}
-          colour={colour}
-          onOpen={() => {
-            raise('qday')()
-            setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
-          }}
-        />
+        <div className="board-right">
+          <QDayBar
+            forecast={forecast}
+            colour={colour}
+            onOpen={() => {
+              raise('qday')()
+              setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
+            }}
+          />
+
+          {/* Always present. Below 1180px it collapses behind an info button
+              rather than disappearing, because these are the numbers that say
+              how much of the board nobody has checked. */}
+          <button
+            className="board-stats__toggle"
+            onClick={() => setStatsOpen((v) => !v)}
+            aria-expanded={statsOpen}
+            aria-label="Board statistics"
+            title="Board statistics"
+          >
+            i
+          </button>
+
+          <div className="board-stats" data-open={statsOpen || undefined}>
+            <span><b>{visible.length}</b> of {pool.length}</span>
+            <span><b>{visible.filter(isSourced).length}</b> sourced</span>
+            {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
+            {debt.unreviewed > 0 && (
+              <span className="board-stats__unreviewed"><b>{debt.unreviewed}</b> unreviewed</span>
+            )}
+            {debt.weeks !== undefined && (
+              <span className={debt.weeks >= 8 ? 'board-stats__stale' : undefined}>
+                reviewed <b>{debt.weeks}w</b> ago
+              </span>
+            )}
+            <span className="board-stats__ver">v{VERSION}</span>
+          </div>
+        </div>
       </header>
 
       <Frame
@@ -587,8 +605,15 @@ function Sky({
    * returns to a truthful arrangement without anyone having to reset it.
    */
   const manual = useRef(new Map<string, { x: number; y: number; releasedAt: number }>())
-  /** Auto-rotation pauses while the reader is interacting, then resumes. */
-  const idleSince = useRef(Date.now())
+  /**
+   * Auto-rotation pauses while the reader is interacting, then resumes.
+   *
+   * performance.now(), NOT Date.now(). The draw loop is given a performance
+   * timestamp, and mixing the two epochs made every idle comparison come out
+   * around minus 1.7 trillion — so the easing term was permanently zero and
+   * nothing ever turned.
+   */
+  const idleSince = useRef(performance.now())
   /**
    * Accumulated drift, kept OUT of React state.
    *
@@ -1292,7 +1317,7 @@ function Sky({
   }
 
   function onWheel(e: React.WheelEvent) {
-    idleSince.current = Date.now()
+    idleSince.current = performance.now()
     if (mode === 'orbit') {
       setCam(clampCamera({ ...cam, dist: cam.dist * (e.deltaY < 0 ? 0.9 : 1.11) }))
       return
@@ -1305,7 +1330,7 @@ function Sky({
   }
 
   function onPointerDown(e: React.PointerEvent) {
-    idleSince.current = Date.now()
+    idleSince.current = performance.now()
     if (tl) {
       // Timeline pans only; marks are selected on release.
       drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
@@ -1389,7 +1414,7 @@ function Sky({
     }
     const nd = nodeDrag.current
     nodeDrag.current = null
-    idleSince.current = Date.now()
+    idleSince.current = performance.now()
     if (nd) {
       const held = manual.current.get(nd.id)
       if (held) held.releasedAt = Date.now()
@@ -1415,7 +1440,7 @@ function Sky({
   useEffect(() => {
     manual.current.clear()
     spin.current = 0
-    idleSince.current = Date.now()
+    idleSince.current = performance.now()
   }, [mode, focusCon])
 
   function onDoubleClick(e: React.MouseEvent) {
