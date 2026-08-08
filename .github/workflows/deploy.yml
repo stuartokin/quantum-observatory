@@ -3,6 +3,12 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # A push made with GITHUB_TOKEN does not trigger workflows — GitHub's guard
+  # against a workflow endlessly retriggering itself. So agent merges never
+  # fire the push above. Deploy on those workflows completing instead.
+  workflow_run:
+    workflows: [Agents, Review]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -16,12 +22,18 @@ concurrency:
 
 jobs:
   deploy:
+    # Nothing was merged if the agent run failed, so nothing to publish.
+    if: >
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: 22
