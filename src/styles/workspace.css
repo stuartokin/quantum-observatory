@@ -117,30 +117,49 @@
 }
 .mini:hover .mini__hint { opacity: 1; }
 
-/* ---------- Toolbar: wraps, compacts, never hides a function ---------- */
+/* ---------- Toolbar: a small window, sized by its corner grip ---------- */
 
 .toolbar {
   flex-wrap: wrap;
-  max-width: min(94vw, 900px);
   justify-content: center;
   row-gap: 2px;
+  padding-bottom: 10px;   /* room for the grip */
+  max-width: calc(100vw - 24px);
 }
-.toolbar[data-collapsed] { padding: 5px 8px; }
+.toolbar[data-collapsed] { padding: 5px 8px; width: auto !important; }
+
 .toolbar[data-compact] button {
-  padding: 7px 10px;
-  min-width: 34px;
-  font-size: 0.78rem;
+  padding: 7px 9px;
+  min-width: 32px;
+  font-size: 0.82rem;
   letter-spacing: 0;
+  text-transform: none;
 }
+
 .toolbar .frame__grip {
   cursor: grab;
-  padding: 4px;
-  margin: 0 4px 0 2px;
+  padding: 5px;
+  margin: 0 3px 0 1px;
   box-sizing: content-box;
 }
 .toolbar .frame__grip:active { cursor: grabbing; }
 .toolbar .frame__grip:hover { opacity: 1; color: var(--ink); }
 
+/* The grip sits inside the rounded corner, so it needs to follow the curve
+   rather than sit in a square that overhangs it. */
+.toolbar__resize {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 16px;
+  height: 16px;
+  cursor: ew-resize;
+  border-radius: 0 0 999px 0;
+  background:
+    radial-gradient(circle at 2px 2px, var(--ink-faint) 1px, transparent 1.4px) 0 0/5px 5px;
+  opacity: 0.45;
+}
+.toolbar__resize:hover { opacity: 1; }
 
 /* ---------- Stacking ----------
    Order is carried by the inline z-index, which beats any stylesheet rule, so
@@ -150,41 +169,74 @@
 
 .frame[data-active='true'] { box-shadow: 0 16px 56px rgb(0 0 0 / 0.7); }
 
-/* ---------- Header ---------- */
+/* ---------- Header ----------
+   Selectors here are deliberately specific. @import rules are evaluated before
+   the rest of the importing file, so anything written as a bare `.board-stats`
+   loses to the older rule in global.css regardless of which file it is in. */
 
-.board-head { align-items: center; gap: var(--gap-m); }
-.board-title { flex: 1 1 auto; min-width: 0; }
-.board-title h2 {
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 46vw;
+.board-head { align-items: center; gap: var(--gap-m); flex-wrap: nowrap; }
+
+.board-head .board-title { flex: 1 1 auto; min-width: 0; }
+.board-head .board-title h2 {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-.board-right {
-  display: flex; align-items: center; gap: var(--gap-s);
-  flex: 0 0 auto; position: relative;
+.board-head .board-right {
+  display: flex !important;
+  align-items: center;
+  gap: var(--gap-s);
+  flex: 0 0 auto;
+  position: relative;
 }
 
-.board-stats__toggle {
+.board-head .board-right .board-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 14px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  max-width: 44vw;
+}
+.board-head .board-right .board-stats b { color: var(--ink); font-weight: 400; }
+.board-head .board-right .board-stats__move { color: var(--line-quantum); }
+.board-head .board-right .board-stats__unreviewed { color: var(--line-ai); }
+.board-head .board-right .board-stats__stale { color: var(--line-energy); }
+.board-head .board-right .board-stats__ver { opacity: 0.5; }
+
+.board-head .board-right .board-stats__toggle {
   display: none;
-  width: 26px; height: 26px; border-radius: 50%;
+  width: 26px; height: 26px; border-radius: 50%; flex: 0 0 auto;
   background: transparent; border: 1px solid var(--hairline);
   color: var(--ink-faint); cursor: pointer;
   font-family: var(--mono); font-size: 0.72rem; font-style: italic;
 }
-.board-stats__toggle:hover { color: var(--ink); }
+.board-head .board-right .board-stats__toggle:hover { color: var(--ink); }
 
+/* Below 13 inches the long title goes and the figures move behind the icon —
+   present rather than dropped, because "unreviewed" is the number that says
+   how much of this nobody has checked. */
 @media (max-width: 1180px) {
-  .board-stats__toggle { display: block; }
-  .board-title h2 { display: none; }
-  .board-stats {
+  .board-head .board-right .board-stats__toggle { display: block; }
+  .board-head .board-title h2 { display: none; }
+  .board-head .board-right .board-stats {
     display: none;
-    position: absolute; right: 0; top: calc(100% + 8px);
-    flex-direction: column; align-items: flex-end; gap: 4px;
+    position: absolute; right: 0; top: calc(100% + 10px);
+    flex-direction: column; align-items: flex-end; gap: 5px;
+    max-width: none;
     padding: var(--gap-s) var(--gap-m);
-    background: color-mix(in oklab, var(--ground-panel) 96%, transparent);
+    background: color-mix(in oklab, var(--ground-panel) 97%, transparent);
     backdrop-filter: blur(16px);
     border: 1px solid var(--hairline); border-radius: var(--radius);
     box-shadow: 0 10px 36px rgb(0 0 0 / 0.6);
     z-index: 60;
   }
-  .board-stats[data-open] { display: flex; }
+  .board-head .board-right .board-stats[data-open] { display: flex; }
+}
+
+@media (max-width: 700px) {
+  .board-head .wordmark { font-size: var(--step-0); }
 }
