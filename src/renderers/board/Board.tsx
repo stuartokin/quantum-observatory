@@ -76,7 +76,12 @@ export function Board() {
 
   const [cons, setCons] = useState<string[]>([...CONSTELLATIONS])
   const [levels, setLevels] = useState<Readiness[]>([...LEVELS])
-  const [actorFilter, setActorFilter] = useState<string | null>(null)
+  /**
+   * Actors are a multi-select filter now, alongside the others, rather than a
+   * separate window with click-one-at-a-time behaviour. Empty means all — the
+   * same convention every other section uses.
+   */
+  const [actorsOn, setActorsOn] = useState<string[] | null>(null)
   const [sourcedOnly, setSourcedOnly] = useState(false)
 
   // The opening workspace: galaxy dominant, teaser and news beside it on a
@@ -91,7 +96,7 @@ export function Board() {
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'teaser', 'news', 'filters', 'actors', 'help', 'qday', 'detail',
+    'galaxy', 'teaser', 'news', 'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
@@ -133,10 +138,10 @@ export function Board() {
           })() &&
           cons.includes(i.constellation ?? '') &&
           levels.includes(i.readiness) &&
-          (!actorFilter || (i.actors ?? []).includes(actorFilter)) &&
+          (!actorsOn || (i.actors ?? []).some((a) => actorsOn.includes(a))) &&
           (!sourcedOnly || isSourced(i)),
       ),
-    [pool, cons, levels, actorFilter, sourcedOnly, hiddenYears],
+    [pool, cons, levels, actorsOn, sourcedOnly, hiddenYears],
   )
 
   const nodes = useMemo(() => layout(visible, { offsets: {} as Offsets }), [visible])
@@ -222,12 +227,6 @@ export function Board() {
     ...(timeline
       ? []
       : [
-          {
-            key: 'actors',
-            label: 'Actors',
-            active: !frames.actors.docked,
-            onClick: toggle('actors'),
-          },
         ]),
     { key: 'news', icon: '◰', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
@@ -524,6 +523,16 @@ export function Board() {
           render={(l) => l}
         />
 
+        <FilterSection
+          label="Actors"
+          all={actors}
+          selected={actorsOn ?? actors}
+          onChange={(next) => setActorsOn(next.length === actors.length ? null : next)}
+          mark={(a) => <GlyphMark glyph={glyphFor(a)} colour={colour} />}
+          render={(a) => a}
+          note="Shape is the organisation; colour is the constellation. Every body on the board is a development, never an organisation."
+        />
+
         <section className="filter-group">
           <header>
             <span className="label">Evidence</span>
@@ -558,39 +567,6 @@ export function Board() {
           note="Undated items are never hidden by a year filter."
         />
       </Frame>
-
-      {!timeline && (
-      <Frame
-        title="Actors"
-        state={frames.actors}
-        onChange={setFrame('actors')}
-        onDock={dock('actors')}
-        accent={colour}
-        z={zOf('actors')}
-        onFocus={raise('actors')}
-      >
-        <ul className="actor-list">
-          {actors.map(([a, n]) => (
-            <li key={a}>
-              <button
-                aria-pressed={actorFilter === a}
-                onClick={() => setActorFilter(actorFilter === a ? null : a)}
-              >
-                <GlyphMark glyph={glyphFor(a)} colour={colour} />
-                <span>{a}</span>
-                <em>{n}</em>
-              </button>
-            </li>
-          ))}
-          {actors.length === 0 && <li className="label">No actors recorded yet.</li>}
-        </ul>
-        <p className="filter-group__note">
-          Every body on the board is a development, not an organisation. The
-          <em> shape</em> tells you who demonstrated it; the <em>colour</em> tells
-          you which constellation it belongs to. Click a name to show only its work.
-        </p>
-      </Frame>
-      )}
 
       <Frame
         title="Help"
@@ -730,8 +706,6 @@ function Sky({
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   /** Live timeline projection, so hit testing uses the same maths as drawing. */
   const tlProject = useRef<{ TX: (x: number) => number; TY: (y: number) => number } | null>(null)
-  /** The legend button's box, so a click can find it. */
-  const legendButton = useRef<{ x: number; y: number; s: number } | null>(null)
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
@@ -1168,34 +1142,11 @@ function Sky({
         // it is closed until asked for — and the button stays visible so it is
         // findable without hunting through a toolbar.
         {
-          // Bottom left. The plot crowds toward the recent years on the right,
-          // and the early years are mostly empty — so the space is there.
-          const size = 22
+          // The toggle is a real DOM button below, not drawn here. Twice I
+          // could not work out why a canvas-drawn one was invisible, and a
+          // control you cannot inspect is a control you cannot fix.
           const bx = AXIS + 10
-          const by = H - size - 12
-          legendButton.current = { x: bx, y: by, s: size }
-
-          g.globalAlpha = 0.92
-          g.fillStyle = '#0B1220'
-          g.beginPath()
-          g.roundRect(bx, by, size, size, 3)
-          g.fill()
-          g.globalAlpha = showLegend ? 0.95 : 0.6
-          g.strokeStyle = colour
-          g.lineWidth = 1.2
-          g.stroke()
-
-          // Three dots in the categories' own colours: the key, in miniature.
-          const sample = CONSTELLATIONS.filter((c) => activeCons.includes(c))
-          ;[0, 1, 2].forEach((i) => {
-            const c = sample[Math.floor((i * sample.length) / 3)] ?? sample[0]
-            if (!c) return
-            g.fillStyle = constellationColour(c)
-            g.beginPath()
-            g.arc(bx + 5 + i * 4.5, by + size / 2, 1.8, 0, Math.PI * 2)
-            g.fill()
-          })
-          g.globalAlpha = 1
+          const by = H - 46
 
           if (showLegend) {
             const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
@@ -1203,7 +1154,7 @@ function Sky({
             const boxW = 138
             const boxH = entries.length * lh + 14
             const lx = bx
-            const ly = by - boxH - 6
+            const ly = Math.max(30, by - boxH - 6)
             g.globalAlpha = 0.94
             g.fillStyle = '#0B1220'
             g.beginPath()
@@ -1601,18 +1552,6 @@ function Sky({
   function onPointerDown(e: React.PointerEvent) {
     idleSince.current = performance.now()
 
-    // The legend button takes the pointer before anything else.
-    const lb = legendButton.current
-    if (tl && lb) {
-      const r = cv.current!.getBoundingClientRect()
-      const px = e.clientX - r.left
-      const py = e.clientY - r.top
-      if (px > lb.x - 3 && px < lb.x + lb.s + 3 && py > lb.y - 3 && py < lb.y + lb.s + 3) {
-        onToggleLegend()
-        return
-      }
-    }
-
     if (tl) {
       // Timeline pans only; marks are selected on release.
       drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
@@ -1782,6 +1721,26 @@ function Sky({
         onTouchMove={onTouchMove}
         onTouchEnd={() => (pinch.current = null)}
       />
+
+      {/* The key toggle. A real button, positioned over the canvas, so it is
+          inspectable and reliably clickable — the canvas-drawn version was
+          neither. */}
+      {timeline && (
+        <button
+          className="legend-toggle"
+          onClick={onToggleLegend}
+          aria-pressed={showLegend}
+          title={showLegend ? 'Hide the category key' : 'Show the category key'}
+          style={{ borderColor: showLegend ? colour : undefined }}
+        >
+          <span className="legend-toggle__dots" aria-hidden="true">
+            {CONSTELLATIONS.slice(0, 3).map((c) => (
+              <i key={c} style={{ background: constellationColour(c) }} />
+            ))}
+          </span>
+          Key
+        </button>
+      )}
     </div>
   )
 }
@@ -1902,6 +1861,7 @@ function FilterSection({
   onChange,
   render,
   swatch,
+  mark,
   note,
 }: {
   label: string
@@ -1910,6 +1870,8 @@ function FilterSection({
   onChange: (next: string[]) => void
   render: (v: string) => string
   swatch?: (v: string) => string
+  /** An arbitrary mark before the label — a glyph, say, rather than a dot. */
+  mark?: (v: string) => React.ReactNode
   note?: string
 }) {
   if (all.length === 0) return null
@@ -1945,6 +1907,11 @@ function FilterSection({
                     style={{ background: swatch(v), opacity: on ? 1 : 0.25 }}
                     aria-hidden="true"
                   />
+                )}
+                {mark && (
+                  <span className="filter-mark" style={{ opacity: on ? 1 : 0.3 }}>
+                    {mark(v)}
+                  </span>
                 )}
                 <span style={{ opacity: on ? 1 : 0.45 }}>{render(v)}</span>
               </label>
