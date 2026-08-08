@@ -725,12 +725,6 @@ function Sky({
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   /** Live timeline projection, so hit testing uses the same maths as drawing. */
   const tlProject = useRef<{ TX: (x: number) => number; TY: (y: number) => number } | null>(null)
-  /** Scrollbar geometry, so a pointer can find them. Null when everything fits. */
-  const tracks = useRef<{
-    h: { x: number; w: number; y: number; frac: number }
-    v: { x: number; y: number; h: number; frac: number }
-  } | null>(null)
-  const barDrag = useRef<{ axis: 'h' | 'v'; o: number; t: number } | null>(null)
   /** The legend button's box, so a click can find it. */
   const legendButton = useRef<{ x: number; y: number; s: number } | null>(null)
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
@@ -910,70 +904,6 @@ function Sky({
       }
       const liveCam = { ...cam, yaw: cam.yaw + spin.current }
 
-      /**
-       * Scrollbars, drawn only when something is off-screen.
-       *
-       * Dragging the plot is the primary gesture, but zoomed in a long way it
-       * stops being obvious how much lies outside the frame or where you are
-       * within it. At the fit-to-frame floor everything is visible, so they
-       * disappear entirely rather than sitting there as furniture.
-       */
-      const drawScrollbars = (leftInset: number) => {
-        tracks.current = null
-        if (cur.current.k <= fitScale * 1.03) return
-
-        const frac = Math.min(1, 1 / cur.current.k)
-        const offX = Math.max(0, Math.min(1 - frac, -cur.current.tx))
-        const offY = Math.max(0, Math.min(1 - frac, -cur.current.ty))
-        // Sat at H-6 before, directly on the frame's own border, where a
-        // purple line on a purple border is no line at all.
-        const inset = 15
-        const hx = leftInset
-        const hw = W - hx - inset - 10
-        const vy = 32
-        const vh = H - vy - inset - 16
-
-        const bar = (
-          x: number, y: number, w: number, h: number, off: number, horizontal: boolean,
-        ) => {
-          // A dark backing, so the track reads over starfield or plot alike.
-          g.globalAlpha = 0.55
-          g.fillStyle = '#070B14'
-          if (horizontal) g.fillRect(x - 4, y - 5, w + 8, 10)
-          else g.fillRect(x - 5, y - 4, 10, h + 8)
-
-          g.lineCap = 'round'
-          g.lineWidth = 3
-          g.globalAlpha = 0.15
-          g.strokeStyle = '#8697B0'
-          g.beginPath()
-          g.moveTo(x, y)
-          g.lineTo(horizontal ? x + w : x, horizontal ? y : y + h)
-          g.stroke()
-          g.globalAlpha = 0.65
-          g.strokeStyle = colour
-          g.beginPath()
-          if (horizontal) {
-            g.moveTo(x + off * w, y)
-            g.lineTo(x + Math.min(1, off + frac) * w, y)
-          } else {
-            g.moveTo(x, y + off * h)
-            g.lineTo(x, y + Math.min(1, off + frac) * h)
-          }
-          g.stroke()
-          g.globalAlpha = 1
-          g.lineCap = 'butt'
-        }
-
-        bar(hx, H - inset, hw, 0, offX, true)
-        bar(W - inset, vy, 0, vh, offY, false)
-
-        tracks.current = {
-          h: { x: hx, w: hw, y: H - inset, frac },
-          v: { x: W - inset, y: vy, h: vh, frac },
-        }
-      }
-
       const e = reduced ? 1 : 0.16
       cur.current.k += (view.k - cur.current.k) * e
       cur.current.tx += (view.tx - cur.current.tx) * e
@@ -1061,11 +991,21 @@ function Sky({
           g.fillText(`NO DATED SOURCE · ${tl.undated}`, AXIS + 4, 20)
         }
 
-        // Room for roughly one label per 5,000 square pixels at rest, more as
-        // you zoom in.
+        /**
+         * How many labels this plot can carry.
+         *
+         * The previous formula gave (W × H) / 5000, which on a normal frame is
+         * over two hundred — a budget larger than the number of marks, and so
+         * no budget at all. What actually constrains a timeline is rows of text
+         * against height, plus a little for width, and the honest number is
+         * about a dozen at rest rather than fifty.
+         */
         const labelBudget = Math.max(
-          3,
-          Math.round(((W * H) / 5000) * Math.min(3, Math.max(0.6, v.k * 0.7))),
+          4,
+          Math.min(
+            26,
+            Math.round((H / 95 + W / 420) * Math.min(2.6, Math.max(0.75, v.k * 0.85))),
+          ),
         )
 
         const ordered = [...tl.marks].sort(
@@ -1150,15 +1090,17 @@ function Sky({
             lx = Math.max(AXIS + 4, lx)
             let ly = py + 4
             let guard = 0
+            // Four nudges, not twelve. A label pushed sixty pixels from its own
+            // mark has stopped labelling anything and is just more text.
             while (
-              guard++ < 12 &&
+              guard++ < 4 &&
               placed.some(
                 (o) => Math.abs(o.y - ly) < 14 && !(lx + tw < o.x - 4 || lx > o.x + o.w + 4),
               )
             ) {
               ly += 14
             }
-            if (guard < 12 || sel || hov) {
+            if (guard < 4 || sel || hov) {
               placed.push({ x: lx, y: ly, w: tw })
               if (sel || hov) {
                 g.globalAlpha = 0.92
@@ -1183,9 +1125,11 @@ function Sky({
         // it is closed until asked for — and the button stays visible so it is
         // findable without hunting through a toolbar.
         {
+          // Bottom left. The plot crowds toward the recent years on the right,
+          // and the early years are mostly empty — so the space is there.
           const size = 18
-          const bx = W - size - 12
-          const by = 34
+          const bx = AXIS + 10
+          const by = H - size - 12
           legendButton.current = { x: bx, y: by, s: size }
 
           g.globalAlpha = 0.85
@@ -1215,8 +1159,8 @@ function Sky({
             const lh = 14
             const boxW = 138
             const boxH = entries.length * lh + 14
-            const lx = W - boxW - 12
-            const ly = by + size + 6
+            const lx = bx
+            const ly = by - boxH - 6
             g.globalAlpha = 0.94
             g.fillStyle = '#0B1220'
             g.beginPath()
@@ -1249,7 +1193,6 @@ function Sky({
           g.fillText(lvl.toUpperCase(), 8, y + 4)
         })
         g.globalAlpha = 1
-        drawScrollbars(110)
         raf = requestAnimationFrame(safeDraw)
         return
       }
@@ -1552,7 +1495,6 @@ function Sky({
         g.fillText(text, lx, ly)
       }
       g.globalAlpha = 1
-      drawScrollbars(6)
 
       raf = requestAnimationFrame(safeDraw)
     }
@@ -1633,24 +1575,6 @@ function Sky({
       }
     }
 
-    // The scrollbars take the pointer before the plot does.
-    const tr = tracks.current
-    if (tr) {
-      const r = cv.current!.getBoundingClientRect()
-      const px = e.clientX - r.left
-      const py = e.clientY - r.top
-      if (Math.abs(py - tr.h.y) < 11 && px > tr.h.x - 6 && px < tr.h.x + tr.h.w + 6) {
-        barDrag.current = { axis: 'h', o: e.clientX, t: view.tx }
-        ;(e.target as Element).setPointerCapture?.(e.pointerId)
-        return
-      }
-      if (Math.abs(px - tr.v.x) < 11 && py > tr.v.y - 6 && py < tr.v.y + tr.v.h + 6) {
-        barDrag.current = { axis: 'v', o: e.clientY, t: view.ty }
-        ;(e.target as Element).setPointerCapture?.(e.pointerId)
-        return
-      }
-    }
-
     if (tl) {
       // Timeline pans only; marks are selected on release.
       drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
@@ -1706,21 +1630,6 @@ function Sky({
       )
       return
     }
-    const bd = barDrag.current
-    const tr = tracks.current
-    if (bd && tr) {
-      // The thumb moves across the track; the content moves the other way, and
-      // by however much of it is off-screen.
-      if (bd.axis === 'h') {
-        const moved = (e.clientX - bd.o) / Math.max(1, tr.h.w)
-        setView({ ...view, tx: bd.t - moved })
-      } else {
-        const moved = (e.clientY - bd.o) / Math.max(1, tr.v.h)
-        setView({ ...view, ty: bd.t - moved })
-      }
-      return
-    }
-
     const d = drag.current
     if (!d) {
       if (tl) {
