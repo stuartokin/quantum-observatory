@@ -1032,11 +1032,21 @@ function Sky({
           if (px < AXIS - 20 || px > W + 20) continue
           const sel = selected === m.id
           const hov = hoverRef.current === m.id
+
+          // The item first: everything below is derived from it.
+          const item = pool.find((i) => i.id === m.id)
+
+          // Same hue system as the galaxy, so a body is recognisably the same
+          // body in both views.
+          const tint = m.sourced
+            ? constellationColour(item?.constellation)
+            : constellationMuted(item?.constellation)
+
           /**
            * Size from evidence and priority, which are discrete and genuinely
            * spread, rather than from the blended importance score — that
            * clusters most sourced items above 0.7, so everything came out the
-           * same size. Range is now roughly 3px to 13px.
+           * same size. Range is roughly 3px to 13px.
            */
           const evidenceWeight =
             { E5: 1, E4: 0.82, E3: 0.6, E2: 0.42, E1: 0.24, E0: 0.12 }[
@@ -1046,12 +1056,6 @@ function Sky({
             { P0: 1, P1: 0.78, P2: 0.5, P3: 0.28, P4: 0.14 }[item?.priority ?? 'P3'] ?? 0.28
           const weight = evidenceWeight * 0.55 + priorityWeight * 0.45
           const rr = (3 + weight * 10) * (sel ? 1.5 : hov ? 1.2 : 1)
-          // Same hue system as the galaxy, so a body is recognisably the same
-          // body in both views.
-          const item = pool.find((i) => i.id === m.id)
-          const tint = m.sourced
-            ? constellationColour(item?.constellation)
-            : constellationMuted(item?.constellation)
 
           if (m.attention > 0.02 && !reduced) {
             const ph = (t * 0.45 + m.x * 5) % 1
