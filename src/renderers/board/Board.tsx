@@ -294,8 +294,6 @@ export function Board() {
     },
   ]
 
-  const allOn = cons.length === CONSTELLATIONS.length && levels.length === LEVELS.length
-
   return (
     <main className="board">
       {/*
@@ -571,9 +569,31 @@ export function Board() {
           label="Readiness"
           all={LEVELS as unknown as string[]}
           selected={levels}
-          onChange={setLevels}
+          onChange={(next) => setLevels(next as Readiness[])}
           render={(l) => l}
         />
+
+        <section className="filter-group">
+          <header>
+            <span className="label">Evidence</span>
+          </header>
+          <ul className="filter-list">
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={sourcedOnly}
+                  onChange={() => setSourcedOnly((v) => !v)}
+                />
+                <span style={{ opacity: sourcedOnly ? 1 : 0.45 }}>Sourced only</span>
+              </label>
+            </li>
+          </ul>
+          <p className="filter-group__note">
+            Hides the hollow bodies — topics on the board with no evidence
+            attached yet.
+          </p>
+        </section>
 
         <FilterSection
           label="Years"
@@ -871,6 +891,21 @@ function Sky({
    * component that re-renders whenever it is observed is one small mistake away
    * from an update loop.
    */
+  /**
+   * The zoom level at which the whole board is inside the frame.
+   *
+   * Below this there is nothing more to reveal, so it becomes the floor —
+   * which is also what removes the need to scroll at all.
+   */
+  const fitScale = useMemo(() => {
+    if (nodes.length === 0) return 0.35
+    const xs = nodes.map((n) => n.x)
+    const ys = nodes.map((n) => n.y)
+    const w = Math.max(0.12, Math.max(...xs) - Math.min(...xs))
+    const h = Math.max(0.12, Math.max(...ys) - Math.min(...ys))
+    return Math.max(0.18, Math.min(1, Math.min(1 / w, 1 / h) * 0.82))
+  }, [nodes])
+
   const applySize = (w: number, h: number) =>
     setSize((s) => (Math.abs(s.w - w) < 0.5 && Math.abs(s.h - h) < 0.5 ? s : { w, h }))
 
@@ -1526,20 +1561,6 @@ function Sky({
     return best
   }
 
-  /**
-   * The zoom level at which the whole board is inside the frame.
-   *
-   * Below this there is nothing more to reveal, so it becomes the floor —
-   * which is also what removes the need to scroll at all.
-   */
-  const fitScale = useMemo(() => {
-    if (nodes.length === 0) return 0.35
-    const xs = nodes.map((n) => n.x)
-    const ys = nodes.map((n) => n.y)
-    const w = Math.max(0.12, Math.max(...xs) - Math.min(...xs))
-    const h = Math.max(0.12, Math.max(...ys) - Math.min(...ys))
-    return Math.max(0.18, Math.min(1, Math.min(1 / w, 1 / h) * 0.82))
-  }, [nodes])
 
   function onWheel(e: React.WheelEvent) {
     idleSince.current = performance.now()
@@ -1627,7 +1648,6 @@ function Sky({
     const bd = barDrag.current
     const st = scrollTrack.current
     if (bd && st) {
-      const r = cv.current!.getBoundingClientRect()
       const frac = (e.clientX - bd.ox) / Math.max(1, st.w)
       setView({ ...view, tx: bd.tx - frac * st.span * cur.current.k })
       return

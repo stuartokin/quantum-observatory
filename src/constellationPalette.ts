@@ -1,4 +1,4 @@
-import { CONSTELLATIONS } from '../renderers/board/tower'
+import { CONSTELLATIONS } from './renderers/board/tower'
 
 /**
  * A hue per constellation, spread across a deliberately narrow arc.
@@ -16,7 +16,7 @@ const ARC_START = 214
 const ARC_END = 326
 
 const HUES: Record<string, number> = Object.fromEntries(
-  CONSTELLATIONS.map((c, i) => [
+  (CONSTELLATIONS as readonly string[]).map((c: string, i: number) => [
     c,
     ARC_START + (i / Math.max(1, CONSTELLATIONS.length - 1)) * (ARC_END - ARC_START),
   ]),
@@ -38,5 +38,5 @@ export function constellationMuted(id?: string, alpha = 1): string {
 }
 
 export const CONSTELLATION_COLOURS = Object.fromEntries(
-  CONSTELLATIONS.map((c) => [c, constellationColour(c)]),
+  (CONSTELLATIONS as readonly string[]).map((c: string) => [c, constellationColour(c)]),
 ) as Record<string, string>
