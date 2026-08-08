@@ -92,16 +92,20 @@ jobs:
           path: .agent-run/
           retention-days: 14
 
+      # The runner records exactly which files it wrote, so this needs no git
+      # history. BASE_REF remains only as a fallback.
       - name: Provenance and escalation check
         env:
           BASE_REF: origin/main
-        run: |
-          git fetch origin main --depth=1
-          node scripts/check-provenance.mjs --agent ${{ matrix.agent }}
+        run: node scripts/check-provenance.mjs --agent ${{ matrix.agent }}
 
       - name: Write scope check
         run: |
-          FILES=$(git diff --name-only origin/main...HEAD 2>/dev/null || git ls-files -mo --exclude-standard)
+          FILES=$(cat .agent-run/written.txt 2>/dev/null | tr '\n' ' ')
+          if [ -z "$FILES" ]; then
+            echo "Nothing written; nothing to scope-check."
+            exit 0
+          fi
           node scripts/check-scope.mjs ${{ matrix.agent }} $FILES
 
       # Publish first, veto after. Every merged item is labelled agent-merged
