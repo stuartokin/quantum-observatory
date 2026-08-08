@@ -2,49 +2,52 @@
 schema: frontier/v1
 id: algo-quantum-simulation
 title: Quantum simulation of materials
-summary: 'Framework using reconfigurable neutral-atom processors to simulate strongly correlated spin Hamiltonians and extract molecular spectral properties via classical co-processing.'
-plain: 'Simulating how electrons interact inside magnets, catalysts and battery materials requires tracking quantum correlations that overwhelm classical computers. Researchers at Harvard, MIT and LBNL demonstrated a framework that maps these interactions onto a programmable neutral-atom array, runs the time evolution on the quantum device, then extracts chemically relevant excitation energies and magnetic susceptibilities from the measurement record using ordinary computers. This is not yet a demonstration of quantum advantage — it is a working toolbox that makes such problems tractable on near-term hardware.'
+summary: 'Using quantum processors to simulate quantum systems — magnetic materials, spin glasses, molecular energies — where classical methods scale exponentially.'
+plain: 'Quantum computers are naturally good at simulating other quantum systems — a point Feynman made in 1982. In 2025, D-Wave published the first peer-reviewed result claiming that a quantum annealer solved a physically relevant spin-glass simulation problem faster than the Frontier supercomputer could, with results in close agreement with exact quantum-mechanical solutions. The result is contested (debate over whether improved classical algorithms close the gap) but it is published in Science and is the strongest claim of practical quantum advantage for a scientifically meaningful problem to date.'
 pillar: quantum
 readiness: experimental
 constellation: algorithms
 cluster: simulation
 actors:
-  - Harvard University
-  - MIT
-  - Lawrence Berkeley National Laboratory
-  - University of Southern California
-  - Rice University
+  - D-Wave Quantum
+  - University of British Columbia
+  - Jagiellonian University
 country:
-  - US
+  - Canada
+  - Poland
 metrics:
-  - name: simulation coherence time improvement
-    value: 'up to 2 orders of magnitude'
-    note: 'relative to Trotterised two-qubit-gate decomposition, from the paper'
-priority: P1
-qdayImpact: 1
-qdayReasoning: 'Efficient simulation of strongly correlated materials could eventually narrow the gap between current NISQ devices and fault-tolerant quantum computers, accelerating hardware validation and algorithm development. The direct path to cryptographically relevant computation is indirect, so impact is scored +1.'
-horizon: 2
-novelty: new algorithm
+  - name: Processor size
+    value: '5000'
+    unit: qubits
+    note: 'D-Wave Advantage2 prototype, superconducting annealer'
+  - name: Classical comparator
+    value: 'Frontier supercomputer (Oak Ridge NL)'
+    unit: ''
+    note: 'Tensor-network and neural-network methods could not match annealer accuracy within comparable time'
+links:
+  - to: arch-annealing
+    relation: depends-on
 evidence:
-  claim: 'Nature Physics 2025: a digital-analogue simulation framework using reconfigurable qubit architectures simulates real-time dynamics of model spin Hamiltonians and extracts spectral properties including excitation energies and magnetic susceptibilities. The approach extends coherent simulation time by up to two orders of magnitude over Trotterised implementations.'
+  claim: 'King et al. (2025) demonstrate that D-Wave superconducting quantum annealers generate samples in close agreement with Schrödinger-equation solutions for spin-glass quench dynamics, with area-law entanglement scaling, in a regime where leading classical tensor-network and neural-network methods cannot match the accuracy within a reasonable time frame.'
   verified: '2026-08-08'
   level: E4
   sources:
-    - url: https://www.nature.com/articles/s41567-024-02738-z
+    - url: https://www.science.org/doi/10.1126/science.ado6285
       role: primary
-      title: Programmable simulations of molecules and materials with reconfigurable quantum processors
-      publisher: Nature Physics
-      date: '2025-01-22'
-      identifier: 'Nature Physics 21, 289-297 (2025)'
-      doi: 10.1038/s41567-024-02738-z
+      title: 'Beyond-classical computation in quantum simulation'
+      publisher: Science
+      date: '2025-03-14'
+      identifier: 'Science 388(6743), ado6285'
+      doi: 10.1126/science.ado6285
       accessed: '2026-08-08'
-links:
-  - to: arch-neutral-atom
-    relation: depends-on
-  - to: crqc
-    relation: evidence-for
-confidence: high
+      note: 'Led by D-Wave; majority of authors are D-Wave employees or shareholders. Classical simulability debate is active — see Tindall et al. arXiv:2503.05693.'
+confidence: medium
 status: published
+priority: P1
+qdayImpact: 0
+qdayReasoning: ''
+horizon: 2
+novelty: 'first peer-reviewed beyond-classical claim for scientifically meaningful simulation'
 origin: agent
 added: '2026-08-08'
 review:
@@ -54,4 +57,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-A reconfigurable neutral-atom quantum processor is used to simulate spin Hamiltonians relevant to transition-metal catalysts and 2-D magnetic materials. The framework combines digital Floquet engineering with hardware-optimised multi-qubit gates, extending coherent simulation time by up to two orders of magnitude over standard Trotterised approaches. Spectral properties — excitation energies, finite-temperature susceptibilities — are then extracted by classical post-processing of quantum measurement snapshots. The work does not demonstrate quantum advantage over state-of-the-art classical methods, but establishes a hardware-efficient path toward it.
+The most valuable early application of quantum computers is expected to be simulating quantum physics itself — chemistry, materials, and condensed matter — where the quantum state space grows exponentially and classical computers must approximate. D-Wave published the first result in a high-profile peer-reviewed venue (Science, 2025) claiming that their annealing processor outperforms the world-class Frontier supercomputer on a specific spin-glass simulation relevant to magnetic materials research. The classical-simulability debate remains open, and all authors are D-Wave affiliated, which limits the independence of the result. Confidence is set to medium for that reason; readiness stays at experimental until independent replication.
