@@ -27,7 +27,7 @@ const FALLBACK_ICON = (label: string) =>
   label.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase()
 
 const MIN_W = 132
-const MAX_ROWS = 3
+const MAX_ROWS = 2
 
 export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent: string }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -40,17 +40,36 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
   const [compact, setCompact] = useState(false)
 
   /**
-   * Words if they fit in the width you chose, icons if they do not. Measured
-   * from the rendered box: a wrapping toolbar keeps its width inside bounds, so
-   * comparing widths never detects overflow — the row count does.
+   * Words if they fit in the width you chose, icons if they do not.
+   *
+   * Counted from the buttons themselves — how many distinct vertical positions
+   * they occupy — rather than inferred from the container height. Dividing
+   * height by an assumed row height was wrong twice: padding and gaps made the
+   * estimate drift, so a genuinely overflowing bar reported two rows and never
+   * switched.
    */
   useLayoutEffect(() => {
     const el = ref.current
     if (!el || collapsed) return
-    const rowH = 40
-    const rows = Math.max(1, Math.round(el.offsetHeight / rowH))
-    if (!compact && rows > MAX_ROWS) setCompact(true)
-    else if (compact && rows === 1 && (width ?? el.offsetWidth) > 620) setCompact(false)
+
+    const measure = () => {
+      const btns = Array.from(el.querySelectorAll('button'))
+      if (btns.length === 0) return
+      const rows = new Set(btns.map((b) => (b as HTMLElement).offsetTop)).size
+
+      if (!compact && rows > MAX_ROWS) setCompact(true)
+      // Returning to words needs clear room, so it cannot flicker at a
+      // borderline width: only when everything already fits on one line.
+      else if (compact && rows === 1) {
+        const natural = btns.reduce((t, b) => t + (b as HTMLElement).offsetWidth, 0)
+        if (natural * 1.9 < (width ?? el.offsetWidth)) setCompact(false)
+      }
+    }
+
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
   }, [width, compact, collapsed, buttons.length])
 
   useEffect(() => {

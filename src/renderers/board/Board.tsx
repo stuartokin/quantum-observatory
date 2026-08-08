@@ -101,6 +101,15 @@ export function Board() {
   const [cam, setCam] = useState<Camera>(DEFAULT_CAMERA)
   const [focusCon, setFocusCon] = useState<string | null>(null)
   const [statsOpen, setStatsOpen] = useState(false)
+  /** Below roughly 13 inches the figures move behind an icon rather than going. */
+  const [narrow, setNarrow] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 1180 : false,
+  )
+  useEffect(() => {
+    const onResize = () => setNarrow(window.innerWidth < 1180)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const [cons, setCons] = useState<string[]>([...CONSTELLATIONS])
   const [levels, setLevels] = useState<Readiness[]>([...LEVELS])
@@ -287,7 +296,20 @@ export function Board() {
           </h2>
         </div>
 
-        <div className="board-right">
+        {/*
+          Inline styles here, deliberately.
+
+          These figures disappeared twice behind stylesheet rules I could not
+          see — an @import is evaluated before the rest of the importing file,
+          so a bare `.board-stats` elsewhere wins on order however specific the
+          replacement. Inline styles beat every stylesheet rule, so the numbers
+          that say how much of this board nobody has checked cannot silently
+          vanish again.
+        */}
+        <div
+          className="board-right"
+          style={{ display: 'flex', alignItems: 'center', gap: 12, flex: '0 0 auto', position: 'relative' }}
+        >
           <QDayBar
             forecast={forecast}
             colour={colour}
@@ -297,33 +319,75 @@ export function Board() {
             }}
           />
 
-          {/* Always present. Below 1180px it collapses behind an info button
-              rather than disappearing, because these are the numbers that say
-              how much of the board nobody has checked. */}
-          <button
-            className="board-stats__toggle"
-            onClick={() => setStatsOpen((v) => !v)}
-            aria-expanded={statsOpen}
-            aria-label="Board statistics"
-            title="Board statistics"
-          >
-            i
-          </button>
+          {narrow && (
+            <button
+              className="board-stats__toggle"
+              onClick={() => setStatsOpen((v) => !v)}
+              aria-expanded={statsOpen}
+              aria-label="Board statistics"
+              title="Board statistics"
+              style={{
+                display: 'block',
+                width: 26,
+                height: 26,
+                borderRadius: '50%',
+                background: 'transparent',
+                border: '1px solid var(--hairline)',
+                color: statsOpen ? colour : 'var(--ink-faint)',
+                cursor: 'pointer',
+                fontFamily: 'var(--mono)',
+                fontSize: '0.72rem',
+                fontStyle: 'italic',
+              }}
+            >
+              i
+            </button>
+          )}
 
-          <div className="board-stats" data-open={statsOpen || undefined}>
-            <span><b>{visible.length}</b> of {pool.length}</span>
-            <span><b>{visible.filter(isSourced).length}</b> sourced</span>
-            {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
-            {debt.unreviewed > 0 && (
-              <span className="board-stats__unreviewed"><b>{debt.unreviewed}</b> unreviewed</span>
-            )}
-            {debt.weeks !== undefined && (
-              <span className={debt.weeks >= 8 ? 'board-stats__stale' : undefined}>
-                reviewed <b>{debt.weeks}w</b> ago
-              </span>
-            )}
-            <span className="board-stats__ver">v{VERSION}</span>
-          </div>
+          {(!narrow || statsOpen) && (
+            <div
+              className="board-stats"
+              style={{
+                display: 'flex',
+                flexDirection: narrow ? 'column' : 'row',
+                alignItems: narrow ? 'flex-end' : 'baseline',
+                flexWrap: 'wrap',
+                gap: narrow ? 5 : 14,
+                fontFamily: 'var(--mono)',
+                fontSize: '0.68rem',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--ink-faint)',
+                ...(narrow
+                  ? {
+                      position: 'absolute',
+                      right: 0,
+                      top: 'calc(100% + 10px)',
+                      padding: '10px 16px',
+                      background: 'var(--ground-panel)',
+                      border: '1px solid var(--hairline)',
+                      borderRadius: 2,
+                      boxShadow: '0 10px 36px rgb(0 0 0 / 0.6)',
+                      zIndex: 80,
+                      whiteSpace: 'nowrap',
+                    }
+                  : {}),
+              }}
+            >
+              <span><b>{visible.length}</b> of {pool.length}</span>
+              <span><b>{visible.filter(isSourced).length}</b> sourced</span>
+              {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
+              {debt.unreviewed > 0 && (
+                <span className="board-stats__unreviewed"><b>{debt.unreviewed}</b> unreviewed</span>
+              )}
+              {debt.weeks !== undefined && (
+                <span className={debt.weeks >= 8 ? 'board-stats__stale' : undefined}>
+                  reviewed <b>{debt.weeks}w</b> ago
+                </span>
+              )}
+              <span style={{ opacity: 0.5 }}>v{VERSION}</span>
+            </div>
+          )}
         </div>
       </header>
 
