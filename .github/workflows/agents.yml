@@ -71,7 +71,10 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node scripts/run-agent.mjs ${{ matrix.agent }}
 
-      - name: Validate what it produced
+      # The runner validates each file against the schema before writing, so
+      # anything reaching this point is already well formed. This checks the
+      # board as a whole is still consistent.
+      - name: Validate the board
         run: npm run validate
 
       - name: Keep the raw response if anything failed
