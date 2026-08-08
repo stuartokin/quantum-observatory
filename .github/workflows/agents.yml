@@ -63,6 +63,11 @@ jobs:
           node-version: 22
       - run: npm install
 
+      # These helpers have broken twice in ways only a live run revealed.
+      # Eleven seconds here beats another round trip.
+      - name: Self-test the agent IO layer
+        run: npm run test:agent
+
       - name: Clear the inbox
         run: |
           find content/frontier/_inbox -name '*.md' ! -name 'README.md' -delete || true
