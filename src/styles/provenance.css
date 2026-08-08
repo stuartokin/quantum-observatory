@@ -35,3 +35,9 @@
 /* Review debt, in the header. If we fall behind, the site says so. */
 .board-stats__unreviewed { color: var(--line-ai); }
 .board-stats__stale { color: var(--line-energy); }
+
+.prov--checked {
+  color: var(--line-cyber);
+  border-color: var(--line-cyber);
+  background: color-mix(in oklab, var(--line-cyber) 8%, transparent);
+}

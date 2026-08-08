@@ -288,3 +288,57 @@ If a review article is your only source, cite it at **E3** and say in the claim
 that the evidence is a review rather than a primary experiment. Better still,
 follow its citations to the experiment it describes and cite that instead —
 that is what a review is for.
+
+## Seed sources — verified, use these
+
+Checked and confirmed 8 Aug 2026. Free to access, primary or national
+technical authority. Prefer these over anything you find loose.
+
+### Take this one first
+
+**Gidney, "How to factor 2048 bit RSA integers with less than a million noisy
+qubits"** — arXiv:2505.15917, Google Quantum AI, May 2025.
+https://arxiv.org/abs/2505.15917
+
+Reduces the estimate from 20 million noisy qubits (Gidney+Ekerå 2019) to under
+one million, factoring in under a week, on the same assumptions: nearest-
+neighbour square grid, 0.1% gate error, 1 microsecond surface code cycle,
+10 microsecond reaction time. The reduction comes from approximate residue
+arithmetic, yoked surface codes, and less space for magic state distillation.
+
+This belongs on `algo-resource-estimation` and it is the single most
+consequential missing source on the board. **A twenty-fold reduction in the
+machine needed to break RSA, with no hardware changing** — exactly the kind of
+result that moves a Q-Day forecast without anything being built. Role
+`preprint`, level E3.
+
+### Migration and policy
+
+- NCSC, timelines for PQC migration —
+  https://www.ncsc.gov.uk/guidance/pqc-migration-timelines
+- NIST IR 8547, transition to PQC standards. RSA and ECC deprecated 2030,
+  disallowed 2035 — https://csrc.nist.gov/pubs/ir/8547/ipd
+- European Commission coordinated implementation roadmap, NIS Cooperation
+  Group — https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography
+- NIST NCCoE, migration practice guide, cryptographic inventory and CBOM —
+  https://pages.nist.gov/nccoe-migration-post-quantum-cryptography/
+- CISA/NSA/NIST quantum-readiness factsheet —
+  https://www.cisa.gov/resources-tools/resources/quantum-readiness-migration-post-quantum-cryptography
+
+### Forecasting
+
+- Global Risk Institute, Quantum Threat Timeline Report — the annual expert
+  survey. https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
+
+### Leads, not evidence
+
+Vendor roadmaps (IBM, IonQ, Quantinuum) are **E2 at most** and must never move
+a Q-Day score. Technical journalism — Physics World, phys.org — is never cited;
+follow it to the paper. Two worth chasing: Sandia's verification of Helios
+fidelity, published in Nature; and Google's 2026 ECC-256 resource result.
+
+Wikipedia's list of quantum processors is a useful **index** and never a
+citation. Note also that it lists processors, not architectures — our
+architectures constellation holds modalities. The real gaps there are
+Majorana systems, GKP encoding, rare-earth ion, molecular qubits,
+measurement-based and cluster-state computing, and analogue simulators.

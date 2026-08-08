@@ -203,6 +203,7 @@ export function checkStructure(text) {
   if (!data.review) return { ok: false, reason: 'no review block' }
   if (data.review.state === 'reviewed')
     return { ok: false, reason: 'claims review.state: reviewed — agents may not' }
+  // agent-reviewed is allowed: it says a machine checked it, not that a person did.
   if (data.review.by === 'human')
     return { ok: false, reason: 'claims review.by: human — agents may not' }
   return { ok: true, id: data.id, data }

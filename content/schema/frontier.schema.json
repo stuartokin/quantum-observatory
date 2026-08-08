@@ -317,10 +317,11 @@
         "state": {
           "enum": [
             "reviewed",
+            "agent-reviewed",
             "agent-merged",
             "vetoed"
           ],
-          "description": "reviewed = a human read it \u00b7 agent-merged = published by an agent, not yet read \u00b7 vetoed = reverted, kept for the record"
+          "description": "reviewed = a human read it \u00b7 agent-reviewed = checked by the reviewer agent against its sources, still unread by a person \u00b7 agent-merged = published by an agent, unchecked \u00b7 vetoed = reverted, kept for the record"
         },
         "by": {
           "enum": [
@@ -346,6 +347,11 @@
         "note": {
           "type": "string",
           "maxLength": 300
+        },
+        "reviewedOn": {
+          "type": "string",
+          "format": "date",
+          "description": "When the reviewer agent checked it. Distinct from a human review date."
         }
       }
     }

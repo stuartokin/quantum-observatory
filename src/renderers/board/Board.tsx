@@ -171,7 +171,12 @@ export function Board() {
    * so the board has to be honest about how much of it nobody has read.
    */
   const debt = useMemo(() => {
-    const unreviewed = pool.filter((i) => i.review?.state === 'agent-merged').length
+    // Both machine states count as unread by a person, which is what the
+    // figure is telling you. Agent-checked is better than agent-merged, but it
+    // is not review.
+    const unreviewed = pool.filter(
+      (i) => i.review?.state === 'agent-merged' || i.review?.state === 'agent-reviewed',
+    ).length
     const dates = pool
       .map((i) => (i.review?.state === 'reviewed' ? i.review.on : undefined))
       .filter((d): d is string => Boolean(d))
@@ -731,7 +736,9 @@ function Sky({
   const unreviewed = useMemo(
     () =>
       new Set(
-        allFrontier.filter((i) => i.review?.state === 'agent-merged').map((i) => i.id),
+        allFrontier
+          .filter((i) => i.review?.state === 'agent-merged' || i.review?.state === 'agent-reviewed')
+          .map((i) => i.id),
       ),
     [],
   )
@@ -1954,6 +1961,11 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
             <span className="prov__dot" />
             Agent-merged — not yet reviewed
           </span>
+        ) : rev?.state === 'agent-reviewed' ? (
+          <span className="prov prov--checked">
+            <span className="prov__dot" />
+            Agent-checked — not read by a person
+          </span>
         ) : rev?.state === 'vetoed' ? (
           <span className="prov prov--vetoed">
             <span className="prov__dot" />
@@ -1966,6 +1978,17 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
           </span>
         )}
       </div>
+
+      {rev?.state === 'agent-reviewed' && (
+        <p className="prov-note">
+          <strong>Checked by the reviewer agent</strong> {ago(rev.reviewedOn)}: sources
+          opened, claim compared against them, evidence level tested against the
+          source type. That is a second machine pass, not a human reading it —
+          the reviewer can only ever make an entry more cautious, never more
+          confident.
+          {rev.note ? ` ${rev.note}` : ''}
+        </p>
+      )}
 
       {rev?.state === 'agent-merged' && (
         <p className="prov-note">

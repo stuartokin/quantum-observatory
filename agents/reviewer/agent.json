@@ -1,0 +1,16 @@
+{
+  "name": "reviewer",
+  "description": "Checks agent-merged items against their own sources. Corrects downward without asking; escalates anything that would raise confidence or carries professional risk.",
+  "model": "claude-sonnet-4-6",
+  "everyWeeks": 1,
+  "maxTokens": 32000,
+  "write_scope": [
+    "content/frontier/_inbox/**"
+  ],
+  "output": "pull_request",
+  "enabled": false,
+  "budget": {
+    "searches": 30,
+    "proposals": 8
+  }
+}

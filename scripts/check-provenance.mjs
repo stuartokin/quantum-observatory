@@ -73,13 +73,13 @@ for (const { path, data } of all) {
     errors.push(`${path}: no review block. Every item must say whether a human has read it.`)
     continue
   }
-  if (!['reviewed', 'agent-merged', 'vetoed'].includes(r.state)) {
+  if (!['reviewed', 'agent-reviewed', 'agent-merged', 'vetoed'].includes(r.state)) {
     errors.push(`${path}: review.state is "${r.state}"`)
   }
   if (r.state === 'reviewed' && !r.on) {
     errors.push(`${path}: reviewed without a date. An undated review is not a review.`)
   }
-  if (r.state === 'agent-merged' && !r.agentMergedOn) {
+  if ((r.state === 'agent-merged' || r.state === 'agent-reviewed') && !r.agentMergedOn) {
     errors.push(`${path}: agent-merged without agentMergedOn. The reader must be able to see how old it is.`)
   }
 }

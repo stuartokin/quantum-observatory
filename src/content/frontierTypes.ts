@@ -40,10 +40,17 @@ export interface Link {
  * asymmetry is what makes publish-first-veto-after safe.
  */
 export interface Review {
-  state: 'reviewed' | 'agent-merged' | 'vetoed'
+  /**
+   * reviewed        a human read it
+   * agent-reviewed  the reviewer agent checked it against its sources
+   * agent-merged    an agent published it, unchecked
+   * vetoed          reverted, kept for the record
+   */
+  state: 'reviewed' | 'agent-reviewed' | 'agent-merged' | 'vetoed'
   by?: 'human' | 'agent'
   on?: string
   agentMergedOn?: string
+  reviewedOn?: string
   agent?: string
   note?: string
 }
