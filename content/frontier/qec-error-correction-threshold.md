@@ -2,55 +2,73 @@
 schema: frontier/v1
 id: qec-error-correction-threshold
 title: Error correction threshold
-summary: 'The theoretical result that fault-tolerant quantum computation is possible if physical error rates fall below a critical constant threshold, regardless of circuit depth.'
-plain: 'In 1996–1997, several groups proved that quantum computers do not need to be perfect — they just need to be good enough. If the probability of any gate going wrong is below a certain constant (the fault-tolerance threshold), then errors can be suppressed arbitrarily by encoding qubits in more physical qubits, at only a modest cost in extra operations. This theoretical result is the foundation of the entire error-correction field. The threshold for common surface-code schemes is around 1%, meaning that if every two-qubit gate has less than roughly 1 error in 100, a quantum computer can in principle run arbitrarily long computations. Demonstrating hardware below this threshold is a separate achievement, covered by qec-below-threshold-surface-code.'
+summary: 'Below-threshold QEC demonstrated on superconducting hardware. Google Willow (Nature, Dec 2024) achieved exponential logical-error suppression as code distance increases; a second independent team confirmed below-threshold operation in Dec 2025.'
+plain: 'Quantum computers make errors constantly. Error correction fixes this by spreading one logical qubit across many physical ones — but it only helps if the physical error rate is already below a critical value called the threshold. Above it, adding more qubits makes things worse. In December 2024, Google''s Willow chip was the first to clearly cross below this threshold on a superconducting processor, halving the logical error rate with each step up in code size. A second independent group confirmed below-threshold operation in December 2025 using a different leakage-suppression technique. This is a foundational milestone: without it, scaling to fault-tolerant quantum computers is mathematically impossible.'
 pillar: quantum
-readiness: emerging
+readiness: demonstrated
 constellation: error-correction
-cluster: theory
+cluster: surface-code
 actors:
-  - Dorit Aharonov
-  - Michael Ben-Or
-  - Alexei Kitaev
-  - Emanuel Knill
-  - Raymond Laflamme
-  - Wojciech Zurek
+  - 'Google Quantum AI'
 country:
   - US
-  - Israel
-  - Russia
 metrics:
-  - name: Surface-code circuit-level threshold (theoretical)
-    value: '~1%'
-    unit: physical error rate
-    note: 'Exact value model-dependent; ~0.1% for depolarising noise in strict distance-d surface code'
-links:
-  - to: qec-surface-code
-    relation: enables
-  - to: qec-below-threshold-surface-code
-    relation: enables
+  - name: 'Logical error suppression factor'
+    value: '2.14'
+    unit: 'Lambda per two steps of code distance'
+    note: 'Distance-7 surface code, 101 qubits, 0.143% error per correction cycle'
+  - name: 'Logical vs physical qubit lifetime'
+    value: '2.4'
+    unit: 'times'
+    note: 'Logical memory exceeds best physical qubit lifetime by factor 2.4 +/- 0.3'
+priority: P0
+qdayImpact: 2
+qdayReasoning: 'Below-threshold operation is a necessary prerequisite for scalable fault-tolerant quantum computation. Demonstrating it removes a foundational uncertainty: that physical error rates might never reach the threshold. It does not imply a CRQC is near — millions of physical qubits and many further engineering steps remain. But it moves Q-Day forecasts from speculative to physically grounded. Score 2: meaningfully tightens the credible lower bound on Q-Day timelines without resolving the vast gap between current demonstrated scale and what a CRQC requires.'
+horizon: 2
+novelty: 'First below-threshold QEC on superconducting hardware; second independent confirmation Dec 2025'
+moved:
+  from: emerging
+  on: '2026-08-08'
 evidence:
-  claim: 'Aharonov & Ben-Or (1997, published SIAM J. Comput. 2008) prove that quantum computation can be made robust against errors when the physical error rate is below a constant threshold, with only polylogarithmic overhead in space and time, for a general noise model including decoherence and depolarisation.'
+  claim: 'Google Quantum AI demonstrated two below-threshold surface code memories on the Willow superconducting processor (Nature, December 2024). A distance-7 code on 101 qubits achieved logical error suppression factor Lambda = 2.14 +/- 0.02 per two steps of code distance, with 0.143% error per cycle, exceeding the best physical qubit lifetime by 2.4 +/- 0.3x. A second independent group demonstrated below-threshold operation on a distance-7 surface code using all-microwave leakage suppression, achieving Lambda = 1.40 +/- 0.06 (Physical Review Letters, December 2025).'
   verified: '2026-08-08'
-  level: E1
+  level: E4
   sources:
-    - url: https://arxiv.org/abs/quant-ph/9906129
+    - url: 'https://www.nature.com/articles/s41586-024-08449-y'
       role: primary
-      title: Fault-Tolerant Quantum Computation with Constant Error Rate
-      publisher: SIAM Journal on Computing
-      date: '1999-06-30'
-      identifier: 'SIAM J. Comput. 38, 1207–1282 (2008); arXiv:quant-ph/9906129'
+      title: 'Quantum error correction below the surface code threshold'
+      publisher: Nature
+      date: '2024-12-09'
+      identifier: 'Nature 638, 920-926 (2025)'
+      doi: '10.1038/s41586-024-08449-y'
       accessed: '2026-08-08'
-      note: 'Original 1997 STOC conference paper; arXiv version 1999; journal version 2008. Independent parallel results by Kitaev (1997) and Knill, Laflamme & Zurek (1996).'
+      note: 'Google Willow 105-qubit processor; distance-7 surface code on 101 qubits; real-time decoder; peer-reviewed.'
+    - url: 'https://arxiv.org/pdf/2408.13687'
+      role: preprint
+      title: 'Quantum error correction below the surface code threshold'
+      publisher: arXiv
+      date: '2024-08-27'
+      identifier: 'arXiv:2408.13687'
+      accessed: '2026-08-08'
+      note: 'Preprint version of the Nature paper.'
+    - url: 'https://physics.aps.org/featured-article-pdf/10.1103/rqkg-dw31'
+      role: corroborating
+      title: 'Experimental Quantum Error Correction below the Surface Code Threshold'
+      publisher: 'Physical Review Letters'
+      date: '2025-12-22'
+      doi: '10.1103/rqkg-dw31'
+      accessed: '2026-08-08'
+      note: 'Independent below-threshold demonstration using all-microwave leakage suppression; Lambda = 1.40 +/- 0.06 on distance-7 surface code.'
 confidence: high
 status: published
-priority: P2
-qdayImpact: 0
-qdayReasoning: ''
-horizon: 3
-novelty: 'foundational theoretical result'
-origin: agent
-added: '2026-08-08'
+links:
+  - to: qec-below-threshold-surface-code
+    relation: evidence-for
+  - to: qec-logical-fidelity
+    relation: enables
+  - to: crqc
+    relation: enables
+origin: human
 review:
   state: agent-merged
   by: agent
@@ -58,4 +76,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-The fault-tolerance threshold theorem is the theoretical bedrock of the entire quantum error correction effort. It says: if physical gates are accurate enough, scalable quantum computing is possible. Without this result there would be no reason to build error-corrected machines, because no amount of extra qubits would help. The threshold was proved independently by multiple groups in 1996–1997 (Aharonov & Ben-Or, Kitaev, Knill–Laflamme–Zurek). The readiness level of this item is correctly set at emerging/E1 — it is a theoretical proof, not a hardware demonstration. The demonstration that real hardware operates below the threshold is captured separately in qec-below-threshold-surface-code.
+The error correction threshold is the boundary below which quantum error correction actually helps. Google Willow crossed it in 2024 on superconducting hardware; a second independent team confirmed it in 2025. Both use surface codes. The result is a necessary but far-from-sufficient step toward a fault-tolerant quantum computer.
