@@ -63,10 +63,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 A CRQC does not exist. The item marks the threat threshold against which all migration timelines are calibrated. The primary source is a peer-reviewed review (E3 ceiling per schema), not an experimental result. Resource requirements published in 2025 and 2026 (see algo-resource-estimation and algo-shor) have materially reduced the estimated hardware needed, which is the main reason expert surveys show accelerating timelines.

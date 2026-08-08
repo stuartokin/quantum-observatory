@@ -66,10 +66,11 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
+  state: reviewed
+  by: human
+  'on': '2026-08-08'
   agentMergedOn: '2026-08-08'
+  agent: sourcer
 ---
 
 Shor''s algorithm is not in question — it is proven correct and the asymptotic speedup is established. What the 2025–2026 papers address is the concrete resource cost at cryptographically relevant parameters. The ECC-256 logical qubit count has halved in under 18 months, driven by two independent European and US research groups. A subsequent arXiv preprint (arXiv:2607.13816, July 2026) reduces the count further to 835 logical qubits for P-256, suggesting the field is still moving quickly.
