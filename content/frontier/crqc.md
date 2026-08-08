@@ -2,74 +2,71 @@
 schema: frontier/v1
 id: crqc
 title: Cryptographically relevant quantum computer
-summary: 'A quantum computer capable of breaking RSA-2048 or ECC-256 in a practically relevant timeframe. Does not yet exist. Expert surveys and NIST policy treat it as plausible within 10-15 years.'
-plain: 'A cryptographically relevant quantum computer (CRQC) is a machine powerful enough and reliable enough to run Shor''s algorithm and break the public-key encryption that secures internet traffic, banking, government communications, and most digital infrastructure. No such machine exists today. The largest fault-tolerant processors demonstrated in 2025-2026 operate with dozens of logical qubits; breaking RSA-2048 requires on the order of one million physical qubits working in concert. What has changed is the estimate of how far away that threshold is. The Global Risk Institute 2025 expert survey found 26 international experts now rate the probability of a CRQC within 10 years at 28-49% — the highest 10-year estimate in the survey''s seven-year history. US policy (NIST IR 8547) deprecates RSA and ECC for federal systems by 2030 and disallows them entirely by 2035. Both timelines imply the migration window is narrower than most organisations have planned for.'
+summary: 'A quantum computer capable of running Shor''s algorithm against RSA-2048 or equivalent elliptic curve targets at cryptographically relevant parameters — breaking deployed public-key cryptography within a practical timeframe.'
+plain: 'A cryptographically relevant quantum computer (CRQC) is one powerful enough to break the encryption that secures the internet: RSA, elliptic curve cryptography, and Diffie-Hellman key exchange. No such machine exists today. The technical requirements — currently estimated at under one million noisy physical qubits for RSA-2048 — remain far beyond any existing device, but algorithmic improvements in 2025 and 2026 have sharply reduced that estimate. Expert surveys in 2025 put a 28–49% probability on a CRQC arriving within ten years.'
 pillar: quantum
 readiness: emerging
 constellation: algorithms
 cluster: cryptanalysis
+priority: P0
+qdayImpact: 0
+qdayReasoning: ''
 actors:
-  - Global Risk Institute
-  - evolutionQ
+  - IBM
   - NIST
+  - University of Waterloo
+  - Microsoft
 country:
-  - CA
   - US
+  - CA
+horizon: 3
+novelty: 'Threshold concept; no CRQC demonstrated. Resource requirements have fallen sharply in 2025.'
 metrics:
-  - name: Expert probability of CRQC within 10 years
+  - name: Expert survey probability of CRQC within 10 years
     value: '28-49'
     unit: percent
-    note: 'GRI Quantum Threat Timeline Report 2025, 26 experts. Range reflects optimistic vs pessimistic interpretation of survey responses. Highest 10-year estimate in the report''s 7-year history.'
-  - name: Expert probability of CRQC within 15 years
+    note: 'GRI Quantum Threat Timeline 2025, 26 expert respondents. Up from 19-34% in the 2024 survey.'
+  - name: Expert survey probability of CRQC within 15 years
     value: '51-70'
     unit: percent
-    note: 'GRI Quantum Threat Timeline Report 2025. Described as likely within 15 years.'
-  - name: US RSA/ECC deprecation date
-    value: '2030'
-    unit: year
-    note: 'NIST IR 8547 ipd (Nov 2024). Deprecated for new federal systems. Full disallowance 2035.'
+    note: 'GRI Quantum Threat Timeline 2025. Reflects acceleration attributed to error correction advances and algorithmic qubit-count reductions.'
 links:
   - to: algo-resource-estimation
     relation: depends-on
   - to: algo-shor
     relation: depends-on
-  - to: harvest-now-decrypt-later
-    relation: enables
+  - to: qec-logical-qubit-scaling
+    relation: depends-on
 evidence:
-  claim: 'The GRI Quantum Threat Timeline Report 2025 (26 international experts, published March 2026) finds that expert estimates of a CRQC within 10 years now range from 28% to 49% probability — the highest 10-year estimate in the survey''s seven-year history, up from 14-34% in 2024. NIST IR 8547 (Initial Public Draft, November 2024) formally proposes deprecating RSA and ECC for all US federal systems by 2030 and disallowing them by 2035. A CRQC does not exist; both sources address forecast and policy response, not experimental demonstration.'
+  claim: 'Scholten et al. (2024, IEEE Security & Privacy, multi-institution including IBM and NIST) review the benefits and risks of quantum computers, concluding that fault-tolerant algorithms pose the primary cryptographic threat and that quantum computers may provide economic benefits before threatening cryptography. The GRI Quantum Threat Timeline 2025 (26 expert respondents) estimates a 28–49% probability of a CRQC within 10 years and 51–70% within 15 years, accelerated from prior surveys. No CRQC has been demonstrated; the item records the threat threshold and the expert consensus on timing.'
   verified: '2026-08-08'
   level: E3
   sources:
-    - url: https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
+    - url: https://arxiv.org/abs/2401.16317
       role: primary
+      title: 'Assessing the Benefits and Risks of Quantum Computers'
+      publisher: 'IEEE Security & Privacy'
+      date: '2024-07-17'
+      identifier: 'arXiv:2401.16317'
+      doi: 10.48550/arXiv.2401.16317
+      accessed: '2026-08-08'
+      note: 'Scholten, Williams, Moody, Mosca, Hurley, Zeng, Troyer, Gambetta. Multi-institution (IBM, NIST, UWaterloo, Microsoft). Review paper; evidence level E3 per schema rules for reviews.'
+    - url: https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
+      role: corroborating
       title: 'Quantum Threat Timeline Report 2025'
-      publisher: 'Global Risk Institute / evolutionQ'
-      date: '2026-03-09'
+      publisher: 'Global Risk Institute'
+      date: '2026-04-22'
       accessed: '2026-08-08'
-      note: 'Annual expert survey. 26 global experts. Authored by Dr Michele Mosca and Dr Marco Piani. Seventh edition.'
-    - url: https://csrc.nist.gov/pubs/ir/8547/ipd
-      role: standard
-      title: 'NIST IR 8547 (Initial Public Draft): Transition to Post-Quantum Cryptography Standards'
-      publisher: NIST
-      date: '2024-11-01'
-      identifier: 'NIST IR 8547 ipd'
-      accessed: '2026-08-08'
-      note: 'Sets 2030 deprecation and 2035 disallowance dates for RSA, ECDSA, ECDH, and DH in US federal systems. Initial public draft; policy direction confirmed by subsequent Executive Order 14412 (June 2026).'
+      note: '26 expert respondents. Annual longitudinal survey; 2025b edition. Not a technical experiment — corroborating expert consensus on timeline only.'
 confidence: medium
 status: published
-priority: P0
-qdayImpact: 0
-qdayReasoning: 'The CRQC item describes the concept and the expert forecast, not a technical result that itself moves Q-Day. The algorithmic results that shift the estimate belong on algo-resource-estimation (qdayImpact +2). This item is the framing concept; its sources confirm what experts believe, not what hardware has achieved.'
-horizon: 2
-novelty: incremental
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
-  agentMergedOn: '2026-08-08'
+  state: agent-merged
+  by: agent
   agent: sourcer
+  agentMergedOn: '2026-08-08'
 ---
 
-A cryptographically relevant quantum computer (CRQC) is a fault-tolerant machine capable of running Shor''s algorithm to break RSA-2048 or ECC-256 in a practically relevant timeframe. No such machine exists as of mid-2026. The Global Risk Institute Quantum Threat Timeline Report 2025 surveyed 26 international experts and found the probability of a CRQC within 10 years now rated at 28–49%, the highest figure in the survey's seven-year history. US policy response is embodied in NIST IR 8547, which proposes deprecating RSA and elliptic-curve algorithms for federal systems by 2030 and disallowing them entirely by 2035. The migration window implied by these two timelines — expert probability rising and policy deadlines fixed — is the primary driver of urgency across the migration constellation.
+A CRQC does not exist. The item marks the threat threshold against which all migration timelines are calibrated. The primary source is a peer-reviewed review (E3 ceiling per schema), not an experimental result. Resource requirements published in 2025 and 2026 (see algo-resource-estimation and algo-shor) have materially reduced the estimated hardware needed, which is the main reason expert surveys show accelerating timelines.

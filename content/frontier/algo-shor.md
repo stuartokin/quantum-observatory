@@ -2,27 +2,36 @@
 schema: frontier/v1
 id: algo-shor
 title: Shor factoring at scale
-summary: 'Shor''s algorithm breaks RSA and ECC in polynomial time on a fault-tolerant quantum computer. Published resource estimates (2021-2026) define the hardware threshold; experimental demonstrations remain limited to trivial problem sizes.'
-plain: 'Shor''s algorithm, published in 1994, can factor large integers and solve the discrete logarithm problem exponentially faster than any known classical method. On a sufficiently powerful quantum computer it would break RSA, elliptic-curve cryptography, and Diffie-Hellman key exchange — the foundations of most internet security. The catch is the hardware requirement. Peer-reviewed estimates put the physical qubit count for breaking RSA-2048 at roughly 20 million (2021 baseline), revised down to under one million in 2025. Experimental demonstrations of Shor have factored only trivially small numbers (15, 21) on physical-qubit processors with no error correction. The gap between demonstrated and required scale is large; the algorithm''s cryptographic relevance depends entirely on fault-tolerant hardware that does not yet exist at the necessary scale.'
+summary: 'Resource estimation and algorithmic development for running Shor''s algorithm at cryptographically relevant scale — factoring RSA integers and solving elliptic curve discrete logarithms (ECDLP) on fault-tolerant quantum hardware.'
+plain: 'Shor''s algorithm, if run on a large enough fault-tolerant quantum computer, would break RSA and elliptic curve cryptography. Running it at the scale needed to threaten real systems (RSA-2048, ECC P-256) is the central open engineering challenge in quantum cryptanalysis. Recent algorithmic papers in 2025 and 2026 have halved the logical qubit count for ECC-256 to around 1,100 logical qubits, and reduced the physical qubit count for RSA-2048 to under one million. Neither target has been attacked — these are resource estimates for future machines, not demonstrations.'
 pillar: quantum
 readiness: emerging
 constellation: algorithms
 cluster: cryptanalysis
+priority: P1
+qdayImpact: 2
+qdayReasoning: 'Two independent groups — Chevignard/Fouque/Schrottenloher (Inria/Univ Rennes, EUROCRYPT 2026) and Babbush et al. (Google Quantum AI, March 2026) — have halved the logical qubit count for 256-bit ECC discrete logarithm from the previous best estimate (2,124 qubits, Haner et al. 2020) to approximately 1,098–1,193 qubits. Combined with Gidney 2025 reducing RSA-2048 physical qubits to under one million, the algorithmic cost of a CRQC has fallen substantially in 2025–2026 without any hardware advance. This is scored +2: the hardware gap remains large, but the algorithmic gap has narrowed faster than most risk models assumed, which is a material signal to migration planners.'
 actors:
+  - 'Univ Rennes / Inria'
   - Google Quantum AI
-  - KTH Royal Institute of Technology
 country:
+  - FR
   - US
-  - SE
+horizon: 3
+novelty: 'Logical qubit count for ECC-256 halved to ~1,098 qubits (EUROCRYPT 2026); independent estimate ~1,175 qubits (Google, March 2026)'
 metrics:
-  - name: Physical qubits for RSA-2048 (2021 peer-reviewed baseline)
-    value: '20000000'
+  - name: Logical qubits for ECC P-256 ECDLP
+    value: '1193'
+    unit: logical qubits
+    note: 'Chevignard et al. EUROCRYPT 2026 (IACR eprint 2026/280). Down from 2,124 (Haner et al. 2020). Gate count is O(n^4) — higher than previous estimates.'
+  - name: Logical qubits for ECC P-256 ECDLP (independent estimate)
+    value: '<1200'
+    unit: logical qubits
+    note: 'Babbush et al. arXiv:2603.28846, Google Quantum AI, March 2026. Under 90 million Toffoli gates in the low-qubit variant.'
+  - name: Physical qubits for ECC P-256 (superconducting, planar, 1e-3 error rate)
+    value: '<500000'
     unit: noisy physical qubits
-    note: 'Gidney+Eker\u00e5, Quantum 5, 433 (2021). 0.1% gate error rate, 1 us surface code cycle, nearest-neighbour grid, 8-hour runtime.'
-  - name: Physical qubits for RSA-2048 (2025 preprint revised estimate)
-    value: '<1000000'
-    unit: noisy physical qubits
-    note: 'Gidney arXiv:2505.15917 (2025). Same physical assumptions. Runtime under one week. Reduction from approximate residue arithmetic and yoked surface codes.'
+    note: 'Babbush et al. estimate for execution in minutes on superconducting architecture. Not independently validated.'
 links:
   - to: algo-resource-estimation
     relation: depends-on
@@ -30,46 +39,37 @@ links:
     relation: evidence-for
   - to: qec-surface-code
     relation: depends-on
-  - to: qec-magic-state-distillation
-    relation: depends-on
 evidence:
-  claim: 'Gidney and Eker\u00e5 (2021, Quantum 5, 433) provide the peer-reviewed baseline resource estimate: RSA-2048 factoring requires approximately 20 million noisy physical qubits in 8 hours, assuming a nearest-neighbour superconducting grid at 0.1% physical gate error rate with surface code error correction. This remains the most-cited published estimate. A 2025 preprint (Gidney, arXiv:2505.15917) reduces this to under one million qubits under identical physical assumptions. Large-scale experimental demonstration of Shor''s algorithm on cryptographically relevant integers has not been achieved on any platform.'
+  claim: 'Chevignard, Fouque and Schrottenloher (Univ Rennes / Inria, EUROCRYPT 2026, IACR eprint 2026/280) present a space-efficient quantum algorithm for ECDLP on 256-bit prime-field curves requiring 1,193 logical qubits — halving the previous best of 2,124 (Haner et al. 2020), at the cost of a higher gate count. Independently, Babbush et al. (Google Quantum AI, arXiv:2603.28846, March 2026) estimate under 1,200 logical qubits and under 90 million Toffoli gates for ECC-256, with fewer than half a million physical qubits on superconducting hardware. Neither result is a demonstration; both are resource estimates for future fault-tolerant machines.'
   verified: '2026-08-08'
   level: E3
   sources:
-    - url: https://quantum-journal.org/papers/q-2021-04-15-433/
+    - url: https://eprint.iacr.org/2026/280
       role: primary
-      title: 'How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits'
-      publisher: Quantum
-      date: '2021-04-15'
-      identifier: 'Quantum 5, 433 (2021)'
-      doi: 10.22331/q-2021-04-15-433
+      title: 'Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves'
+      publisher: 'EUROCRYPT 2026 / IACR Cryptology ePrint Archive'
+      date: '2026-03-01'
+      identifier: 'IACR eprint 2026/280'
       accessed: '2026-08-08'
-      note: 'Gidney and Eker\u00e5. Peer-reviewed. The authoritative baseline resource estimate. E4-quality source for the 20-million-qubit figure.'
-    - url: https://arxiv.org/abs/2505.15917
-      role: preprint
-      title: 'How to factor 2048 bit RSA integers with less than a million noisy qubits'
+      note: 'Chevignard, Fouque, Schrottenloher. Univ Rennes, Inria, CNRS, IRISA. Peer-reviewed at EUROCRYPT 2026. Achieves 1,193 logical qubits for P-256 at cost of O(n^4) gate count.'
+    - url: https://arxiv.org/abs/2603.28846
+      role: corroborating
+      title: 'Securing Elliptic Curve Cryptocurrencies against Quantum Vulnerabilities: Resource Estimates and Mitigations'
       publisher: arXiv
-      date: '2025-05-21'
-      identifier: 'arXiv:2505.15917 [quant-ph]'
-      doi: 10.48550/arXiv.2505.15917
+      date: '2026-03-30'
+      identifier: 'arXiv:2603.28846'
+      doi: 10.48550/arXiv.2603.28846
       accessed: '2026-08-08'
-      note: 'Gidney, Google Quantum AI. Revises baseline downward by over 20x using approximate residue arithmetic and yoked surface codes. Preprint, not yet peer-reviewed.'
+      note: 'Babbush, Zalcman, Gidney et al., Google Quantum AI / Ethereum Foundation / Stanford. Preprint whitepaper. Describes ZKP-validated circuits; not yet peer-reviewed.'
 confidence: high
 status: published
-priority: P1
-qdayImpact: 1
-qdayReasoning: 'Shor''s algorithm is the core mechanism by which Q-Day would occur. The item itself does not move Q-Day — it is the algorithm description and resource estimation, not a hardware achievement. The qdayImpact of +1 reflects that progress in this item (improving resource estimates) is a necessary precondition for Q-Day but not sufficient without hardware at scale. The 2025 revision of the qubit estimate (see algo-resource-estimation) is where the impact properly sits.'
-horizon: 2
-novelty: incremental
 origin: agent
 added: '2026-08-08'
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-08'
-  agentMergedOn: '2026-08-08'
+  state: agent-merged
+  by: agent
   agent: sourcer
+  agentMergedOn: '2026-08-08'
 ---
 
-Shor''s algorithm (1994) solves integer factorisation and the discrete logarithm problem in polynomial quantum time, breaking RSA, ECC, and Diffie-Hellman key exchange on any sufficiently large fault-tolerant quantum computer. The peer-reviewed baseline resource estimate (Gidney+Ekerå, *Quantum* 5, 433, 2021) puts the requirement at approximately 20 million noisy physical qubits to factor RSA-2048 in 8 hours, under realistic superconducting hardware assumptions. A 2025 preprint from Google Quantum AI (Gidney, arXiv:2505.15917) revises this to under one million qubits — a 20-fold reduction from algorithmic improvements alone. Experimental demonstrations of Shor's algorithm remain limited to factoring small numbers (15, 21) without error correction; the algorithm has not been run on cryptographically relevant inputs on any platform.
+Shor''s algorithm is not in question — it is proven correct and the asymptotic speedup is established. What the 2025–2026 papers address is the concrete resource cost at cryptographically relevant parameters. The ECC-256 logical qubit count has halved in under 18 months, driven by two independent European and US research groups. A subsequent arXiv preprint (arXiv:2607.13816, July 2026) reduces the count further to 835 logical qubits for P-256, suggesting the field is still moving quickly.
