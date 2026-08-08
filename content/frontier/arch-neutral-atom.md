@@ -15,6 +15,7 @@ metrics:
 evidence:
   claim: Logical magic state distillation was demonstrated on a neutral-atom processor using dynamically reconfigurable atom transport.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-025-09367-3
       role: primary
@@ -26,6 +27,13 @@ links:
     relation: evidence-for
   - to: arch-trapped-ion
     relation: competes-with
+priority: P1
+horizon: 2
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

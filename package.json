@@ -1,15 +1,17 @@
 {
   "name": "horizonq",
   "private": true,
-  "version": "0.13.1",
+  "version": "0.17.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate && tsc --noEmit && vite build && npm run budget",
+    "build": "npm run validate && npm run provenance && tsc --noEmit && vite build && npm run budget",
     "preview": "vite preview",
     "validate": "node scripts/validate-content.mjs",
     "budget": "node scripts/check-budget.mjs",
-    "scope": "node scripts/check-scope.mjs"
+    "scope": "node scripts/check-scope.mjs",
+    "agent": "node scripts/run-agent.mjs",
+    "provenance": "node scripts/check-provenance.mjs"
   },
   "dependencies": {
     "front-matter": "^4.0.2",

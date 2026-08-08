@@ -20,6 +20,7 @@ metrics:
 evidence:
   claim: IBM introduced a fault-tolerant quantum memory based on bivariate bicycle qLDPC codes; the gross code encodes 12 logical qubits into 144 data qubits plus 144 syndrome qubits, correcting as well as the surface code with about ten times fewer qubits.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-024-07107-7
       role: primary
@@ -39,6 +40,15 @@ links:
     relation: enables
   - to: qec-surface-code
     relation: competes-with
+priority: P0
+horizon: 2
+qdayImpact: 2
+qdayReasoning: 'Roughly tenfold reduction in physical qubits per logical qubit cuts the machine size a cryptanalytic attack would need.'
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

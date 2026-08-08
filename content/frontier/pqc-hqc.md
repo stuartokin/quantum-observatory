@@ -17,6 +17,7 @@ metrics:
 evidence:
   claim: NIST selected HQC for standardisation on 11 March 2025, reported in NIST IR 8545 on the fourth round of the PQC standardisation process.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
       role: standard
@@ -27,6 +28,13 @@ links:
 moved:
   from: experimental
   'on': '2026-06-11'
+priority: P1
+horizon: 2
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

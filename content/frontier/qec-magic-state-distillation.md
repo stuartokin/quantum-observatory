@@ -20,6 +20,7 @@ metrics:
 evidence:
   claim: The first experimental demonstration of magic state distillation performed entirely on logical qubits, using distance-3 and distance-5 colour-code qubits on a neutral-atom processor, with output fidelity exceeding that of any input state.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-025-09367-3
       role: primary
@@ -37,6 +38,15 @@ links:
 moved:
   from: emerging
   'on': '2026-07-14'
+priority: P1
+horizon: 2
+qdayImpact: 1
+qdayReasoning: 'Completes the logical gate set, removing one of the remaining unknowns in fault-tolerant operation.'
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

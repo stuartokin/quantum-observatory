@@ -145,6 +145,23 @@ export function Board() {
   const item = selected ? pool.find((i) => i.id === selected) ?? null : null
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
 
+  /**
+   * Review debt, shown rather than hidden. Agents publish without a human gate,
+   * so the board has to be honest about how much of it nobody has read.
+   */
+  const debt = useMemo(() => {
+    const unreviewed = pool.filter((i) => i.review?.state === 'agent-merged').length
+    const dates = pool
+      .map((i) => (i.review?.state === 'reviewed' ? i.review.on : undefined))
+      .filter((d): d is string => Boolean(d))
+      .sort()
+    const last = dates.length ? dates[dates.length - 1] : undefined
+    const weeks = last
+      ? Math.floor((Date.now() - new Date(last).getTime()) / 6.048e8)
+      : undefined
+    return { unreviewed, last, weeks }
+  }, [pool])
+
   useEffect(() => {
     if (item) {
       raise('detail')()
@@ -243,6 +260,16 @@ export function Board() {
           <span><b>{visible.length}</b> of {pool.length}</span>
           <span><b>{visible.filter(isSourced).length}</b> sourced</span>
           {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
+          {debt.unreviewed > 0 && (
+            <span className="board-stats__unreviewed">
+              <b>{debt.unreviewed}</b> unreviewed
+            </span>
+          )}
+          {debt.weeks !== undefined && (
+            <span className={debt.weeks >= 8 ? 'board-stats__stale' : undefined}>
+              reviewed <b>{debt.weeks}w</b> ago
+            </span>
+          )}
           <span className="board-stats__ver">v{VERSION}</span>
         </div>
       </header>
@@ -472,6 +499,15 @@ function Sky({
 
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes])
 
+  /** Ids nobody has read. Marked on the board, not only in the detail panel. */
+  const unreviewed = useMemo(
+    () =>
+      new Set(
+        allFrontier.filter((i) => i.review?.state === 'agent-merged').map((i) => i.id),
+      ),
+    [],
+  )
+
   const tl = useMemo(
     () =>
       timeline
@@ -677,6 +713,17 @@ function Sky({
           g.arc(px, py, rr, 0, Math.PI * 2)
           g.fill()
           g.shadowBlur = 0
+
+          if (unreviewed.has(m.id)) {
+            g.globalAlpha = 0.75
+            g.strokeStyle = '#FFB020'
+            g.lineWidth = 1
+            g.setLineDash([2, 3])
+            g.beginPath()
+            g.arc(px, py, rr + 5, 0, Math.PI * 2)
+            g.stroke()
+            g.setLineDash([])
+          }
 
           if (sel || hov) {
             g.globalAlpha = 1
@@ -908,6 +955,20 @@ function Sky({
         drawBody(g, n.glyph, px, py, r, actorColour(colour, n.actor), n.sourced)
         g.shadowBlur = 0
 
+        // Unreviewed items carry a dashed ring wherever they appear. The label
+        // in the panel is not enough — someone scanning the board must be able
+        // to see which bodies nobody has checked.
+        if (unreviewed.has(n.id)) {
+          g.globalAlpha = 0.75 * fade
+          g.strokeStyle = '#FFB020'
+          g.lineWidth = 1
+          g.setLineDash([2, 3])
+          g.beginPath()
+          g.arc(px, py, r + 5, 0, Math.PI * 2)
+          g.stroke()
+          g.setLineDash([])
+        }
+
         if (sel || hov) {
           g.globalAlpha = 1
           g.strokeStyle = colour
@@ -963,7 +1024,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
@@ -1186,6 +1247,13 @@ function Help({ colour }: { colour: string }) {
         <div><dt><GlyphMark glyph="comet" colour={colour} /></dt><dd>The shape is the organisation behind it</dd></div>
       </dl>
 
+      <p>
+        A <strong>dashed amber ring</strong> means a research agent published
+        that entry and no human has read it yet. Its sources are real, but
+        nobody has confirmed the judgement. Open it to see when it was
+        published and by which agent.
+      </p>
+
       <p className="label">Controls</p>
       <p>
         Hover to name · click to open · drag a body to move it · double-click a
@@ -1247,21 +1315,61 @@ const PLAIN_CONFIDENCE: Record<string, string> = {
   low: 'One source, contested, or the evidence has not been re-checked in a year. Verify before relying on it.',
 }
 
+/** Human-readable age, so nobody has to subtract dates in their head. */
+function ago(date?: string): string {
+  if (!date) return 'unknown'
+  const days = Math.floor((Date.now() - new Date(date).getTime()) / 864e5)
+  if (days < 1) return 'today'
+  if (days === 1) return 'yesterday'
+  if (days < 31) return `${days} days ago`
+  if (days < 365) return `${Math.round(days / 30.44)} months ago`
+  return `${(days / 365).toFixed(1)} years ago`
+}
+
 function Detail({ item, definition }: { item: FrontierItem; definition?: string }) {
   const colour = PILLAR_SPECTRUM[item.pillar].colour
   const needsSource = item.evidence.claim.startsWith('NEEDS PRIMARY SOURCE')
+  const rev = item.review
 
   return (
     <div className="detail">
       <div className="meta">
         <span className="badge" style={{ color: colour, borderColor: colour }}>{item.readiness}</span>
         <span className="badge">{item.constellation}</span>
-        {needsSource ? (
-          <span className="badge" data-conf="low">unsourced</span>
+        {item.evidence.level && <span className="badge">{item.evidence.level}</span>}
+        {item.priority && <span className="badge">{item.priority}</span>}
+        {needsSource && <span className="badge" data-conf="low">unsourced</span>}
+      </div>
+
+      {/* Provenance first, before any claim. The reader should know who stands
+          behind this before they read what it says. */}
+      <div style={{ marginTop: 'var(--gap-s)' }}>
+        {rev?.state === 'agent-merged' ? (
+          <span className="prov prov--agent">
+            <span className="prov__dot" />
+            Agent-merged — not yet reviewed
+          </span>
+        ) : rev?.state === 'vetoed' ? (
+          <span className="prov prov--vetoed">
+            <span className="prov__dot" />
+            Vetoed
+          </span>
         ) : (
-          <span className="badge" data-conf={item.confidence}>confidence {item.confidence}</span>
+          <span className="prov">
+            <span className="prov__dot" />
+            Reviewed {ago(rev?.on)}
+          </span>
         )}
       </div>
+
+      {rev?.state === 'agent-merged' && (
+        <p className="prov-note">
+          <strong>Published by the {rev.agent ?? 'research'} agent</strong>{' '}
+          {ago(rev.agentMergedOn)}, without human review. The sources below are
+          real and were checked by the agent, but nobody has yet read this entry
+          and confirmed it. Weigh it accordingly.
+        </p>
+      )}
 
       <h3>{item.title}</h3>
       {item.summary && <p>{item.summary}</p>}
@@ -1292,8 +1400,20 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
         </dl>
       )}
 
+      {typeof item.qdayImpact === 'number' && item.qdayImpact !== 0 && (
+        <div className="plain">
+          <span className="label">
+            Q-Day impact {item.qdayImpact > 0 ? `+${item.qdayImpact}` : item.qdayImpact}
+          </span>
+          {item.qdayReasoning && <p>{item.qdayReasoning}</p>}
+        </div>
+      )}
+
       {item.actors && item.actors.length > 0 && (
-        <p className="actors"><span className="label">Demonstrated by</span> {item.actors.join(' · ')}</p>
+        <p className="actors">
+          <span className="label">Demonstrated by</span> {item.actors.join(' · ')}
+          {item.country?.length ? ` · ${item.country.join(', ')}` : ''}
+        </p>
       )}
 
       <div className="evidence">

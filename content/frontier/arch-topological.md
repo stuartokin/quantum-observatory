@@ -10,12 +10,21 @@ readiness: emerging
 evidence:
   claim: NEEDS PRIMARY SOURCE — placeholder. Replace with a specific free primary source and restate what it actually says.
   verified: '2026-08-04'
+  level: E1
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography
       role: corroborating
 links:
   - to: qec-surface-code
     relation: competes-with
+priority: P3
+horizon: 3
+qdayImpact: -1
+qdayReasoning: 'Two decades of promise without a settled result is weak evidence for the fast paths.'
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: low
 status: draft
 added: '2026-08-04'

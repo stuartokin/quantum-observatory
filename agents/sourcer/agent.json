@@ -1,0 +1,10 @@
+{
+  "name": "sourcer",
+  "description": "Finds primary sources for items already on the board that have none. Depth, not breadth. Run on demand as a campaign, never on a schedule.",
+  "model": "claude-sonnet-4-6",
+  "everyWeeks": 0,
+  "write_scope": ["content/frontier/_inbox/**"],
+  "output": "pull_request",
+  "enabled": false,
+  "budget": { "searches": 60, "proposals": 12 }
+}

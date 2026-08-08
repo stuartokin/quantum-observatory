@@ -18,6 +18,7 @@ metrics:
 evidence:
   claim: Google demonstrated below-threshold surface code memory on a superconducting processor; IBM has shipped successive transmon processors on a published roadmap.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-024-08449-y
       role: primary
@@ -33,6 +34,13 @@ links:
     relation: depends-on
   - to: enable-control-electronics
     relation: depends-on
+priority: P1
+horizon: 1
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

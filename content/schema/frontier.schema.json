@@ -5,14 +5,15 @@
   "description": "One development on the frontier. Position is derived from readiness; nothing here stores coordinates. No item exists without a source.",
   "type": "object",
   "required": [
-    "schema",
+    "confidence",
+    "evidence",
     "id",
-    "title",
     "pillar",
     "readiness",
-    "evidence",
-    "confidence",
-    "status"
+    "review",
+    "schema",
+    "status",
+    "title"
   ],
   "additionalProperties": false,
   "properties": {
@@ -125,7 +126,8 @@
       "required": [
         "sources",
         "claim",
-        "verified"
+        "verified",
+        "level"
       ],
       "additionalProperties": false,
       "properties": {
@@ -175,6 +177,17 @@
               }
             }
           }
+        },
+        "level": {
+          "enum": [
+            "E0",
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5"
+          ],
+          "description": "E5 replicated/independently validated \u00b7 E4 peer-reviewed, not replicated \u00b7 E3 preprint or credible lab demo \u00b7 E2 prototype or vendor technical claim \u00b7 E1 proposal/theory \u00b7 E0 speculative. Never discard E0/E1 for being speculative \u2014 label them."
         }
       }
     },
@@ -227,6 +240,90 @@
     "added": {
       "type": "string",
       "format": "date"
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "description": "What the board should pull the eye to. Set by the final test: if this were true and scaled, what assumption would have to change? If none, P3 or P4. Significance, never publicity."
+    },
+    "qdayImpact": {
+      "type": "integer",
+      "minimum": -3,
+      "maximum": 3,
+      "description": "Quantum only. +3 could significantly accelerate Q-Day, 0 no credible effect, -3 strong evidence current forecasts are over-optimistic."
+    },
+    "qdayReasoning": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Required whenever qdayImpact is not 0. A score without reasoning is an opinion."
+    },
+    "country": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Where the work was done. Makes the English-language coverage gap measurable rather than merely admitted."
+    },
+    "novelty": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "Free tag, not a scored axis. e.g. major breakthrough, new architecture, incremental."
+    },
+    "horizon": {
+      "enum": [
+        1,
+        2,
+        3
+      ],
+      "description": "1 mainstream 0-3y \u00b7 2 emerging lab/prototype 3-10y \u00b7 3 frontier/blue sky."
+    },
+    "review": {
+      "type": "object",
+      "description": "Provenance. Every item declares whether a human has read it. An agent writes agent-merged and cannot write reviewed \u2014 that is the whole safeguard.",
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "reviewed",
+            "agent-merged",
+            "vetoed"
+          ],
+          "description": "reviewed = a human read it \u00b7 agent-merged = published by an agent, not yet read \u00b7 vetoed = reverted, kept for the record"
+        },
+        "by": {
+          "enum": [
+            "human",
+            "agent"
+          ],
+          "description": "Who last set this state."
+        },
+        "on": {
+          "type": "string",
+          "format": "date",
+          "description": "Date the state was set."
+        },
+        "agentMergedOn": {
+          "type": "string",
+          "format": "date",
+          "description": "When an agent published it. Retained after review so the history stays legible."
+        },
+        "agent": {
+          "type": "string",
+          "description": "Which agent, when agent-merged."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
     }
   }
 }

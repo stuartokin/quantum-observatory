@@ -1,0 +1,10 @@
+{
+  "name": "scout",
+  "description": "Horizons 1 and 2. Mainstream and emerging quantum developments. Proposes new frontier items with primary sources.",
+  "model": "claude-sonnet-4-6",
+  "everyWeeks": 1,
+  "write_scope": ["content/frontier/_inbox/**"],
+  "output": "pull_request",
+  "enabled": false,
+  "budget": { "searches": 25, "proposals": 6 }
+}

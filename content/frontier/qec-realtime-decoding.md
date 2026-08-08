@@ -15,6 +15,7 @@ metrics:
 evidence:
   claim: Google reported below-threshold performance maintained while decoding in real time; IBM reports that improved belief propagation is sufficient for real-time decoding of qLDPC quantum memory.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-024-08449-y
       role: primary
@@ -34,6 +35,15 @@ links:
     relation: depends-on
   - to: qec-below-threshold-surface-code
     relation: enables
+priority: P1
+horizon: 2
+qdayImpact: 1
+qdayReasoning: 'Decoding speed was a plausible hard blocker; evidence it is tractable removes a source of delay.'
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

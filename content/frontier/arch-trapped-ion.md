@@ -21,6 +21,7 @@ metrics:
 evidence:
   claim: 'Quantinuum states Helios achieved 48 logical qubits from 98 physical qubits, an error-correcting overhead of 2:1 in a commercial setting, with 99.921 per cent two-qubit gate fidelity.'
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.sec.gov/Archives/edgar/data/0002110105/000162828026037917/quantinuum-sx1a.htm
       role: primary
@@ -41,6 +42,15 @@ links:
 moved:
   from: demonstrated
   'on': '2026-07-02'
+priority: P1
+horizon: 1
+qdayImpact: 1
+qdayReasoning: 'A 2:1 physical-to-logical overhead in a commercial system is far below usual assumptions, though at small absolute scale.'
+country: [US/UK]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

@@ -15,6 +15,7 @@ metrics:
 evidence:
   claim: IBM has published a modular architecture based on bivariate bicycle codes, with entanglement between modules via a universal adapter planned for demonstration on its innovation roadmap.
   verified: '2026-08-04'
+  level: E3
   sources:
     - url: https://www.arxiv.org/abs/2506.03094
       role: preprint
@@ -32,6 +33,13 @@ links:
     relation: depends-on
   - to: qec-logical-qubit-scaling
     relation: enables
+priority: P2
+horizon: 3
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: medium
 status: published
 added: '2026-08-04'

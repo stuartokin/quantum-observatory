@@ -24,6 +24,7 @@ metrics:
 evidence:
   claim: Two below-threshold surface code memories were demonstrated on the Willow processor; the distance-7 code showed logical error suppressed by Λ = 2.14 per two units of distance, exceeding the best physical qubit lifetime by a factor of 2.4.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-024-08449-y
       role: primary
@@ -47,6 +48,15 @@ links:
     relation: depends-on
   - to: qec-logical-fidelity
     relation: evidence-for
+priority: P0
+horizon: 2
+qdayImpact: 2
+qdayReasoning: 'Crossing the error-correction threshold on a scalable platform is a precondition for any cryptanalytic machine. Moves engineering feasibility, not the date directly.'
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

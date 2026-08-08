@@ -19,6 +19,7 @@ metrics:
 evidence:
   claim: NIST published FIPS 205 on 13 August 2024, based on a different mathematical approach to ML-DSA and intended as a backup method.
   verified: '2026-08-04'
+  level: E4
   sources:
     - url: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards
       role: standard
@@ -29,6 +30,15 @@ links:
     relation: competes-with
   - to: mig-hardware-roots
     relation: enables
+priority: P1
+horizon: 1
+qdayImpact: 0
+qdayReasoning: 'A defence, not a capability.'
+country: [US]
+review:
+  state: reviewed
+  by: human
+  'on': '2026-08-07'
 confidence: high
 status: published
 added: '2026-08-04'

@@ -1,0 +1,37 @@
+/* ---------- Provenance ----------
+   The auto-merge model rests on the reader always being able to see whether a
+   human has checked something. These styles are not decoration. */
+
+.prov {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 2px 7px;
+  color: var(--ink-faint);
+}
+.prov--agent {
+  color: var(--line-ai);
+  border-color: var(--line-ai);
+  background: color-mix(in oklab, var(--line-ai) 10%, transparent);
+}
+.prov--vetoed { color: var(--line-energy); border-color: var(--line-energy); }
+.prov__dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+.prov-note {
+  margin-top: var(--gap-s);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+.prov-note strong { color: var(--line-ai); font-weight: 400; }
+
+/* Review debt, in the header. If we fall behind, the site says so. */
+.board-stats__unreviewed { color: var(--line-ai); }
+.board-stats__stale { color: var(--line-energy); }
