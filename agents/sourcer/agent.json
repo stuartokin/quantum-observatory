@@ -5,6 +5,6 @@
   "everyWeeks": 0,
   "write_scope": ["content/frontier/_inbox/**"],
   "output": "pull_request",
-  "enabled": false,
+  "enabled": true,
   "budget": { "searches": 60, "proposals": 12 }
 }
