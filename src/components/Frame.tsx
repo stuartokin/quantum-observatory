@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 /**
- * A moveable, resizeable panel.
+ * A moveable, resizeable, minimisable panel.
  *
- * Drags are driven straight through the DOM and only committed to React state
- * on release. Calling setState on every pointermove re-rendered the tree and
- * forced a full canvas redraw per pixel — which is why dragging felt like it
- * was fighting you.
+ * Drags run through the DOM and commit to React state once on release. Calling
+ * setState on every pointermove re-renders the tree and forces a full canvas
+ * repaint per pixel, which is why dragging used to feel like it was fighting
+ * you.
+ *
+ * Three states, deliberately distinct:
+ *   open        normal
+ *   minimised   collapsed to its title bar, still on screen
+ *   docked      gone from the workspace, recoverable from the toolbar
  */
 
 export interface FrameState {
@@ -14,6 +19,7 @@ export interface FrameState {
   y: number
   w: number
   h: number
+  minimised?: boolean
   docked?: boolean
 }
 
@@ -27,6 +33,10 @@ export function Frame({
   accent,
   z,
   onFocus,
+  /** Frames holding a canvas need to know when their box changed. */
+  onResized,
+  minWidth = 220,
+  minHeight = 140,
 }: {
   title: string
   state: FrameState
@@ -37,6 +47,9 @@ export function Frame({
   accent?: string
   z?: number
   onFocus?: () => void
+  onResized?: () => void
+  minWidth?: number
+  minHeight?: number
 }) {
   const ref = useRef<HTMLElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
@@ -53,8 +66,9 @@ export function Frame({
         el.style.left = `${Math.max(4, Math.min(window.innerWidth - 90, d.s.x + dx))}px`
         el.style.top = `${Math.max(4, Math.min(window.innerHeight - 44, d.s.y + dy))}px`
       } else {
-        el.style.width = `${Math.max(210, Math.min(window.innerWidth - d.s.x - 8, d.s.w + dx))}px`
-        el.style.height = `${Math.max(130, Math.min(window.innerHeight - d.s.y - 8, d.s.h + dy))}px`
+        el.style.width = `${Math.max(minWidth, Math.min(window.innerWidth - d.s.x - 8, d.s.w + dx))}px`
+        el.style.height = `${Math.max(minHeight, Math.min(window.innerHeight - d.s.y - 8, d.s.h + dy))}px`
+        onResized?.()
       }
     }
 
@@ -64,7 +78,6 @@ export function Frame({
       drag.current = null
       setActive(false)
       if (!d || !el) return
-      // Commit once, at the end.
       onChange({
         ...d.s,
         x: parseFloat(el.style.left),
@@ -72,6 +85,7 @@ export function Frame({
         w: parseFloat(el.style.width),
         h: parseFloat(el.style.height),
       })
+      onResized?.()
     }
 
     window.addEventListener('pointermove', move)
@@ -80,12 +94,11 @@ export function Frame({
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerup', up)
     }
-  }, [onChange])
+  }, [onChange, onResized, minWidth, minHeight])
 
   const begin = (mode: 'move' | 'resize') => (e: React.PointerEvent) => {
     e.preventDefault()
     const el = ref.current!
-    // Seed inline styles so the drag has something to move.
     el.style.left = `${state.x}px`
     el.style.top = `${state.y}px`
     el.style.width = `${state.w}px`
@@ -102,26 +115,39 @@ export function Frame({
       ref={ref}
       className="frame"
       data-active={active}
+      data-minimised={state.minimised || undefined}
       onPointerDown={onFocus}
       style={{
         zIndex: z,
         left: state.x,
         top: state.y,
         width: state.w,
-        height: state.h,
+        height: state.minimised ? undefined : state.h,
         borderColor: accent,
       }}
     >
       <header className="frame__bar" onPointerDown={begin('move')}>
         <span className="frame__grip" aria-hidden="true" />
         <span className="frame__title">{title}</span>
+        <button
+          className="frame__btn"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={() => {
+            onChange({ ...state, minimised: !state.minimised })
+            requestAnimationFrame(() => onResized?.())
+          }}
+          aria-label={state.minimised ? 'Expand' : 'Minimise'}
+          title={state.minimised ? 'Expand' : 'Minimise'}
+        >
+          {state.minimised ? '▸' : '▾'}
+        </button>
         {onDock && (
           <button
             className="frame__btn"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={onDock}
-            aria-label="Minimise to toolbar"
-            title="Minimise to toolbar"
+            aria-label="Send to toolbar"
+            title="Send to toolbar"
           >
             –
           </button>
@@ -138,8 +164,49 @@ export function Frame({
         )}
       </header>
 
-      <div className="frame__body">{children}</div>
-      <span className="frame__resize" onPointerDown={begin('resize')} aria-hidden="true" />
+      {!state.minimised && (
+        <>
+          <div className="frame__body">{children}</div>
+          <span className="frame__resize" onPointerDown={begin('resize')} aria-hidden="true" />
+        </>
+      )}
     </section>
   )
+}
+
+/**
+ * Opening layout for a wide screen: the galaxy dominant on the left, a teaser
+ * of what changed and the news beneath it on the right. Below 1100px the extra
+ * frames start docked — three panels on a laptop screen is two too many.
+ */
+export function defaultLayout(w: number, h: number): Record<string, FrameState> {
+  const wide = w >= 1100
+  const pad = 12
+  const top = 74
+  const rightW = wide ? Math.min(400, Math.round(w * 0.28)) : 320
+  const mainW = wide ? w - rightW - pad * 3 : w - pad * 2
+  const mainH = h - top - pad - 62
+
+  return {
+    galaxy: { x: pad, y: top, w: mainW, h: mainH },
+    teaser: {
+      x: wide ? mainW + pad * 2 : 60,
+      y: top,
+      w: rightW,
+      h: Math.round(mainH * 0.42),
+      docked: !wide,
+    },
+    news: {
+      x: wide ? mainW + pad * 2 : 90,
+      y: wide ? top + Math.round(mainH * 0.42) + pad : 120,
+      w: rightW,
+      h: mainH - Math.round(mainH * 0.42) - pad,
+      docked: !wide,
+    },
+    filters: { x: 24, y: 120, w: 260, h: 430, docked: true },
+    actors: { x: 300, y: 120, w: 260, h: 300, docked: true },
+    help: { x: 70, y: 130, w: 460, h: 480, docked: true },
+    detail: { x: Math.max(16, w - 424), y: 96, w: 400, h: 470, docked: true },
+    qday: { x: 24, y: h - 260, w: 340, h: 210, docked: true },
+  }
 }

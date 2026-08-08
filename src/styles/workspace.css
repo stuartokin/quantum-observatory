@@ -1,0 +1,91 @@
+/* ---------- Workspace ----------
+   Three frames on a wide screen: the galaxy dominant, what changed and the
+   news beside it. Frames are windows, so the board no longer owns the viewport. */
+
+.frame[data-minimised] { height: auto !important; }
+.frame[data-minimised] .frame__body { display: none; }
+
+.frame__body--flush { padding: 0; overflow: hidden; }
+
+/* ---------- News ---------- */
+
+.news { display: grid; gap: var(--gap-m); }
+.news__week h4 {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-faint); font-weight: 400;
+  border-bottom: 1px solid var(--hairline); padding-bottom: 5px; margin: 0 0 6px;
+}
+.news__week h4 em { font-style: normal; opacity: 0.7; }
+.news__week ul { list-style: none; margin: 0; padding: 0; }
+
+.news__item button {
+  display: grid; gap: 2px; width: 100%; text-align: left;
+  background: transparent; border: 0; border-left: 2px solid transparent;
+  padding: 6px 0 6px 9px; cursor: pointer; color: var(--ink-muted);
+}
+.news__item button:hover { border-left-color: var(--hairline); }
+.news__item[data-kind='moved'] button { border-left-color: var(--line-quantum); }
+.news__item[data-kind='vetoed'] button { border-left-color: var(--line-energy); }
+.news__item[data-kind='agent'] button { border-left-color: var(--line-ai); }
+
+.news__kind {
+  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.news__title { color: var(--ink); font-size: var(--step--1); line-height: 1.35; }
+.news__line { font-size: var(--step--1); color: var(--ink-muted); }
+.news__meta {
+  font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+
+/* ---------- Teaser ---------- */
+
+.teaser { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.teaser li { display: flex; align-items: flex-start; gap: 4px; }
+.teaser li > button:first-child {
+  flex: 1 1 auto; display: grid; gap: 2px; text-align: left;
+  background: transparent; border: 0; cursor: pointer; padding: 6px 4px;
+}
+.teaser__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  display: inline-block; margin-bottom: 2px;
+}
+.teaser__title { color: var(--ink); font-size: var(--step--1); line-height: 1.35; }
+.teaser__line { font-size: 0.68rem; color: var(--ink-muted); }
+.teaser__jump {
+  flex: 0 0 auto; background: transparent; border: 1px solid var(--hairline);
+  border-radius: var(--radius); color: var(--ink-faint); cursor: pointer;
+  padding: 4px 8px; min-height: 30px; align-self: center;
+}
+.teaser__jump:hover { color: var(--ink); }
+
+/* ---------- Q-Day ---------- */
+
+.qday {
+  display: flex; align-items: baseline; gap: var(--gap-s);
+  background: transparent; border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 5px 12px; cursor: pointer;
+  font-family: var(--mono); font-size: 0.64rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+}
+.qday:hover { border-color: var(--ink-faint); }
+.qday[data-agent] { border-color: var(--line-ai); }
+.qday__range { font-size: 0.86rem; letter-spacing: 0.04em; }
+.qday__central { color: var(--ink-muted); }
+.qday__state { opacity: 0.75; text-transform: none; letter-spacing: 0.04em; }
+
+.qday-panel__q { font-size: var(--step--1); color: var(--ink-muted); line-height: 1.55; margin: 0 0 var(--gap-m); }
+.qday-log { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
+.qday-log li {
+  display: grid; gap: 2px; font-size: var(--step--1); color: var(--ink-muted);
+  border-left: 2px solid var(--hairline); padding-left: 10px;
+}
+.qday-log strong { color: var(--ink); font-family: var(--mono); font-size: 0.66rem; font-weight: 400; }
+.qday-log em { font-style: normal; color: var(--ink-faint); font-size: 0.66rem; }
+.qday-log__assumption { color: var(--ink-faint); }
+
+@media (max-width: 1100px) {
+  .qday__central, .qday__state { display: none; }
+}

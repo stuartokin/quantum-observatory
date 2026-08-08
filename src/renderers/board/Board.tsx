@@ -25,7 +25,10 @@ import {
 } from './orbit3d'
 import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
-import { Frame, type FrameState } from '../../components/Frame'
+import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
+import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
+import { buildNews, headlines } from './news'
+import { forecastFor, type Forecast } from '../../content/forecast'
 import { Toolbar } from '../../components/Toolbar'
 
 /** Galaxies. Only quantum has data; the rest are declared so the switch exists
@@ -102,19 +105,23 @@ export function Board() {
   const [actorFilter, setActorFilter] = useState<string | null>(null)
   const [sourcedOnly, setSourcedOnly] = useState(false)
 
-  // Windows start minimised — the board should be the first thing you see.
-  const [frames, setFrames] = useState<Record<string, FrameState>>({
-    filters: { x: 16, y: 90, w: 260, h: 430, docked: true },
-    actors: { x: 292, y: 90, w: 260, h: 300, docked: true },
-    help: { x: 60, y: 110, w: 460, h: 480, docked: true },
-    detail: { x: 0, y: 0, w: 400, h: 470, docked: true },
-  })
+  // The opening workspace: galaxy dominant, teaser and news beside it on a
+  // wide screen, everything else in the toolbar until asked for.
+  const [frames, setFrames] = useState<Record<string, FrameState>>(() =>
+    defaultLayout(window.innerWidth, window.innerHeight),
+  )
   const setFrame = (k: string) => (s: FrameState) => setFrames((f) => ({ ...f, [k]: s }))
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const toggle = (k: string) => () =>
     setFrames((f) => ({ ...f, [k]: { ...f[k], docked: !f[k].docked } }))
 
-  const [order, setOrder] = useState<string[]>(['filters', 'actors', 'help', 'detail'])
+  /** Canvases inside frames need telling when their box changed. */
+  const [resizeTick, setResizeTick] = useState(0)
+  const bump = () => setResizeTick((n) => n + 1)
+
+  const [order, setOrder] = useState<string[]>([
+    'galaxy', 'teaser', 'news', 'filters', 'actors', 'help', 'qday', 'detail',
+  ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
 
@@ -143,6 +150,9 @@ export function Board() {
 
   const nodes = useMemo(() => layout(visible, { offsets: {} as Offsets }), [visible])
   const item = selected ? pool.find((i) => i.id === selected) ?? null : null
+  const news = useMemo(() => buildNews(pool), [pool])
+  const teaserEntries = useMemo(() => headlines(news), [news])
+  const forecast = useMemo(() => forecastFor(galaxy), [galaxy])
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
 
   /**
@@ -215,8 +225,19 @@ export function Board() {
             onClick: toggle('actors'),
           },
         ]),
+    { key: 'news', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
+    { key: 'teaser', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
+    { key: 'qday', label: 'Q-Day', active: !frames.qday.docked, onClick: toggle('qday') },
     { key: 'help', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
-    { key: 'reset', label: 'Reset', onClick: () => setView({ k: 1, tx: 0, ty: 0 }) },
+    {
+      key: 'reset',
+      label: 'Reset',
+      onClick: () => {
+        setView({ k: 1, tx: 0, ty: 0 })
+        setFrames(defaultLayout(window.innerWidth, window.innerHeight))
+        bump()
+      },
+    },
   ]
 
   const allOn = cons.length === CONSTELLATIONS.length && levels.length === LEVELS.length
@@ -272,24 +293,88 @@ export function Board() {
           )}
           <span className="board-stats__ver">v{VERSION}</span>
         </div>
+
+        <QDayBar
+          forecast={forecast}
+          colour={colour}
+          onOpen={() => {
+            raise('qday')()
+            setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
+          }}
+        />
       </header>
 
-      <Sky
-        nodes={nodes}
-        colour={colour}
-        selected={selected}
-        onSelect={setSelected}
-        view={view}
-        setView={setView}
-        activeCons={cons}
-        mode={mode}
-        focusCon={focusCon}
-        onEnterOrbit={enterOrbit}
-        onLeaveOrbit={leaveOrbit}
-        timeline={timeline}
-        cam={cam}
-        setCam={setCam}
-      />
+      <Frame
+        title={timeline ? 'Timeline' : mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
+        state={frames.galaxy}
+        onChange={setFrame('galaxy')}
+        accent={colour}
+        z={zOf('galaxy')}
+        onFocus={raise('galaxy')}
+        onResized={bump}
+        minWidth={360}
+        minHeight={260}
+      >
+        <Sky
+          nodes={nodes}
+          colour={colour}
+          selected={selected}
+          onSelect={setSelected}
+          view={view}
+          setView={setView}
+          activeCons={cons}
+          mode={mode}
+          focusCon={focusCon}
+          onEnterOrbit={enterOrbit}
+          onLeaveOrbit={leaveOrbit}
+          timeline={timeline}
+          cam={cam}
+          setCam={setCam}
+          resizeTick={resizeTick}
+          forecast={forecast}
+        />
+      </Frame>
+
+      <Frame
+        title="What changed"
+        state={frames.teaser}
+        onChange={setFrame('teaser')}
+        onDock={dock('teaser')}
+        accent={colour}
+        z={zOf('teaser')}
+        onFocus={raise('teaser')}
+      >
+        <Teaser
+          entries={teaserEntries}
+          colour={colour}
+          onSelect={setSelected}
+          onJump={(c) => { setTimeline(false); enterOrbit(c) }}
+        />
+      </Frame>
+
+      <Frame
+        title="News"
+        state={frames.news}
+        onChange={setFrame('news')}
+        onDock={dock('news')}
+        accent={colour}
+        z={zOf('news')}
+        onFocus={raise('news')}
+      >
+        <News weeks={news} colour={colour} onSelect={setSelected} />
+      </Frame>
+
+      <Frame
+        title="Q-Day forecast"
+        state={frames.qday}
+        onChange={setFrame('qday')}
+        onDock={dock('qday')}
+        accent={colour}
+        z={zOf('qday')}
+        onFocus={raise('qday')}
+      >
+        <QDayPanel forecast={forecast} colour={colour} />
+      </Frame>
 
       <Frame
         title="Filters"
@@ -446,6 +531,8 @@ function Sky({
   timeline,
   cam,
   setCam,
+  resizeTick,
+  forecast,
 }: {
   nodes: Node[]
   colour: string
@@ -461,6 +548,8 @@ function Sky({
   timeline: boolean
   cam: Camera
   setCam: (c: Camera) => void
+  resizeTick: number
+  forecast?: Forecast
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -479,7 +568,14 @@ function Sky({
   const anim = useRef(new Map<string, { x: number; y: number }>())
   /** Bodies the reader has moved by hand. These win over any computed target,
    *  so rearranging to read a label is never undone by the layout. */
-  const manual = useRef(new Map<string, { x: number; y: number }>())
+  /**
+   * Bodies the reader has dragged. They no longer stay where they were put —
+   * each decays back into its orbit over about eight seconds, so the system
+   * returns to a truthful arrangement without anyone having to reset it.
+   */
+  const manual = useRef(new Map<string, { x: number; y: number; releasedAt: number }>())
+  /** Auto-rotation pauses while the reader is interacting, then resumes. */
+  const idleSince = useRef(Date.now())
   /** Perspective scale per node while in orbit — drives size and depth fade. */
   const depthOf = useRef(new Map<string, { scale: number; depth: number }>())
   /** Live timeline projection, so hit testing uses the same maths as drawing. */
@@ -598,6 +694,14 @@ function Sky({
     return () => ro.disconnect()
   }, [])
 
+  // A frame resize changes the box without the observer always firing in time.
+  useEffect(() => {
+    const el = wrap.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    setSize({ w: r.width, h: r.height })
+  }, [resizeTick])
+
   useEffect(() => {
     const c = cv.current
     if (!c || size.w < 10 || size.h < 10) return
@@ -618,6 +722,17 @@ function Sky({
       const t = (now - t0) / 1000
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
+
+      // Slow drift around the tilt axis. Barely perceptible frame to frame,
+      // clearly moving if you look away and back — the sky should feel alive
+      // without ever demanding attention.
+      if (mode === 'orbit' && !reduced && !camDrag.current && !nodeDrag.current) {
+        const idleFor = (now - idleSince.current) / 1000
+        if (idleFor > 2) {
+          const ease = Math.min(1, (idleFor - 2) / 3)
+          setCam({ ...cam, yaw: cam.yaw + 0.00022 * dt * 1000 * ease })
+        }
+      }
 
       const e = reduced ? 1 : 0.16
       cur.current.k += (view.k - cur.current.k) * e
@@ -661,6 +776,36 @@ function Sky({
           g.lineTo(W, y)
           g.stroke()
         })
+
+        // The Q-Day range, drawn on the time axis it actually refers to. A
+        // forecast shown beside a timeline is a number; drawn on it, it is a
+        // claim you can see against the evidence.
+        if (forecast?.estimates) {
+          const { aggressive, conservative, central } = forecast.estimates
+          const lo = aggressive ?? central
+          const hi = conservative ?? central
+          if (lo && hi) {
+            const x1 = TX(yearFraction(lo, tl.from, tl.to))
+            const x2 = TX(yearFraction(hi, tl.from, tl.to))
+            g.globalAlpha = 0.07
+            g.fillStyle = colour
+            g.fillRect(x1, 24, Math.max(2, x2 - x1), H - 30)
+            g.globalAlpha = 0.5
+            g.strokeStyle = colour
+            g.setLineDash([3, 4])
+            for (const x of [x1, x2]) {
+              g.beginPath()
+              g.moveTo(x, 24)
+              g.lineTo(x, H - 6)
+              g.stroke()
+            }
+            g.setLineDash([])
+            g.fillStyle = colour
+            const tag = `Q-DAY ${lo}–${hi}${forecast.state === 'agent-estimate' ? ' · AGENT' : ''}`
+            g.fillText(tag, x1 + 5, H - 12)
+            g.globalAlpha = 1
+          }
+        }
 
         // Undated gutter, inside the plot so its marks stay visible and clickable.
         const gEdge = TX(GUTTER - 0.008)
@@ -805,6 +950,13 @@ function Sky({
       }
 
       // Ease every node toward its target — this is the tower/orbit transition.
+      // Release held bodies gradually rather than snapping them back.
+      for (const [id, held] of manual.current) {
+        if (nodeDrag.current?.id === id) continue
+        const heldFor = (Date.now() - held.releasedAt) / 1000
+        if (heldFor > 8) manual.current.delete(id)
+      }
+
       for (const n of nodes) {
         const held = manual.current.get(n.id)
         const ring = orbit3d.get(n.id)
@@ -814,9 +966,21 @@ function Sky({
           depthOf.current.set(n.id, { scale: q.scale, depth: q.depth })
           projected = { x: q.sx, y: q.sy }
         }
-        const tgt = held ?? projected ?? targets.get(n.id) ?? { x: n.x, y: n.y }
+        const home = projected ?? targets.get(n.id) ?? { x: n.x, y: n.y }
+        let tgt = home
+        if (held) {
+          if (nodeDrag.current?.id === n.id) {
+            tgt = held
+          } else {
+            // Ease from where it was dropped back toward its orbit.
+            const t01 = Math.min(1, (Date.now() - held.releasedAt) / 8000)
+            const k = t01 * t01 * (3 - 2 * t01) // smoothstep
+            tgt = { x: held.x + (home.x - held.x) * k, y: held.y + (home.y - held.y) * k }
+          }
+        }
         const a = anim.current.get(n.id) ?? { x: n.x, y: n.y }
-        const speed = nodeDrag.current?.id === n.id || projected ? 1 : reduced ? 1 : 0.09
+        const speed =
+          nodeDrag.current?.id === n.id ? 1 : held ? 0.25 : projected ? 1 : reduced ? 1 : 0.09
         a.x += (tgt.x - a.x) * speed
         a.y += (tgt.y - a.y) * speed
         anim.current.set(n.id, a)
@@ -837,6 +1001,20 @@ function Sky({
           g.fillStyle = 'rgba(134,151,176,0.85)'
           g.fillText(lvl.toUpperCase(), 8, y + 15)
         })
+
+        // Q-Day on the galaxy. There is no time axis here, so it is a caption
+        // rather than a band — but the figure belongs on every view, not only
+        // the one where it can be drawn to scale.
+        if (forecast?.estimates) {
+          const { aggressive, conservative } = forecast.estimates
+          if (aggressive && conservative) {
+            const txt = `Q-DAY ${aggressive}–${conservative}${forecast.state === 'agent-estimate' ? ' · AGENT ESTIMATE' : ''}`
+            g.globalAlpha = 0.55
+            g.fillStyle = colour
+            g.fillText(txt, 8, H - 10)
+            g.globalAlpha = 1
+          }
+        }
 
         // Category names fade out as you zoom in — at close range they clutter
         // exactly the thing you are trying to read.
@@ -1024,7 +1202,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
@@ -1058,6 +1236,7 @@ function Sky({
   }
 
   function onWheel(e: React.WheelEvent) {
+    idleSince.current = Date.now()
     if (mode === 'orbit') {
       setCam(clampCamera({ ...cam, dist: cam.dist * (e.deltaY < 0 ? 0.9 : 1.11) }))
       return
@@ -1070,6 +1249,7 @@ function Sky({
   }
 
   function onPointerDown(e: React.PointerEvent) {
+    idleSince.current = Date.now()
     if (tl) {
       // Timeline pans only; marks are selected on release.
       drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty }
@@ -1103,6 +1283,7 @@ function Sky({
       manual.current.set(nd.id, {
         x: nd.sx + (e.clientX - nd.ox) / cur.current.k / (r.width - 124),
         y: nd.sy + (e.clientY - nd.oy) / cur.current.k / (r.height - 30),
+        releasedAt: Date.now() + 1e9, // held while dragging; set properly on release
       })
       return
     }
@@ -1147,7 +1328,10 @@ function Sky({
     }
     const nd = nodeDrag.current
     nodeDrag.current = null
+    idleSince.current = Date.now()
     if (nd) {
+      const held = manual.current.get(nd.id)
+      if (held) held.releasedAt = Date.now()
       // A tap rather than a drag: select it, and do not pin it.
       if (Math.hypot(e.clientX - nd.ox, e.clientY - nd.oy) < 4) {
         manual.current.delete(nd.id)
