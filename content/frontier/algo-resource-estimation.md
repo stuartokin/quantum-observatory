@@ -2,57 +2,77 @@
 schema: frontier/v1
 id: algo-resource-estimation
 title: Cryptanalytic resource estimation
-summary: 'Quantitative estimates of the physical-qubit cost to run Shor''s algorithm against deployed RSA and elliptic-curve key sizes at realistic error rates.'
-plain: 'Before a quantum computer can threaten encryption, researchers need to know exactly how large and how accurate it would have to be. Resource estimation papers work through the engineering in detail: how many physical qubits, how long would it run, and what error rate is assumed. The headline figure dropped from 20 million noisy qubits (Gidney & Ekerå 2019) to under one million (Gidney 2025) for RSA-2048 — a 20× reduction in four years, driven mainly by algorithmic improvements rather than better hardware.'
+summary: 'Theoretical estimates of the quantum resources needed to break RSA and ECC at cryptographic scale, tracking algorithmic improvements over time.'
+plain: 'Resource estimation asks: how large a quantum computer would actually be needed to crack today''s encryption? Researchers calculate the number of physical qubits and runtime required. The best 2025 estimate (Gidney, Google) puts RSA-2048 factoring within reach of under one million noisy qubits in under a week — down from 20 million qubits in 2021. These are theoretical calculations, not hardware demonstrations.'
 pillar: quantum
-readiness: demonstrated
 constellation: algorithms
+readiness: demonstrated
 cluster: cryptanalysis
 actors:
-  - Google Quantum AI
+  - 'Google Quantum AI'
+  - 'Iceberg Quantum'
 country:
   - US
+  - AU
+horizon: 2
+novelty: major reduction in estimated qubit requirements
+priority: P1
+qdayImpact: 2
+qdayReasoning: 'Algorithmic resource estimates for RSA-2048 factoring have fallen by 95% between 2021 and 2025 (from 20 million to under 1 million noisy qubits) without any change in hardware assumptions. The Pinnacle architecture (2026) reduces this further to ~100,000 qubits using qLDPC codes. Falling estimates accelerate the plausible timeline for a CRQC, though no hardware capable of these computations yet exists. The impact is on threat forecasting, not on cryptographic capability today.'
 metrics:
-  - name: Physical qubits to factor RSA-2048
-    value: '<1 million'
-    unit: noisy physical qubits
-    note: 'Assumes 0.1% gate error rate, 1 µs surface-code cycle, <1 week runtime (Gidney 2025)'
-  - name: Previous best estimate
-    value: '20 million'
-    unit: noisy physical qubits
-    note: 'Gidney & Ekerå 2019, 8-hour runtime'
+  - name: 'Physical qubits for RSA-2048 (Gidney 2021)'
+    value: '20000000'
+    unit: 'qubits'
+    note: 'Peer-reviewed 2021 baseline; 8-hour runtime'
+  - name: 'Physical qubits for RSA-2048 (Gidney 2025)'
+    value: '<1000000'
+    unit: 'qubits'
+    note: 'Preprint; less than 1 week runtime; same hardware assumptions'
+  - name: 'Physical qubits for RSA-2048 (Pinnacle 2026)'
+    value: '<100000'
+    unit: 'qubits'
+    note: 'Preprint; uses qLDPC codes; Iceberg Quantum'
 links:
   - to: algo-shor
     relation: evidence-for
   - to: crqc
-    relation: enables
+    relation: evidence-for
+  - to: qec-qldpc-bivariate-bicycle
+    relation: depends-on
 evidence:
-  claim: 'Gidney (Google Quantum AI, May 2025) estimates RSA-2048 can be factored in under one week by a quantum computer with fewer than one million noisy physical qubits, a 20× reduction on the 2019 Gidney–Ekerå estimate of 20 million, achieved through approximate residue arithmetic and yoked surface codes.'
-  verified: '2026-08-08'
+  claim: 'Gidney (2025) estimates RSA-2048 can be factored in under a week by a quantum computer with fewer than one million noisy qubits, reducing the 2021 estimate of 20 million qubits by over 95%. Improvements derive from approximate residue arithmetic, yoked surface codes, and magic state cultivation. Webster et al. (2026) reduce this further to ~100,000 qubits using qLDPC codes.'
   level: E3
+  verified: '2026-08-08'
   sources:
     - url: https://arxiv.org/abs/2505.15917
-      role: preprint
-      title: How to factor 2048 bit RSA integers with less than a million noisy qubits
+      role: primary
+      title: 'How to factor 2048 bit RSA integers with less than a million noisy qubits'
       publisher: arXiv
       date: '2025-05-21'
-      identifier: arXiv:2505.15917
+      identifier: 'arXiv:2505.15917'
       doi: 10.48550/arXiv.2505.15917
       accessed: '2026-08-08'
-      note: 'Google Quantum AI, Craig Gidney. Not yet peer-reviewed at time of verification.'
-    - url: https://research.google/pubs/how-to-factor-2048-bit-rsa-integers-with-less-than-a-million-noisy-qubits/
+      note: 'Preprint only as of verification date; Craig Gidney, Google Quantum AI'
+    - url: https://doi.org/10.22331/q-2021-04-15-433
       role: corroborating
-      title: How to factor 2048 bit RSA integers with less than a million noisy qubits
-      publisher: Google Research
-      date: '2025-05-21'
+      title: 'How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits'
+      publisher: Quantum
+      date: '2021-04-15'
+      identifier: 'Quantum 5, 433 (2021)'
+      doi: 10.22331/q-2021-04-15-433
       accessed: '2026-08-08'
+      note: 'Peer-reviewed 2021 baseline by Gidney and Ekerå; superseded quantitatively by 2025 preprint'
+    - url: https://arxiv.org/abs/2602.11457
+      role: corroborating
+      title: 'The Pinnacle Architecture: Reducing the cost of breaking RSA-2048 to 100 000 physical qubits using quantum LDPC codes'
+      publisher: arXiv
+      date: '2026-02-12'
+      identifier: 'arXiv:2602.11457'
+      doi: 10.48550/arXiv.2602.11457
+      accessed: '2026-08-08'
+      note: 'Preprint; Iceberg Quantum; extends Gidney 2025 with qLDPC codes'
 confidence: high
 status: published
-priority: P0
-qdayImpact: 2
-qdayReasoning: 'A 20× reduction in the physical qubit requirement for RSA-2048 factoring brings the engineering target meaningfully closer to what near-term fault-tolerant roadmaps project. This does not demonstrate a CRQC exists, but it lowers the bar significantly and compresses the remaining gap between demonstrated QEC hardware and the resource requirement. Combined with ongoing fabrication improvements, this accelerates credible Q-Day timelines.'
-horizon: 2
-novelty: 'major algorithmic reduction in CRQC resource estimate'
 origin: agent
 added: '2026-08-08'
 review:
@@ -62,4 +82,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-The dominant public estimate for how capable a quantum computer would need to be to break RSA-2048 encryption dropped by a factor of 20 in a single 2025 paper. Craig Gidney (Google Quantum AI) showed that, under the same physical assumptions as his 2019 paper, fewer than one million noisy qubits suffice — trading a longer runtime (under a week rather than 8 hours) for a dramatically smaller machine. The reduction comes from adopting approximate residue arithmetic (Chevignard et al. 2024) and more efficient qubit storage. This is still a preprint and the required machine does not exist, but the number matters: it tells policymakers and engineers what they are aiming to build against.
+Resource estimation is the discipline of calculating how many qubits and how much time a fault-tolerant quantum computer would actually need to break real-world encryption. The numbers have fallen sharply. In 2021, Gidney and Ekerå estimated RSA-2048 required 20 million noisy qubits running for 8 hours. By May 2025, Gidney revised this to under 1 million qubits in under a week, exploiting three algorithmic improvements. In February 2026, the Pinnacle Architecture from Iceberg Quantum pushed the estimate to under 100,000 qubits using quantum LDPC codes. None of these are hardware demonstrations — they are calculations of what would be needed.

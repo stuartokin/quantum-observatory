@@ -2,57 +2,59 @@
 schema: frontier/v1
 id: enable-fabrication
 title: Qubit fabrication yield
-summary: Industrial-scale manufacturing of superconducting qubits with high yield and reproducible coherence, using semiconductor foundry processes.
-plain: Making one qubit in a university lab is hard. Making ten thousand identical ones on a single wafer, reliably, is a different problem entirely. Fabrication yield is about closing that gap — applying chip-factory techniques to quantum devices so that most qubits on a wafer work, and work well enough to use in a real computer.
+summary: 'Industrial-scale fabrication of superconducting qubits with high yield and uniformity, demonstrating that quantum processors can be manufactured using standard semiconductor foundry processes.'
+plain: 'Making quantum computers at scale requires producing hundreds or thousands of identical, high-quality qubits on a single chip. Until recently, qubit fabrication relied on laboratory techniques poorly suited to mass production. Imec (2024) demonstrated superconducting transmon qubits made on 300 mm silicon wafers using standard CMOS foundry equipment — the same tools used for ordinary computer chips — achieving 98.25% yield and coherence times over 100 microseconds, performance comparable to research-grade devices.'
 pillar: quantum
-readiness: demonstrated
 constellation: enabling
+readiness: demonstrated
+cluster: hardware-stack
 actors:
-  - imec
-  - Delft University of Technology
-  - KU Leuven
+  - Imec
+  - 'KU Leuven'
 country:
   - BE
-  - NL
 horizon: 2
+novelty: 'first 300 mm CMOS foundry fabrication of high-coherence superconducting qubits'
 priority: P1
 qdayImpact: 1
-qdayReasoning: Yield and reproducibility at wafer scale are prerequisites for manufacturing the millions of physical qubits a CRQC requires. The imec 2024 result shows industrial methods can reach >100 µs coherence, but full integration into a working processor at this scale has not been demonstrated.
-evidence:
-  claim: Van Damme et al. (Nature 2024) fabricated superconducting transmon qubits in imec's 300 mm CMOS pilot line using industry-standard methods. Characterisation of 400 qubits and 12,840 Josephson junction test structures showed coherence times exceeding 100 µs and excellent qubit yield across the wafer.
-  level: E4
-  verified: '2026-08-08'
-  sources:
-    - url: https://www.nature.com/articles/s41586-024-07941-9
-      role: primary
-      title: Advanced CMOS manufacturing of superconducting qubits on 300 mm wafers
-      publisher: Nature
-      date: '2024-10-02'
-      identifier: 'Nature 634, 74–79 (2024)'
-      doi: 10.1038/s41586-024-07941-9
-      accessed: '2026-08-08'
-      note: Van Damme et al.; imec / KU Leuven / TU Delft. Open-access Creative Commons. First large-scale industrial CMOS fabrication of transmon qubits with T1/T2 > 100 µs.
+qdayReasoning: 'High-yield industrial fabrication is a necessary precondition for scaling quantum computers to millions of qubits. Without it, production bottlenecks constrain the path to a CRQC. This result demonstrates the feasibility of the manufacturing supply chain, but does not by itself advance Q-Day.'
 metrics:
-  - name: Wafer diameter
+  - name: 'Wafer diameter'
     value: '300'
-    unit: mm
-  - name: Qubits characterised
-    value: '400'
-  - name: Josephson junction test structures
-    value: '12840'
-  - name: Relaxation/coherence time
+    unit: 'mm'
+  - name: 'Qubit yield'
+    value: '98.25'
+    unit: '%'
+    note: '393 of 400 qubits functional across wafer'
+  - name: 'Median relaxation time'
+    value: '75'
+    unit: 'µs'
+    note: 'Time-averaged median across wafer'
+  - name: 'Coherence time'
     value: '>100'
-    unit: µs
+    unit: 'µs'
+    note: 'Relaxation and coherence times exceeding 100 µs'
 links:
   - to: arch-superconducting
     relation: enables
   - to: enable-cryogenics
     relation: depends-on
+evidence:
+  claim: 'Van Damme et al. (2024) at Imec demonstrated superconducting transmon qubits manufactured in a 300 mm CMOS pilot line using industrial methods (optical lithography and reactive-ion etching), achieving relaxation and coherence times exceeding 100 µs and a yield of 98.25% (393 of 400 qubits functional) across the wafer. Performance was comparable to laboratory-fabricated devices.'
+  level: E4
+  verified: '2026-08-08'
+  sources:
+    - url: https://www.nature.com/articles/s41586-024-07941-9
+      role: primary
+      title: 'Advanced CMOS manufacturing of superconducting qubits on 300 mm wafers'
+      publisher: Nature
+      date: '2024-09-18'
+      identifier: 'Nature 634, 74-79 (2024)'
+      doi: 10.1038/s41586-024-07941-9
+      accessed: '2026-08-08'
+      note: 'Van Damme et al.; Imec and KU Leuven, Belgium; open access via PMC'
 confidence: high
 status: published
-moved:
-  from: experimental
-  on: '2026-08-08'
 origin: agent
 added: '2026-08-08'
 review:
@@ -62,4 +64,4 @@ review:
   agentMergedOn: '2026-08-08'
 ---
 
-The imec result (Van Damme et al., Nature 2024) is the clearest demonstration that superconducting qubit fabrication can be transferred to a semiconductor foundry without sacrificing coherence. Characterising 400 qubits with coherence times above 100 µs on a single 300 mm wafer is a qualitative leap from academic cleanroom runs of a handful of devices. The readiness moves to **demonstrated**: industrial methods work at meaningful scale. What remains undemonstrated is full integration — routing, packaging, and control wiring — at this device count.
+Building quantum computers at the scale required for fault-tolerant computation will require manufacturing millions of qubits reliably and cheaply. Imec, Belgium's leading semiconductor research centre, demonstrated in 2024 that superconducting transmon qubits can be made on 300 mm silicon wafers in a standard CMOS foundry — the same industrial equipment used for modern microchips. The result: 98.25% of qubits worked correctly, with coherence times over 100 microseconds, matching what smaller research laboratories achieve with bespoke techniques. This is a significant step toward industrial quantum computing supply chains.
