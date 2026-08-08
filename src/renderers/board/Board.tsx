@@ -118,11 +118,14 @@ export function Board() {
     [galaxy],
   )
 
-  const actors = useMemo(() => {
+  /** Actors by how much of the board they account for, most prolific first. */
+  const actorCounts = useMemo(() => {
     const m = new Map<string, number>()
     for (const i of pool) for (const a of i.actors ?? []) m.set(a, (m.get(a) ?? 0) + 1)
-    return [...m.entries()].sort((a, b) => b[1] - a[1])
+    return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
   }, [pool])
+
+  const actors = useMemo(() => actorCounts.map(([name]) => name), [actorCounts])
 
   const visible = useMemo(
     () =>
@@ -529,7 +532,10 @@ export function Board() {
           selected={actorsOn ?? actors}
           onChange={(next) => setActorsOn(next.length === actors.length ? null : next)}
           mark={(a) => <GlyphMark glyph={glyphFor(a)} colour={colour} />}
-          render={(a) => a}
+          render={(a) => {
+            const n = actorCounts.find(([name]) => name === a)?.[1] ?? 0
+            return n > 1 ? `${a} · ${n}` : a
+          }}
           note="Shape is the organisation; colour is the constellation. Every body on the board is a development, never an organisation."
         />
 
