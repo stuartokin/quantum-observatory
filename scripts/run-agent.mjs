@@ -168,22 +168,53 @@ if (data.stop_reason === 'max_tokens') {
 }
 
 /**
- * With web search on, the response is a running commentary interleaved with
- * tool calls, and the JSON arrives at the end. Joining every text block glues
- * the narration onto the answer and nothing parses — so take the last complete
- * JSON object in the response instead.
+ * Finding the answer in the response.
+ *
+ * With web search on, the reply is running commentary interleaved with tool
+ * calls, and the JSON object can be split across several text blocks. Trying
+ * each block in isolation fails, because no single block holds the whole
+ * object. So: scan for balanced braces across the joined text, respecting
+ * strings and escapes, and take the last object that actually looks like our
+ * output contract.
  */
+function balancedObjects(text) {
+  const out = []
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] !== '{') continue
+    let depth = 0
+    let inStr = false
+    let esc = false
+    for (let j = i; j < text.length; j++) {
+      const c = text[j]
+      if (esc) { esc = false; continue }
+      if (c === '\\') { esc = true; continue }
+      if (c === '"') { inStr = !inStr; continue }
+      if (inStr) continue
+      if (c === '{') depth++
+      else if (c === '}') {
+        depth--
+        if (depth === 0) { out.push(text.slice(i, j + 1)); i = j; break }
+      }
+    }
+  }
+  return out
+}
+
 function extractJson(chunks) {
-  for (const chunk of [...chunks].reverse()) {
-    const cleaned = chunk.replace(/```(?:json)?/g, '').trim()
-    const start = cleaned.indexOf('{')
-    const end = cleaned.lastIndexOf('}')
-    if (start === -1 || end <= start) continue
-    const candidate = cleaned.slice(start, end + 1)
-    try {
-      return JSON.parse(candidate)
-    } catch {
-      /* try the next block */
+  // Last block first — usually the answer. Then the whole thing joined, which
+  // is what catches an object split across blocks.
+  const candidates = [...[...chunks].reverse(), chunks.join('\n')]
+  for (const chunk of candidates) {
+    const cleaned = chunk.replace(/```(?:json)?/g, '')
+    for (const obj of balancedObjects(cleaned).reverse()) {
+      try {
+        const parsed = JSON.parse(obj)
+        // Must match the output contract, so prose containing braces and any
+        // stray object the model wrote along the way are both ignored.
+        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.files)) return parsed
+      } catch {
+        /* not this one */
+      }
     }
   }
   return null
