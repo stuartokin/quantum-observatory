@@ -843,9 +843,19 @@ function Sky({
     return t
   }, [nodes, mode, focusCon])
 
+  /**
+   * Only accept a genuinely different box.
+   *
+   * A fresh object every observation re-renders on sub-pixel jitter, and a
+   * component that re-renders whenever it is observed is one small mistake away
+   * from an update loop.
+   */
+  const applySize = (w: number, h: number) =>
+    setSize((s) => (Math.abs(s.w - w) < 0.5 && Math.abs(s.h - h) < 0.5 ? s : { w, h }))
+
   useEffect(() => {
     if (!wrap.current) return
-    const ro = new ResizeObserver(([e]) => setSize({ w: e.contentRect.width, h: e.contentRect.height }))
+    const ro = new ResizeObserver(([e]) => applySize(e.contentRect.width, e.contentRect.height))
     ro.observe(wrap.current)
     return () => ro.disconnect()
   }, [])
@@ -855,7 +865,7 @@ function Sky({
     const el = wrap.current
     if (!el) return
     const r = el.getBoundingClientRect()
-    setSize({ w: r.width, h: r.height })
+    applySize(r.width, r.height)
   }, [resizeTick])
 
   useEffect(() => {

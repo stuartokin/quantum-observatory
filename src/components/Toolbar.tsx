@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * The single toolbar — a small window rather than a bar.
@@ -27,7 +27,6 @@ const FALLBACK_ICON = (label: string) =>
   label.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase()
 
 const MIN_W = 132
-const MAX_ROWS = 2
 
 export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent: string }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -37,44 +36,28 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
   const [width, setWidth] = useState<number | null>(null)
   const [collapsed, setCollapsed] = useState(false)
-  const [compact, setCompact] = useState(false)
+  const [viewport, setViewport] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200,
+  )
+
+  useEffect(() => {
+    const onResize = () => setViewport(window.innerWidth)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   /**
-   * Words if they fit in the width you chose, icons if they do not.
+   * Words or icons, decided from the width you set — nothing measured.
    *
-   * Counted from the buttons themselves — how many distinct vertical positions
-   * they occupy — rather than inferred from the container height. Dividing
-   * height by an assumed row height was wrong twice: padding and gaps made the
-   * estimate drift, so a genuinely overflowing bar reported two rows and never
-   * switched.
+   * The previous version measured the rendered rows and set state from a
+   * layout effect, which could oscillate: too many rows, switch to icons,
+   * buttons shrink, now one row with room, switch back to words, too many rows
+   * again. That is React error #185, and no amount of hysteresis truly closes
+   * it, because the thing being measured is changed by the measurement.
+   *
+   * A threshold on the width the reader chose cannot feed back into itself.
    */
-  useLayoutEffect(() => {
-    const el = ref.current
-    if (!el || collapsed) return
-
-    const measure = () => {
-      const btns = Array.from(el.querySelectorAll('button'))
-      if (btns.length === 0) return
-      const rows = new Set(btns.map((b) => (b as HTMLElement).offsetTop)).size
-
-      // A hard floor as well as the row test. Below this width words cannot
-      // fit whatever the wrapping does, and relying on the row count alone
-      // meant a narrow bar could sit at two rows of truncated labels forever.
-      const w = width ?? el.offsetWidth
-      if (!compact && (rows > MAX_ROWS || w < 460)) setCompact(true)
-      // Returning to words needs clear room, so it cannot flicker at a
-      // borderline width: only when everything already fits on one line.
-      else if (compact && rows === 1 && w > 620) {
-        const natural = btns.reduce((t, b) => t + (b as HTMLElement).offsetWidth, 0)
-        if (natural * 1.9 < w) setCompact(false)
-      }
-    }
-
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [width, compact, collapsed, buttons.length])
+  const compact = (width ?? Infinity) < 520 || viewport < 760
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
