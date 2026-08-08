@@ -1,0 +1,132 @@
+name: Agents
+
+on:
+  schedule:
+    # Weekly, Monday 06:00 UTC. Individual agents decide whether they are due.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Agent to run (blank = all due)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      agents: ${{ steps.list.outputs.agents }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        name: Find agents that are due
+        run: |
+          if [ -n "${{ inputs.agent }}" ]; then
+            echo "agents=[\"${{ inputs.agent }}\"]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          DUE=$(node -e '
+            const fs=require("fs");
+            const week=Math.floor(Date.now()/6048e5);
+            const out=fs.readdirSync("agents").filter(d=>fs.existsSync(`agents/${d}/agent.json`))
+              .filter(d=>{
+                const c=JSON.parse(fs.readFileSync(`agents/${d}/agent.json`,"utf8"));
+                if(!c.enabled) return false;
+                const every=c.everyWeeks??1;
+                // 0 means never scheduled — a campaign agent, run by hand.
+                if(every===0) return false;
+                return week % every === 0;
+              });
+            console.log(JSON.stringify(out));
+          ')
+          echo "agents=$DUE" >> $GITHUB_OUTPUT
+
+  run:
+    needs: discover
+    if: needs.discover.outputs.agents != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      # One PR per agent. A single PR mixing agents is unreviewable.
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        agent: ${{ fromJson(needs.discover.outputs.agents) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+
+      - name: Run ${{ matrix.agent }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/run-agent.mjs ${{ matrix.agent }}
+
+      - name: Validate what it produced
+        run: npm run validate
+
+      - name: Provenance and escalation check
+        env:
+          BASE_REF: origin/main
+        run: |
+          git fetch origin main --depth=1
+          node scripts/check-provenance.mjs --agent ${{ matrix.agent }}
+
+      - name: Write scope check
+        run: |
+          FILES=$(git diff --name-only origin/main...HEAD 2>/dev/null || git ls-files -mo --exclude-standard)
+          node scripts/check-scope.mjs ${{ matrix.agent }} $FILES
+
+      # Publish first, veto after. Every merged item is labelled agent-merged
+      # and says so on the board until a human confirms it.
+      - name: Merge and publish
+        if: success()
+        run: |
+          COUNT=$(cat .agent-run/count.txt 2>/dev/null || echo 0)
+          if [ "$COUNT" -eq 0 ]; then
+            echo "Nothing proposed. Nothing to merge."
+            exit 0
+          fi
+          git config user.name "horizonq-agent"
+          git config user.email "agent@users.noreply.github.com"
+          # Proposals move from the inbox onto the board.
+          for f in content/frontier/_inbox/*.md; do
+            [ "$(basename $f)" = "README.md" ] && continue
+            mv "$f" content/frontier/
+          done
+          npm run validate
+          node scripts/check-provenance.mjs
+          BRANCH="agent/${{ matrix.agent }}/$(date +%Y-%m-%d-%H%M)"
+          git checkout -b "$BRANCH"
+          git add content/frontier
+          git commit -m "${{ matrix.agent }}: $COUNT item(s), agent-merged"
+          git push origin "$BRANCH"
+          PR=$(gh pr create --title "${{ matrix.agent }}: $COUNT item(s)" \
+                            --body-file .agent-run/pr-body.md \
+                            --base main --head "$BRANCH")
+          # Squash so a single revert undoes the whole run.
+          gh pr merge "$PR" --squash --admin
+          echo "MERGED_PR=$PR" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log it for veto
+        if: success() && env.MERGED_PR != ''
+        run: |
+          TITLE="Review queue — week of $(date +%Y-%m-%d)"
+          EXISTING=$(gh issue list --search "$TITLE in:title" --state open --json number --jq '.[0].number')
+          BODY=$(printf '### %s — %s item(s)\n\nMerged and live, **not yet reviewed**.\n\n%s\n\n- Confirm: tick here and set `review.state: reviewed`\n- Veto: use the Revert button on %s\n' \
+                 "${{ matrix.agent }}" "$(cat .agent-run/count.txt)" "$MERGED_PR" "$MERGED_PR")
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" --label "review-queue" || \
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
