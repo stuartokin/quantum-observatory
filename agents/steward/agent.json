@@ -1,0 +1,9 @@
+{
+  "name": "steward",
+  "description": "Runs when an issue moves. Resolves what the precedents already cover, records what it decided, and leaves only what needs a person.",
+  "model": "claude-sonnet-4-6",
+  "trigger": "issues",
+  "maxTokens": 32000,
+  "enabled": false,
+  "budget": { "issues": 3, "proposals": 8, "decisions": 5, "searches": 20 }
+}
