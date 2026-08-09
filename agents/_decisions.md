@@ -114,3 +114,9 @@ instance is evidenced, that is `emerging` — not `demonstrated`.
 *Decided 9 Aug 2026, after sense-grid-timing framed GPS-spoofing risk as a
 timing capability, and harvest-now-decrypt-later used `demonstrated` to mean the
 threat model is acknowledged.*
+
+**An item's title must not imply a demonstration that does not exist.** Where
+only resource estimates exist, name the gap rather than the achievement —
+"Hardware gap to X" rather than "X at scale". Four separate runs independently
+flagged `algo-shor` for this before it was changed.
+*Decided 9 Aug 2026.*
