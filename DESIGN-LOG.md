@@ -1,213 +1,154 @@
-# Horizon Q — design log
+# Design log
 
-Running record of requirements, decisions and open questions. Updated as we go.
-Feeds the image-generation prompts, then the architecture, then the data model.
+Decisions and why they were made. Written for whoever opens this next — which
+may be a person, may be an agent, and will not have been in the room.
+
+`AGENT-PLAN.md` covers the agent architecture. `agents/_decisions.md` covers
+editorial precedent. This covers the interface and the reasoning behind it,
+including the parts that went wrong.
 
 ---
 
-## 1. What this is
+## The core commitments
 
-**Not** a portfolio of Stuart's work. An **observatory of the frontier** — a live,
-sourced map of how close developments in each field are to being real. Stuart's
-writing annotates the board; it is not the subject of it.
+**Content never stores coordinates.** Items carry readiness, constellation and
+evidence; where a body appears is derived. A renderer is a mapping over content,
+not a layout somebody saved.
 
-Decided 3 Aug 2026, after the portfolio version was built and judged to have no
-wow factor. The name promises the frontier, not a CV.
+**Every number on screen is a real count.** No sample data, no illustrative
+figures, no "typically around". If a number cannot be counted it does not
+appear.
 
-## 2. Brand
+**Nothing claims more than its evidence.** An unsourced topic is drawn hollow
+and says so. A machine-checked entry says a machine checked it. The board is
+allowed to be thin; it is not allowed to be misleading.
 
-| | |
-| --- | --- |
-| Company | HorizonQ Limited |
-| Domain | horizonqltd.com |
-| Tagline | Enabling future technology for positive change |
-| Logo | Square mark, deep navy `#001656` |
-| Byline | Stuart Okin, personal capacity, disclaimer on all published content |
+---
 
-## 3. The board — core concept
+## Colour
 
-Vertical axis is **readiness**, not time. Decided after comparing both as
-generated images; maturity answers "how real is this", which is the question the
-audience actually has.
+**Hue carries the constellation and nothing else.** Nine hues across a narrow
+arc, 205° to 335°, blue-violet through magenta, with lightness alternating
+74/63% so neighbouring lanes differ in two dimensions rather than one.
 
-**AXIS INVERTED, 3 Aug 2026.** New ideas arrive at the TOP and drift DOWN as
-they mature toward mainstream. Gravity does the explaining — things fall toward
-reality. New arrivals land where the eye already starts, which removes the need
-for arrows and badges to direct attention.
+Nine unrelated colours would turn a sky into a pie chart. The arc is wide enough
+that adjacent constellations are plainly different and narrow enough that the
+board still reads as one galaxy.
 
-```
-EMERGING          ← new arrivals flash in here, bright, labelled
-                     wide and busy: speculation is cheap
-EXPERIMENTAL
-DEMONSTRATED
-ADOPTED
-MAINSTREAM        ← few, large, settled
-```
+**Importance is carried by size and brightness, never hue.** Saturation is held
+constant so no category shouts louder than another.
 
-Shape is a **funnel**, not a mountain: broad at the top, narrowing downward.
-Most of the frontier never reaches the bottom.
+**Actor is carried by glyph shape.** It used to shift the hue by up to ±34°,
+which was catastrophic: adjacent constellations sit 16° apart, so the actor tint
+completely scrambled the category signal it was competing with. Removed, along
+with `shiftHue` and `actorHash`. Shape was always the better channel.
 
-**Per-pillar axis.** The scale is not universal — "demonstrated" means something
-different in quantum than in cyber. When a column is focused, its axis relabels
-to that field's own maturity language. Resolves open question 2.
+---
 
-**Focus mode.** Three columns on arrival, but any one can be focused to fill the
-frame. Multi-column is the overview; single-column is the working view.
+## Things that were tried and removed
 
-Columns are pillars. **Launch with three**: cyber (violet), quantum (teal),
-AI (amber). Materials and energy shown but marked NOT YET COVERED — no data, no
-methodology, and an unsourced readiness claim about energy technology is a
-professional risk given Stuart's role.
+**Scrollbars on the canvas.** Built for both views and both axes, then deleted.
+Panning by drag already worked; the bars added a second mechanism for the same
+job and a class of hit-testing bugs for no gain. Zooming out now stops at a
+fit-to-frame floor, so there is nothing off-screen to indicate.
 
-### Density rule (critical)
+**Automatic toolbar compaction.** Two attempts, both wrong in different ways —
+one compared widths, which a wrapping toolbar defeats; the other measured its
+own rendered height and oscillated between states, producing React error #185.
 
-The interface is **not** uniformly dense. That was the flaw that killed the
-first video concept: 1,842 individually tappable dots is not an interface — on a
-phone each target would be a few pixels with no hint of what it is.
+The rule learned: **when a measurement drives the thing it measures, the answer
+is not a better threshold.** Compaction is now a threshold on the width the
+reader sets with a corner grip. A value the reader controls cannot feed back
+into itself.
 
-- **Top zone** — sparse, every item permanently labelled, large targets
-- **Middle** — named clusters with counts, e.g. `QUBIT SCALING — 41`
-- **Floor** — dim texture, aggregate only, never individually tappable
+**Canvas-drawn UI controls.** The timeline key toggle was drawn on the canvas
+and twice could not be found on screen despite apparently correct coordinates.
+Replaced with a DOM button. A control that cannot be inspected cannot be
+debugged.
 
-Semantic zoom resolves clusters into labelled items. Zoom is **resolution**,
-not magnification.
+---
 
-### Attention mechanic
+## Things that were hard to see and worth knowing
 
-Two motions, both downward-settling:
+**Header layout is inline, not CSS.** The statistics vanished for three
+versions. Every diagnosis was wrong until the tell was noticed: the Q-Day bar
+had vanished too, so it was never a styling problem with the figures. A flex
+item defaults to `min-width: auto`, so a long title refused to shrink and pushed
+the entire right-hand side off the edge of the header.
 
-- **New ideas flash in at the top**, brightness weighted by importance as judged
-  by the agents. This is how agent discovery becomes visible rather than
-  announced.
-- **Clusters drift down** as evidence accumulates. Movement is the signal; the
-  board tells you where to look rather than daring you to guess.
+The constraints now sit in inline styles, which beat every stylesheet rule
+regardless of import order. Note also that `@import` is evaluated **before** the
+rest of the importing file, so a rule in `workspace.css` loses to a bare rule in
+`global.css` — the opposite of the obvious assumption.
 
-Expand a drifting cluster, pick a star, read further.
+**Rotation lives in a ref.** Calling `setCam()` inside the draw loop triggered a
+state update sixty times a second, each cancelling and restarting the animation
+frame. Drift accumulates in `spin.current` and is added at projection time; it
+folds into real camera state only when the reader takes hold.
 
-### Confidence decay
+**Use `performance.now()` consistently.** Idle detection stored `Date.now()` and
+compared it against a `performance.now()` timestamp, producing a difference of
+about minus 1.7 trillion — so the easing term was permanently zero and nothing
+ever turned.
 
-Ratings age. Not re-verified in 6 months → visibly fades. 12 months → drops to
-low confidence, flags for review. Makes the board honest, gives agents real
-work, and means it visibly breathes without faked telemetry.
+**Labels are rationed by area, not by merit.** Threshold-based rationing failed
+twice: most sourced items score above 0.7 on any blended importance measure, so
+"only the important ones" meant nearly all of them. Both views now compute a
+budget from their own dimensions and award labels most-important-first.
 
-**No fake telemetry.** No "power level 89.3%". Every number is a real count.
+The timeline budget was briefly `(W × H) / 5000`, which on a normal frame is
+over two hundred — a limit larger than the number of marks, and therefore no
+limit at all. **Sanity-check a formula against a real frame size before
+shipping it.**
 
-## 4. Evidence standard
+---
 
-Every marker carries these or it does not exist:
+## Content in the bundle
 
-```yaml
-readiness: lab-result
-evidence:
-  source: https://…        # primary, free to access
-  claim: what the source actually says
-  verified: '2026-08-02'
-confidence: medium         # high | medium | low
-```
+Content is bundled into JavaScript at build time, so the entry chunk grows with
+every item an agent adds. Application code and content are measured separately,
+or the app appears to bloat whenever an agent does its job.
 
-Extends the Patch Pulse confidence-badge discipline to the whole board. When a
-rating is disputed, point at the source rather than defend a judgement.
+**At roughly 200 items the answer is to fetch content as JSON at runtime, not to
+raise the ceiling.** The budget gate says so when it fails.
 
-## 5. Two content collections
+Separately, about 30 KB gzipped of the app bundle is js-yaml, pulled in by
+`front-matter` to parse content in the browser — every visitor downloads a YAML
+parser to read files fixed at build time. Moving that into a Vite plugin would
+cut roughly a third of the bundle. That is the next size win, not another
+increase.
 
-- `content/frontier/` — the world. Readiness items.
-- `content/items/` — Stuart's articles, talks, observatories.
+---
 
-An article links to the frontier items it discusses. A frontier item shows
-"Stuart wrote about this". Conflating them would force a rebuild later.
+## Working practice, learned the hard way
 
-## 6. UI requirements
+**Editing code by text substitution introduces errors that are invisible until
+compiled.** This session produced two duplicated JSX attributes, two
+use-before-declaration errors, and a regex mangled into `/^---\\r?\\n/` — which
+matches a literal backslash and therefore nothing, and rejected every file an
+agent produced for a full version.
 
-### Windowing
-- Frames are **resizeable and moveable**
-- Keyboard shortcuts dock/hide frames left and right
-- Saveable window arrangements ("workspaces")
+Countermeasures now in place: `scripts/test-agent-io.mjs` runs 28 checks in CI
+before any agent does, and duplicate-attribute and brace-depth scans run before
+packaging. Anything patched should be *run*, not inspected — shell quoting
+returned contradictory answers about that regex twice.
 
-### Toolbar
-- Moveable and collapsible
-- Functions (predicted, to confirm): filter by pillar, confidence threshold,
-  time scrub, search, sources on/off, agent activity, read view, options,
-  save/load workspace
+**Repair of a structured format is useful and not free.** The YAML repair layer
+has fixed three real problems — unquoted colons, backslash-escaped apostrophes,
+unclosed front matter — and caused one, by quoting a valid block scalar `>-`
+into a two-character string. Every case belongs in the self-test.
 
-### Auth
-- Login screen present but **greyed out / disabled** at launch
-- Later enables admin, and additional services (commercial tier)
+---
 
-### Form factors
-- Laptop: desk instrument. Persistent sidebar, horizontal toolbar, windowing.
-- Mobile: card overlays rather than windows. Thumb-reachable controls.
-- Fold: must work folded, unfolded, mid-fold.
-- Document view permanently available — screen readers, slow connections,
-  vestibular sensitivity. Off-limits to redesign agents.
+## Open, and deliberately so
 
-## 7. Agents
-
-| Agent | Cadence | Job |
-| --- | --- | --- |
-| Scout | weekly | Propose new frontier items with sources, into an inbox |
-| Verifier | monthly | Re-check evidence URLs, update verified date, decay confidence |
-| Challenger | quarterly | Argue the opposite rating on a sample, flag disagreements |
-
-The Challenger is non-negotiable. An agent that only agrees will drift into
-confident nonsense.
-
-**Autonomy model:** ships freely with a canary window (12h preview, auto-promote
-unless vetoed), but anything touching Ofgem, named organisations, live
-consultations or regulatory positions escalates for a decision. One-tap
-rollback. No auto-merge.
-
-## 8. Design language
-
-Palette derived from emission spectra, not picked. Five pillars are real
-spectral lines, always in wavelength order:
-
-| Pillar | Line | nm | Colour |
-| --- | --- | --- | --- |
-| Cyber | Hg | 435.8 | `#A97BFF` |
-| Materials | H-beta | 486.1 | `#5B8CFF` |
-| Quantum | O III | 500.7 | `#3DE0C0` |
-| AI | Na D | 589.0 | `#FFB020` |
-| Energy | H-alpha | 656.3 | `#FF5A47` |
-
-Ground `#070B14` — an observing site at night, not a void.
-Type: Archivo (display), Newsreader (body), IBM Plex Mono (data/labels).
-
-**Signature element:** the spectral index — those lines on a continuum, acting
-as filter in the document view and legend on the board.
-
-## 9. Architecture that survives
-
-Everything structural from Phase 0 carries over:
-
-- Content never stores coordinates — abstract spatial properties only
-- Worlds are mappings; the readiness board becomes the primary world
-- Orbital and Landscape stay as alternate mappings over the **article**
-  collection, which is what they always suited
-- Three CI gates: schema, performance budget, agent write scope
-- Document renderer protected from agents
-
-## 10. Open questions
-
-1. Can a defensible readiness census be populated for quantum/PQC from Q-Day?
-   Target: 40–60 items, fully sourced.
-3. Does the laptop layout feel like an instrument, or a stretched phone?
-4. Commercial tier — deferred, but access and licence fields tagged from day one.
-5. Ofgem outside-interest position, before any paid tier is built.
-
-## 10a. Storyboard beats (laptop)
-
-Six panels, agreed as the narrative for UI generation:
-
-1. Arrival — default workspace, rising clusters draw the eye
-2. Cluster expanded — semantic zoom resolves a count into labelled items
-3. Item detail — evidence, source, confidence, last verified
-4. Windows rearranged — drag, resize, dock to edge as collapsed tab
-5. Toolbar moved and options open — save/load workspace
-6. Agent activity — new items arriving, confidence decay visible
-
-## 11. Status
-
-- Phase 0 shipped: v0.2.1 live at stuartokin.github.io
-- Read view: good, keep
-- Orbital / Landscape: architecturally sound, conceptually parked
-- Next: draw the UI together → then architecture → then data gathering
+- **Non-English coverage is poor.** Chinese and Japanese programmes are on the
+  source register and rarely reached. Stated on the site rather than implied
+  away.
+- **Patents are not searched.** No tooling.
+- **The intersection view is unbuilt.** Cross-galaxy links are tagged but not
+  displayed, and should not be designed until a second galaxy has real content —
+  the interesting version is one body appearing in two galaxies at once, and
+  that is not answerable with data on one side.
+- **`horizonqltd.com` is not yet pointing here.** Everything runs on
+  `stuartokin.github.io`.
