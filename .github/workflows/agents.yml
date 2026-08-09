@@ -10,6 +10,10 @@ on:
         description: 'Agent to run (blank = all due)'
         required: false
         type: string
+      focus:
+        description: 'Optional: item ids or a instruction for this run only'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -76,6 +80,7 @@ jobs:
       - name: Run ${{ matrix.agent }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_FOCUS: ${{ inputs.focus }}
         run: node scripts/run-agent.mjs ${{ matrix.agent }}
 
       # The runner validates each file against the schema before writing, so
