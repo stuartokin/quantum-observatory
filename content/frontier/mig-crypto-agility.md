@@ -17,7 +17,7 @@ novelty: 'Formal NIST guidance establishing crypto-agility as PQC migration prer
 evidence:
   claim: 'NIST NCCoE SP 1800-38A (April 2023, updated February 2025) frames crypto-agility as a foundational requirement for PQC migration, alongside cryptographic discovery and interoperability testing. NIST Internal Report 8547 (Initial Public Draft, November 2024) establishes that RSA and elliptic-curve cryptography are deprecated for new systems after 2030 and disallowed entirely after 2035, creating hard deadlines that force crypto-agile design on systems built today. Readiness is experimental: the concept is defined and mandated by NIST, but deployment of fully agile systems at enterprise scale is not yet standard practice.'
   verified: '2026-08-08'
-  level: E4
+  level: E3
   sources:
     - url: 'https://www.nccoe.nist.gov/sites/default/files/2023-04/pqc-migration-nist-sp-1800-38a-preliminary-draft.pdf'
       role: standard
@@ -26,7 +26,7 @@ evidence:
       date: '2023-04-24'
       identifier: 'NIST SP 1800-38A (Preliminary Draft)'
       accessed: '2026-08-08'
-      note: 'Establishes crypto-agility as a core workstream for PQC migration alongside cryptographic discovery and interoperability testing.'
+      note: 'Establishes crypto-agility as a core workstream for PQC migration alongside cryptographic discovery and interoperability testing. Preliminary draft — not a finalised formal standard; E3 ceiling applies.'
     - url: 'https://csrc.nist.gov/pubs/ir/8547/ipd'
       role: standard
       title: 'NIST IR 8547: Transition to Post-Quantum Cryptography Standards'
@@ -34,7 +34,7 @@ evidence:
       date: '2024-11-19'
       identifier: 'NIST IR 8547 (Initial Public Draft)'
       accessed: '2026-08-08'
-      note: 'Sets deprecation of RSA/ECC for new systems after 2030 and disallowance after 2035; makes crypto-agility an urgent design requirement.'
+      note: 'Sets deprecation of RSA/ECC for new systems after 2030 and disallowance after 2035; makes crypto-agility an urgent design requirement. Initial public draft — not a finalised formal standard; E3 ceiling applies.'
 confidence: high
 status: published
 links:
@@ -46,11 +46,12 @@ links:
     relation: enables
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-09'
+  note: 'E4 → E3: both sources are NIST draft documents (preliminary draft practice guide and initial public draft internal report), not finalised formal standards. Schema caps non-finalised guidance at E3. Amending an agent-merged item.'
 ---
 
 Crypto-agility is not a feature — it is an architectural property that must be designed in from the start. NIST IR 8547 has set hard dates: deprecated 2030, disallowed 2035. Systems without agility face a forced rebuild.
