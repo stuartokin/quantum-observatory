@@ -144,7 +144,7 @@
       "properties": {
         "claim": {
           "type": "string",
-          "maxLength": 800
+          "maxLength": 1200
         },
         "verified": {
           "type": "string",
@@ -346,7 +346,7 @@
         },
         "note": {
           "type": "string",
-          "maxLength": 300
+          "maxLength": 600
         },
         "reviewedOn": {
           "type": "string",

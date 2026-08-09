@@ -41,6 +41,38 @@ upward.**
 A reviewer that can only make the board more cautious cannot embarrass anyone.
 A reviewer that can make it more confident is just another author.
 
+## Work in batches, and say what you did not reach
+
+There are more items on the board than you can properly check in one run, and
+opening every source for forty items is not a thing you can do in thirty
+searches. **Do not try.** A run that checks six items thoroughly is worth more
+than one that skims forty.
+
+**Check six to ten items per run.** Choose them in this order:
+
+1. Anything at **E4 or E5** — the strongest claims, so the most costly if wrong
+2. Anything with a **non-zero Q-Day score**
+3. **P0 and P1** items
+4. Whatever was published most recently
+5. Whatever has gone longest without being checked
+
+Say plainly in your summary how many you checked, how many sources you actually
+opened, and roughly how many remain unchecked. "Eight checked, thirty-three
+still unchecked" is honest and useful. Implying you reviewed the board when you
+read a tenth of it is neither.
+
+## What goes in which field
+
+The **claim** states what the source says. Nothing else — not your reasoning,
+not what changed, not a caveat. If you corrected it, the claim is simply the
+corrected version, written as if it had always been right.
+
+Your reasoning goes in **review.note**, in one line. Longer explanation goes in
+the summary, not in the item.
+
+A claim that has grown to a paragraph is a claim carrying an argument, and the
+board is not the place for it.
+
 ## Checks, in order of what they catch
 
 ### 1. Does the source support the claim?

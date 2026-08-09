@@ -8,10 +8,10 @@
     "content/frontier/_inbox/**"
   ],
   "output": "pull_request",
-  "enabled": true,
+  "enabled": false,
   "budget": {
     "searches": 30,
-    "proposals": 8
+    "proposals": 6
   },
   "existingIdsOnly": true
 }
