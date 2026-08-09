@@ -183,12 +183,19 @@ export function Board() {
    * so the board has to be honest about how much of it nobody has read.
    */
   const debt = useMemo(() => {
-    // Both machine states count as unread by a person, which is what the
-    // figure is telling you. Agent-checked is better than agent-merged, but it
-    // is not review.
-    const unreviewed = pool.filter(
-      (i) => i.review?.state === 'agent-merged' || i.review?.state === 'agent-reviewed',
-    ).length
+    /**
+     * Two different questions, and showing only one of them was misleading.
+     *
+     * `unreviewed` is how much no person has read. A reviewer agent can never
+     * reduce it, because a machine checking a machine is not review — which
+     * made the figure look stuck while the reviewer was working steadily.
+     *
+     * `checked` is how much a machine has at least been through. That is the
+     * number that moves when the reviewer runs, and it belongs on screen.
+     */
+    const unchecked = pool.filter((i) => i.review?.state === 'agent-merged').length
+    const checked = pool.filter((i) => i.review?.state === 'agent-reviewed').length
+    const unreviewed = unchecked + checked
     const dates = pool
       .map((i) => (i.review?.state === 'reviewed' ? i.review.on : undefined))
       .filter((d): d is string => Boolean(d))
@@ -197,7 +204,7 @@ export function Board() {
     const weeks = last
       ? Math.floor((Date.now() - new Date(last).getTime()) / 6.048e8)
       : undefined
-    return { unreviewed, last, weeks }
+    return { unreviewed, unchecked, checked, last, weeks }
   }, [pool])
 
   useEffect(() => {
@@ -420,7 +427,13 @@ export function Board() {
               <span><b>{visible.filter(isSourced).length}</b> sourced</span>
               {moved > 0 && <span className="board-stats__move"><b>{moved}</b> moved</span>}
               {debt.unreviewed > 0 && (
-                <span className="board-stats__unreviewed"><b>{debt.unreviewed}</b> unreviewed</span>
+                <span
+                  className="board-stats__unreviewed"
+                  title="Nobody has read these. The figure in brackets has at least been checked by the reviewer agent against its own sources."
+                >
+                  <b>{debt.unreviewed}</b> unreviewed
+                  {debt.checked > 0 && <> ({debt.checked} checked)</>}
+                </span>
               )}
               {debt.weeks !== undefined && (
                 <span className={debt.weeks >= 8 ? 'board-stats__stale' : undefined}>
@@ -1826,6 +1839,8 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
     }
     return {
       total: pool.length,
+      unchecked: pool.filter((i) => i.review?.state === 'agent-merged').length,
+      checked: pool.filter((i) => i.review?.state === 'agent-reviewed').length,
       sourced: pool.filter(
         (i) => i.status === 'published' && !i.evidence.claim.startsWith('NEEDS PRIMARY SOURCE'),
       ).length,
@@ -1918,7 +1933,10 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
         </p>
         <p>
           <strong>Agent-checked</strong> means a second agent opened the sources
-          and tested the claim against them. That agent can only ever make an
+          and tested the claim against them. It still counts toward the
+          unreviewed figure — the number in brackets beside it is how many have
+          at least been through that check, and that is the figure a reviewer
+          run moves. That agent can only ever make an
           entry more cautious, never more confident — anything that would raise a
           level goes to a person instead. It is still not a person having read it.
         </p>
@@ -1927,6 +1945,8 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
         <dl className="metrics">
           <div><dt>Items</dt><dd>{stats.total}</dd></div>
           <div><dt>Sourced</dt><dd>{stats.sourced}</dd></div>
+          <div><dt>Unchecked</dt><dd>{stats.unchecked}</dd></div>
+          <div><dt>Agent-checked</dt><dd>{stats.checked}</dd></div>
           <div><dt>Constellations</dt><dd>{stats.constellations}</dd></div>
           {stats.level.map(([k, v]) => (
             <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
