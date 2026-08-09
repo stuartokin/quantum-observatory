@@ -423,3 +423,20 @@ the scarcest thing in this system.
 
 If a precedent looks wrong, say so in your summary. They are meant to be
 arguable, not immovable.
+
+## Directing a run from an issue
+
+A line anywhere in an open issue or its comments addresses your next run:
+
+```
+/focus <your name>: what you should look at
+```
+
+It runs to the next blank line, so an instruction can be several sentences.
+
+**Do it first, and report what you found even if the answer is that nothing
+needed changing.** Say so in your summary under a `Focus` heading; a person
+wrote that line where they noticed the problem, and should be able to see it
+was picked up.
+
+If the focus and your usual priorities conflict, the focus wins for that run.

@@ -15,7 +15,60 @@
  */
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
+import { execSync } from 'node:child_process'
 import { extractJson, normaliseFile, checkFile } from './agent-io.mjs'
+
+/**
+ * Focus picked up from the issues themselves.
+ *
+ * A line anywhere in an open issue or its comments:
+ *
+ *     /focus sourcer: check whether Luo arXiv:2607.13816 misquotes Chevignard
+ *
+ * addresses the next run of that agent. It means the instruction can be written
+ * where the finding is, at the moment it is noticed, rather than remembered
+ * until somebody is next in the Actions tab — which is where instructions go to
+ * be forgotten.
+ *
+ * The workflow's own focus field still wins if it is filled in.
+ */
+function focusFromIssues(agent) {
+  try {
+    const raw = execSync('gh issue list --state open --limit 20 --json number,title,body,comments', {
+      encoding: 'utf8',
+      maxBuffer: 10 * 1024 * 1024,
+      stdio: ['pipe', 'pipe', 'ignore'],
+    })
+    const issues = JSON.parse(raw)
+    const found = []
+    const opener = new RegExp(`^\\s*/focus\\s+${agent}\\s*:\\s*(.*)$`, 'i')
+
+    for (const i of issues) {
+      const bodies = [i.body ?? '', ...(i.comments ?? []).map((c) => c.body ?? '')]
+      for (const b of bodies) {
+        const lines = b.split('\n')
+        for (let n = 0; n < lines.length; n++) {
+          const m = lines[n].match(opener)
+          if (!m) continue
+          // An instruction runs until a blank line or the next /focus, so it
+          // can be written across several lines like anything else.
+          const parts = [m[1].trim()]
+          let k = n + 1
+          while (k < lines.length && lines[k].trim() && !/^\s*\/focus\s/i.test(lines[k])) {
+            parts.push(lines[k].trim())
+            k++
+          }
+          found.push(`(from issue #${i.number}) ${parts.join(' ').trim()}`)
+          n = k - 1
+        }
+      }
+    }
+    return found
+  } catch {
+    // No gh, no token, or no issues. Not a failure — just no focus.
+    return []
+  }
+}
 
 const agent = process.argv[2]
 if (!agent) {
@@ -89,6 +142,16 @@ function existingItems() {
 
 const items = existingItems()
 const existingIds = new Set(items.map((i) => i.id))
+
+// The workflow field wins; otherwise take anything addressed to this agent in
+// the open issues.
+const focus = process.env.AGENT_FOCUS
+  ? [process.env.AGENT_FOCUS]
+  : focusFromIssues(agent)
+if (focus.length) {
+  console.log(`  focus: ${focus.length} instruction(s)`)
+  for (const f of focus) console.log('    ' + f.slice(0, 100))
+}
 const schema = readFileSync('content/schema/frontier.schema.json', 'utf8')
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 // Shared across every agent, so changing it changes all four at once.
@@ -148,14 +211,14 @@ ${decisions || '(none)'}
 
 ${new Date().toISOString().slice(0, 10)}
 ${
-  process.env.AGENT_FOCUS
+  focus.length
     ? `
 # Focus for this run
 
 A person asked for this specifically. Do it first, and say what you found even
 if the answer is that nothing needed changing.
 
-> ${process.env.AGENT_FOCUS}
+${focus.map((f) => `> ${f}`).join('\n>\n')}
 
 Everything below still applies. If the focus and your usual priorities conflict,
 the focus wins for this run only.
@@ -450,6 +513,9 @@ const pr = [
         `_${(out.escalations ?? out.needsYou).length - 3} further item(s) qualified and were ` +
           `suppressed to keep the escalation list to three. See the run record._`,
       ]
+    : []),
+  ...(focus.length
+    ? ['', '## Focus', ...focus.map((f) => `- ${f}`)]
     : []),
   ...section('Worth Scout\'s attention', out.worthScout, (r) =>
     typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.source ?? r.why ?? ''}`,
