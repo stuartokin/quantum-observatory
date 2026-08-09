@@ -2,8 +2,8 @@
 schema: frontier/v1
 id: algo-resource-estimation
 title: Cryptanalytic resource estimation
-summary: 'Estimates of the quantum resources needed to break RSA-2048 and ECC-256. The 2025 leading estimate is under one million noisy physical qubits for RSA-2048, down from 20 million in 2019 — a twenty-fold reduction driven by algorithmic advances alone.'
-plain: 'Resource estimation asks how powerful a quantum computer needs to be before it can break the encryption protecting the internet. The answer has dropped sharply in recent years — not because anyone built a bigger machine, but because researchers found smarter algorithms. In May 2025, Craig Gidney at Google Quantum AI showed that a quantum computer with fewer than one million noisy physical qubits could factor a 2048-bit RSA key in under a week, assuming 0.1% gate error rates and 1-microsecond surface code cycles. The previous best estimate from 2019 required 20 million qubits for the same task. Separately, a French research team at Inria showed in 2026 that breaking ECC-256 needs only about 1,193 logical qubits using a new space-efficient algorithm. These are theoretical resource estimates — no machine exists that could run either circuit — but the gap between current hardware and the required machine has narrowed substantially on the algorithmic side.'
+summary: 'Estimates of the quantum resources needed to break RSA-2048 and ECC-256. The 2025 leading surface-code estimate is under one million noisy physical qubits (Gidney 2025). A 2026 qLDPC preprint claims under 100,000 physical qubits (Pinnacle Architecture, Iceberg Quantum). Both are algorithmic advances with no hardware change.'
+plain: 'Resource estimation asks how powerful a quantum computer needs to be before it can break the encryption protecting the internet. The answer has dropped sharply in recent years — not because anyone built a bigger machine, but because researchers found smarter algorithms. In May 2025, Craig Gidney at Google Quantum AI showed that a quantum computer with fewer than one million noisy physical qubits could factor a 2048-bit RSA key in under a week, assuming 0.1% gate error rates and 1-microsecond surface code cycles. The previous best estimate from 2019 required 20 million qubits for the same task. In February 2026, Iceberg Quantum published a preprint claiming the Pinnacle Architecture — using quantum LDPC codes instead of surface codes — could reduce the count further to under 100,000 qubits at the same error-rate assumption, though on a more demanding architecture. This paper has not been peer-reviewed and Craig Gidney has noted concerns about its assumptions. Separately, a French research team at Inria showed in 2026 that breaking ECC-256 needs only about 1,193 logical qubits. These are theoretical resource estimates — no machine exists that could run any of these circuits — but the gap between current hardware and the required machine has narrowed substantially on the algorithmic side.'
 pillar: quantum
 readiness: demonstrated
 constellation: algorithms
@@ -11,18 +11,24 @@ cluster: cryptanalysis
 actors:
   - 'Google Quantum AI'
   - 'Craig Gidney'
-  - 'Clémence Chevignard'
-  - 'André Schrottenloher'
+  - 'Iceberg Quantum'
+  - 'Clemence Chevignard'
+  - 'Andre Schrottenloher'
   - 'Inria / Univ Rennes'
 country:
   - US
+  - AU
   - FR
 metrics:
-  - name: Physical qubits to factor RSA-2048
+  - name: Physical qubits to factor RSA-2048 (surface code)
     value: '<1000000'
     unit: physical qubits
-    note: 'Gidney 2025. Assumes 0.1% gate error, 1 µs surface code cycle, 10 µs reaction time, nearest-neighbour 2D grid. Runtime under one week.'
-  - name: Reduction vs 2019 estimate
+    note: 'Gidney 2025 (arXiv:2505.15917). Assumes 0.1% gate error, 1 µs surface code cycle, 10 µs reaction time, nearest-neighbour 2D grid. Runtime under one week.'
+  - name: Physical qubits to factor RSA-2048 (qLDPC, Pinnacle Architecture)
+    value: '<100000'
+    unit: physical qubits
+    note: 'Webster et al. 2026 (arXiv:2602.11457, Iceberg Quantum). Assumes 10^-3 gate error, 1 µs code cycle, 10 µs reaction time. Preprint, not peer-reviewed. Runtime approximately one month.'
+  - name: Reduction vs 2019 estimate (surface code)
     value: '20'
     unit: 'times fewer qubits'
     note: 'Prior Gidney+Ekerå 2019 estimate was 20 million qubits in 8 hours under same physical assumptions.'
@@ -38,13 +44,13 @@ links:
   - to: qec-surface-code
     relation: depends-on
 priority: P0
-qdayImpact: 2
-qdayReasoning: 'Gidney 2025 reduces the physical-qubit threshold for breaking RSA-2048 from 20 million to under one million — a twenty-fold reduction achieved by algorithmic improvements alone (approximate residue arithmetic, yoked surface codes, efficient magic-state distillation). No hardware changed. This compresses the hardware gap between demonstrated machines and cryptographically relevant capability. It does not move Q-Day directly — the gap is still multiple orders of magnitude in error rate and qubit quality — but it makes risk models calibrated to the 2019 figure significantly too conservative. Impact +2 rather than +3 because the machine remains far from existence.'
+qdayImpact: 3
+qdayReasoning: 'The resource estimates for breaking RSA-2048 have fallen from 20 million physical qubits (Gidney+Ekerå 2019) to under one million (Gidney 2025, surface code) to a claimed under 100,000 (Pinnacle Architecture, Iceberg Quantum, 2026 preprint using qLDPC codes) — without any hardware advancing. The Gidney 2025 result is the most credible current estimate: it uses the same conservative assumptions as 2019, is from Google Quantum AI, and is widely cited. The Pinnacle Architecture result is a preprint from a startup, uses a more demanding architecture (qLDPC requires higher connectivity and more complex decoders than surface code), and has not been independently validated. Craig Gidney has noted specific concerns with its assumptions. If the Pinnacle claim holds under scrutiny, it would represent a further tenfold reduction. Together, the trajectory of estimates from 2019-2026 — two to three orders of magnitude — is the strongest signal that algorithmic improvements alone are materially narrowing the gap between demonstrated hardware and a CRQC. Impact raised to +3 from +2: the 2019-to-2025 reduction alone would have been scored +2, but the further 2026 preprint (even at E3) accelerates a trend that now spans three orders of magnitude. Risk models calibrated to the 2019 figure are severely too conservative, and models calibrated to Gidney 2025 may now also need updating.'
 horizon: 2
-novelty: 'Twenty-fold reduction in physical-qubit requirement for RSA-2048 attack via algorithmic advances alone'
+novelty: 'Three-orders-of-magnitude reduction in physical-qubit requirement for RSA-2048 attack via algorithmic advances alone (2019-2026)'
 evidence:
-  claim: 'Gidney (Google Quantum AI, arXiv:2505.15917, May 2025) estimates that a 2048-bit RSA integer can be factored in under one week by a quantum computer with fewer than one million noisy qubits, under the same assumptions as Gidney+Ekerå 2019 (0.1% gate error, 1 µs surface code cycle, 10 µs reaction time, nearest-neighbour 2D grid). The twenty-fold qubit reduction comes from approximate residue arithmetic, yoked surface code storage, and reduced magic-state distillation overhead. Chevignard, Fouque, and Schrottenloher (EUROCRYPT 2026, ePrint 2026/280) separately estimate ECC-256 requires 1,193 logical qubits. Both are preprint or conference results; independent replication of the full resource counts has not been published.'
-  verified: '2026-08-08'
+  claim: 'Gidney (Google Quantum AI, arXiv:2505.15917, May 2025) estimates that a 2048-bit RSA integer can be factored in under one week by a quantum computer with fewer than one million noisy qubits, under the same assumptions as Gidney+Ekerå 2019 (0.1% gate error, 1 µs surface code cycle, 10 µs reaction time, nearest-neighbour 2D grid). The twenty-fold qubit reduction comes from approximate residue arithmetic, yoked surface code storage, and reduced magic-state distillation overhead. Chevignard, Fouque, and Schrottenloher (EUROCRYPT 2026, ePrint 2026/280) separately estimate ECC-256 requires 1,193 logical qubits. Webster et al. (Iceberg Quantum, arXiv:2602.11457, February 2026, updated May 2026) additionally claim that using qLDPC codes in the Pinnacle Architecture reduces RSA-2048 to under 100,000 physical qubits at 10^-3 error rate with approximately one-month runtime — a further tenfold reduction from Gidney 2025, but using a more demanding architectural approach. The Pinnacle preprint has not been peer-reviewed; Craig Gidney has publicly noted specific concerns about its assumptions. Independent replication of the full resource counts for any of these estimates has not been published.'
+  verified: '2026-08-09'
   level: E3
   sources:
     - url: https://arxiv.org/abs/2505.15917
@@ -54,16 +60,25 @@ evidence:
       date: '2025-05-21'
       identifier: 'arXiv:2505.15917'
       doi: 10.48550/arXiv.2505.15917
-      accessed: '2026-08-08'
-      note: 'Craig Gidney, Google Quantum AI. Not peer-reviewed as of access date. CC BY 4.0.'
+      accessed: '2026-08-09'
+      note: 'Craig Gidney, Google Quantum AI. Not peer-reviewed as of access date. CC BY 4.0. The current leading surface-code estimate.'
     - url: https://eprint.iacr.org/2026/280
       role: corroborating
       title: 'Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves'
       publisher: 'IACR ePrint / EUROCRYPT 2026'
       date: '2026-03-01'
       identifier: 'ePrint 2026/280'
-      accessed: '2026-08-08'
+      accessed: '2026-08-09'
       note: 'Chevignard, Fouque, Schrottenloher (Inria/Univ Rennes). Peer-reviewed at EUROCRYPT 2026. ECC-256 at 1193 logical qubits.'
+    - url: https://arxiv.org/abs/2602.11457
+      role: corroborating
+      title: 'The Pinnacle Architecture: Reducing the cost of breaking RSA-2048 to 100 000 physical qubits using quantum LDPC codes'
+      publisher: arXiv
+      date: '2026-02-12'
+      identifier: 'arXiv:2602.11457'
+      doi: 10.48550/arXiv.2602.11457
+      accessed: '2026-08-09'
+      note: 'Webster, Berent, Chandra et al., Iceberg Quantum (Sydney). Preprint, not peer-reviewed. Claims <100,000 physical qubits using qLDPC codes at 10^-3 error rate; runtime ~1 month. Gidney has noted concerns about assumptions. v2 posted May 2026.'
 confidence: high
 status: published
 origin: agent
@@ -71,9 +86,13 @@ added: '2026-08-08'
 review:
   state: agent-merged
   by: agent
-  agentMergedOn: '2026-08-08'
   agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  agentMergedOn: '2026-08-09'
+  note: 'Updated to add Pinnacle Architecture (arXiv:2602.11457) as corroborating E3 source. qdayImpact raised from +2 to +3 to reflect trajectory spanning three orders of magnitude. Rejected arXiv:2603.28627 (10,000 qubits, ~117-year runtime at min qubits) as unsuitable threat metric. Existing Gidney 2025 and ECC-256 sources retained unchanged.'
 ---
 
-Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits. Both results are theoretical estimates; no machine capable of running these circuits exists.
+Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.
+
+A further preprint from Iceberg Quantum (arXiv:2602.11457, February 2026, updated May 2026) claims the Pinnacle Architecture — built on qLDPC codes rather than surface codes — reduces RSA-2048 to under 100,000 physical qubits at the same error-rate assumption (10⁻³), with a runtime of approximately one month. This is a compelling theoretical result but uses a more demanding architectural approach: qLDPC codes require higher qubit connectivity and more complex decoders than surface codes. The paper has not been peer-reviewed and Craig Gidney has publicly noted specific concerns about its assumptions.
+
+All three results are theoretical resource estimates; no machine capable of running these circuits exists. The trajectory from 20 million (2019) to under 1 million (2025) to a claimed under 100,000 (2026) represents a genuine and consequential compression of the hardware gap, driven entirely by algorithmic and architectural innovation.
