@@ -135,6 +135,21 @@ ${sources || '(none)'}
 # Today
 
 ${new Date().toISOString().slice(0, 10)}
+${
+  process.env.AGENT_FOCUS
+    ? `
+# Focus for this run
+
+A person asked for this specifically. Do it first, and say what you found even
+if the answer is that nothing needed changing.
+
+> ${process.env.AGENT_FOCUS}
+
+Everything below still applies. If the focus and your usual priorities conflict,
+the focus wins for this run only.
+`
+    : ''
+}
 
 # Output contract
 
