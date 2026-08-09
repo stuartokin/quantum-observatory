@@ -22,10 +22,16 @@ concurrency:
 
 jobs:
   steward:
-    # Do not respond to our own comments, or the loop never settles.
+    # Respond to the agents, never to itself.
+    #
+    # The first version of this excluded github-actions[bot] entirely — which
+    # is every issue and every comment on this repository, so the steward would
+    # have skipped every run it existed for. The loop it needs to break is only
+    # its own, so its comments carry a marker and only those are ignored.
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.actor != 'github-actions[bot]'
+      github.event_name == 'issues' ||
+      !contains(github.event.comment.body, '<!-- steward -->')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -95,7 +101,9 @@ jobs:
             const fs = require('fs');
             const a = JSON.parse(fs.readFileSync('.agent-run/actions.json', 'utf8'));
             for (const c of a.issueComments ?? []) {
-              fs.writeFileSync('/tmp/c.md', c.body);
+              // The marker is how the trigger guard tells the steward's own
+              // comments from the other agents'. Without it, it answers itself.
+              fs.writeFileSync('/tmp/c.md', c.body + '\n\n<!-- steward -->');
               require('child_process').execSync('gh issue comment ' + c.number + ' --body-file /tmp/c.md', { stdio: 'inherit' });
             }
             // Only close what the agent said has nothing left, and never one it
@@ -103,6 +111,6 @@ jobs:
             const raised = new Set((a.needsHuman ?? []).map(n => n.issue).filter(Boolean));
             for (const n of a.close ?? []) {
               if (raised.has(n)) { console.log('Not closing #' + n + ' — something was raised on it'); continue; }
-              require('child_process').execSync('gh issue close ' + n + ' --comment \"Nothing further needs a person. Closed by the steward.\"', { stdio: 'inherit' });
+              require('child_process').execSync('gh issue close ' + n + ' --comment \"Nothing further needs a person. Closed by the steward.\n\n<!-- steward -->\"', { stdio: 'inherit' });
             }
           " || echo "Nothing to report."
