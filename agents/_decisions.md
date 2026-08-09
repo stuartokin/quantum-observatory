@@ -43,6 +43,13 @@ by the same team is not replication, however many papers deep.
 **A preprint is E3**, including a preprint from a large laboratory, and
 including one cited widely by others. Peer review is the line.
 
+**A preprint that has since appeared in a peer-reviewed journal may be promoted
+to E4 only against the journal record itself** — volume, page or DOI. Secondary
+reports that publication has occurred are not sufficient, however many agree. If
+the record cannot be reached directly, leave the level where it is and say so.
+*Decided 9 Aug 2026, after entanglement-distribution, where publication in PRL
+was confirmed only by secondary coverage.*
+
 ---
 
 ## Q-Day
