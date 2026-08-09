@@ -5,7 +5,7 @@ title: Harvest-now, decrypt-later
 summary: 'Adversaries collect today''s encrypted traffic for retroactive decryption once a cryptographically relevant quantum computer exists. Formally recognised in joint CISA/NSA/NIST guidance (August 2023).'
 plain: 'Most internet traffic is protected by encryption that relies on hard maths problems — specifically factoring large numbers or solving discrete logarithms. A sufficiently powerful quantum computer could solve those problems efficiently using Shor''s algorithm. Harvest-now, decrypt-later (HNDL) is the strategy of capturing encrypted traffic today and storing it until that quantum capability arrives. The data is already collected before anyone has the means to break it; defenders get no second chance. The US government — through a joint CISA, NSA and NIST factsheet published in August 2023 — formally named this threat model and urged critical-infrastructure operators to begin migration planning immediately.'
 pillar: quantum
-readiness: demonstrated
+readiness: emerging
 constellation: migration
 cluster: threat-model
 actors:
@@ -54,11 +54,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-09'
+  note: 'readiness demonstrated → emerging per _decisions.md: a formally-recognised threat model without evidenced instances is emerging, not demonstrated. CISA factsheet says adversaries could be targeting data — acknowledged possibility, not confirmed operation. Item is amending an agent-merged entry.'
 ---
 
 Harvest-now, decrypt-later (HNDL) is the practice of capturing ciphertext today and storing it against the day when a cryptographically relevant quantum computer (CRQC) can break the key-establishment mechanism that protected it. The attack is passive and undetectable: an adversary needs only network access and storage, not any cryptanalytic capability at the time of collection.
@@ -67,4 +68,4 @@ The threat model rests on two premises that are both well-established: (1) Shor'
 
 On 21 August 2023, CISA, NSA and NIST published a joint factsheet explicitly naming HNDL and urging organisations that support critical infrastructure to begin post-quantum migration planning immediately. National Security Memorandum 10 (2022) had already set a 2035 federal migration deadline, implicitly acknowledging that a CRQC could plausibly exist before then.
 
-**Note for reviewers:** The readiness label 'demonstrated' here means the threat model is formally recognised by national authorities, not that a confirmed live HNDL collection against a named target has been publicly evidenced. The framing question is flagged in the run summary.
+**Readiness note:** Readiness is `emerging` because the threat model is formally recognised by national authorities but no publicly evidenced live HNDL collection against a named target has been confirmed. Per board decisions, a recognised threat model without evidenced instances is emerging. The urgency for migration planning is real regardless of whether collection is already occurring.
