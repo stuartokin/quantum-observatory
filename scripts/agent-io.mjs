@@ -124,6 +124,12 @@ export function normaliseFile(raw) {
         // inside single quotes by doubling it, never with a backslash, so
         // 'Shor\'s algorithm' terminates early and the rest of the line
         // becomes nonsense. Models write the backslash form constantly.
+        // Block scalars are valid YAML and must be left alone. Quoting
+        // "summary: >-" into "summary: '>-'" turns a folded string into a
+        // literal two-character value followed by orphaned indented lines,
+        // which is what broke four files.
+        if (/^[|>][-+]?\d*$/.test(value)) return line
+
         if (/^'/.test(value)) {
           if (!value.includes("\\'")) return line
           return head + value.replace(/\\'/g, "''")

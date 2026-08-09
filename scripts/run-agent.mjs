@@ -71,6 +71,7 @@ function existingItems() {
 }
 
 const items = existingItems()
+const existingIds = new Set(items.map((i) => i.id))
 const schema = readFileSync('content/schema/frontier.schema.json', 'utf8')
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 // Shared across every agent, so changing it changes all four at once.
@@ -117,6 +118,7 @@ Reply with a single JSON object and nothing else — no prose, no markdown fence
   "badlyFramed": [ { "id": "...", "why": "why this asks the wrong question" } ],
   "applicationCandidates": [ { "what": "...", "source": "url" } ],
   "escalations": [ { "what": "...", "why": "what is wrong and what decision is needed" } ],
+  "worthScout": [ { "what": "...", "source": "url" } ],
   "rejected": [ { "what": "...", "why": "..." } ],
   "files": [ { "path": "content/frontier/_inbox/<id>.md", "content": "<full file>" } ]
 }
@@ -129,7 +131,11 @@ The source register is at agents/_sources.md — work it in tier order before
 searching freely.
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
-Maximum files this run: ${cfg.budget?.proposals ?? 6}
+Maximum files this run: ${cfg.budget?.proposals ?? 6}${
+  cfg.existingIdsOnly
+    ? '\n\nYou may ONLY write files whose id already appears in the board list above.\nA file with any other id is rejected. You are not here to add topics.'
+    : ''
+}
 
 Do your research first. Then reply with the JSON object and nothing after it.
 Do not narrate your reasoning in the final message — your output budget is
@@ -288,6 +294,23 @@ for (const f of files) {
 
   const content = normaliseFile(f.content)
   const check = checkFile(content)
+
+  /**
+   * Some agents may only revise what is already on the board.
+   *
+   * The reviewer exists to check existing entries. On its first run it wrote
+   * four brand-new topics instead — a scope failure the prompt asked it to
+   * avoid and could not prevent. An instruction is a request; this is a rule.
+   */
+  if (check.ok && cfg.existingIdsOnly && !existingIds.has(check.id)) {
+    rejected.push({
+      path: f.path,
+      reason: `"${check.id}" is not on the board. ${agent} may only revise existing items, never add topics.`,
+      head: content.slice(0, 240),
+    })
+    continue
+  }
+
   if (!check.ok) {
     rejected.push({ path: f.path, reason: check.reason, head: content.slice(0, 240) })
     continue
@@ -369,6 +392,9 @@ const pr = [
           `suppressed to keep the escalation list to three. See the run record._`,
       ]
     : []),
+  ...section('Worth Scout\'s attention', out.worthScout, (r) =>
+    typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.source ?? r.why ?? ''}`,
+  ),
   ...section('Considered and rejected', out.rejected, (r) =>
     typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.why}`,
   ),

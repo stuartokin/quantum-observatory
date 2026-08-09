@@ -7,10 +7,11 @@
     "content/frontier/_inbox/**"
   ],
   "output": "pull_request",
-  "enabled": true,
+  "enabled": false,
   "budget": {
     "searches": 35,
     "proposals": 5
   },
-  "maxTokens": 32000
+  "maxTokens": 32000,
+  "existingIdsOnly": true
 }

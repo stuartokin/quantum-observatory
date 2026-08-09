@@ -12,5 +12,6 @@
     "searches": 30,
     "proposals": 8
   },
-  "maxTokens": 24000
+  "maxTokens": 24000,
+  "existingIdsOnly": true
 }

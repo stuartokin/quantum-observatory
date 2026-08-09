@@ -98,6 +98,29 @@ t('backslash apostrophe repaired', unescaped.includes("summary: 'Shor''s algorit
 t('  nested value repaired', unescaped.includes("claim: 'The paper''s result is tenfold.'"))
 t('  no backslash escapes remain', !(unescaped.match(FRONT_MATTER)?.[1] ?? '').includes("\\'"))
 t('  body untouched', unescaped.includes("Body with Shor's apostrophe."))
+
+// Block scalars are valid YAML. Quoting "summary: >-" into "summary: '>-'"
+// turns a folded string into a two-character value with orphaned lines under
+// it, which is what broke four files on the reviewer's first run.
+const folded = [
+  '---',
+  'id: a',
+  'summary: >-',
+  '  A folded string that runs',
+  '  across two lines.',
+  'plain: |',
+  '  Literal line one.',
+  'review:',
+  '  state: agent-merged',
+  '---',
+  '',
+  'Body.',
+  '',
+].join('\n')
+const kept = normaliseFile(folded)
+t('folded scalar untouched', kept.includes('summary: >-'))
+t('  literal scalar untouched', kept.includes('plain: |'))
+t('  no stray quotes added', !kept.includes("'>-'") && !kept.includes("'|'"))
 t('trailing newline added', normaliseFile('---\nid: a\n---\nbody').endsWith('\n'))
 
 const split = [
