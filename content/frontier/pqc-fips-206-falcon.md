@@ -14,27 +14,28 @@ metrics:
     note: in development
 evidence:
   claim: NIST states FALCON was selected and will be published in FIPS 206, which is in development. An Initial Public Draft was submitted August 2025; the final standard is expected in late 2026 or early 2027.
-  verified: '2026-08-04'
-  level: E4
+  verified: '2026-08-09'
+  level: E3
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
       role: standard
       publisher: NIST
+      note: 'NIST CSRC project page confirming FALCON selected for FIPS 206. FIPS 206 not yet formally published — IPD submitted August 2025, final standard expected late 2026 or early 2027. A project announcement page for a forthcoming standard is E3, not E4; formal standards are E4 only when published.'
 links:
   - to: pqc-fips-204
     relation: competes-with
 priority: P1
 horizon: 2
 country: [US]
+confidence: high
+status: published
+added: '2026-08-04'
+origin: human
 review:
   state: agent-reviewed
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-09'
-  note: 'readiness demonstrated → experimental: FIPS 206 IPD submitted August 2025; final standard expected late 2026 or early 2027 — not yet formally published. Demonstrated requires a published standard; experimental is correct. Evidence claim updated to reflect IPD status.'
-confidence: high
-status: published
-added: '2026-08-04'
-origin: human
+  note: 'E4 → E3: source is the NIST CSRC project page for a standard still in development. FIPS 206 IPD submitted August 2025; final expected late 2026/early 2027. A project page for a forthcoming standard is E3, not E4 — formal standard rule applies only when the standard is published. Readiness already corrected to experimental in prior run.'
 ---

@@ -33,22 +33,22 @@ metrics:
     note: NSM-10 (2022) target for federal PQC migration, implicitly acknowledging CRQC plausibility before that date
 evidence:
   claim: 'The joint CISA/NSA/NIST factsheet "Quantum-Readiness: Migration to Post-Quantum Cryptography" (August 2023) formally states that adversaries may be collecting encrypted data now with the goal of decrypting it once quantum technology matures — the factsheet names this a "harvest now, decrypt later" threat — and urges critical-infrastructure organisations to begin migration planning immediately. This constitutes formal recognition of the threat model by the principal US technical authorities for cybersecurity and cryptographic standards.'
-  level: E4
-  verified: '2026-08-08'
+  level: E3
+  verified: '2026-08-09'
   sources:
     - url: https://www.cisa.gov/sites/default/files/2023-08/Quantum%20Readiness_Final_CLEAR_508c%20(3).pdf
       role: standard
       title: 'Quantum-Readiness: Migration to Post-Quantum Cryptography'
       publisher: 'CISA / NSA / NIST'
       date: '2023-08-21'
-      accessed: '2026-08-08'
-      note: Joint factsheet. Mirrors also at media.defense.gov. Formally names HNDL and urges immediate migration planning for critical infrastructure.
+      accessed: '2026-08-09'
+      note: Joint advisory factsheet. Mirrors also at media.defense.gov. Formally names HNDL and urges immediate migration planning for critical infrastructure. Authoritative government guidance but not a formal standard (FIPS/ETSI); E3 ceiling applies.
     - url: https://media.defense.gov/2023/Aug/21/2003284212/-1/-1/0/CSI-QUANTUM-READINESS.PDF
       role: corroborating
       title: 'Quantum-Readiness: Migration to Post-Quantum Cryptography (DoD mirror)'
       publisher: NSA
       date: '2023-08-21'
-      accessed: '2026-08-08'
+      accessed: '2026-08-09'
 confidence: high
 status: published
 origin: agent
@@ -59,7 +59,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-09'
-  note: 'readiness demonstrated → emerging per _decisions.md: a formally-recognised threat model without evidenced instances is emerging, not demonstrated. CISA factsheet says adversaries could be targeting data — acknowledged possibility, not confirmed operation. Item is amending an agent-merged entry.'
+  note: 'E4 → E3: CISA/NSA/NIST joint factsheet is authoritative tier-3 guidance, not a formal published standard (FIPS/ETSI). Formal standards are E4; government advisory factsheets are E3 at most. Amending a prior agent-reviewed item.'
 ---
 
 Harvest-now, decrypt-later (HNDL) is the practice of capturing ciphertext today and storing it against the day when a cryptographically relevant quantum computer (CRQC) can break the key-establishment mechanism that protected it. The attack is passive and undetectable: an adversary needs only network access and storage, not any cryptanalytic capability at the time of collection.
