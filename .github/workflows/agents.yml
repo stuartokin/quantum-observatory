@@ -81,6 +81,8 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AGENT_FOCUS: ${{ inputs.focus }}
+          # For reading /focus lines out of the open issues.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/run-agent.mjs ${{ matrix.agent }}
 
       # The runner validates each file against the schema before writing, so
