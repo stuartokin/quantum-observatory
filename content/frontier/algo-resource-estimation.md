@@ -69,7 +69,7 @@ evidence:
       date: '2026-03-01'
       identifier: 'ePrint 2026/280'
       accessed: '2026-08-09'
-      note: 'Chevignard, Fouque, Schrottenloher (Inria/Univ Rennes). Peer-reviewed at EUROCRYPT 2026. ECC-256 at 1193 logical qubits.'
+      note: 'Chevignard, Fouque, Schrottenloher (Inria/Univ Rennes). Peer-reviewed at EUROCRYPT 2026. ECC-256 at 1,193 logical qubits (P-256). Note: the original abstract incorrectly listed 1,098 for P-256 and 1,193 for P-224; the ePrint carries an explicit correction (last revised June 2026) swapping these values. The correct P-256 figure is 1,193. Some secondary sources citing the pre-correction abstract report 1,098 for P-256 in error.'
     - url: https://arxiv.org/abs/2602.11457
       role: corroborating
       title: 'The Pinnacle Architecture: Reducing the cost of breaking RSA-2048 to 100 000 physical qubits using quantum LDPC codes'
@@ -86,9 +86,9 @@ added: '2026-08-08'
 review:
   state: agent-merged
   by: agent
-  agent: sourcer
+  agent: verifier
   agentMergedOn: '2026-08-09'
-  note: 'Updated to add Pinnacle Architecture (arXiv:2602.11457) as corroborating E3 source. qdayImpact raised from +2 to +3 to reflect trajectory spanning three orders of magnitude. Rejected arXiv:2603.28627 (10,000 qubits, ~117-year runtime at min qubits) as unsuitable threat metric. Existing Gidney 2025 and ECC-256 sources retained unchanged.'
+  note: 'Focus instruction: updated Chevignard ePrint source note to record the June 2026 abstract correction that swapped P-224 and P-256 figures. The correct Chevignard P-256 figure (1,193) was already in the claim and metric. Added note warning that secondary sources citing the pre-correction abstract may incorrectly report 1,098 for P-256. No other fields changed.'
 ---
 
 Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.

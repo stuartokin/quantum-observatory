@@ -10,6 +10,7 @@ constellation: architectures
 cluster: solid-state spin
 actors:
   - University of New South Wales
+  - Diraq
   - Intel
   - RIKEN
   - Delft University of Technology
@@ -23,13 +24,13 @@ country:
   - BE
 metrics:
   - name: two-qubit gate fidelity (Si MOS research device)
-    value: ">99"
+    value: '>99'
     unit: percent
     note: Tanttu et al., Nature Physics 2024; consistent and repeatable
   - name: two-qubit gate fidelity (300 mm foundry device)
-    value: ">99"
+    value: '>99'
     unit: percent
-    note: Steinacker et al., Nature 2025; industry-compatible SiMOS unit cells
+    note: 'Steinacker et al., Nature 646, 81-87 (2025); industry-compatible SiMOS unit cells'
 links:
   - to: arch-superconducting
     relation: competes-with
@@ -38,8 +39,8 @@ links:
   - to: enable-fabrication
     relation: depends-on
 evidence:
-  claim: Tanttu et al. (Nature Physics 2024) demonstrate consistent and repeatable above-99% fidelity two-qubit gates in Si MOS quantum dot devices by characterising and mitigating physical error sources. Steinacker et al. (Nature 2025) replicate >99% two-qubit fidelity in industry-compatible SiMOS unit cells manufactured in a 300 mm foundry environment.
-  verified: '2026-08-08'
+  claim: Tanttu et al. (Nature Physics 2024) demonstrate consistent and repeatable above-99% fidelity two-qubit gates in Si MOS quantum dot devices by characterising and mitigating physical error sources. Steinacker et al. (Nature 646, 2025) replicate >99% two-qubit fidelity in industry-compatible SiMOS unit cells manufactured in a 300 mm foundry environment, with SPAM fidelities reaching 99.9% across four devices on the same wafer.
+  verified: '2026-08-09'
   level: E4
   sources:
     - url: https://www.nature.com/articles/s41567-024-02614-w
@@ -47,19 +48,19 @@ evidence:
       title: Assessment of the errors of high-fidelity two-qubit gates in silicon quantum dots
       publisher: Nature Physics
       date: '2024-08-20'
-      identifier: Nature Physics 20, 1804–1809 (2024)
+      identifier: 'Nature Physics 20, 1804-1809 (2024)'
       doi: 10.1038/s41567-024-02614-w
-      accessed: '2026-08-08'
+      accessed: '2026-08-09'
       note: UNSW Sydney-led collaboration. Demonstrates >99% two-qubit gate fidelity, tying errors to physical origins.
     - url: https://www.nature.com/articles/s41586-025-09531-9
       role: corroborating
       title: Industry-compatible silicon spin-qubit unit cells exceeding 99% fidelity
       publisher: Nature
       date: '2025-09-24'
-      identifier: Nature (2025)
+      identifier: 'Nature 646, 81-87 (2025)'
       doi: 10.1038/s41586-025-09531-9
-      accessed: '2026-08-08'
-      note: UNSW/imec/KU Leuven collaboration. Two-qubit operations >99% fidelity on chips from a 300 mm semiconductor foundry.
+      accessed: '2026-08-09'
+      note: 'Steinacker, Dumoulin Stuyck, Dzurak et al.; UNSW / Diraq / imec / KU Leuven. Two-qubit operations >99% fidelity on chips from a 300 mm semiconductor foundry. SPAM fidelity up to 99.9%. Four separate devices on same wafer all exceed threshold.'
 confidence: high
 status: published
 priority: P2
@@ -72,15 +73,15 @@ added: '2026-08-08'
 review:
   state: agent-merged
   by: agent
-  agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  agent: verifier
+  agentMergedOn: '2026-08-09'
+  note: 'Verified both sources resolve. Corrected Steinacker et al. identifier from bare "Nature (2025)" to "Nature 646, 81-87 (2025)" confirmed via PubMed (PMID confirmed Oct 2025 issue). Added Diraq to actors: Steinacker et al. is a UNSW/Diraq/imec/KU Leuven collaboration and Diraq was missing. Updated source note with SPAM fidelity detail and multi-device confirmation.'
 ---
 
 Silicon spin qubits confine individual electrons (or holes) in electrostatically defined quantum dots in silicon or silicon-germanium heterostructures, using spin states as |0⟩ and |1⟩. The platform is attractive for scalability because it is compatible with existing CMOS manufacturing.
 
 The critical milestone of >99% two-qubit gate fidelity — often cited as a necessary condition for surface-code error correction — was demonstrated by Tanttu et al. (Nature Physics, August 2024) in a Si MOS research device. The study identified dominant error sources (charge noise, valley splitting variability) and showed that mitigation strategies yield consistent, repeatable performance above the 99% threshold.
 
-The result was independently corroborated at industrial scale by Steinacker et al. (Nature, 2025), who achieved >99% two-qubit fidelity in unit cells fabricated in a 300 mm commercial foundry, a significant step toward manufacturable silicon quantum processors.
+The result was independently corroborated at industrial scale by Steinacker et al. (Nature 646, September 2025), who achieved >99% two-qubit fidelity in unit cells fabricated in a 300 mm commercial foundry, with SPAM fidelities reaching 99.9% across four separate devices on the same wafer — a significant step toward manufacturable silicon quantum processors.
 
 Key remaining challenges: qubit count beyond ~10 qubits, fan-out of classical control at cryogenic temperatures, and mid-circuit measurement.
