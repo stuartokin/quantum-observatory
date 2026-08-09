@@ -50,6 +50,23 @@ if (!KEY) {
 
 /* ---------- context ---------- */
 
+/**
+ * The full text of every item, for agents that revise rather than add.
+ *
+ * The compact index below is enough to avoid duplicating a topic. It is not
+ * enough to review one: an agent asked whether a source supports a claim had
+ * never been shown the claim, and said so twice in its own summary before
+ * anyone noticed. It also explains why its first run went hunting for new
+ * topics — given nothing to check, it found something else to do.
+ */
+function fullItems() {
+  const out = []
+  for (const f of readdirSync('content/frontier').filter((x) => x.endsWith('.md'))) {
+    out.push(`--- ${f} ---\n${readFileSync(join('content/frontier', f), 'utf8')}`)
+  }
+  return out.join('\n\n')
+}
+
 /** The existing board, compact. An agent that cannot see it will duplicate it. */
 function existingItems() {
   const out = []
@@ -80,7 +97,19 @@ const sources = existsSync('agents/_sources.md')
   : ''
 
 const context = `
-# Existing board — ${items.length} items
+${
+  cfg.existingIdsOnly
+    ? `# The board in full — ${items.length} items
+
+You revise what is here. Every field of every item follows, so you can check a
+claim against its own sources rather than guessing from a summary.
+
+${fullItems()}
+
+# Index
+`
+    : `# Existing board — ${items.length} items`
+}
 
 Read this before proposing anything. Adding something already present is the
 most common way an agent wastes a reviewer's time.

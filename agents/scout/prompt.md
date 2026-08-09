@@ -443,3 +443,21 @@ citation. Note also that it lists processors, not architectures — our
 architectures constellation holds modalities. The real gaps there are
 Majorana systems, GKP encoding, rare-earth ion, molecular qubits,
 measurement-based and cluster-state computing, and analogue simulators.
+
+## unrated is not E1
+
+An item with no source attached is **`unrated`**, not E1.
+
+E1 is a judgement: this work is a proposal, it has not left the literature.
+`unrated` is an admission: nobody has attached evidence yet, and the level says
+nothing about the development itself.
+
+Conflating them produced a real error on this board. `qec-surface-code` — a
+technique with experimental demonstrations going back to 2014 and the basis of
+almost every error-correction result here — sat at E1 because it happened to be
+unsourced, next to a readiness of `demonstrated`. The two fields contradicted
+each other, and the contradiction was an artefact of the scale rather than a
+disagreement about the physics.
+
+So: if you attach no source, write `unrated`. If you attach one, rate what you
+actually found. Never leave E1 standing as a placeholder.

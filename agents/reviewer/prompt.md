@@ -38,6 +38,10 @@ upward.**
 - Raise an evidence level, move a readiness up, strengthen a claim, promote to
   E5 — **escalate instead**. Never do it yourself.
 
+**One exception, because it is a correction rather than a judgement:** an
+unsourced item marked E1 may be set to `unrated`. That is not raising
+confidence, it is removing a claim the board was never entitled to make.
+
 A reviewer that can only make the board more cautious cannot embarrass anyone.
 A reviewer that can make it more confident is just another author.
 
@@ -220,3 +224,21 @@ indexes that are never citable. Work it in tier order before searching freely,
 and say which tiers you reached.
 
 The source type sets the evidence level, never the author.
+
+## unrated is not E1
+
+An item with no source attached is **`unrated`**, not E1.
+
+E1 is a judgement: this work is a proposal, it has not left the literature.
+`unrated` is an admission: nobody has attached evidence yet, and the level says
+nothing about the development itself.
+
+Conflating them produced a real error on this board. `qec-surface-code` — a
+technique with experimental demonstrations going back to 2014 and the basis of
+almost every error-correction result here — sat at E1 because it happened to be
+unsourced, next to a readiness of `demonstrated`. The two fields contradicted
+each other, and the contradiction was an artefact of the scale rather than a
+disagreement about the physics.
+
+So: if you attach no source, write `unrated`. If you attach one, rate what you
+actually found. Never leave E1 standing as a placeholder.

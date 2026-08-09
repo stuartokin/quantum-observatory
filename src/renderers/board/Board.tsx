@@ -1038,9 +1038,9 @@ function Sky({
            * same size. Range is roughly 3px to 13px.
            */
           const evidenceWeight =
-            { E5: 1, E4: 0.82, E3: 0.6, E2: 0.42, E1: 0.24, E0: 0.12 }[
-              item?.evidence?.level ?? 'E1'
-            ] ?? 0.24
+            { E5: 1, E4: 0.82, E3: 0.6, E2: 0.42, E1: 0.24, E0: 0.12, unrated: 0.18 }[
+              item?.evidence?.level ?? 'unrated'
+            ] ?? 0.18
           const priorityWeight =
             { P0: 1, P1: 0.78, P2: 0.5, P3: 0.28, P4: 0.14 }[item?.priority ?? 'P3'] ?? 0.28
           const weight = evidenceWeight * 0.55 + priorityWeight * 0.45
@@ -2162,7 +2162,15 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
       <div className="meta">
         <span className="badge" style={{ color: colour, borderColor: colour }}>{item.readiness}</span>
         <span className="badge">{item.constellation}</span>
-        {item.evidence.level && <span className="badge">{item.evidence.level}</span>}
+        {item.evidence.level && (
+          <span className="badge" title={
+            item.evidence.level === 'unrated'
+              ? 'No evidence attached yet. This says nothing about the development itself.'
+              : undefined
+          }>
+            {item.evidence.level}
+          </span>
+        )}
         {item.priority && <span className="badge">{item.priority}</span>}
         {needsSource && <span className="badge" data-conf="low">unsourced</span>}
       </div>

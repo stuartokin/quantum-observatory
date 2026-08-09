@@ -204,6 +204,7 @@
         },
         "level": {
           "enum": [
+            "unrated",
             "E0",
             "E1",
             "E2",
@@ -211,7 +212,7 @@
             "E4",
             "E5"
           ],
-          "description": "E5 replicated/independently validated \u00b7 E4 peer-reviewed, not replicated \u00b7 E3 preprint or credible lab demo \u00b7 E2 prototype or vendor technical claim \u00b7 E1 proposal/theory \u00b7 E0 speculative. Never discard E0/E1 for being speculative \u2014 label them."
+          "description": "unrated = no evidence attached yet; says nothing about the development itself \u00b7 E0 speculative \u00b7 E1 proposal or theoretical work \u00b7 E2 prototype or vendor claim \u00b7 E3 preprint, review article, or credible lab demonstration \u00b7 E4 peer-reviewed experimental result \u00b7 E5 independently replicated. unrated and E1 are NOT the same: E1 is a judgement that the work is theoretical, unrated is an admission that nobody has looked. Conflating them made a well-demonstrated topic read as untested."
         }
       }
     },

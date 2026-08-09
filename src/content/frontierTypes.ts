@@ -1,6 +1,12 @@
 export type Readiness = 'emerging' | 'experimental' | 'demonstrated' | 'adopted' | 'mainstream'
 export type Confidence = 'high' | 'medium' | 'low'
-export type EvidenceLevel = 'E0' | 'E1' | 'E2' | 'E3' | 'E4' | 'E5'
+/**
+ * `unrated` is not a low grade — it means nobody has attached evidence yet, and
+ * says nothing about the development. E1 is a judgement that the work is
+ * theoretical. Treating the two as the same made a well-demonstrated technique
+ * read as untested.
+ */
+export type EvidenceLevel = 'unrated' | 'E0' | 'E1' | 'E2' | 'E3' | 'E4' | 'E5'
 export type Priority = 'P0' | 'P1' | 'P2' | 'P3' | 'P4'
 export type SourceRole = 'primary' | 'preprint' | 'standard' | 'vendor' | 'corroborating'
 export type Relation = 'depends-on' | 'competes-with' | 'enables' | 'supersedes' | 'evidence-for'
