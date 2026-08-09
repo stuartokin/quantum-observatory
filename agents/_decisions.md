@@ -47,8 +47,7 @@ including one cited widely by others. Peer review is the line.
 to E4 only against the journal record itself** — volume, page or DOI. Secondary
 reports that publication has occurred are not sufficient, however many agree. If
 the record cannot be reached directly, leave the level where it is and say so.
-*Decided 9 Aug 2026, after entanglement-distribution, where publication in PRL
-was confirmed only by secondary coverage.*
+*Decided 9 Aug 2026, after entanglement-distribution.*
 
 ---
 
