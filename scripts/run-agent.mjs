@@ -361,7 +361,10 @@ const mismatch =
     : []
 
 const pr = [
-  `**${written.length} item(s) published${rejected.length ? `, ${rejected.length} discarded` : ''}.**`,
+  written.length === 0
+    ? `**Nothing changed.**${rejected.length ? ` ${rejected.length} file(s) discarded.` : ''} ` +
+      `A run that changes nothing is a result, not a failure — the summary below is the output.`
+    : `**${written.length} item(s) published${rejected.length ? `, ${rejected.length} discarded` : ''}.**`,
   ...mismatch,
   '',
   out.summary ?? '',
