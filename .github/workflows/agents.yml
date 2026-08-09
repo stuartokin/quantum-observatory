@@ -90,6 +90,9 @@ jobs:
         with:
           name: ${{ matrix.agent }}-run-${{ github.run_number }}
           path: .agent-run/
+          # .agent-run is a dot-directory, which this action skips unless told
+          # otherwise — which is why the record was never actually uploaded.
+          include-hidden-files: true
           retention-days: 90
 
       # The runner records exactly which files it wrote, so this needs no git
