@@ -18,7 +18,7 @@ priority: P2
 qdayImpact: 0
 evidence:
   claim: No cross-platform benchmark standard has been formally agreed. Multiple competing frameworks (quantum volume, mirror circuits, volumetric benchmarks, layer fidelity) exist; Proctor et al. 2025 surveys them and identifies open research questions including how to benchmark utility-scale systems.
-  level: E4
+  level: E3
   verified: '2026-08-08'
   sources:
     - url: https://www.nature.com/articles/s42254-024-00796-z
@@ -29,7 +29,7 @@ evidence:
       identifier: 'Nat. Rev. Phys. 7, 105–118 (2025)'
       doi: 10.1038/s42254-024-00796-z
       accessed: '2026-08-08'
-      note: Peer-reviewed perspective by Proctor, Young, Baczewski, Blume-Kohout (Sandia/SNL). Principal survey of the field; identifies lack of agreed cross-platform standard as an open problem.
+      note: Peer-reviewed Perspective by Proctor, Young, Baczewski, Blume-Kohout (Sandia/SNL). Survey/review article; schema caps review/survey/roadmap papers at E3. Principal survey of the field; identifies lack of agreed cross-platform standard as an open problem.
 metrics:
   - name: Citations within 6 months
     value: '79'
@@ -46,11 +46,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-09'
+  note: 'E4 → E3: Proctor et al. is a Perspective/survey in Nature Reviews Physics; schema rule caps review/survey/roadmap papers at E3, not E4.'
 ---
 
 Cross-platform benchmarking provides the measurement science needed to compare quantum processors honestly. Without it, vendors publish incomparable numbers and users cannot choose between systems. The 2025 Nature Reviews Physics survey by Proctor et al. (Sandia National Laboratories) is the field's current reference: it classifies benchmarks by what they actually measure, critiques existing approaches, and maps the open problems. No formal standard body has yet ratified a cross-platform benchmark suite.
