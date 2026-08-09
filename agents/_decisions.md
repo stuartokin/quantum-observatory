@@ -106,3 +106,11 @@ the one it evidences, not split.** Three items where two would sit unsourced for
 months is not an improvement.
 *Decided 9 Aug 2026, on arch-topological, which conflated Majorana zero modes,
 fractional quantum Hall anyons and Floquet codes.*
+
+**Readiness describes the technology, not the risk it addresses.** An item that
+conflates the two should be reframed around the technology, with the risk stated
+in the claim rather than the level. Where a threat model is recognised but no
+instance is evidenced, that is `emerging` — not `demonstrated`.
+*Decided 9 Aug 2026, after sense-grid-timing framed GPS-spoofing risk as a
+timing capability, and harvest-now-decrypt-later used `demonstrated` to mean the
+threat model is acknowledged.*
