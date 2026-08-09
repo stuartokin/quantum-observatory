@@ -1,9 +1,9 @@
 ---
 schema: frontier/v1
 id: arch-topological
-title: Topological qubits
-summary: 'Error resistance built into the physics rather than added by code. Microsoft published an InAs-Al hybrid parity measurement in Nature (Feb 2025), but Nature''s own reviewers stated this does not constitute evidence for Majorana zero modes. Physics remains contested.'
-plain: 'An approach where the information is stored in a property of the system that local disturbances cannot easily change — like a knot that survives being jostled. If it worked, it would need far less error correction. Microsoft published a Nature paper in February 2025 claiming a key step toward topological qubits in semiconductor-superconductor devices. However, Nature''s own peer-review notes stated the result does not prove the existence of the Majorana particles needed, and independent researchers have challenged the diagnostic test used. Two decades of promise, still contested physics.'
+title: Majorana-based topological qubits
+summary: 'Microsoft''s InAs-Al hybrid approach to hardware-protected qubits. Contested: Nature''s own peer-review notes state the results do not evidence Majorana zero modes.'
+plain: 'An approach where the qubit is stored in a property that local disturbances cannot easily change — like a knot that survives being jostled. If it worked it would need far less error correction. Microsoft has pursued it for two decades. The central physics claim remains disputed: the journal that published the 2025 result attached a note saying it does not demonstrate the effect it was looking for.'
 pillar: quantum
 constellation: architectures
 readiness: emerging
