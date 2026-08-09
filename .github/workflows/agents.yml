@@ -20,6 +20,12 @@ permissions:
   pull-requests: write
   issues: write
 
+# One agent writing to main at a time. Queue rather than cancel — a run that
+# has already done its research should not be thrown away.
+concurrency:
+  group: agents-main
+  cancel-in-progress: false
+
 jobs:
   discover:
     runs-on: ubuntu-latest
@@ -141,6 +147,15 @@ jobs:
           git checkout -b "$BRANCH"
           git add content/frontier
           git commit -m "${{ matrix.agent }}: $COUNT item(s), agent-merged"
+
+          # main moves under us when another agent finishes mid-run, and the
+          # merge then fails with "Base branch was modified" — leaving good work
+          # stranded on a branch. Rebase onto whatever main is now.
+          git fetch origin main
+          git rebase origin/main || {
+            echo "::warning::Rebase hit a conflict. Leaving the branch for a human."
+            exit 1
+          }
           git push origin "$BRANCH"
           # A pull request gives the cleanest veto — GitHub's own Revert button.
           # If the repo forbids Actions from opening one, fall back to pushing
@@ -151,7 +166,16 @@ jobs:
             # --admin bypasses the pending checks. CI on a bot-authored PR
             # sits awaiting manual approval, and the same gates have already
             # run in this job — validate, provenance, escalation, scope.
-            gh pr merge "$PR" --squash --admin --delete-branch
+            # One retry: another agent can still land between the rebase and
+            # this call, and the second attempt almost always succeeds.
+            gh pr merge "$PR" --squash --admin --delete-branch || {
+              echo "Merge raced. Rebasing and retrying once."
+              git fetch origin main
+              git rebase origin/main
+              git push --force-with-lease origin "$BRANCH"
+              sleep 5
+              gh pr merge "$PR" --squash --admin --delete-branch
+            }
             echo "MERGED_PR=$PR" >> $GITHUB_ENV
           else
             echo "::warning::Could not open a pull request. Pushing to main directly."

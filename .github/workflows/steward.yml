@@ -85,6 +85,11 @@ jobs:
           if git diff --quiet && git diff --staged --quiet; then
             echo "Nothing to commit."
           else
+            git fetch origin main
+            git rebase origin/main || {
+              echo "::warning::Rebase conflict. Leaving changes uncommitted."
+              exit 1
+            }
             git add content/frontier agents/_decisions.md
             git commit -m "steward: $COUNT item(s), $(node -e "
               const a=require('./.agent-run/actions.json');
