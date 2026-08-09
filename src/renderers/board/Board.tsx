@@ -33,6 +33,16 @@ import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
 import { RELEASES } from '../../releases'
 import sourceRegister from '/agents/_sources.md?raw'
+import decisionsDoc from '/agents/_decisions.md?raw'
+import scoutPrompt from '/agents/scout/prompt.md?raw'
+import sourcerPrompt from '/agents/sourcer/prompt.md?raw'
+import verifierPrompt from '/agents/verifier/prompt.md?raw'
+import reviewerPrompt from '/agents/reviewer/prompt.md?raw'
+import designLog from '/docs/DESIGN-LOG.md?raw'
+import operating from '/docs/OPERATING.md?raw'
+import agentPlan from '/docs/AGENT-PLAN.md?raw'
+import { Markdown } from '../../components/Markdown'
+import { buildDecisions, tally } from './decisions'
 import { Toolbar } from '../../components/Toolbar'
 
 /** Galaxies. Only quantum has data; the rest are declared so the switch exists
@@ -1789,59 +1799,6 @@ function Section({
   )
 }
 
-/**
- * The source register, rendered from the agents' own file.
- *
- * Not a copy. A second list of sources maintained beside the first would
- * disagree with it within a month, and the version shown to a reader would be
- * the one nobody was updating.
- */
-function SourceRegister() {
-  const blocks = useMemo(() => {
-    const out: { heading: string; lines: string[] }[] = []
-    let current: { heading: string; lines: string[] } | null = null
-    for (const raw of sourceRegister.split('\n')) {
-      const line = raw.trim()
-      if (!line || line === '---') continue
-      const h = line.match(/^#{2,3}\s+(.*)$/)
-      if (h) {
-        current = { heading: h[1], lines: [] }
-        out.push(current)
-        continue
-      }
-      if (!current) continue
-      if (line.startsWith('#')) continue
-      current.lines.push(line.replace(/^[-*]\s*/, ''))
-    }
-    return out.filter((b) => b.lines.length)
-  }, [])
-
-  const linkify = (line: string) => {
-    const m = line.match(/^(.*?)\s*[—-]?\s*(https?:\/\/\S+)$/)
-    if (!m) return <span>{line.replace(/\*\*/g, '')}</span>
-    return (
-      <a href={m[2]} target="_blank" rel="noopener noreferrer">
-        {m[1].replace(/\*\*/g, '') || m[2]}
-      </a>
-    )
-  }
-
-  return (
-    <div className="register">
-      {blocks.map((b) => (
-        <div key={b.heading}>
-          <span className="label">{b.heading}</span>
-          <ul>
-            {b.lines.map((l, i) => (
-              <li key={i}>{linkify(l)}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
   const [open, setOpen] = useState<Set<string>>(new Set(['reading']))
   const toggle = (id: string) =>
@@ -1851,7 +1808,10 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
       return n
     })
 
-  const SECTIONS = ['reading', 'controls', 'provenance', 'sources', 'versions', 'elsewhere']
+  const SECTIONS = [
+    'reading', 'controls', 'provenance', 'decisions', 'sources',
+    'prompts', 'design', 'operating', 'plan', 'versions', 'elsewhere',
+  ]
   const allOpen = SECTIONS.every((id) => open.has(id))
 
   /** Counted from the board, never written down — a typed figure ages badly. */
@@ -1874,6 +1834,16 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
       constellations: new Set(pool.map((i) => i.constellation)).size,
     }
   }, [pool])
+
+  const decisions = useMemo(() => buildDecisions(pool), [pool])
+  const counts = useMemo(() => tally(decisions), [decisions])
+  const [agentDoc, setAgentDoc] = useState<'scout' | 'sourcer' | 'verifier' | 'reviewer'>('scout')
+  const PROMPTS = {
+    scout: scoutPrompt,
+    sourcer: sourcerPrompt,
+    verifier: verifierPrompt,
+    reviewer: reviewerPrompt,
+  }
 
   return (
     <div className="help">
@@ -1967,6 +1937,58 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
         </dl>
       </Section>
 
+      <Section
+        id="decisions"
+        title="What was decided, and by whom"
+        open={open.has('decisions')}
+        onToggle={toggle}
+      >
+        <p>
+          Two kinds of decision run through this board. <strong>Precedents</strong>{' '}
+          are settled by a person once and applied by the agents thereafter.{' '}
+          <strong>Judgements</strong> are made on individual items — a readiness
+          moved, an evidence level corrected, an entry removed.
+        </p>
+        <p>
+          The record below is derived from the board itself, so it cannot
+          disagree with what the board holds. An agent may only ever correct{' '}
+          <em>downward</em>; anything that would raise a claim goes to a person.
+        </p>
+
+        <dl className="metrics">
+          <div><dt>Decisions</dt><dd>{counts.total}</dd></div>
+          <div><dt>By a person</dt><dd>{counts.byHuman}</dd></div>
+          <div><dt>By an agent</dt><dd>{counts.byAgent}</dd></div>
+          <div><dt>Readiness moved</dt><dd>{counts.moved}</dd></div>
+          <div><dt>Corrected down</dt><dd>{counts.corrected}</dd></div>
+          <div><dt>Vetoed</dt><dd>{counts.vetoed}</dd></div>
+        </dl>
+
+        <span className="label">Most recent first</span>
+        <ul className="decisions">
+          {decisions.slice(0, 40).map((d, i) => (
+            <li key={`${d.id}-${d.kind}-${i}`} data-kind={d.kind} data-by={d.by}>
+              <span className="decisions__meta">
+                {d.date} · {d.by === 'human' ? 'person' : (d.agent ?? 'agent')}
+              </span>
+              <span className="decisions__title">{d.title}</span>
+              <span className="decisions__what">{d.what}</span>
+              {d.why && <span className="decisions__why">{d.why}</span>}
+            </li>
+          ))}
+        </ul>
+        {decisions.length > 40 && (
+          <p className="filter-group__note">
+            {decisions.length - 40} older decisions not shown.
+          </p>
+        )}
+
+        <span className="label" style={{ display: 'block', marginTop: 20 }}>
+          Standing precedents
+        </span>
+        <Markdown source={decisionsDoc} />
+      </Section>
+
       <Section id="sources" title="Where the agents look" open={open.has('sources')} onToggle={toggle}>
         <p>
           The register below is the agents&rsquo; own, rendered from the file they
@@ -1980,7 +2002,40 @@ function Help({ colour, pool }: { colour: string; pool: FrontierItem[] }) {
           programmes — not because their work is weak, but because a board that
           follows attention has stopped looking.
         </p>
-        <SourceRegister />
+        <Markdown source={sourceRegister} />
+      </Section>
+
+      <Section id="prompts" title="What the agents are told" open={open.has('prompts')} onToggle={toggle}>
+        <p>
+          The agents' instructions in full. Judgement lives here rather than in
+          code, so it can be read and argued with by anyone who can read the
+          board.
+        </p>
+        <div className="prompt-tabs">
+          {(['scout', 'sourcer', 'verifier', 'reviewer'] as const).map((a) => (
+            <button
+              key={a}
+              onClick={() => setAgentDoc(a)}
+              aria-pressed={agentDoc === a}
+              style={agentDoc === a ? { color: colour, borderColor: colour } : undefined}
+            >
+              {a}
+            </button>
+          ))}
+        </div>
+        <Markdown source={PROMPTS[agentDoc]} />
+      </Section>
+
+      <Section id="design" title="Design log" open={open.has('design')} onToggle={toggle}>
+        <Markdown source={designLog} />
+      </Section>
+
+      <Section id="operating" title="How this is run" open={open.has('operating')} onToggle={toggle}>
+        <Markdown source={operating} />
+      </Section>
+
+      <Section id="plan" title="The agent plan" open={open.has('plan')} onToggle={toggle}>
+        <Markdown source={agentPlan} />
       </Section>
 
       <Section id="versions" title="What changed, by version" open={open.has('versions')} onToggle={toggle}>

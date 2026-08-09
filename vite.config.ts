@@ -11,6 +11,8 @@ export default defineConfig({
       // Help renders the agents' own source register rather than a copy of it,
       // so the two cannot drift apart.
       '/agents': resolve(__dirname, 'agents'),
+      // The project's own documents, rendered in Help from source.
+      '/docs': resolve(__dirname, '.'),
     },
   },
   build: {
@@ -26,10 +28,18 @@ export default defineConfig({
           // "/content/frontier/x.md?raw", so match on the path, not the
           // extension. That suffix is why the first attempt caught nothing.
           const norm = id.split('?')[0]
+          // Documents and content share a chunk. They grow with the project,
+          // not with the application, and measuring them together with React
+          // would make the app look like it bloats whenever anyone writes
+          // anything down.
           if (
             norm.includes('/content/frontier/') ||
             norm.includes('/content/items/') ||
-            norm.endsWith('/content/site.json')
+            norm.includes('/agents/') ||
+            norm.endsWith('/content/site.json') ||
+            norm.endsWith('/DESIGN-LOG.md') ||
+            norm.endsWith('/OPERATING.md') ||
+            norm.endsWith('/AGENT-PLAN.md')
           ) {
             return 'content'
           }
