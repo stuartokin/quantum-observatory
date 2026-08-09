@@ -242,3 +242,21 @@ disagreement about the physics.
 
 So: if you attach no source, write `unrated`. If you attach one, rate what you
 actually found. Never leave E1 standing as a placeholder.
+
+## Field limits
+
+| Field | Maximum |
+| --- | --- |
+| `title` | 110 characters |
+| `summary` | 600 |
+| `plain` | 1600 |
+| `evidence.claim` | 1600 |
+| `evidence.sources[].note` | 600 |
+| `qdayReasoning` | 1600 |
+| `review.note` | 800 |
+| `novelty` | 200 |
+| `metrics[].note` | 200 |
+
+Generous on purpose. Three runs were discarded for exceeding the previous
+limits by a few dozen characters. If you are near one, the field is probably
+carrying an argument that belongs in your summary instead.

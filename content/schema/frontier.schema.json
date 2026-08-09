@@ -27,15 +27,15 @@
     "title": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 90
+      "maxLength": 110
     },
     "summary": {
       "type": "string",
-      "maxLength": 400
+      "maxLength": 600
     },
     "plain": {
       "type": "string",
-      "maxLength": 1200,
+      "maxLength": 1600,
       "description": "What this actually is, in plain English, for a reader who is not a specialist in this field. No jargon that is not immediately explained."
     },
     "pillar": {
@@ -144,7 +144,7 @@
       "properties": {
         "claim": {
           "type": "string",
-          "maxLength": 1200
+          "maxLength": 1600
         },
         "verified": {
           "type": "string",
@@ -192,8 +192,8 @@
               },
               "note": {
                 "type": "string",
-                "maxLength": 200,
-                "description": "Anything a reader needs to know about this source specifically."
+                "maxLength": 600,
+                "description": "What a reader needs to know about this source specifically \u2014 what it adds, what it supersedes, where it is contested."
               },
               "accessed": {
                 "type": "string",
@@ -284,8 +284,8 @@
     },
     "qdayReasoning": {
       "type": "string",
-      "maxLength": 700,
-      "description": "Required whenever qdayImpact is not 0. A score without reasoning is an opinion."
+      "maxLength": 1600,
+      "description": "Required whenever qdayImpact is not 0. Explain what changes and by how much \u2014 a score without reasoning is an opinion. Room here for a real argument: a twenty-fold reduction in the qubits needed to break RSA deserves more than a line."
     },
     "country": {
       "type": "array",
@@ -296,7 +296,7 @@
     },
     "novelty": {
       "type": "string",
-      "maxLength": 140,
+      "maxLength": 200,
       "description": "Free tag, not a scored axis. e.g. major breakthrough, new architecture, incremental."
     },
     "horizon": {
@@ -347,7 +347,7 @@
         },
         "note": {
           "type": "string",
-          "maxLength": 600
+          "maxLength": 800
         },
         "reviewedOn": {
           "type": "string",

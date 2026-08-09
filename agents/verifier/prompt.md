@@ -205,15 +205,22 @@ The schema enforces these. Exceeding one discards the file.
 
 | Field | Maximum |
 | --- | --- |
-| `title` | 90 characters |
-| `summary` | 400 |
-| `plain` | 1200 |
-| `evidence.claim` | 800 |
-| `qdayReasoning` | 700 |
+| `title` | 110 characters |
+| `summary` | 600 |
+| `plain` | 1600 |
+| `evidence.claim` | 1600 |
+| `evidence.sources[].note` | 600 |
+| `qdayReasoning` | 1600 |
+| `review.note` | 800 |
+| `novelty` | 200 |
 | `metrics[].note` | 200 |
 
-`plain` is the one worth spending words on — it is what a non-specialist reads.
-Two or three sentences is right; a page is not.
+These are generous on purpose. Three runs were discarded for exceeding the
+previous limits by a few dozen characters — research done, sources found, and
+thrown away over a number nobody had measured. Write what the field needs. If
+you are near a limit the field is probably carrying an argument that belongs in
+your summary instead.
+
 
 ## Quote anything containing a colon
 
