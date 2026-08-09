@@ -1,0 +1,108 @@
+name: Steward
+
+# Runs when an issue moves, rather than on a schedule. The other agents produce
+# the queue; this one works it down.
+
+on:
+  issues:
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  # An agent commenting on an issue triggers this, which comments on an issue.
+  # Cancel-in-progress plus the bot check below keeps that from compounding.
+  group: steward
+  cancel-in-progress: false
+
+jobs:
+  steward:
+    # Do not respond to our own comments, or the loop never settles.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+
+      - name: Self-test the agent IO layer
+        run: npm run test:agent
+
+      - name: Clear the inbox
+        run: find content/frontier/_inbox -name '*.md' ! -name 'README.md' -delete || true
+
+      - name: Run the steward
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/steward.mjs
+
+      - name: Keep the run record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: steward-run-${{ github.run_number }}
+          path: .agent-run/
+          include-hidden-files: true
+          retention-days: 90
+
+      - name: Provenance and escalation check
+        run: node scripts/check-provenance.mjs --agent steward
+
+      - name: Publish
+        run: |
+          COUNT=$(cat .agent-run/count.txt 2>/dev/null || echo 0)
+          git config user.name "horizonq-agent"
+          git config user.email "agent@users.noreply.github.com"
+
+          for f in content/frontier/_inbox/*.md; do
+            [ -e "$f" ] || continue
+            [ "$(basename $f)" = "README.md" ] && continue
+            mv "$f" content/frontier/
+          done
+
+          npm run validate
+          node scripts/check-provenance.mjs
+
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            git add content/frontier agents/_decisions.md
+            git commit -m "steward: $COUNT item(s), $(node -e "
+              const a=require('./.agent-run/actions.json');
+              console.log(a.decisionsAdded + ' precedent(s)')")"
+            git push origin main
+          fi
+
+      - name: Report back
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const a = JSON.parse(fs.readFileSync('.agent-run/actions.json', 'utf8'));
+            for (const c of a.issueComments ?? []) {
+              fs.writeFileSync('/tmp/c.md', c.body);
+              require('child_process').execSync('gh issue comment ' + c.number + ' --body-file /tmp/c.md', { stdio: 'inherit' });
+            }
+            // Only close what the agent said has nothing left, and never one it
+            // also raised something on.
+            const raised = new Set((a.needsHuman ?? []).map(n => n.issue).filter(Boolean));
+            for (const n of a.close ?? []) {
+              if (raised.has(n)) { console.log('Not closing #' + n + ' — something was raised on it'); continue; }
+              require('child_process').execSync('gh issue close ' + n + ' --comment \"Nothing further needs a person. Closed by the steward.\"', { stdio: 'inherit' });
+            }
+          " || echo "Nothing to report."
