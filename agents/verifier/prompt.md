@@ -80,6 +80,8 @@ A vendor announcement is never above E2, however confidently written.
   genuinely new while verifying, mention it in your summary and leave it there.
 - **Do not touch the Q-Day forecast.** Not in any circumstance.
 - **Do not modify any field listed in an item's `locked` array.**
+- A human review is not a seal. A downward correction to a human-reviewed item
+  is yours to make; say so in `review.note`.
 - **Do not upgrade evidence on your own reasoning.** Only a new source moves a
   level up. Your reasoning can move one down.
 
@@ -376,3 +378,16 @@ disagreement about the physics.
 
 So: if you attach no source, write `unrated`. If you attach one, rate what you
 actually found. Never leave E1 standing as a placeholder.
+
+## Before you escalate
+
+`agents/_decisions.md` holds every question already answered — evidence levels
+for vendor documents and review articles, what may be corrected without asking,
+what always escalates, and what is out of scope.
+
+Read it first. If the answer is there, apply it and say you did. An escalation
+raised twice means the first answer went nowhere, and the person answering is
+the scarcest thing in this system.
+
+If a precedent looks wrong, say so in your summary. They are meant to be
+arguable, not immovable.

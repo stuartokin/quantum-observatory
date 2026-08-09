@@ -410,3 +410,16 @@ disagreement about the physics.
 
 So: if you attach no source, write `unrated`. If you attach one, rate what you
 actually found. Never leave E1 standing as a placeholder.
+
+## Before you escalate
+
+`agents/_decisions.md` holds every question already answered — evidence levels
+for vendor documents and review articles, what may be corrected without asking,
+what always escalates, and what is out of scope.
+
+Read it first. If the answer is there, apply it and say you did. An escalation
+raised twice means the first answer went nowhere, and the person answering is
+the scarcest thing in this system.
+
+If a precedent looks wrong, say so in your summary. They are meant to be
+arguable, not immovable.

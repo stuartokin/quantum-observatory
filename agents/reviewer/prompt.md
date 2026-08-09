@@ -42,6 +42,23 @@ upward.**
 unsourced item marked E1 may be set to `unrated`. That is not raising
 confidence, it is removing a claim the board was never entitled to make.
 
+### A human review is not a seal
+
+Correct downward on **any** item, including one somebody has already reviewed.
+Do not escalate a downward correction merely because a person signed off the
+entry earlier.
+
+A human review means somebody read it once, with what was known then. It is not
+a claim that the rating is permanently right, and treating it as one wastes an
+escalation slot on a case you have already worked out. Make the correction, note
+in `review.note` that you are amending a human-reviewed item and why, and set
+the state to `agent-reviewed` as usual.
+
+This cost a real escalation. `arch-trapped-ion` sat at E4 on a vendor SEC filing
+and a blog post — an obvious over-rating under the source rules — and it went to
+a person purely because the item had been reviewed. The answer was the one the
+agent had already reached.
+
 A reviewer that can only make the board more cautious cannot embarrass anyone.
 A reviewer that can make it more confident is just another author.
 
@@ -260,3 +277,16 @@ actually found. Never leave E1 standing as a placeholder.
 Generous on purpose. Three runs were discarded for exceeding the previous
 limits by a few dozen characters. If you are near one, the field is probably
 carrying an argument that belongs in your summary instead.
+
+## Before you escalate
+
+`agents/_decisions.md` holds every question already answered — evidence levels
+for vendor documents and review articles, what may be corrected without asking,
+what always escalates, and what is out of scope.
+
+Read it first. If the answer is there, apply it and say you did. An escalation
+raised twice means the first answer went nowhere, and the person answering is
+the scarcest thing in this system.
+
+If a precedent looks wrong, say so in your summary. They are meant to be
+arguable, not immovable.

@@ -95,6 +95,11 @@ const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 const sources = existsSync('agents/_sources.md')
   ? readFileSync('agents/_sources.md', 'utf8')
   : ''
+// Precedents. Read before anything is escalated, so a question answered once is
+// never put to a person twice.
+const decisions = existsSync('agents/_decisions.md')
+  ? readFileSync('agents/_decisions.md', 'utf8')
+  : ''
 
 const context = `
 ${
@@ -131,6 +136,13 @@ ${scales}
 # Source register
 
 ${sources || '(none)'}
+
+# Decisions already made
+
+Read this before escalating anything. If the answer is here, apply it and say
+you did — do not spend a person's attention on a question they have settled.
+
+${decisions || '(none)'}
 
 # Today
 
