@@ -161,31 +161,42 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log it for veto
-        if: success() && env.MERGED_PR != ''
+      # Log the run whether or not anything changed.
+      #
+      # This used to fire only when files merged, which meant a reviewer run
+      # reporting "eight checked, nothing to correct, one thing needs you"
+      # produced no issue at all — and the escalation was lost. For an agent
+      # whose normal outcome is no change, that is precisely backwards.
+      - name: Log the run
+        if: success()
         run: |
-          COUNT=$(cat .agent-run/count.txt)
-          if [ -n "$DIRECT_PUSH" ]; then
-            VETO="revert commit $MERGED_PR"
-          else
-            VETO="use the Revert button on $MERGED_PR"
-          fi
+          COUNT=$(cat .agent-run/count.txt 2>/dev/null || echo 0)
           TITLE="Review queue - week of $(date +%Y-%m-%d)"
 
-          # The full agent summary, not a count. This is the thing that gets
-          # read weekly, and the "could not source" reasoning is often more
-          # useful than the items that succeeded.
+          if [ -n "$MERGED_PR" ]; then
+            if [ -n "$DIRECT_PUSH" ]; then
+              VETO="revert commit $MERGED_PR"
+            else
+              VETO="use the Revert button on $MERGED_PR"
+            fi
+            HEAD="## ${{ matrix.agent }} - $COUNT item(s), merged and live"
+            LINKS="$MERGED_PR
+
+          - Confirm: Actions → Confirm or veto → \`mark-reviewed\`
+          - Veto: $VETO"
+          else
+            HEAD="## ${{ matrix.agent }} - ran, nothing changed"
+            LINKS="_No files written. The summary below is the result._"
+          fi
+
           {
-            echo "## ${{ matrix.agent }} — $COUNT item(s)"
+            echo "$HEAD"
             echo
-            echo "Merged and live, **not yet reviewed**. $MERGED_PR"
-            echo
-            echo "- Confirm: Actions → Review → \`mark-reviewed\`"
-            echo "- Veto: $VETO"
+            echo "$LINKS"
             echo
             echo "---"
             echo
-            cat .agent-run/pr-body.md
+            cat .agent-run/pr-body.md 2>/dev/null || echo "_No summary returned._"
           } > /tmp/issue-body.md
 
           EXISTING=$(gh issue list --search "$TITLE" --state open --json number,title \
