@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { NewsEntry, NewsWeek } from '../renderers/board/news'
 import type { Forecast } from '../content/forecast'
 
@@ -156,6 +156,22 @@ export function QDayBar({
   colour: string
   onOpen: () => void
 }) {
+  /**
+   * The bar sheds detail as the header narrows.
+   *
+   * It sat beside six statistics with neither able to shrink, so on a normal
+   * screen the two ran into each other. The range is the part worth keeping;
+   * the central estimate and the review age are available in the panel.
+   */
+  const [wide, setWide] = useState(
+    typeof window !== 'undefined' ? window.innerWidth >= 1600 : false,
+  )
+  useEffect(() => {
+    const onResize = () => setWide(window.innerWidth >= 1600)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   if (!forecast) return null
   const { earliest, aggressive, central, conservative } = forecast.estimates
   const agentSet = forecast.state === 'agent-estimate'
@@ -166,12 +182,15 @@ export function QDayBar({
       <span className="qday__range" style={{ color: colour }}>
         {aggressive ?? earliest}–{conservative ?? central}
       </span>
-      {central && <span className="qday__central">central {central}</span>}
-      <span className="qday__state">
-        {agentSet ? 'Agent estimate, not yet reviewed' : 'Reviewed'}
-        {' · '}
-        {ago(forecast.lastHumanReview ?? forecast.on)}
-      </span>
+      {wide && central && <span className="qday__central">central {central}</span>}
+      {wide && (
+        <span className="qday__state">
+          {agentSet ? 'Agent estimate, not yet reviewed' : 'Reviewed'}
+          {' · '}
+          {ago(forecast.lastHumanReview ?? forecast.on)}
+        </span>
+      )}
+      {!wide && agentSet && <span className="qday__state">agent</span>}
     </button>
   )
 }

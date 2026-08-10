@@ -401,7 +401,10 @@ export function Board() {
                 alignItems: narrow ? 'flex-end' : 'baseline',
                 flexWrap: narrow ? 'wrap' : 'nowrap',
                 whiteSpace: 'nowrap',
-                gap: narrow ? 5 : 14,
+                gap: narrow ? 5 : 12,
+                minWidth: 0,
+                flex: '0 1 auto',
+                overflow: 'hidden',
                 fontFamily: 'var(--mono)',
                 fontSize: '0.68rem',
                 letterSpacing: '0.08em',
@@ -1304,43 +1307,53 @@ function Sky({
           }
         }
 
-        // Category names fade out as you zoom in — at close range they clutter
-        // exactly the thing you are trying to read.
+        // Category names live in a reserved band with its own backing.
+        //
+        // Staggering onto two rows was not enough: item labels are drawn in the
+        // same region, so a body near the top printed straight over the
+        // category names. A band nothing else may enter is the only
+        // arrangement that holds at every width.
         const zoomFade = Math.max(0, Math.min(1, (1.7 - v.k) / 0.5))
         if (zoomFade > 0.02) {
-          // Nine names across a narrow frame will not fit on one line, and
-          // running them together is worse than showing fewer. Stagger onto two
-          // rows, truncate to the lane, and drop any that still collide.
-          const laneW = (W - PAD) / CONSTELLATIONS.length
+          const active = CONSTELLATIONS.filter((c) => activeCons.includes(c))
+          const laneW = (W - PAD) / Math.max(1, active.length)
           const placedNames: { x: number; w: number; row: number }[] = []
-          CONSTELLATIONS.forEach((c, i) => {
-            if (!activeCons.includes(c)) return
+
+          g.globalAlpha = zoomFade
+          const backing = g.createLinearGradient(0, 0, 0, 42)
+          backing.addColorStop(0, 'rgba(7,11,20,0.96)')
+          backing.addColorStop(0.7, 'rgba(7,11,20,0.86)')
+          backing.addColorStop(1, 'rgba(7,11,20,0)')
+          g.fillStyle = backing
+          g.fillRect(0, 0, W, 42)
+
+          active.forEach((c, i) => {
             const cx = X(CONSTELLATION_HOME[c] ?? 0.5)
-            if (cx < PAD - 40 || cx > W + 40) return
+            if (cx < -60 || cx > W + 60) return
 
             let label = CONSTELLATION_LABEL[c].toUpperCase()
-            let tw = g.measureText(label).width
-            const budget = laneW * 1.7
-            while (tw > budget && label.length > 4) {
-              label = label.slice(0, -2)
-              tw = g.measureText(label + '…').width
+            const budget = laneW * 1.5
+            if (g.measureText(label).width > budget) {
+              while (label.length > 4 && g.measureText(label + '…').width > budget) {
+                label = label.slice(0, -1)
+              }
+              label += '…'
             }
-            if (label !== CONSTELLATION_LABEL[c].toUpperCase()) label += '…'
-            tw = g.measureText(label).width
+            const tw = g.measureText(label).width
 
             const row = i % 2
-            const x = cx - tw / 2
+            const x = Math.max(3, Math.min(W - tw - 3, cx - tw / 2))
             const clash = placedNames.some(
-              (o) => o.row === row && !(x + tw < o.x - 6 || x > o.x + o.w + 6),
+              (o) => o.row === row && !(x + tw < o.x - 10 || x > o.x + o.w + 10),
             )
             if (clash) return
             placedNames.push({ x, w: tw, row })
 
             g.fillStyle = constellationColour(c)
-            g.globalAlpha = (row === 0 ? 0.9 : 0.65) * zoomFade
-            g.fillText(label, Math.max(4, x), 18 + row * 13)
-            g.globalAlpha = 1
+            g.globalAlpha = (row === 0 ? 0.95 : 0.7) * zoomFade
+            g.fillText(label, x, 14 + row * 13)
           })
+          g.globalAlpha = 1
         }
       } else {
         // ---------------- ORBIT, IN THREE DIMENSIONS ----------------
@@ -1495,7 +1508,14 @@ function Sky({
           (n.sourced && n.rank >= labelFloor) ||
           v.k > 2.2
         const showLabel = sel || hov || inFocus || earns
-        if (showLabel && off > 0.5 && (labelQueue.length < capacity || sel || hov || inFocus)) {
+        // Nothing may print into the constellation band at the top.
+        const clearOfBand = py > 46 || sel || hov
+        if (
+          showLabel &&
+          off > 0.5 &&
+          clearOfBand &&
+          (labelQueue.length < capacity || sel || hov || inFocus)
+        ) {
           labelQueue.push({ n, px, py, top: sel || hov })
         }
       }
