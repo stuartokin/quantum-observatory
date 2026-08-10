@@ -152,7 +152,19 @@ if (focus.length) {
   console.log(`  focus: ${focus.length} instruction(s)`)
   for (const f of focus) console.log('    ' + f.slice(0, 100))
 }
-const schema = readFileSync('content/schema/frontier.schema.json', 'utf8')
+/**
+ * The schema an agent is shown must be the one it writes against.
+ *
+ * Every agent was handed the frontier schema regardless of its write scope, so
+ * the newsroom — which writes news — produced frontier-shaped files with a
+ * `title` field and `schema: frontier/v1`. It was following the specification
+ * it had been given.
+ */
+const writesNews = (cfg.write_scope ?? []).some((p) => p.includes('content/news'))
+const schemaPath = writesNews
+  ? 'content/schema/news.schema.json'
+  : 'content/schema/frontier.schema.json'
+const schema = readFileSync(schemaPath, 'utf8')
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 // Shared across every agent, so changing it changes all four at once.
 const sources = existsSync('agents/_sources.md')
@@ -176,7 +188,9 @@ ${fullItems()}
 
 # Index
 `
-    : `# Existing board — ${items.length} items`
+    : writesNews
+      ? '# The board these headlines attach to'
+      : `# Existing board — ${items.length} items`
 }
 
 Read this before proposing anything. Adding something already present is the
@@ -425,8 +439,14 @@ for (const f of files) {
     const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
     if (!fm) return text
     let head = fm[1]
-    if (!/^schema:/m.test(head)) head = `schema: ${collection}\n${head}`
-    if (!/^id:/m.test(head)) head = head.replace(/^(schema:.*\n)/, `$1id: ${base}\n`)
+    // A declared schema that disagrees with the folder is wrong about the
+    // folder, not the other way round.
+    if (/^schema:/m.test(head)) head = head.replace(/^schema:.*$/m, `schema: ${collection}`)
+    else head = `schema: ${collection}\n${head}`
+    // The filename is the identity. An id that disagrees with it would fail
+    // validation later for no useful reason, so make them agree here.
+    if (/^id:/m.test(head)) head = head.replace(/^id:.*$/m, `id: ${base}`)
+    else head = head.replace(/^(schema:.*\n)/, `$1id: ${base}\n`)
     return text.replace(fm[1], head)
   }
 

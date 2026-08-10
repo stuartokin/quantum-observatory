@@ -170,8 +170,15 @@ Optional body. Anything a reader would want beyond the plain-English reading —
 what was measured, what remains unproven, who disputes it.
 ```
 
-`id` must match the filename without the extension. Date-first ids sort
-usefully and are encouraged.
+`id` must match the filename without the extension — write
+`content/news/2026-08-10-sandia-validates-helios-fidelity.md` and the id is
+`2026-08-10-sandia-validates-helios-fidelity`. Date first, so items sort
+usefully.
+
+**`schema` is `news/v1`.** Not `frontier/v1`. You are writing news, which is a
+different collection with a different shape: it has `headline` and not `title`,
+`validation` and not `evidence`, and it points at the board rather than being
+part of it.
 
 **Every field above marked required in the schema must be present**, even where
 you think the filename or the source implies it: `schema`, `id`, `headline`,
