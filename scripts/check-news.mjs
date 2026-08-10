@@ -58,6 +58,53 @@ const published = []
 const counts = { verified: 0, 'single-source': 0, contested: 0, rejected: 0 }
 let linked = 0
 
+/**
+ * What separates a duplicate from a pair of companion papers is the source.
+ *
+ * Two Nature papers from the same laboratory on the same day, on adjacent
+ * physics, will share most of their significant words and are two events. The
+ * same result written twice will share a source URL.
+ *
+ * So: similar wording and the same source is a duplicate and fails. Similar
+ * wording with different sources is worth a look and only warns — the gate
+ * cannot tell, and failing a build on a guess trains people to ignore it.
+ */
+const STOP = new Set([
+  'the','a','an','and','or','of','in','on','to','for','with','at','by','from',
+  'as','is','are','its','it','that','this','into','over','after','first',
+])
+const tokens = (t) =>
+  new Set(
+    t.toLowerCase().replace(/[^a-z0-9× ]/g, ' ').split(/\s+/)
+      .filter((w) => w.length > 2 && !STOP.has(w)),
+  )
+const overlap = (a, b) => {
+  const A = tokens(a), B = tokens(b)
+  if (!A.size || !B.size) return 0
+  let shared = 0
+  for (const w of A) if (B.has(w)) shared++
+  return shared / Math.min(A.size, B.size)
+}
+/** arXiv id or DOI, so two URLs for one paper still match. */
+const identity = (u = '') => {
+  const arxiv = u.match(/arxiv\.org\/abs\/([\d.]+)/i)
+  if (arxiv) return `arxiv:${arxiv[1]}`
+
+  const doi = u.match(/(10\.\d{4,}\/[^\s?#]+)/)
+  if (doi) return `doi:${doi[1].toLowerCase()}`
+
+  // A Nature article URL and its DOI are the same paper written two ways, and
+  // an agent citing one while an earlier run cited the other is exactly how a
+  // duplicate slips past a URL comparison.
+  const nature = u.match(/nature\.com\/articles\/(s\d{5}-\d{3}-[\dA-Za-z-]+)/)
+  if (nature) return `doi:10.1038/${nature[1].toLowerCase()}`
+
+  const science = u.match(/science\.org\/doi\/(?:abs\/|full\/)?(10\.\d{4,}\/[^\s?#]+)/)
+  if (science) return `doi:${science[1].toLowerCase()}`
+
+  return u.replace(/[?#].*$/, '').toLowerCase()
+}
+
 for (const f of files) {
   const path = join(DIR, f)
   const raw = readFileSync(path, 'utf8')
@@ -136,52 +183,6 @@ for (const f of files) {
   })
 }
 
-/**
- * What separates a duplicate from a pair of companion papers is the source.
- *
- * Two Nature papers from the same laboratory on the same day, on adjacent
- * physics, will share most of their significant words and are two events. The
- * same result written twice will share a source URL.
- *
- * So: similar wording and the same source is a duplicate and fails. Similar
- * wording with different sources is worth a look and only warns — the gate
- * cannot tell, and failing a build on a guess trains people to ignore it.
- */
-const STOP = new Set([
-  'the','a','an','and','or','of','in','on','to','for','with','at','by','from',
-  'as','is','are','its','it','that','this','into','over','after','first',
-])
-const tokens = (t) =>
-  new Set(
-    t.toLowerCase().replace(/[^a-z0-9× ]/g, ' ').split(/\s+/)
-      .filter((w) => w.length > 2 && !STOP.has(w)),
-  )
-const overlap = (a, b) => {
-  const A = tokens(a), B = tokens(b)
-  if (!A.size || !B.size) return 0
-  let shared = 0
-  for (const w of A) if (B.has(w)) shared++
-  return shared / Math.min(A.size, B.size)
-}
-/** arXiv id or DOI, so two URLs for one paper still match. */
-const identity = (u = '') => {
-  const arxiv = u.match(/arxiv\.org\/abs\/([\d.]+)/i)
-  if (arxiv) return `arxiv:${arxiv[1]}`
-
-  const doi = u.match(/(10\.\d{4,}\/[^\s?#]+)/)
-  if (doi) return `doi:${doi[1].toLowerCase()}`
-
-  // A Nature article URL and its DOI are the same paper written two ways, and
-  // an agent citing one while an earlier run cited the other is exactly how a
-  // duplicate slips past a URL comparison.
-  const nature = u.match(/nature\.com\/articles\/(s\d{5}-\d{3}-[\dA-Za-z-]+)/)
-  if (nature) return `doi:10.1038/${nature[1].toLowerCase()}`
-
-  const science = u.match(/science\.org\/doi\/(?:abs\/|full\/)?(10\.\d{4,}\/[^\s?#]+)/)
-  if (science) return `doi:${science[1].toLowerCase()}`
-
-  return u.replace(/[?#].*$/, '').toLowerCase()
-}
 
 const warnings = []
 for (let i = 0; i < published.length; i++) {
