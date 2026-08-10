@@ -54,7 +54,7 @@ evidence:
       identifier: 'Science 392, 6800: 868 (2026)'
       doi: 10.1126/science.adx2728
       accessed: '2026-08-09'
-      note: 'Tindall, Mello, Fishman, Stoudenmire, Sels; Flatiron Institute and Boston University. Peer-reviewed rebuttal showing BP-TNS matches D-Wave in 2D/3D regimes. Preprint arXiv:2503.05693 (March 2025, v4 May 2026). D-Wave disputes scope via arXiv:2504.06283.'
+      note: 'Tindall, Mello, Fishman, Stoudenmire, Sels; Flatiron Institute and Boston University. Peer-reviewed rebuttal showing BP-TNS matches D-Wave in 2D/3D regimes. Confirmed published May 2026. D-Wave disputes scope via arXiv:2504.06283.'
 confidence: medium
 status: published
 moved:
@@ -67,11 +67,12 @@ novelty: beyond-classical demonstration on physics simulation (contested)
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-09'
-  note: 'Focus instruction: move readiness demonstrated → experimental, citing Tindall et al. Science 2026 (DOI 10.1126/science.adx2728). Prior reviewer held at demonstrated pending scientific resolution; human focus instruction overrides. D-Wave dispute recorded in claim. Confidence remains medium.'
+  reviewedOn: '2026-08-10'
+  note: 'Tindall Science 2026 (adx2728) confirmed published May 22 2026. D-Wave dispute (arXiv:2504.06283) confirmed and accurately described. BP-TNS matches D-Wave on 2D/3D lattice geometries (cubic, diamond, square confirmed in secondary sources); D-Wave argues higher-dimensional biclique problems and largest 3D simulations remain beyond BP-TNS. E4 correct; both sources are peer-reviewed Science papers. No changes made.'
 ---
 
 Quantum annealing encodes combinatorial optimisation and physics-simulation problems as an Ising Hamiltonian and exploits quantum tunnelling to search the energy landscape. D-Wave has operated cloud-accessible superconducting annealers commercially since 2011, scaling to ~5,000 qubits on the Advantage and Advantage2 systems.

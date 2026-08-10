@@ -61,7 +61,7 @@ evidence:
       identifier: 'arXiv:2505.15917'
       doi: 10.48550/arXiv.2505.15917
       accessed: '2026-08-09'
-      note: 'Craig Gidney, Google Quantum AI. Not peer-reviewed as of access date. CC BY 4.0. The current leading surface-code estimate.'
+      note: 'Craig Gidney, Google Quantum AI. Not peer-reviewed as of access date. CC BY 4.0. The current leading surface-code estimate. Confirmed: <1M qubits, <1 week, 0.1%/1µs assumptions, ~20x reduction vs 2019.'
     - url: https://eprint.iacr.org/2026/280
       role: corroborating
       title: 'Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves'
@@ -69,7 +69,7 @@ evidence:
       date: '2026-03-01'
       identifier: 'ePrint 2026/280'
       accessed: '2026-08-09'
-      note: 'Chevignard, Fouque, Schrottenloher (Inria/Univ Rennes). Peer-reviewed at EUROCRYPT 2026. ECC-256 at 1,193 logical qubits (P-256). Note: the original abstract incorrectly listed 1,098 for P-256 and 1,193 for P-224; the ePrint carries an explicit correction (last revised June 2026) swapping these values. The correct P-256 figure is 1,193. Some secondary sources citing the pre-correction abstract report 1,098 for P-256 in error.'
+      note: 'Chevignard, Fouque, Schrottenloher (Inria/Univ Rennes). Peer-reviewed at EUROCRYPT 2026. ECC-256 at 1,193 logical qubits (P-256). ePrint correction note confirmed (last revised June 2026): abstract had swapped P-224 (1,098) and P-256 (1,193) values. Correct P-256 figure is 1,193.'
     - url: https://arxiv.org/abs/2602.11457
       role: corroborating
       title: 'The Pinnacle Architecture: Reducing the cost of breaking RSA-2048 to 100 000 physical qubits using quantum LDPC codes'
@@ -89,7 +89,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'arXiv:2505.15917 opened; Gidney <1M qubits, <1 week, same 0.1%/1µs assumptions as 2019 confirmed. E3 correct — all three sources are preprints or conference proceedings, none peer-reviewed in a journal. No changes made.'
+  note: 'arXiv:2505.15917 opened and confirmed: Gidney <1M qubits, <1 week, same 0.1%/1µs/10µs assumptions as 2019. ePrint 2026/280 correction note confirmed (P-224/P-256 swap corrected June 2026; P-256=1,193). E3 correct — all three sources are preprints or conference ePrint proceedings, none peer-reviewed in a primary journal. No changes made.'
 ---
 
 Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.

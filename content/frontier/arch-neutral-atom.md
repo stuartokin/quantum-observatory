@@ -40,7 +40,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-10'
-  note: 'Nature 645, 620-625 confirmed. Source entry doi and note fields added. Bluvstein et al. Nature 649, 39-46 (January 2026) — fault-tolerant neutral-atom architecture for universal quantum computation, Harvard/MIT/QuEra, up to 448 atoms — confirmed as a significant subsequent paper and already flagged for Scout in prior run. A further paper (Bluvstein et al. arXiv:2506.20661, June 2026) extends this work; flagged for Scout under worth-noting. E4 and readiness experimental confirmed; no changes made.'
+  note: 'Nature 645, 620-625 confirmed via Nature website cross-check. DOI 10.1038/s41586-025-09367-3 verified. 5-to-1 magic state distillation on d=3 and d=5 colour-code qubits on QuEra Gemini, Harvard/MIT/QuEra team confirmed. E4 correct for peer-reviewed experimental result. No independent replication by a separate institution found. Bluvstein et al. Nature 649, 39-46 (Jan 2026) — fault-tolerant neutral-atom architecture for universal quantum computation using up to 448 atoms — confirmed as published and flagged for Scout as a significant update to this entry or potential new item.'
 confidence: high
 status: published
 added: '2026-08-04'

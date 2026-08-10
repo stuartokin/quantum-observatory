@@ -52,7 +52,7 @@ evidence:
       identifier: 'Science 392, 6800: 868 (2026)'
       doi: 10.1126/science.adx2728
       accessed: '2026-08-09'
-      note: 'Tindall, Mello, Fishman, Stoudenmire, Sels; Flatiron Institute and Boston University. Peer-reviewed rebuttal showing BP-TNS matches D-Wave in 2D/3D regimes. Preprint arXiv:2503.05693. D-Wave disputes scope via arXiv:2504.06283.'
+      note: 'Tindall, Mello, Fishman, Stoudenmire, Sels; Flatiron Institute and Boston University. Peer-reviewed rebuttal showing BP-TNS matches D-Wave in 2D/3D regimes. Confirmed published May 2026. D-Wave disputes scope via arXiv:2504.06283.'
 confidence: medium
 status: published
 priority: P1
@@ -63,15 +63,16 @@ novelty: 'first peer-reviewed beyond-classical claim for scientifically meaningf
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-09'
-  note: 'Focus instruction: add Tindall et al. Science 2026 (DOI 10.1126/science.adx2728) as corroborating source. Readiness was already experimental. Claim updated to reflect active peer-reviewed dispute. Confidence remains medium. Actors updated to include Flatiron Institute and Boston University.'
+  reviewedOn: '2026-08-10'
+  note: 'Tindall et al. Science 2026 (adx2728) confirmed published May 22 2026 via science.org, Science 392, 868. D-Wave dispute (arXiv:2504.06283) confirmed active and accurately described. BP-TNS methods confirmed to match D-Wave on 2D/3D lattice geometries; D-Wave argues BP-TNS does not cover full scope. Both papers peer-reviewed and published in Science. E4 correct. No changes made.'
 ---
 
 The most valuable early application of quantum computers is expected to be simulating quantum physics itself — chemistry, materials, and condensed matter — where the quantum state space grows exponentially and classical computers must approximate. D-Wave published the first result in a high-profile peer-reviewed venue (Science, 2025) claiming that their annealing processor outperforms the world-class Frontier supercomputer on a specific spin-glass simulation relevant to magnetic materials research.
 
-A 2026 Science paper by Tindall et al. (Flatiron Institute / Boston University) showed that classical belief-propagation tensor-network (BP-TNS) methods can match D-Wave results on the 2D and 3D lattice geometries studied in the original paper. D-Wave disputes whether this covers the hardest problem instances and argues that Tindall et al. did not attempt the most complex geometries, largest 3D simulations, low-precision ensembles where quantum correlations grow fastest, or the fourth-order observables produced by the annealer.
+A 2026 Science paper by Tindall et al. (Flatiron Institute / Boston University) showed that classical belief-propagation tensor-network (BP-TNS) methods can match D-Wave results on the 2D and 3D lattice geometries studied in the original paper. D-Wave disputes the scope: their published comment (arXiv:2504.06283) argues Tindall et al. did not attempt the most complex geometries, largest 3D simulations, low-precision ensembles where quantum correlations grow fastest, or the fourth-order observables produced by the annealer.
 
 Both papers are peer-reviewed and published in Science. The classical-simulability debate remains open. Confidence is medium and readiness stays at experimental until the scope dispute is independently resolved.

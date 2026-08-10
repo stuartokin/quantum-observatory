@@ -31,7 +31,7 @@ metrics:
   - name: 'Logical qubits for ECC P-256 ECDLP (best current estimate)'
     value: '835'
     unit: 'logical qubits'
-    note: 'Luo et al. arXiv:2607.13816, July 2026. Down from 1,193 (Chevignard, EUROCRYPT 2026). Preprint only; not peer-reviewed.'
+    note: 'Luo et al. arXiv:2607.13816, July 2026. Down from 1,193 (Chevignard, EUROCRYPT 2026). Preprint only; not peer-reviewed. Supersedes same group''s April preprint arXiv:2604.02311.'
   - name: 'Logical qubits for ECC P-256 ECDLP (peer-reviewed estimate)'
     value: '1193'
     unit: 'logical qubits'
@@ -77,7 +77,7 @@ evidence:
       date: '2026-03-01'
       identifier: 'IACR eprint 2026/280'
       accessed: '2026-08-09'
-      note: 'Chevignard, Fouque, Schrottenloher. Peer-reviewed at EUROCRYPT 2026. Achieves 1,193 logical qubits for P-256 at cost of O(n^4) gate count. The ePrint carries an explicit correction note (last revised June 2026): the original abstract swapped the P-224 figure (1,098) and the P-256 figure (1,193). Corrected P-256 value is 1,193.'
+      note: 'Chevignard, Fouque, Schrottenloher. Peer-reviewed at EUROCRYPT 2026. Achieves 1,193 logical qubits for P-256. ePrint correction note (last revised June 2026): abstract originally swapped P-224 (1,098) and P-256 (1,193) values; corrected P-256 value is 1,193.'
     - url: 'https://arxiv.org/abs/2607.13816'
       role: corroborating
       title: 'Quantum Algorithm for Elliptic Curve Discrete Logarithms with Space-Efficient Point Addition'
@@ -86,7 +86,7 @@ evidence:
       identifier: 'arXiv:2607.13816'
       doi: '10.48550/arXiv.2607.13816'
       accessed: '2026-08-09'
-      note: 'Luo, Yang, Luo, Wang, Su, Sun, Li, Li; Peking University / Sun Yat-Sen / CAS. Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 via space-efficient modular inversion. Caution: abstract cites Chevignard P-256 as 1,098 but that is the P-224 figure. The Chevignard ePrint itself confirms this via a June 2026 correction note swapping P-224 and P-256 values. The correct Chevignard P-256 figure is 1,193.'
+      note: 'Luo, Yang, Luo, Wang, Su, Sun, Li, Li; Peking University / Sun Yat-Sen / CAS. Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 via space-efficient modular inversion. Supersedes same group arXiv:2604.02311. Abstract cites Chevignard P-256 as 1,098 — confirmed error; 1,098 is the P-224 figure per ePrint 2026/280 correction note.'
 confidence: high
 status: published
 origin: agent
@@ -97,7 +97,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'arXiv:2607.13816 opened and confirmed: 835 logical qubits for P-256. Luo abstract cites Chevignard as 1098 for P-256 — confirmed this is the P-224 figure per ePrint 2026/280 correction note. Board notes are accurate. E3 correct (all sources preprints or conference proceedings). No changes made.'
+  note: 'arXiv:2607.13816 confirmed: 835 logical qubits for 256-bit prime-field curve. Luo abstract cites Chevignard as 1,098 for P-256 — confirmed to be P-224 figure per ePrint 2026/280 correction note (last revised June 2026). Willsch NIC Series 52, 239-250 (2025) confirmed as conference proceedings; E3 correct. Note added: arXiv:2607.13816 supersedes arXiv:2604.02311 (same group, April 2026). No other changes made.'
 ---
 
 Shor''s algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.

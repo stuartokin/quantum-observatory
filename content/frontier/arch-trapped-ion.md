@@ -40,7 +40,7 @@ evidence:
       identifier: 'Nature 655, 81-86 (2026)'
       doi: 10.1038/s41586-026-10676-4
       accessed: '2026-08-09'
-      note: 'Ransford et al.; Quantinuum and Sandia National Laboratories. Peer-reviewed. Sandia co-authored and independently verified fidelity figures under DOE CRADA. Publisher correction issued 7 July 2026 (DOI 10.1038/s41586-026-10882-0); fidelity claims unchanged.'
+      note: 'Ransford et al.; Quantinuum and Sandia National Laboratories. Peer-reviewed. Sandia co-authored and independently verified fidelity figures under DOE CRADA. Publisher correction issued 7 July 2026 (DOI 10.1038/s41586-026-10882-0); fidelity claims unchanged. Infidelities confirmed: 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM).'
     - url: https://arxiv.org/abs/2511.05465
       role: preprint
       title: 'Helios: A 98-qubit trapped-ion quantum computer'
@@ -78,7 +78,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'Nature 655, 81-86 opened; single-qubit infidelity 2.5(1)×10⁻⁵, two-qubit 7.9(2)×10⁻⁴, SPAM 3.3(5)×10⁻⁴ confirmed against published paper and against Sandia co-authorship (DOE CRADA). Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) already documented correctly. E4 correct; Sandia co-authorship constitutes institutional verification but is not independent replication in a separate paper. No changes made.'
+  note: 'Nature 655, 81-86 opened directly via nature.com; single-qubit infidelity 2.5(1)×10⁻⁵, two-qubit 7.9(2)×10⁻⁴, SPAM 3.3(5)×10⁻⁴ confirmed against published abstract and Sandia co-authorship (DOE CRADA confirmed). Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) already documented correctly. E4 correct; Sandia co-authorship constitutes institutional verification but is not independent replication in a separate paper. No changes made.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.
