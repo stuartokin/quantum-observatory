@@ -33,11 +33,19 @@ export default defineConfig({
           // not with the application, and measuring them together with React
           // would make the app look like it bloats whenever anyone writes
           // anything down.
+          //
+          // Match the whole content tree rather than naming collections.
+          // /content/news/ was missed when it was added, so every headline the
+          // newsroom wrote went into the entry chunk — downloaded before
+          // anything appeared on screen, and growing with each run. The content
+          // chunk stayed byte-identical across builds while the app grew, which
+          // is the tell.
+          //
+          // Naming collections has now failed twice: once here, once in the
+          // workflow that stages files for commit. Match the tree.
           if (
-            norm.includes('/content/frontier/') ||
-            norm.includes('/content/items/') ||
+            norm.includes('/content/') ||
             norm.includes('/agents/') ||
-            norm.endsWith('/content/site.json') ||
             norm.endsWith('/DESIGN-LOG.md') ||
             norm.endsWith('/OPERATING.md') ||
             norm.endsWith('/AGENT-PLAN.md')

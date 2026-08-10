@@ -59,6 +59,15 @@ const KB = 1024
  *         below were rewritten to measure that instead, which is what a
  *         performance budget was always for.
  *
+ *         Then the app grew again, and the cause was not the application at
+ *         all: /content/news/ and /content/forecasts/ were missing from the
+ *         chunk matcher in vite.config.ts, so every headline the newsroom wrote
+ *         was landing in the entry chunk. The tell was the content chunk
+ *         staying byte-identical between builds while the app climbed.
+ *
+ *         If this figure rises after an agent run rather than after a code
+ *         change, look at the chunk matcher before looking at the code.
+ *
  *         The news archive and the headline detail view were split out too:
  *         the ticker is on screen from the first paint, those two are not shown
  *         until a reader asks. Splitting them was worth more than raising this
