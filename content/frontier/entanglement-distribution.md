@@ -16,7 +16,7 @@ metrics:
   - name: Matter-to-matter entanglement distance
     value: '420'
     unit: km
-    note: 'Atomic ensemble quantum memories, telecom S-band conversion, Luo et al. Phys. Rev. Lett. 136, 240801 (2026)'
+    note: 'Atomic ensemble quantum memories, telecom S-band conversion, Wang, Luo et al. Phys. Rev. Lett. 136, 240601 (2026)'
   - name: Previous record
     value: '~100'
     unit: km
@@ -36,19 +36,19 @@ moved:
   from: emerging
   on: '2026-08-08'
 evidence:
-  claim: 'Luo et al. (Physical Review Letters 136, 240801, June 2026; preprint arXiv:2504.05660) report entanglement between two atomic ensemble quantum memories separated by 420 km of optical fibre. Photons from the memories are converted to telecom S-band (1,350 nm) via quantum frequency conversion to exploit low fibre loss (0.17 dB/km). Phase is stabilised using combined far-off-resonant and dual-band locking. The result exceeds the previous memory-memory entanglement record by more than four times and is published in a peer-reviewed journal, though not yet independently replicated by a different group.'
+  claim: 'Wang, Luo et al. (Physical Review Letters 136, 240601, June 2026; preprint arXiv:2504.05660) report entanglement between two atomic ensemble quantum memories separated by 420 km of optical fibre. Photons from the memories are converted to telecom S-band (1,350 nm) via quantum frequency conversion to exploit low fibre loss (0.17 dB/km). Phase is stabilised using combined far-off-resonant and dual-band locking. The result exceeds the previous memory-memory entanglement record by more than four times and is published in a peer-reviewed journal, though not yet independently replicated by a different group.'
   level: E4
-  verified: '2026-08-09'
+  verified: '2026-08-10'
   sources:
-    - url: https://link.aps.org/doi/10.1103/PhysRevLett.136.240801
+    - url: https://link.aps.org/doi/10.1103/PhysRevLett.136.240601
       role: primary
       title: Entangling Quantum Memories over 420 km in Fiber
       publisher: Physical Review Letters
-      date: '2026-06-17'
-      identifier: 'Phys. Rev. Lett. 136, 240801 (2026)'
-      doi: 10.1103/PhysRevLett.136.240801
-      accessed: '2026-08-09'
-      note: 'Luo, Wang, Zheng et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 17 June 2026. Not yet independently replicated.'
+      date: '2026-06-16'
+      identifier: 'Phys. Rev. Lett. 136, 240601 (2026)'
+      doi: 10.1103/PhysRevLett.136.240601
+      accessed: '2026-08-10'
+      note: 'Bin Wang, Xi-Yu Luo, Bo-Feng Gao et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 16 June 2026. Identifier corrected from 240801 (which is a different paper about a memory-assisted nonlocal optical interferometer) to 240601 per APS PRL issue 24 listing. Not yet independently replicated.'
     - url: https://arxiv.org/abs/2504.05660
       role: preprint
       title: Entangling quantum memories over 420 km in fiber
@@ -57,7 +57,7 @@ evidence:
       identifier: arXiv:2504.05660
       doi: 10.48550/arXiv.2504.05660
       accessed: '2026-08-09'
-      note: 'Preprint version submitted April 2025; published in PRL June 2026 as Phys. Rev. Lett. 136, 240801.'
+      note: 'Preprint version submitted April 2025; published in PRL June 2026 as Phys. Rev. Lett. 136, 240601.'
     - url: https://www.nature.com/articles/s41467-022-33919-0
       role: corroborating
       title: Continuous entanglement distribution over a transnational 248 km fiber link
@@ -77,10 +77,10 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'PRL 136, 240801 confirmed as published 17 June 2026 via APS website and multiple secondary sources citing Luo et al. 2026. 420 km, telecom S-band conversion, USTC/Hefei team confirmed. E4 correct for peer-reviewed PRL paper. Not yet independently replicated. No changes made.'
+  note: 'Citation error corrected: APS PRL issue 24 listing confirms Bin Wang, Xi-Yu Luo, Bo-Feng Gao et al. (420 km paper) is PRL 136, 240601 (16 June 2026), not 240801. PRL 136, 240801 is a distinct paper about a memory-assisted nonlocal optical interferometer. DOI, identifier, URL, date, and source note updated accordingly. Claim updated to reflect Wang, Luo et al. author order per APS record. E4 level unchanged; correction is a citation fix, not an evidence reassessment.'
 ---
 
-Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., Phys. Rev. Lett. 136, 240801, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
+Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Wang, Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
 
 The technique uses the DLCZ heralding scheme: photons emitted by laser-cooled rubidium atomic ensembles (Alice and Bob) are converted to 1,350 nm telecom S-band and routed to a central relay (Charlie), which performs a Bell-state measurement. Successful interference heralds that Alice and Bob are now entangled. Phase stability over 420 km is maintained by a two-stage locking scheme.
 

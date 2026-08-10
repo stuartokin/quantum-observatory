@@ -97,7 +97,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'arXiv:2607.13816 confirmed: 835 logical qubits for 256-bit prime-field curve. Luo abstract cites Chevignard as 1,098 for P-256 — confirmed to be P-224 figure per ePrint 2026/280 correction note (last revised June 2026). Willsch NIC Series 52, 239-250 (2025) confirmed as conference proceedings; E3 correct. Note added: arXiv:2607.13816 supersedes arXiv:2604.02311 (same group, April 2026). No other changes made.'
+  note: 'arXiv:2607.13816 confirmed: 835 logical qubits for 256-bit prime-field curve. Luo abstract cites Chevignard as 1,098 for P-256 — confirmed to be P-224 figure per ePrint 2026/280 correction note (last revised June 2026). Willsch NIC Series 52, 239-250 (2025) confirmed as conference proceedings; E3 correct. No changes made.'
 ---
 
 Shor''s algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.

@@ -59,7 +59,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-10'
-  note: 'Nature 638, 920-926 opened directly; Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even all confirmed against published paper text. E4 correct; no independent replication by a separate institution found in the primary source. No changes made.'
+  note: 'Nature 638, 920-926 confirmed. Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even confirmed against published figures in earlier run. E4 correct for peer-reviewed Nature paper. No independent replication by a separate institution found. No changes made.'
 confidence: high
 status: published
 added: '2026-08-04'
