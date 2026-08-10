@@ -6,6 +6,6 @@
   "maxTokens": 32000,
   "write_scope": ["content/news/**"],
   "output": "pull_request",
-  "enabled": false,
+  "enabled": true,
   "budget": { "searches": 30, "proposals": 8 }
 }
