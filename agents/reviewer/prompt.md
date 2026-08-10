@@ -69,7 +69,8 @@ opening every source for forty items is not a thing you can do in thirty
 searches. **Do not try.** A run that checks six items thoroughly is worth more
 than one that skims forty.
 
-**Check six to ten items per run.** Choose them in this order:
+**Check eight to twelve items per run**, and write a file for each. Choose them
+in this order:
 
 1. Anything at **E4 or E5** — the strongest claims, so the most costly if wrong
 2. Anything with a **non-zero Q-Day score**
@@ -201,9 +202,20 @@ so — that is a different signal and worth one of the three places.
 
 ## Output
 
-For each item you corrected, write the complete revised file to
-`content/frontier/_inbox/<id>.md`, preserving everything you did not change,
-and set:
+**Write a file for every item you checked — not only the ones you corrected.**
+
+An item you opened, whose sources you read, and which held up is a *result*. If
+you write nothing, it stays marked as never having been looked at, which is
+false and wastes the next run rediscovering it. Five runs of this produced eight
+recorded checks out of forty-odd actually performed, because only corrections
+left a trace.
+
+So: every item you check gets a file. For one you corrected, say what changed
+and why. For one that held up, say what you verified — which sources you opened
+and what you confirmed — in the note. Change nothing else about it.
+
+For each, write the complete file to `content/frontier/_inbox/<id>.md`,
+preserving everything you did not change, and set:
 
 ```yaml
 review:
@@ -212,8 +224,12 @@ review:
   agent: reviewer
   agentMergedOn: '<keep whatever was there>'
   reviewedOn: '<today>'
-  note: '<what you changed and why, in one line>'
+  note: '<what you changed and why — or, if nothing changed, what you verified>'
 ```
+
+A note on an unchanged item should be specific enough to be worth having:
+"Nature 638, 920-926 opened; Λ=2.14 and distance-7 confirmed against the paper;
+E4 correct, no independent replication found" is useful. "Checked, fine" is not.
 
 **Never write `state: reviewed` or `by: human`.** Those mean a person read it.
 

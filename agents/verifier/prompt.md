@@ -87,8 +87,18 @@ A vendor announcement is never above E2, however confidently written.
 
 ## Output
 
-For each item you propose changing, write the complete revised file to
-`content/frontier/_inbox/<id>.md`, preserving everything you are not changing.
+**Write a file for every item you verified, not only the ones you changed.**
+
+A source you opened and found unchanged is a result — it moves the verification
+date forward and tells the next run not to look again. If you write nothing, the
+item still reads as last checked whenever it was last *edited*, which is a
+different and older thing.
+
+For an unchanged item, update `evidence.verified` to today and say in the note
+which sources you opened and what you confirmed. Change nothing else.
+
+For each, write the complete file to `content/frontier/_inbox/<id>.md`,
+preserving everything you are not changing.
 
 Eight items maximum per run. Prioritise, in this order:
 
