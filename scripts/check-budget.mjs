@@ -59,6 +59,11 @@ const KB = 1024
  *         below were rewritten to measure that instead, which is what a
  *         performance budget was always for.
  *
+ *         The news archive and the headline detail view were split out too:
+ *         the ticker is on screen from the first paint, those two are not shown
+ *         until a reader asks. Splitting them was worth more than raising this
+ *         number by the 0.2 KB it was over.
+ *
  * deferred Chunks loaded on demand. Real bytes, charged only to the readers who
  *         open the thing. Generous, but not unbounded: everything deferred is
  *         still a download for somebody.

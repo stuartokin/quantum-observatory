@@ -27,7 +27,7 @@ import { VERSION } from '../../version'
 import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
 import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
-import { Ticker, NewsArchive, NewsDetail } from '../../components/Ticker'
+import { Ticker } from '../../components/Ticker'
 import { GlyphMark } from '../../components/GlyphMark'
 
 /**
@@ -37,6 +37,8 @@ import { GlyphMark } from '../../components/GlyphMark'
  * readers never open it, and it was costing everyone the download.
  */
 const Help = lazy(() => import('../../components/Help'))
+const NewsArchive = lazy(() => import('../../components/NewsArchive'))
+const NewsDetail = lazy(() => import('../../components/NewsDetail'))
 import { recentNews, newsFor, newsAbout } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
@@ -571,12 +573,14 @@ export function Board() {
         }
       >
         {headlineMode === 'archive' && (
-          <NewsArchive
-            items={allHeadlines}
-            colour={colour}
-            onOpen={openHeadline}
-            onTicker={() => setHeadlineView('ticker')}
-          />
+          <Suspense fallback={<p className="label">Loading…</p>}>
+            <NewsArchive
+              items={allHeadlines}
+              colour={colour}
+              onOpen={openHeadline}
+              onTicker={() => setHeadlineView('ticker')}
+            />
+          </Suspense>
         )}
       </Frame>
 
@@ -590,7 +594,9 @@ export function Board() {
           z={zOf('newsitem')}
           onFocus={raise('newsitem')}
         >
-          <NewsDetail item={openNews} colour={colour} />
+          <Suspense fallback={<p className="label">Loading…</p>}>
+            <NewsDetail item={openNews} colour={colour} />
+          </Suspense>
         </Frame>
       )}
 
