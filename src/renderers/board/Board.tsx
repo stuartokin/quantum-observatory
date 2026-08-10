@@ -272,6 +272,15 @@ export function Board() {
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     {
+      // Off by default: there will eventually be far more headlines than
+      // items, and a board showing every announcement is a news reader.
+      key: 'overlay',
+      icon: '⌁',
+      label: showNewsOverlay ? 'Hide headlines' : 'Show headlines',
+      active: showNewsOverlay,
+      onClick: () => setShowNewsOverlay((v) => !v),
+    },
+    {
       key: 'reset',
       icon: '⟲',
       label: 'Reset',
