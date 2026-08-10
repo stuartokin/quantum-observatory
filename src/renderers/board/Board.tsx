@@ -89,6 +89,8 @@ export function Board() {
   const [hiddenYears, setHiddenYears] = useState<Set<number>>(new Set())
   /** The key starts closed. It is reference, and the plot is the point. */
   const [showLegend, setShowLegend] = useState(false)
+  /** The item under the pointer, so the frame bar can name who is behind it. */
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
   /** Kinds of organisation to show. Empty is meaningless, so null means all. */
   const [orgTypes, setOrgTypes] = useState<ActorType[] | null>(null)
   const [openNews, setOpenNews] = useState<NewsItem | null>(null)
@@ -232,6 +234,20 @@ export function Board() {
   const allHeadlines = useMemo(() => newsFor(galaxy), [galaxy])
 
   /** What the ticker is showing, and what is behind it. */
+  /**
+   * Who is behind the body under the pointer.
+   *
+   * This lived only inside the key, which is closed by default — so the answer
+   * to "who did this" required opening a panel first. It belongs where the eye
+   * already is.
+   */
+  const hoveredActor = useMemo(() => {
+    if (!hoveredId) return null
+    const it = pool.find((i) => i.id === hoveredId)
+    const name = it?.actors?.[0]
+    return name ? { name, type: actorType(name) } : null
+  }, [hoveredId, pool])
+
   const headlineSpan = useMemo(() => {
     const span = (list: typeof allHeadlines) => {
       if (list.length === 0) return null
@@ -535,8 +551,26 @@ export function Board() {
         minWidth={360}
         minHeight={260}
         flush
+        action={
+          <>
+            {hoveredActor && (
+              <span className="frame__hovered">
+                {hoveredActor.name} · {ACTOR_TYPE_LABEL[hoveredActor.type]}
+              </span>
+            )}
+            <button
+              className="frame__mode"
+              onClick={() => setShowLegend((v) => !v)}
+              aria-pressed={showLegend}
+              style={showLegend ? { color: colour, borderColor: colour } : undefined}
+            >
+              Key
+            </button>
+          </>
+        }
       >
         <Sky
+          onHover={setHoveredId}
           nodes={nodes}
           colour={colour}
           selected={selected}
@@ -554,7 +588,6 @@ export function Board() {
           resizeTick={resizeTick}
           forecast={forecast}
           showLegend={showLegend}
-          onToggleLegend={() => setShowLegend((v) => !v)}
           pool={pool}
           newsOverlay={showNewsOverlay}
           onOpenNews={openHeadline}
@@ -871,7 +904,7 @@ function Sky({
   resizeTick,
   forecast,
   showLegend,
-  onToggleLegend,
+  onHover,
   pool,
   newsOverlay,
   onOpenNews,
@@ -893,7 +926,7 @@ function Sky({
   resizeTick: number
   forecast?: Forecast
   showLegend: boolean
-  onToggleLegend: () => void
+  onHover: (id: string | null) => void
   pool: FrontierItem[]
   newsOverlay: boolean
   onOpenNews: (n: NewsItem) => void
@@ -904,6 +937,7 @@ function Sky({
   const [hover, setHover] = useState<string | null>(null)
   const hoverRef = useRef<string | null>(null)
   hoverRef.current = hover
+  useEffect(() => onHover(hover), [hover, onHover])
 
   const drag = useRef<{ x: number; y: number; tx: number; ty: number } | null>(null)
   const pinch = useRef<{ d: number; k: number; angle: number; roll: number } | null>(null)
@@ -2135,23 +2169,6 @@ function Sky({
         onTouchEnd={() => (pinch.current = null)}
       />
 
-      {/* The key toggle. A real button, positioned over the canvas, so it is
-          inspectable and reliably clickable — the canvas-drawn version was
-          neither. */}
-      <button
-          className="legend-toggle"
-          onClick={onToggleLegend}
-          aria-pressed={showLegend}
-          title={showLegend ? 'Hide the category key' : 'Show the category key'}
-          style={{ borderColor: showLegend ? colour : undefined }}
-        >
-          <span className="legend-toggle__dots" aria-hidden="true">
-            {CONSTELLATIONS.slice(0, 3).map((c) => (
-              <i key={c} style={{ background: constellationColour(c) }} />
-            ))}
-          </span>
-          Key
-      </button>
     </div>
   )
 }
