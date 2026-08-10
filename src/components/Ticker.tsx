@@ -38,7 +38,8 @@ export function Ticker({
   const inner = useRef<HTMLDivElement>(null)
   const offset = useRef(0)
   const paused = useRef(false)
-  const [showState, setShowState] = useState(false)
+  /** True while the reader is in charge of it — hover or an explicit step. */
+  const [held, setHeld] = useState(false)
 
   useEffect(() => {
     if (items.length === 0) return
@@ -66,7 +67,7 @@ export function Ticker({
   /** Step by roughly one item, so the controls feel like paging not scrubbing. */
   const nudge = (dir: number) => {
     paused.current = true
-    setShowState(true)
+    setHeld(true)
     offset.current += dir * -260
   }
 
@@ -92,12 +93,13 @@ export function Ticker({
       ref={track}
       onPointerEnter={() => {
         paused.current = true
-        setShowState(true)
+        setHeld(true)
       }}
       onPointerLeave={() => {
         paused.current = false
-        setShowState(false)
+        setHeld(false)
       }}
+      data-held={held || undefined}
     >
       <div className="strip__window">
         <div className="strip__inner" ref={inner}>
@@ -127,7 +129,7 @@ export function Ticker({
         </div>
       </div>
 
-      <div className="strip__controls" data-active>
+      <div className="strip__controls" data-active={held || undefined}>
         <button onClick={() => nudge(-1)} aria-label="Back">‹</button>
         <button onClick={() => nudge(1)} aria-label="Forward">›</button>
         <button onClick={onArchive} title="By month">☰</button>

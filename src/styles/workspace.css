@@ -494,9 +494,11 @@
 
 /* Controls appear on approach — permanently visible they are clutter on a
    strip this slim. */
-.strip__controls { display: flex; gap: 2px; flex: 0 0 auto; opacity: 0.55; transition: opacity 140ms ease; }
+.strip__controls { display: flex; gap: 2px; flex: 0 0 auto; opacity: 0.5; transition: opacity 140ms ease; }
 .strip__controls[data-active] { opacity: 1; }
-.strip:hover .strip__controls { opacity: 1; }
+
+/* A paused ticker should look paused, or stopping it reads as a fault. */
+.strip[data-held] .strip__inner { opacity: 0.72; }
 .strip__controls button {
   background: transparent; border: 1px solid var(--hairline);
   border-radius: var(--radius); color: var(--ink-faint); cursor: pointer;
