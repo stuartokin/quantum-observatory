@@ -145,7 +145,10 @@ jobs:
           node scripts/check-provenance.mjs
           BRANCH="agent/${{ matrix.agent }}/$(date +%Y-%m-%d-%H%M)"
           git checkout -b "$BRANCH"
-          git add content/frontier
+          # Stage the whole content tree, not named collections. Naming them meant
+          # every newsroom run failed with "nothing added to commit", and the fix
+          # for that named two collections and would have failed on the third.
+          git add content
           git commit -m "${{ matrix.agent }}: $COUNT item(s), agent-merged"
 
           # main moves under us when another agent finishes mid-run, and the
