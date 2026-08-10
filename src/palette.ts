@@ -1,4 +1,14 @@
-export type Pillar = 'ai' | 'quantum' | 'materials' | 'energy' | 'cyber'
+import type { Pillar } from './content/types'
+
+/*
+ * Pillar is domain vocabulary and lives with the content model. This module
+ * decides what each one looks like, not which ones exist.
+ *
+ * Both files used to declare it, so the two definitions were free to drift
+ * apart without anything noticing. Not re-exported here: nothing imported it
+ * from this module, and a second door into one room is how the confusion
+ * started.
+ */
 
 /**
  * Each pillar is a real emission line, and the five appear in wavelength order

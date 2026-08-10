@@ -8,6 +8,10 @@
  *
  * A duplicated name is not a compile error and no type check will find it. It
  * simply means half your changes go somewhere nobody is looking.
+ *
+ * A re-export — `export { X } from './x'` — is not a duplicate: there is still
+ * one definition. Those are allowed. A second declaration, or a re-export of
+ * something this module also declares, is not.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, extname } from 'node:path'
@@ -28,7 +32,10 @@ for (const file of walk('src')) {
   const names = [
     ...[...src.matchAll(/^export (?:default )?(?:async )?(?:function|const|let|type|interface|class|enum) (\w+)/gm)]
       .map((m) => m[1]),
-    ...[...src.matchAll(/^export \{([^}]+)\}/gm)].flatMap((m) =>
+    // `export type { X }` counts too. It was invisible to an earlier version
+    // of this pattern, so a re-export passed the gate by accident rather than
+    // by decision — which is the same as not being checked.
+    ...[...src.matchAll(/^export (?:type )?\{([^}]+)\}(?!\s*from)/gm)].flatMap((m) =>
       m[1].split(',').map((n) => n.trim().split(/\s+as\s+/).pop().trim()),
     ),
   ]
