@@ -73,11 +73,12 @@ status: published
 added: '2026-08-04'
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-09'
-  note: 'Focus item: replaced SEC filing and vendor blog with Ransford et al. Nature 655 (2026) as primary source. Evidence raised E2 → E4. Sandia added as actor. Fidelity claims now directly sourced to peer-reviewed paper. arXiv:2511.05465 retained as preprint. Resolves reviewer escalation noted in previous agent-reviewed state.'
+  reviewedOn: '2026-08-10'
+  note: 'Nature 655, 81-86 opened; single-qubit infidelity 2.5(1)×10⁻⁵, two-qubit 7.9(2)×10⁻⁴, SPAM 3.3(5)×10⁻⁴ confirmed against paper. Sandia co-authorship and DOE CRADA verification confirmed. Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) already documented. E4 correct; no independent replication by a different institution found. No changes made.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.
