@@ -36,7 +36,7 @@ const KB = 1024
  *           Board.tsx            filters, year filter, timeline legend,
  *                                scrollbar, zoom-to-fit, provenance rendering
  *
- *         REDUCED to 80 KB on 10 Aug 2026, from 106.
+ *         REDUCED to 88 KB on 10 Aug 2026, from 106.
  *
  *         front-matter and js-yaml are gone from the browser. Content is
  *         parsed at build time by plugins/frontmatter.ts, which is where it
@@ -44,19 +44,26 @@ const KB = 1024
  *         neither can the result of parsing them. Every visitor had been
  *         downloading a YAML parser to read them anyway.
  *
- *         That is about 30 KB gzipped, roughly a third of what the bundle was.
- *         The ceiling is now lower than it was when this file was written.
+ *         Measured saving: 13.8 KB gzipped, 97.5 to 83.7. The ceiling was first
+ *         set to 80 on an estimate of "about 30 KB", which was wrong by more
+ *         than twice, and the build then failed on a number nobody had
+ *         measured. 88 is the measured figure plus a little room.
  *
- *         The lesson worth keeping: the budget was raised three times before
- *         anyone looked at what was actually in the bundle. A ceiling that only
- *         ever moves upward is a record of surrender, not a constraint.
+ *         Two lessons, both cheap to forget:
+ *         a ceiling that only ever moves upward is a record of surrender;
+ *         a ceiling set from an estimate is not a measurement either.
+ *
+ *         NEXT REDUCTION, when it is needed: the Help panel carries a markdown
+ *         renderer and every project document, and is opened occasionally.
+ *         Lazy-loading it moves that out of the first paint. Do that before
+ *         raising this number again.
  *
  * content The frontier items. Grows as agents fill the board, which is the
  *         point, so the ceiling is generous. At ~200 items it should move to a
  *         JSON file fetched at runtime rather than bundled.
  */
 const BUDGET = {
-  app: 80 * KB,
+  app: 88 * KB,
   content: 220 * KB,
   css: 20 * KB,
 }
