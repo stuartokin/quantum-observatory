@@ -32,6 +32,7 @@ export const RELEASES: Release[] = [
       'Hover a body and the timeline key names the organisation in brackets beside its type, so the specific identity is still one glance away.',
       'The detail panel scrolls back to the top when you open a different item. Reading halfway down one entry and clicking another used to open the new one in the middle of itself.',
       'A comment written in the wrong form inside a JSX tag would have failed the build; found by a scan that now runs over every component.',
+      'The board had been importing glyphFor from two different modules, and using the older one — so the new rules changed nothing on screen. Two functions with one name is a trap; there is now only one.',
     ],
   },
   {

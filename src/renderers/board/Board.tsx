@@ -10,11 +10,16 @@ import {
   CONSTELLATION_HOME,
   layout,
   isSourced,
-  glyphFor,
   type Node,
 } from './tower'
+// glyphFor comes from here, not from tower.
+//
+// tower exports its own, and Board was importing that one — so rewriting the
+// glyph rules in this module changed nothing on screen. Two functions with one
+// name is a trap; there is now only one.
 import {
   drawBody,
+  glyphFor,
   glyphForType,
   actorType,
   ACTOR_TYPES,
