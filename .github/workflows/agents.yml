@@ -95,7 +95,7 @@ jobs:
       # anything reaching this point is already well formed. This checks the
       # board as a whole is still consistent.
       - name: Validate the board
-        run: npm run validate
+        run: npm run validate && npm run validate:news
 
       - name: Keep the run record
         if: always()

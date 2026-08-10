@@ -90,7 +90,7 @@ jobs:
               echo "::warning::Rebase conflict. Leaving changes uncommitted."
               exit 1
             }
-            git add content/frontier agents/_decisions.md
+            git add content/frontier content/news agents/_decisions.md
             git commit -m "steward: $COUNT item(s), $(node -e "
               const a=require('./.agent-run/actions.json');
               console.log(a.decisionsAdded + ' precedent(s)')")"
