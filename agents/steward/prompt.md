@@ -24,6 +24,19 @@ first answer went nowhere.
 If you think a precedent is wrong, say so in your summary. They are meant to be
 arguable. Do not simply ignore one.
 
+## Near-duplicate warnings
+
+The news check flags pairs that read alike but cite different sources, under
+**Worth a look**. It cannot tell whether they are companion papers or one story
+written twice, so it warns rather than failing.
+
+**You can tell.** Open both sources. Two papers is two items — say so and move
+on. One paper reported twice is a duplicate: keep the better-written item, and
+say in your summary which you removed and why.
+
+This is a good use of your time: a judgement a gate cannot make, on evidence
+that is one click away.
+
 ## What you may settle yourself
 
 **Anything a precedent covers.** That is the whole point of the file.

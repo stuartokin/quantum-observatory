@@ -12,7 +12,7 @@
  *   - a `verified` item must actually have something to verify against
  *   - `about` must point at frontier items that exist
  */
-import { readdirSync, readFileSync, existsSync } from 'node:fs'
+import { readdirSync, readFileSync, existsSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { createRequire } from 'node:module'
 
@@ -127,19 +127,25 @@ for (const f of files) {
   }
 
   if (data.establishedBy?.length) linked++
-  published.push({ id: data.id, date: data.date, headline: data.headline })
+  published.push({
+    id: data.id,
+    date: data.date,
+    headline: data.headline,
+    source: data.source?.url ?? '',
+    established: (data.establishedBy ?? []).map((e) => identity(e.url)),
+  })
 }
 
 /**
- * The same story twice, in different words.
+ * What separates a duplicate from a pair of companion papers is the source.
  *
- * "Microsoft and Quantinuum 800x logical error rate improvement peer-reviewed
- * and published in Nature" and "Microsoft and Quantinuum publish peer-reviewed
- * 800x logical error rate improvement in Nature" are one event and two files.
- * Telling an agent not to repeat itself is necessary and not sufficient.
+ * Two Nature papers from the same laboratory on the same day, on adjacent
+ * physics, will share most of their significant words and are two events. The
+ * same result written twice will share a source URL.
  *
- * Same date, mostly the same words, is a duplicate. Compared on meaningful
- * tokens only, so word order and filler cannot disguise it.
+ * So: similar wording and the same source is a duplicate and fails. Similar
+ * wording with different sources is worth a look and only warns — the gate
+ * cannot tell, and failing a build on a guess trains people to ignore it.
  */
 const STOP = new Set([
   'the','a','an','and','or','of','in','on','to','for','with','at','by','from',
@@ -157,17 +163,47 @@ const overlap = (a, b) => {
   for (const w of A) if (B.has(w)) shared++
   return shared / Math.min(A.size, B.size)
 }
+/** arXiv id or DOI, so two URLs for one paper still match. */
+const identity = (u = '') => {
+  const arxiv = u.match(/arxiv\.org\/abs\/([\d.]+)/i)
+  if (arxiv) return `arxiv:${arxiv[1]}`
 
+  const doi = u.match(/(10\.\d{4,}\/[^\s?#]+)/)
+  if (doi) return `doi:${doi[1].toLowerCase()}`
+
+  // A Nature article URL and its DOI are the same paper written two ways, and
+  // an agent citing one while an earlier run cited the other is exactly how a
+  // duplicate slips past a URL comparison.
+  const nature = u.match(/nature\.com\/articles\/(s\d{5}-\d{3}-[\dA-Za-z-]+)/)
+  if (nature) return `doi:10.1038/${nature[1].toLowerCase()}`
+
+  const science = u.match(/science\.org\/doi\/(?:abs\/|full\/)?(10\.\d{4,}\/[^\s?#]+)/)
+  if (science) return `doi:${science[1].toLowerCase()}`
+
+  return u.replace(/[?#].*$/, '').toLowerCase()
+}
+
+const warnings = []
 for (let i = 0; i < published.length; i++) {
   for (let j = i + 1; j < published.length; j++) {
     const a = published[i], b = published[j]
     const sim = overlap(a.headline, b.headline)
-    const sameDay = a.date === b.date
-    const sameWeek = Math.abs(new Date(a.date) - new Date(b.date)) < 8 * 864e5
-    if ((sameDay && sim > 0.5) || (sameWeek && sim > 0.72)) {
+    const days = Math.abs(new Date(a.date) - new Date(b.date)) / 864e5
+    if (days > 8 || sim < 0.5) continue
+
+    const sameSource =
+      identity(a.source) === identity(b.source) ||
+      (a.established ?? []).some((u) => (b.established ?? []).includes(u))
+
+    if (sameSource) {
       errors.push(
-        `duplicate: "${a.id}" and "${b.id}" describe the same event ` +
+        `duplicate: "${a.id}" and "${b.id}" report the same source ` +
           `(${Math.round(sim * 100)}% of the significant words shared). Keep one.`,
+      )
+    } else if (sim > 0.65) {
+      warnings.push(
+        `"${a.id}" and "${b.id}" are ${Math.round(sim * 100)}% alike but cite ` +
+          `different sources. Companion papers, or one story written twice? Worth a look.`,
       )
     }
   }
@@ -183,6 +219,25 @@ if (files.length) {
         .join(' · '),
   )
   console.log(`  ${linked} of ${files.length} traced to the research behind them`)
+}
+
+if (warnings.length) {
+  console.log('\nWorth a look:')
+  for (const w of warnings) console.log('  - ' + w)
+
+  /**
+   * Written to a file as well as the log.
+   *
+   * A warning that only appears in build output is a warning nobody sees. The
+   * agent workflow picks this up and puts it in the weekly issue, which is the
+   * one place these get read.
+   */
+  try {
+    mkdirSync('.agent-run', { recursive: true })
+    writeFileSync('.agent-run/news-warnings.txt', warnings.join('\n'))
+  } catch {
+    /* not running under an agent; the log will have to do */
+  }
 }
 
 if (errors.length) {
