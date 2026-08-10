@@ -115,6 +115,68 @@ Do not write anything naming Ofgem, a live consultation, a licence condition,
 an enforcement action, a regulatory position or a select committee. Report it in
 your summary and leave the file unwritten.
 
+## A complete file
+
+Copy this shape. Describing the fields was not enough — the first run omitted
+`schema` and `id` entirely, having reasonably assumed the filename carried the
+identity.
+
+```
+---
+schema: news/v1
+id: 2026-08-10-sandia-validates-helios-fidelity
+headline: 'Sandia publishes independent gate-fidelity validation of Helios in Nature'
+pillar: quantum
+date: '2026-06-17'
+plain: 'Quantinuum''s fidelity figures had rested on the company''s own filings and blog. An independent national laboratory has now measured them and published in a peer-reviewed journal, which is a different kind of claim.'
+significance: notable
+source:
+  url: https://www.nature.com/articles/s41586-026-10676-4
+  kind: paper
+  title: A 98-qubit trapped-ion quantum computer with all-to-all connectivity
+  publisher: Nature
+  date: '2026-06-17'
+  doi: 10.1038/s41586-026-10676-4
+corroboration:
+  - url: https://www.sandia.gov/news/example
+    publisher: Sandia National Laboratories
+    kind: authority
+validation:
+  status: verified
+  checks:
+    - 'Nature paper opened; the 99.921 per cent two-qubit figure appears in the results, not only the abstract'
+    - 'Sandia is a co-author, so this is an independent measurement rather than a vendor restatement'
+    - 'No contradicting report found'
+about:
+  - arch-trapped-ion
+  - qec-logical-qubit-scaling
+establishedBy:
+  - url: https://arxiv.org/abs/2602.22211
+    title: 'Beyond break-even performance across 48 logical qubits'
+    relation: builds-on
+    date: '2026-02'
+actors: [Quantinuum, Sandia National Laboratories]
+country: [US]
+review:
+  state: agent-merged
+  by: agent
+  agent: newsroom
+  agentMergedOn: '2026-08-10'
+status: published
+added: '2026-08-10'
+---
+
+Optional body. Anything a reader would want beyond the plain-English reading —
+what was measured, what remains unproven, who disputes it.
+```
+
+`id` must match the filename without the extension. Date-first ids sort
+usefully and are encouraged.
+
+**Every field above marked required in the schema must be present**, even where
+you think the filename or the source implies it: `schema`, `id`, `headline`,
+`pillar`, `date`, `plain`, `source`, `validation`.
+
 ## File format
 
 Begins with `---` on the first line, closes its front matter with `---`. No code

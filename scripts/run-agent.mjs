@@ -411,7 +411,26 @@ for (const f of files) {
     process.exit(1)
   }
 
-  const content = normaliseFile(f.content)
+  /**
+   * Restore identity fields the agent left to the filename.
+   *
+   * Writing `2026-08-10-something.md` and omitting `id` is a reasonable
+   * instinct — the filename does carry the identity — but the schema requires
+   * the field and the validator already enforces that the two agree. Deriving
+   * it is a repair, not a guess.
+   */
+  const withIdentity = (text, path) => {
+    const base = path.split('/').pop().replace(/\.md$/, '')
+    const collection = path.includes('/news/') ? 'news/v1' : 'frontier/v1'
+    const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+    if (!fm) return text
+    let head = fm[1]
+    if (!/^schema:/m.test(head)) head = `schema: ${collection}\n${head}`
+    if (!/^id:/m.test(head)) head = head.replace(/^(schema:.*\n)/, `$1id: ${base}\n`)
+    return text.replace(fm[1], head)
+  }
+
+  const content = withIdentity(normaliseFile(f.content), f.path)
   const check = checkFile(content)
 
   /**
