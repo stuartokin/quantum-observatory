@@ -80,6 +80,30 @@ export function Board() {
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
   /** Strip across the page, or a window with the whole history. */
   const [headlineMode, setHeadlineMode] = useState<'ticker' | 'archive'>('ticker')
+
+  /**
+   * The two views want opposite shapes — a ticker is one row across the page,
+   * an archive is a column. Switching resizes the window rather than leaving
+   * the reader to do it, and returns it to the strip when they switch back.
+   */
+  const setHeadlineView = (mode: 'ticker' | 'archive') => {
+    setHeadlineMode(mode)
+    setFrames((f) => ({
+      ...f,
+      headlines:
+        mode === 'ticker'
+          ? { ...f.headlines, x: 12, y: 74, w: window.innerWidth - 24, h: 34, docked: false }
+          : {
+              ...f.headlines,
+              x: Math.max(12, Math.round(window.innerWidth * 0.06)),
+              y: 96,
+              w: Math.min(620, window.innerWidth - 40),
+              h: Math.min(620, window.innerHeight - 190),
+              docked: false,
+            },
+    }))
+    setOrder((o) => [...o.filter((x) => x !== 'headlines'), 'headlines'])
+  }
   /**
    * The figures live behind the icon at every width now.
    *
@@ -541,7 +565,7 @@ export function Board() {
               items={headlines14}
               colour={colour}
               onOpen={openHeadline}
-              onArchive={() => setHeadlineMode('archive')}
+              onArchive={() => setHeadlineView('archive')}
             />
           ) : undefined
         }
@@ -551,7 +575,7 @@ export function Board() {
             items={allHeadlines}
             colour={colour}
             onOpen={openHeadline}
-            onTicker={() => setHeadlineMode('ticker')}
+            onTicker={() => setHeadlineView('ticker')}
           />
         )}
       </Frame>

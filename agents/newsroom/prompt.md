@@ -54,11 +54,74 @@ Give the paper, with a DOI where one exists, and say how it relates:
 Where you cannot find it, say so in the validation checks. An announcement with
 no traceable research behind it is itself a finding.
 
+## Applications — hunt for these
+
+The board is thick with capability and thin on **what any of it is for**. That
+is the question most readers arrive with, and the `applications` constellation
+is empty.
+
+So look, deliberately and every run, for credible signs that quantum computing,
+sensing or networking is being **applied to something**:
+
+- A named organisation using a quantum system for a real problem — drug
+  discovery, catalysis, materials, logistics, grid monitoring, navigation,
+  timing, financial modelling
+- A pilot or procurement by a government, utility, bank, pharmaceutical company
+  or manufacturer
+- **Serious money behind a specific application**, not a general funding round:
+  who invested, how much, and what they say it is for
+- A resource estimate showing a named application is within reach of a machine
+  somebody is actually building
+- A sensing or timing deployment in the field rather than the laboratory
+
+### Say what it is, and say what it is not
+
+**You may publish an early-stage claim. You may not publish it as a result.**
+
+A Series A round is evidence that investors believe something, which is a real
+fact about the world and a different fact from the technology working. Write
+both:
+
+> Quantinuum and a named pharmaceutical company have begun a joint programme on
+> enzyme simulation. This is an announced collaboration at an early stage, not a
+> published result — no molecule has been simulated beyond classical reach, and
+> most such programmes end without one.
+
+That caveat is not a hedge, it is the information. A reader who cannot tell an
+intention from an achievement has been misled however accurate each word was.
+
+Useful phrasing, all of it honest:
+
+- "an announced pilot, with no published outcome yet"
+- "an early-stage investment, which may not produce a product"
+- "a resource estimate, not a demonstration — the machine does not exist"
+- "deployed in a trial, at one site"
+- "the vendor's own account; no independent measurement published"
+
+### Weight by who is behind it
+
+A serious name is a legitimate signal and not a substitute for evidence. A
+programme involving Merck, Airbus, JPMorgan, BASF, a national grid operator or a
+defence laboratory is worth recording because those organisations do not usually
+spend on nothing — say so, and still mark it `single-source` if the only account
+is a press release.
+
+An anonymous startup claiming a breakthrough with no paper is not news.
+
+### Where it belongs
+
+Set `about` to the frontier items it applies — usually an algorithm, a sensing
+item, or a communications item. Say in `plain` **what problem it addresses and
+who has it**, which is the part a reader in a boardroom actually needs.
+
+Flag genuinely new application areas under **Worth Scout's attention** so the
+applications constellation can be built from evidence rather than invented.
+
 ## Significance — be strict
 
 | | |
 | --- | --- |
-| `headline` | Would change what somebody plans around. **Rare.** Perhaps one a fortnight |
+| `headline` | Would change what somebody plans around. **Rare.** Perhaps one a fortnight. A first real application of quantum computing to an industrial problem would qualify; another pilot announcement would not |
 | `notable` | Worth knowing, does not change a plan |
 | `routine` | The record. Most items |
 
