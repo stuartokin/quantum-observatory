@@ -11,6 +11,10 @@ export interface Release {
 /**
  * The last ten releases.
  *
+ * Update this in the same commit as the change it describes. It fell nine
+ * versions behind once, and reconstructing it afterwards is guesswork about
+ * what mattered rather than a record of it.
+ *
  * Written by hand, deliberately. A changelog generated from commit messages
  * records what was touched; this records what changed for someone using the
  * thing, which is a different question and the only one worth answering here.
@@ -20,46 +24,94 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
-    version: '0.22.1',
-    date: '2026-08-08',
-    headline: 'A source register, and a hard limit on what reaches you.',
+    version: '0.38.0',
+    date: '2026-08-10',
+    headline: 'Headlines on the timeline, and one organisation gets one shape.',
+    ui: [
+      'Headline satellites appear on the timeline at their own date, not beside the item they bear on — so several announcements about one development read as a sequence rather than a stack. A faint thread links each back to its item once there is room to draw one.',
+      'The timeline key now documents the shapes as well as the colours. Half the visual grammar had gone unexplained.',
+      'ETH Zürich, ETH Zurich and ETHZ were three organisations wearing three shapes. Actor names are normalised — diacritics, punctuation, legal suffixes and common aliases — before the shape is chosen.',
+    ],
+  },
+  {
+    version: '0.37.0',
+    date: '2026-08-10',
+    headline: 'The newsroom stops repeating itself, and starts finding things.',
     agents: [
-      'Shared source register at agents/_sources.md — six tiers, from arXiv and the journals through standards bodies to discovery indexes that are never citable. Read into every agent at run time, so one file governs all four.',
-      'Major vendors reinstated. An earlier instruction told Scout not to lead with IBM, Google, Microsoft, Quantinuum or IonQ — which would have had it skipping Willow in Nature and the qLDPC memory in Nature. The source type sets the evidence level, never the author.',
-      'Replaced by a coverage requirement instead: at least half of each run must come from outside those five.',
-      'The reviewer may escalate at most three items per run. Enforced in the runner, not only asked for — if more qualify it ranks them and reports how many it suppressed.',
+      'The newsroom had never been shown its own back catalogue, so every run started from nothing and had no way to avoid duplication. It now gets every published headline with its date and subject, and a coverage-by-month table showing where the gaps are.',
+      'Two duplicate gates: same source and similar wording fails the build; similar wording with different sources warns, because companion papers exist and failing on a guess trains people to ignore the check.',
+      'Dates must record when something happened, never when it was found. One paper reached the board twice because the two runs dated it differently.',
+      'A backfill method rather than a search: read one month of an aggregator archive and follow each item to its primary source, then sweep the journal tables of contents for the same month. One month per run — a year in one run produces eight items and the impression that eight is all there was.',
+    ],
+    ui: [
+      'Headlines became a window rather than a strip: moveable, resizable, minimisable, switching between a rolling ticker and an archive grouped by year and month. Dragging it taller or shorter switches the view.',
+      'Panel titles are clickable where there is something to say — the headline counts, their span, how many are verified and how many trace back to research.',
+    ],
+  },
+  {
+    version: '0.36.0',
+    date: '2026-08-10',
+    headline: 'Applications, and honest caveats.',
+    agents: [
+      'The newsroom now hunts deliberately for applications — named organisations using quantum systems for real problems, pilots, investment behind a specific application, sensing deployed in the field.',
+      'It may publish an early-stage claim but never as a result. A funding round is evidence that investors believe something, which is a different fact from the technology working, and the item must say which it is.',
+    ],
+  },
+  {
+    version: '0.34.0',
+    date: '2026-08-10',
+    headline: 'The browser stops downloading a YAML parser.',
+    ui: [
+      'Content is parsed at build time by a Vite plugin. front-matter and js-yaml are gone from the bundle; the only runtime dependencies left are React and React DOM.',
+      'The performance budget came down from 106 KB to 88, then learned to measure the entry chunk separately from code loaded on demand — it had been counting a code split as growth, which punished exactly the change it asked for.',
+    ],
+  },
+  {
+    version: '0.33.0',
+    date: '2026-08-10',
+    headline: 'A news collection, kept separate from the board.',
+    ui: [
+      'Headlines are a distinct content type that points at the board rather than being part of it. A stream of announcements allowed to move a readiness map is what the map exists to resist.',
+      'Every item carries a validation block saying what was actually checked, and the research behind it where that could be traced.',
+    ],
+  },
+  {
+    version: '0.29.0',
+    date: '2026-08-10',
+    headline: 'Bodies become lit worlds.',
+    ui: [
+      'Glyphs rewritten as spheres with a single light source across the whole board — a base gradient toward the light, a terminator, and a rim light on the shadowed limb. Consistent lighting is most of what separates a field of spheres from a field of discs.',
+      'Rings draw in two halves so the planet sits between them; a comet tail points away from the light as a real one points away from the sun.',
+      'Constellation names moved into a reserved band with its own backing, and item labels are excluded from it. Staggering onto two rows was never going to hold while labels could print into the same region.',
+    ],
+  },
+  {
+    version: '0.25.0',
+    date: '2026-08-09',
+    headline: 'Precedents, so a question answered once is not asked again.',
+    agents: [
+      'agents/_decisions.md holds every settled question and is read by all five agents before anything escalates. Vendor documents are E2 whatever their legal status; reviews cap at E3; downward corrections need no permission.',
+      'That last rule was an over-restriction of mine: corrections to human-reviewed items were escalating even when the agent had already reached the right answer.',
+    ],
+  },
+  {
+    version: '0.23.0',
+    date: '2026-08-09',
+    headline: 'Help becomes the record.',
+    ui: [
+      'Eleven collapsible sections with expand all. The design log, operating guide, agent plan, source register and all agent prompts render from source rather than from copies, so they cannot drift.',
+      'A decision record derived from the board itself: every readiness change, downward correction and veto, tagged with who settled it.',
+      'Content statistics counted live rather than written into a changelog, where a number is wrong within a week.',
     ],
   },
   {
     version: '0.22.0',
     date: '2026-08-08',
-    headline: 'A fourth agent, to keep the review queue off your desk.',
+    headline: 'A reviewer that can only make the board more cautious.',
     agents: [
-      'Reviewer agent: opens the sources behind published items and checks the claim against them, the evidence level against the source type, and the readiness against the evidence.',
-      'It may correct downward on its own judgement and never upward. Anything that would make the board more confident is escalated instead.',
-      'New provenance state agent-reviewed — "checked by a machine, not read by a person". It still counts toward the unreviewed figure, because it is not review.',
-      'All prompts seeded with verified sources, including Gidney arXiv:2505.15917 — RSA-2048 in under a million noisy qubits, against 20 million in 2019.',
-    ],
-  },
-  {
-    version: '0.21.0',
-    date: '2026-08-08',
-    headline: 'Filters gathered into one place.',
-    ui: [
-      'Actors folded into the filters window as a fifth section, multi-select with its own All and None, each shown with its glyph.',
-      'Every filter group now has independent All and None. Clearing constellations no longer clears readiness and years with it.',
-      'The timeline key moved to a real button over the plot. The canvas-drawn version could not be inspected and twice could not be found.',
-    ],
-  },
-  {
-    version: '0.20.0',
-    date: '2026-08-08',
-    headline: 'Colour by constellation, and a filter for time.',
-    ui: [
-      'Nine hues across a narrow arc from blue-violet to magenta, with alternating lightness so neighbouring lanes differ in two dimensions. Importance is carried by size and brightness, never hue.',
-      'Year filter, so removing time frees the board.',
-      'Timeline marks scale by evidence level and priority — discrete fields that actually spread, rather than a blended score where everything lands above 0.7.',
-      'Both views zoom out to a fit-to-frame floor. No scrollbars.',
+      'Opens the sources behind published items and checks the claim against them, the evidence level against the source type, the readiness against the evidence.',
+      'It corrects downward on its own judgement and never upward. Anything that would raise a claim is escalated, capped at three items a run.',
+      'New provenance state agent-reviewed — checked by a machine, not read by a person — which still counts toward the unreviewed figure, because it is not review.',
     ],
   },
   {
@@ -67,62 +119,9 @@ export const RELEASES: Release[] = [
     date: '2026-08-08',
     headline: 'The board becomes a workspace.',
     ui: [
-      'Galaxy and timeline live in a frame that moves, resizes and minimises. Zoom and pinch still work inside it.',
-      'Three frames on a wide screen: galaxy dominant, What changed and News beside it.',
-      'What changed is a live rotating miniature of whichever constellation moved most. Click to open it full size.',
-      'News derived from the board itself rather than authored separately, so it cannot drift out of step with what the board shows.',
-      'Q-Day in three places: the header, a caption on the galaxy, and a shaded band across the actual years on the timeline.',
-      'Constellation orbits drift slowly when idle. A body you drag eases back into its orbit over about eight seconds.',
-    ],
-  },
-  {
-    version: '0.18.0',
-    date: '2026-08-08',
-    headline: 'Reviewing made possible in one click.',
-    agents: [
-      'Review workflow: mark items reviewed, or veto them with a reason, from the Actions tab. Confirming keeps the agent provenance rather than erasing it; vetoing archives rather than deletes.',
-      'Applications added as a ninth constellation. It had been named in the agent prompts but never existed on the board.',
-      'Constellation constrained to nine known values — a typo used to place an item in the wrong lane silently.',
-    ],
-  },
-  {
-    version: '0.17.0',
-    date: '2026-08-08',
-    headline: 'Provenance made visible.',
-    ui: [
-      'Unreviewed items carry a dashed amber ring on the board and the timeline. The panel label alone was not enough for someone scanning.',
-      'Review debt in the header: how many entries nobody has read, and how long since anyone did.',
-      'Q-Day impact and its reasoning shown on the item.',
-    ],
-    agents: [
-      'A fourth CI gate: every item must declare whether a human has read it, an agent may never claim that it did, and neither may touch anything naming Ofgem, a live consultation or a regulatory position.',
-    ],
-  },
-  {
-    version: '0.16.0',
-    date: '2026-08-08',
-    headline: 'A third agent, for depth rather than breadth.',
-    agents: [
-      'Sourcer: attaches primary sources to items already on the board. Run by hand as a campaign, not on a schedule.',
-      'Told explicitly that failing to find a source is a result worth reporting — a weak citation on a significant item is worse than an honest gap.',
-    ],
-  },
-  {
-    version: '0.15.0',
-    date: '2026-08-08',
-    headline: 'Publish first, veto after.',
-    agents: [
-      'Agents merge and publish without waiting for review. With five galaxies, review-before-merge is about three hours a week, and a queue you stop reading is worse than no agents.',
-      'Every item declares its provenance, and an agent cannot write the state that means a person read it.',
-    ],
-  },
-  {
-    version: '0.14.0',
-    date: '2026-08-08',
-    headline: 'The agent layer.',
-    agents: [
-      'Scout and Verifier, a generic runner, and evidence levels E0–E5 replacing a single confidence field.',
-      'Priority P0–P4 set by one test: if this were true and it scaled, what assumption would have to change?',
+      'Galaxy and timeline live in frames that move, resize and minimise. Three panels on a wide screen: galaxy dominant, what changed, and the journals beside it.',
+      'Constellation orbits drift slowly when idle, and a body you drag eases back into its orbit over about eight seconds.',
+      'Q-Day in three places, including a shaded band across the actual years on the timeline — the forecast drawn in its own units.',
     ],
   },
 ]

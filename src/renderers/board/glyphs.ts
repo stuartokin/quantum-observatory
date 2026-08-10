@@ -19,11 +19,61 @@ export const GLYPHS: Glyph[] = [
   'pulsar',
 ]
 
+/**
+ * Common ways one organisation gets written by different agents on different
+ * days. Without this, ETH Zürich, ETH Zurich and ETHZ are three organisations
+ * wearing three different shapes on the same board.
+ */
+const ALIASES: Record<string, string> = {
+  ethz: 'eth zurich',
+  'eidgenossische technische hochschule zurich': 'eth zurich',
+  'google quantum ai': 'google',
+  'google research': 'google',
+  'ibm quantum': 'ibm',
+  'ibm research': 'ibm',
+  'microsoft azure quantum': 'microsoft',
+  'microsoft quantum': 'microsoft',
+  'quantinuum ltd': 'quantinuum',
+  'honeywell quantum solutions': 'quantinuum',
+  'usts': 'ustc',
+  'university of science and technology of china': 'ustc',
+  'mit': 'massachusetts institute of technology',
+  'caltech': 'california institute of technology',
+  'nist': 'national institute of standards and technology',
+  'ncsc': 'national cyber security centre',
+  'cisa': 'cybersecurity and infrastructure security agency',
+  'sandia': 'sandia national laboratories',
+  'delft': 'qutech',
+  'tu delft': 'qutech',
+}
+
+/**
+ * One organisation, one shape.
+ *
+ * Diacritics, punctuation, case and legal suffixes all vary between sources,
+ * and hashing the raw string made each variant a different glyph. Normalise
+ * first, then hash — the name a source happens to use should not change what
+ * the board draws.
+ */
+export function canonicalActor(actor: string): string {
+  const flat = actor
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')   // é -> e, ü -> u
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[.,'’"()]/g, '')
+    .replace(/\b(inc|ltd|llc|gmbh|corp|corporation|plc|sa|ag|co)\b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return ALIASES[flat] ?? flat
+}
+
 /** Stable across runs, so an organisation keeps its shape. */
 export function glyphFor(actor: string): Glyph {
+  const name = canonicalActor(actor)
   let h = 2166136261
-  for (let i = 0; i < actor.length; i++) {
-    h ^= actor.charCodeAt(i)
+  for (let i = 0; i < name.length; i++) {
+    h ^= name.charCodeAt(i)
     h = Math.imul(h, 16777619)
   }
   return GLYPHS[(h >>> 0) % GLYPHS.length]

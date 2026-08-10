@@ -1193,6 +1193,8 @@ function Sky({
           ),
         )
 
+        const newsMarks: { x: number; y: number; r: number; item: NewsItem }[] = []
+
         const ordered = [...tl.marks].sort(
           (a, b) =>
             Number(a.id === selected) - Number(b.id === selected) ||
@@ -1256,6 +1258,50 @@ function Sky({
           // things are, never what they are.
           drawBody(g, item?.actors?.[0] ? glyphFor(item.actors[0]) : 'star', px, py, rr, tint, m.sourced)
           g.shadowBlur = 0
+
+          /**
+           * Headlines, placed at their own date rather than beside their item.
+           *
+           * The timeline has a real horizontal axis, so a headline can sit
+           * where it actually happened. Zoomed in far enough that months are
+           * distinguishable, that spreads them out on its own — several
+           * announcements about one item stop stacking and start reading as a
+           * sequence.
+           */
+          if (newsOverlay && item) {
+            const attached = newsAbout(item.id)
+            attached.forEach((n, k) => {
+              const nf = yearFraction(n.date, tl.from, tl.to)
+              const nx = TX(nf)
+              if (nx < AXIS || nx > W) return
+              const big = n.significance === 'headline'
+              // Below the mark when they share a date, so they never hide it.
+              const spread = v.k > 2 ? 0 : k * 3
+              const ny = py + rr + 7 + spread
+              g.globalAlpha = (big ? 0.95 : 0.5) * (dim && !sel ? 0.3 : 1)
+              g.fillStyle = big ? '#FFB020' : '#8697B0'
+              if (big) {
+                g.shadowColor = '#FFB020'
+                g.shadowBlur = 6
+              }
+              g.beginPath()
+              g.arc(nx, ny, big ? 3.2 : 1.8, 0, Math.PI * 2)
+              g.fill()
+              g.shadowBlur = 0
+              // A thread back to the item it bears on, once there is room.
+              if (v.k > 1.6 && Math.abs(nx - px) > 6) {
+                g.globalAlpha = 0.18
+                g.strokeStyle = big ? '#FFB020' : '#8697B0'
+                g.lineWidth = 0.8
+                g.beginPath()
+                g.moveTo(px, py)
+                g.lineTo(nx, ny)
+                g.stroke()
+              }
+              newsMarks.push({ x: nx, y: ny, r: (big ? 3.2 : 1.8) + 4, item: n })
+            })
+            g.globalAlpha = 1
+          }
 
           // A ring for the things that would change an assumption.
           if (item?.priority === 'P0' || item?.priority === 'P1') {
@@ -1343,6 +1389,8 @@ function Sky({
         })
         g.globalAlpha = 1
 
+        newsHits.current = newsMarks
+
         // Category key, tucked behind a small button in the corner. The nine
         // names take up real estate that the plot needs more than they do, so
         // it is closed until asked for — and the button stays visible so it is
@@ -1356,9 +1404,19 @@ function Sky({
 
           if (showLegend) {
             const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
+            // The actors actually present, most prolific first, so the key
+            // explains the shapes on screen rather than every shape possible.
+            const shown = new Map<string, string>()
+            for (const m of tl.marks) {
+              const it = pool.find((i) => i.id === m.id)
+              for (const a of it?.actors ?? []) {
+                if (!shown.has(a) && shown.size < 6) shown.set(a, a)
+              }
+            }
+            const actorRows = [...shown.keys()]
             const lh = 14
-            const boxW = 138
-            const boxH = entries.length * lh + 14
+            const boxW = 168
+            const boxH = entries.length * lh + 14 + (actorRows.length ? actorRows.length * lh + 20 : 0)
             const lx = bx
             const ly = Math.max(30, by - boxH - 6)
             g.globalAlpha = 0.94
@@ -1379,6 +1437,27 @@ function Sky({
               g.fillStyle = '#A9B6C9'
               g.fillText(CONSTELLATION_LABEL[c], lx + 24, y)
             })
+
+            // Shape is the organisation. The key said nothing about that until
+            // now, which left half the visual grammar undocumented.
+            if (actorRows.length) {
+              const base = ly + 15 + entries.length * lh + 8
+              g.globalAlpha = 0.5
+              g.strokeStyle = '#8697B0'
+              g.beginPath()
+              g.moveTo(lx + 10, base - 4)
+              g.lineTo(lx + boxW - 10, base - 4)
+              g.stroke()
+              g.globalAlpha = 1
+              g.fillStyle = '#66748A'
+              g.fillText('SHAPE = WHO', lx + 13, base + 8)
+              actorRows.forEach((a, i) => {
+                const y = base + 22 + i * lh
+                drawBody(g, glyphFor(a), lx + 14, y - 4, 3.6, '#A9B6C9', true)
+                g.fillStyle = '#A9B6C9'
+                g.fillText(a.length > 20 ? a.slice(0, 19) + '…' : a, lx + 26, y)
+              })
+            }
             g.globalAlpha = 1
           }
         }
