@@ -292,6 +292,8 @@
 
 .legend-toggle {
   position: absolute;
+  /* Clear of the timeline's readiness strip; the galaxy has no such strip, so
+     the same inset reads as ordinary padding there. */
   left: 114px;
   bottom: 12px;
   z-index: 4;

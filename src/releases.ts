@@ -24,6 +24,16 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.40.0',
+    date: '2026-08-11',
+    headline: 'The key explains both halves of the grammar, in both views.',
+    ui: [
+      'The key is available on the galaxy as well as the timeline, behind the same button. It had been drawn only on the timeline, so shape — what kind of organisation is behind a result — went undocumented on the view most people look at first.',
+      'Hover a body and the key names the organisation in brackets beside its type. This existed but only inside the timeline key, which was closed by default and therefore invisible.',
+      'A filter for the kind of organisation: university, national laboratory, standards body, company, consortium. An item with no actor recorded is never hidden by it — the filter asks who did the work, and silence is not an answer to disagree with.',
+    ],
+  },
+  {
     version: '0.39.0',
     date: '2026-08-10',
     headline: 'Shape says what kind of organisation, not which one.',
@@ -115,16 +125,6 @@ export const RELEASES: Release[] = [
       'Eleven collapsible sections with expand all. The design log, operating guide, agent plan, source register and all agent prompts render from source rather than from copies, so they cannot drift.',
       'A decision record derived from the board itself: every readiness change, downward correction and veto, tagged with who settled it.',
       'Content statistics counted live rather than written into a changelog, where a number is wrong within a week.',
-    ],
-  },
-  {
-    version: '0.22.0',
-    date: '2026-08-08',
-    headline: 'A reviewer that can only make the board more cautious.',
-    agents: [
-      'Opens the sources behind published items and checks the claim against them, the evidence level against the source type, the readiness against the evidence.',
-      'It corrects downward on its own judgement and never upward. Anything that would raise a claim is escalated, capped at three items a run.',
-      'New provenance state agent-reviewed — checked by a machine, not read by a person — which still counts toward the unreviewed figure, because it is not review.',
     ],
   },
 ]

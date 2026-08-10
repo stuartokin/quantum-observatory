@@ -89,6 +89,8 @@ export function Board() {
   const [hiddenYears, setHiddenYears] = useState<Set<number>>(new Set())
   /** The key starts closed. It is reference, and the plot is the point. */
   const [showLegend, setShowLegend] = useState(false)
+  /** Kinds of organisation to show. Empty is meaningless, so null means all. */
+  const [orgTypes, setOrgTypes] = useState<ActorType[] | null>(null)
   const [openNews, setOpenNews] = useState<NewsItem | null>(null)
   /** Headlines are off by default — there will eventually be a great many. */
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
@@ -200,9 +202,15 @@ export function Board() {
           cons.includes(i.constellation ?? '') &&
           levels.includes(i.readiness) &&
           (!actorsOn || (i.actors ?? []).some((a) => actorsOn.includes(a))) &&
+          // An item with no actor recorded is never hidden by this: the filter
+          // asks who did the work, and silence is not an answer to disagree
+          // with.
+          (!orgTypes ||
+            (i.actors ?? []).length === 0 ||
+            (i.actors ?? []).some((a) => orgTypes.includes(actorType(a)))) &&
           (!sourcedOnly || isSourced(i)),
       ),
-    [pool, cons, levels, actorsOn, sourcedOnly, hiddenYears],
+    [pool, cons, levels, actorsOn, sourcedOnly, hiddenYears, orgTypes],
   )
 
   const nodes = useMemo(() => layout(visible, { offsets: {} as Offsets }), [visible])
@@ -718,6 +726,20 @@ export function Board() {
         />
 
         <FilterSection
+          label="Kind of organisation"
+          all={ACTOR_TYPES as unknown as string[]}
+          selected={(orgTypes ?? ACTOR_TYPES) as unknown as string[]}
+          onChange={(next) =>
+            setOrgTypes(
+              next.length === ACTOR_TYPES.length ? null : (next as ActorType[]),
+            )
+          }
+          mark={(t) => <GlyphMark glyph={glyphForType(t as ActorType)} colour={colour} />}
+          render={(t) => ACTOR_TYPE_LABEL[t as ActorType]}
+          note="Shape on the board says what kind of organisation is behind a result. A national laboratory, a university, a standards body and a company carry different weight, and the evidence rules already say so."
+        />
+
+        <FilterSection
           label="Actors"
           all={actors}
           selected={actorsOn ?? actors}
@@ -1103,6 +1125,97 @@ function Sky({
       }
       const liveCam = { ...cam, yaw: cam.yaw + spin.current }
 
+      /**
+       * The key, shared by both views.
+       *
+       * It explains colour and shape — which constellation, and what kind of
+       * organisation. It was drawn only on the timeline, so half the grammar
+       * went undocumented on the view most people look at first.
+       *
+       * Closed until asked for: nine names and five shapes take real estate the
+       * plot needs more than they do.
+       */
+      const drawKey = (leftInset: number, idsOnPlot: string[]) => {
+        // it is closed until asked for — and the button stays visible so it is
+        // findable without hunting through a toolbar.
+        {
+          // The toggle is a real DOM button below, not drawn here. Twice I
+          // could not work out why a canvas-drawn one was invisible, and a
+          // control you cannot inspect is a control you cannot fix.
+          const bx = leftInset + 10
+          const by = H - 46
+
+          if (showLegend) {
+            const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
+            // Types present on this plot, not every type that exists.
+            const typesHere = new Set<ActorType>()
+            for (const id of idsOnPlot) {
+              const it = pool.find((i) => i.id === id)
+              for (const a of it?.actors ?? []) typesHere.add(actorType(a))
+            }
+            const actorRows = ACTOR_TYPES.filter((t) => typesHere.has(t))
+
+            // The organisation under the pointer, named against its own type.
+            const hovered = hoverRef.current
+              ? pool.find((i) => i.id === hoverRef.current)
+              : null
+            const hoveredByType = new Map<ActorType, string>()
+            for (const a of hovered?.actors ?? []) {
+              if (!hoveredByType.has(actorType(a))) hoveredByType.set(actorType(a), a)
+            }
+            const lh = 14
+            const boxW = 168
+            const boxH = entries.length * lh + 14 + (actorRows.length ? actorRows.length * lh + 20 : 0)
+            const lx = bx
+            const ly = Math.max(30, by - boxH - 6)
+            g.globalAlpha = 0.94
+            g.fillStyle = '#0B1220'
+            g.beginPath()
+            g.roundRect(lx, ly, boxW, boxH, 3)
+            g.fill()
+            g.globalAlpha = 0.3
+            g.strokeStyle = '#8697B0'
+            g.stroke()
+            entries.forEach((c, i) => {
+              const y = ly + 15 + i * lh
+              g.globalAlpha = 1
+              g.fillStyle = constellationColour(c)
+              g.beginPath()
+              g.arc(lx + 13, y - 3.5, 3.4, 0, Math.PI * 2)
+              g.fill()
+              g.fillStyle = '#A9B6C9'
+              g.fillText(CONSTELLATION_LABEL[c], lx + 24, y)
+            })
+
+            // Shape is the organisation. The key said nothing about that until
+            // now, which left half the visual grammar undocumented.
+            if (actorRows.length) {
+              const base = ly + 15 + entries.length * lh + 8
+              g.globalAlpha = 0.5
+              g.strokeStyle = '#8697B0'
+              g.beginPath()
+              g.moveTo(lx + 10, base - 4)
+              g.lineTo(lx + boxW - 10, base - 4)
+              g.stroke()
+              g.globalAlpha = 1
+              g.fillStyle = '#66748A'
+              g.fillText('SHAPE = WHO', lx + 13, base + 8)
+              actorRows.forEach((t, i) => {
+                const y = base + 22 + i * lh
+                const named = hoveredByType.get(t)
+                drawBody(g, glyphForType(t), lx + 14, y - 4, 3.6, named ? colour : '#A9B6C9', true)
+                g.fillStyle = named ? '#E6EDF7' : '#A9B6C9'
+                const text = named
+                  ? `${ACTOR_TYPE_LABEL[t]} (${named.length > 18 ? named.slice(0, 17) + '…' : named})`
+                  : ACTOR_TYPE_LABEL[t]
+                g.fillText(text, lx + 26, y)
+              })
+            }
+            g.globalAlpha = 1
+          }
+        }
+      }
+
       const e = reduced ? 1 : 0.16
       cur.current.k += (view.k - cur.current.k) * e
       cur.current.tx += (view.tx - cur.current.tx) * e
@@ -1409,87 +1522,8 @@ function Sky({
         g.globalAlpha = 1
 
         newsHits.current = newsMarks
+        drawKey(AXIS, tl.marks.map((m) => m.id))
 
-        // Category key, tucked behind a small button in the corner. The nine
-        // names take up real estate that the plot needs more than they do, so
-        // it is closed until asked for — and the button stays visible so it is
-        // findable without hunting through a toolbar.
-        {
-          // The toggle is a real DOM button below, not drawn here. Twice I
-          // could not work out why a canvas-drawn one was invisible, and a
-          // control you cannot inspect is a control you cannot fix.
-          const bx = AXIS + 10
-          const by = H - 46
-
-          if (showLegend) {
-            const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
-            // Types present on this plot, not every type that exists.
-            const typesHere = new Set<ActorType>()
-            for (const m of tl.marks) {
-              const it = pool.find((i) => i.id === m.id)
-              for (const a of it?.actors ?? []) typesHere.add(actorType(a))
-            }
-            const actorRows = ACTOR_TYPES.filter((t) => typesHere.has(t))
-
-            // The organisation under the pointer, named against its own type.
-            const hovered = hoverRef.current
-              ? pool.find((i) => i.id === hoverRef.current)
-              : null
-            const hoveredByType = new Map<ActorType, string>()
-            for (const a of hovered?.actors ?? []) {
-              if (!hoveredByType.has(actorType(a))) hoveredByType.set(actorType(a), a)
-            }
-            const lh = 14
-            const boxW = 168
-            const boxH = entries.length * lh + 14 + (actorRows.length ? actorRows.length * lh + 20 : 0)
-            const lx = bx
-            const ly = Math.max(30, by - boxH - 6)
-            g.globalAlpha = 0.94
-            g.fillStyle = '#0B1220'
-            g.beginPath()
-            g.roundRect(lx, ly, boxW, boxH, 3)
-            g.fill()
-            g.globalAlpha = 0.3
-            g.strokeStyle = '#8697B0'
-            g.stroke()
-            entries.forEach((c, i) => {
-              const y = ly + 15 + i * lh
-              g.globalAlpha = 1
-              g.fillStyle = constellationColour(c)
-              g.beginPath()
-              g.arc(lx + 13, y - 3.5, 3.4, 0, Math.PI * 2)
-              g.fill()
-              g.fillStyle = '#A9B6C9'
-              g.fillText(CONSTELLATION_LABEL[c], lx + 24, y)
-            })
-
-            // Shape is the organisation. The key said nothing about that until
-            // now, which left half the visual grammar undocumented.
-            if (actorRows.length) {
-              const base = ly + 15 + entries.length * lh + 8
-              g.globalAlpha = 0.5
-              g.strokeStyle = '#8697B0'
-              g.beginPath()
-              g.moveTo(lx + 10, base - 4)
-              g.lineTo(lx + boxW - 10, base - 4)
-              g.stroke()
-              g.globalAlpha = 1
-              g.fillStyle = '#66748A'
-              g.fillText('SHAPE = WHO', lx + 13, base + 8)
-              actorRows.forEach((t, i) => {
-                const y = base + 22 + i * lh
-                const named = hoveredByType.get(t)
-                drawBody(g, glyphForType(t), lx + 14, y - 4, 3.6, named ? colour : '#A9B6C9', true)
-                g.fillStyle = named ? '#E6EDF7' : '#A9B6C9'
-                const text = named
-                  ? `${ACTOR_TYPE_LABEL[t]} (${named.length > 18 ? named.slice(0, 17) + '…' : named})`
-                  : ACTOR_TYPE_LABEL[t]
-                g.fillText(text, lx + 26, y)
-              })
-            }
-            g.globalAlpha = 1
-          }
-        }
 
         raf = requestAnimationFrame(safeDraw)
         return
@@ -1851,6 +1885,7 @@ function Sky({
       g.globalAlpha = 1
 
       newsHits.current = newsMarks
+      drawKey(PAD, nodes.map((n) => n.id))
       raf = requestAnimationFrame(safeDraw)
     }
 
@@ -2103,8 +2138,7 @@ function Sky({
       {/* The key toggle. A real button, positioned over the canvas, so it is
           inspectable and reliably clickable — the canvas-drawn version was
           neither. */}
-      {timeline && (
-        <button
+      <button
           className="legend-toggle"
           onClick={onToggleLegend}
           aria-pressed={showLegend}
@@ -2117,8 +2151,7 @@ function Sky({
             ))}
           </span>
           Key
-        </button>
-      )}
+      </button>
     </div>
   )
 }
