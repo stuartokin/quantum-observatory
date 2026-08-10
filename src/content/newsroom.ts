@@ -1,29 +1,16 @@
-import fm from 'front-matter'
 import type { NewsItem } from './newsTypes'
 
 const files = import.meta.glob('/content/news/*.md', {
-  query: '?raw',
+  query: '?parsed',
   import: 'default',
   eager: true,
-}) as Record<string, string>
+}) as Record<string, { attributes: Record<string, unknown>; body: string }>
 
-function normalise(v: unknown): unknown {
-  if (v instanceof Date) return v.toISOString().slice(0, 10)
-  if (Array.isArray(v)) return v.map(normalise)
-  if (v && typeof v === 'object') {
-    return Object.fromEntries(
-      Object.entries(v as Record<string, unknown>).map(([k, x]) => [k, normalise(x)]),
-    )
-  }
-  return v
-}
 
 export const allNews: NewsItem[] = Object.entries(files)
   .filter(([path]) => !path.endsWith('README.md'))
-  .map(([, raw]) => {
-    const { attributes, body } = fm<Record<string, unknown>>(raw)
-    return { ...(normalise(attributes) as NewsItem), body }
-  })
+  .map(([, { attributes, body }]) => ({ ...(attributes as unknown as NewsItem), body }))
+  .filter((n) => n.schema === 'news/v1')
   .filter((n) => n.status !== 'archived' && n.validation?.status !== 'rejected')
   .sort((a, b) => b.date.localeCompare(a.date))
 

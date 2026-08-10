@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
+import { frontmatter } from './plugins/frontmatter'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [frontmatter(), react()],
   // Content lives outside /src so agents have one obvious place to write.
   resolve: {
     alias: {

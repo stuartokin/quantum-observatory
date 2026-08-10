@@ -1,4 +1,3 @@
-import fm from 'front-matter'
 
 export interface ForecastEstimates {
   earliest?: number
@@ -35,26 +34,15 @@ export interface Forecast {
 }
 
 const files = import.meta.glob('/content/forecasts/*.md', {
-  query: '?raw',
+  query: '?parsed',
   import: 'default',
   eager: true,
-}) as Record<string, string>
+}) as Record<string, { attributes: Record<string, unknown>; body: string }>
 
-function normalise(v: unknown): unknown {
-  if (v instanceof Date) return v.toISOString().slice(0, 10)
-  if (Array.isArray(v)) return v.map(normalise)
-  if (v && typeof v === 'object') {
-    return Object.fromEntries(
-      Object.entries(v as Record<string, unknown>).map(([k, x]) => [k, normalise(x)]),
-    )
-  }
-  return v
-}
 
-export const forecasts: Forecast[] = Object.values(files).map((raw) => {
-  const { attributes, body } = fm<Record<string, unknown>>(raw)
-  return { ...(normalise(attributes) as Forecast), body }
-})
+export const forecasts: Forecast[] = Object.values(files).map(
+  ({ attributes, body }) => ({ ...(attributes as unknown as Forecast), body }),
+)
 
 export const forecastFor = (pillar: string): Forecast | undefined =>
   forecasts.find((f) => f.pillar === pillar)

@@ -36,24 +36,27 @@ const KB = 1024
  *           Board.tsx            filters, year filter, timeline legend,
  *                                scrollbar, zoom-to-fit, provenance rendering
  *
- *         Raised again to 106 KB on 10 Aug 2026, for the news collection: a
- *         second content type, its loader and schema, the ticker, the month
- *         archive, and a small markdown renderer for the documents in Help.
+ *         REDUCED to 80 KB on 10 Aug 2026, from 106.
  *
- *         THIS IS THE LAST RAISE. THE NEXT CHANGE HERE MUST BE A REDUCTION.
+ *         front-matter and js-yaml are gone from the browser. Content is
+ *         parsed at build time by plugins/frontmatter.ts, which is where it
+ *         always belonged — the files cannot change once the site is built, so
+ *         neither can the result of parsing them. Every visitor had been
+ *         downloading a YAML parser to read them anyway.
  *
- *         About 30 KB gzipped of this is js-yaml, pulled in by front-matter to
- *         parse content in the browser. Every visitor downloads a YAML parser
- *         to read files that were fixed at build time. Moving that parse into
- *         a Vite plugin would cut roughly a third of the application bundle —
- *         far more than any future raise would concede. Do that instead.
+ *         That is about 30 KB gzipped, roughly a third of what the bundle was.
+ *         The ceiling is now lower than it was when this file was written.
+ *
+ *         The lesson worth keeping: the budget was raised three times before
+ *         anyone looked at what was actually in the bundle. A ceiling that only
+ *         ever moves upward is a record of surrender, not a constraint.
  *
  * content The frontier items. Grows as agents fill the board, which is the
  *         point, so the ceiling is generous. At ~200 items it should move to a
  *         JSON file fetched at runtime rather than bundled.
  */
 const BUDGET = {
-  app: 106 * KB,
+  app: 80 * KB,
   content: 220 * KB,
   css: 20 * KB,
 }

@@ -1,22 +1,10 @@
-import fm from 'front-matter'
 import type { FrontierItem, Confidence } from './frontierTypes'
 
 const files = import.meta.glob('/content/frontier/*.md', {
-  query: '?raw',
+  query: '?parsed',
   import: 'default',
   eager: true,
-}) as Record<string, string>
-
-function normalise(value: unknown): unknown {
-  if (value instanceof Date) return value.toISOString().slice(0, 10)
-  if (Array.isArray(value)) return value.map(normalise)
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, normalise(v)]),
-    )
-  }
-  return value
-}
+}) as Record<string, { attributes: Record<string, unknown>; body: string }>
 
 /**
  * CONFIDENCE DECAY.
@@ -36,20 +24,14 @@ export function decayed(stated: Confidence, verified: string, now = new Date()):
 }
 
 export const allFrontier: FrontierItem[] = Object.entries(files)
-  .map(([path, raw]) => {
-    try {
-      const { attributes } = fm<Record<string, unknown>>(raw)
-      const item = normalise(attributes) as FrontierItem
-      if (!item?.id || !item.evidence?.verified) {
-        console.warn('Skipping malformed frontier file:', path)
-        return null
-      }
-      return { ...item, confidence: decayed(item.confidence, item.evidence.verified) }
-    } catch (e) {
-      // One bad file must not take the board down — name it and carry on.
-      console.warn('Failed to parse frontier file:', path, e)
+  .map(([path, mod]) => {
+    const item = mod.attributes as unknown as FrontierItem
+    // A malformed file must not take the board down — name it and carry on.
+    if (!item?.id || !item.evidence?.verified) {
+      console.warn('Skipping malformed frontier file:', path)
       return null
     }
+    return { ...item, confidence: decayed(item.confidence, item.evidence.verified) }
   })
   .filter((i): i is FrontierItem => i !== null)
 
