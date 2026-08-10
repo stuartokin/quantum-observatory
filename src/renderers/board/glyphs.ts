@@ -68,16 +68,96 @@ export function canonicalActor(actor: string): string {
   return ALIASES[flat] ?? flat
 }
 
-/** Stable across runs, so an organisation keeps its shape. */
-export function glyphFor(actor: string): Glyph {
-  const name = canonicalActor(actor)
-  let h = 2166136261
-  for (let i = 0; i < name.length; i++) {
-    h ^= name.charCodeAt(i)
-    h = Math.imul(h, 16777619)
-  }
-  return GLYPHS[(h >>> 0) % GLYPHS.length]
+export type ActorType =
+  | 'university'
+  | 'national-lab'
+  | 'standards'
+  | 'vendor'
+  | 'programme'
+  | 'unknown'
+
+export const ACTOR_TYPE_LABEL: Record<ActorType, string> = {
+  university: 'University',
+  'national-lab': 'National laboratory',
+  standards: 'Standards or authority',
+  vendor: 'Company',
+  programme: 'Programme or consortium',
+  unknown: 'Other',
 }
+
+/**
+ * Shape says what kind of organisation, not which one.
+ *
+ * Eight shapes hashed from a name told a reader nothing — two adjacent bodies
+ * might share a shape by coincidence and mean nothing by it. What actually
+ * bears on how much a result is worth is the *kind* of organisation behind it:
+ * a national laboratory, a university, a standards body and a vendor carry
+ * different weight, and the evidence rules already say so.
+ *
+ * The organisation itself is still available — hover a body and the key names
+ * it. This is the more informative channel and the cheaper one to read.
+ */
+export function actorType(actor: string): ActorType {
+  const n = canonicalActor(actor)
+
+  // Standards and authorities first: NIST is a national laboratory and a
+  // standards body, and for a reader weighing a claim the second matters more.
+  if (
+    /\b(nist|etsi|iso|iec|ietf|ncsc|cisa|nsa|bsi|enisa|itu|ansi|cen|cenelec)\b/.test(n) ||
+    /standards|cybersecurity and infrastructure|national cyber security/.test(n)
+  ) {
+    return 'standards'
+  }
+
+  if (
+    /national laborator|sandia|oak ridge|fermilab|argonne|brookhaven|los alamos|lawrence livermore|berkeley lab|nasa|jet propulsion|riken|cnrs|cea|fraunhofer|max planck|naval research|afrl|darpa/.test(n)
+  ) {
+    return 'national-lab'
+  }
+
+  if (
+    /universit|institute of technology|\bcollege\b|\beth\b|\bepfl\b|caltech|ustc|qutech|polytechnic|\bschool\b|academy of sciences/.test(n)
+  ) {
+    return 'university'
+  }
+
+  if (/flagship|consortium|programme|program office|nqcc|nqtp|partnership|alliance|initiative/.test(n)) {
+    return 'programme'
+  }
+
+  return n ? 'vendor' : 'unknown'
+}
+
+/**
+ * One shape per kind of organisation.
+ *
+ * A star is a university: where things originate. A ringed world is a national
+ * laboratory: substantial, structured, slow-moving. A pulsar is a standards
+ * body: a fixed signal others navigate by. A comet is a company: fast, bright,
+ * and not always still there. A cluster is a consortium, which is what one is.
+ */
+const TYPE_GLYPH: Record<ActorType, Glyph> = {
+  university: 'star',
+  'national-lab': 'ringed',
+  standards: 'pulsar',
+  vendor: 'comet',
+  programme: 'cluster',
+  unknown: 'crescent',
+}
+
+export function glyphFor(actor: string): Glyph {
+  return TYPE_GLYPH[actorType(actor)]
+}
+
+/** For the key: the shapes actually in use, in a sensible reading order. */
+export const ACTOR_TYPES: ActorType[] = [
+  'university',
+  'national-lab',
+  'standards',
+  'vendor',
+  'programme',
+]
+export const glyphForType = (t: ActorType): Glyph => TYPE_GLYPH[t]
 
 /**
  * Lighting.

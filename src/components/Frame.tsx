@@ -43,6 +43,7 @@ export function Frame({
   onInfo,
   info,
   action,
+  scrollKey,
 }: {
   title: string
   state: FrameState
@@ -71,10 +72,23 @@ export function Frame({
   info?: ReactNode
   /** A control that belongs in the title bar rather than the body. */
   action?: ReactNode
+  /**
+   * Change this and the body scrolls back to the top.
+   *
+   * Reading halfway down one item and clicking another left the panel where it
+   * was, so the new entry opened in the middle of itself. The content changed;
+   * the scroll position should not have survived it.
+   */
+  scrollKey?: string | null
 }) {
   const ref = useRef<HTMLElement>(null)
+  const body = useRef<HTMLDivElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
   const [active, setActive] = useState(false)
+
+  useEffect(() => {
+    if (body.current) body.current.scrollTop = 0
+  }, [scrollKey])
 
   useEffect(() => {
     const move = (e: PointerEvent) => {
@@ -131,15 +145,18 @@ export function Frame({
 
   if (state.docked) return null
 
+  /*
+   * data-info exists so the stylesheet can let this frame overflow. The info
+   * panel hangs below the title bar, outside the frame's own box, and a frame
+   * that clips its overflow swallows it — which is why clicking the title
+   * appeared to do nothing at all.
+   */
   return (
     <section
       ref={ref}
       className="frame"
       data-active={active}
       data-minimised={state.minimised || undefined}
-      // The info panel hangs below the title bar, outside the frame's own box.
-      // A frame that clips its overflow swallows it, which is why clicking the
-      // title appeared to do nothing at all.
       data-info={info ? '' : undefined}
       onPointerDown={onFocus}
       style={{
@@ -212,7 +229,10 @@ export function Frame({
 
       {!state.minimised && !barOnly && (
         <>
-          <div className={flush ? 'frame__body frame__body--flush' : 'frame__body'}>
+          <div
+            ref={body}
+            className={flush ? 'frame__body frame__body--flush' : 'frame__body'}
+          >
             {children}
           </div>
           <span className="frame__resize" onPointerDown={begin('resize')} aria-hidden="true" />

@@ -24,6 +24,17 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.39.0',
+    date: '2026-08-10',
+    headline: 'Shape says what kind of organisation, not which one.',
+    ui: [
+      'Glyphs now carry organisation type — university, national laboratory, standards body, company, consortium — rather than a hash of the name. Eight shapes derived from spelling told a reader nothing; the kind of organisation behind a result is what actually bears on its weight, and the evidence rules already say so.',
+      'Hover a body and the timeline key names the organisation in brackets beside its type, so the specific identity is still one glance away.',
+      'The detail panel scrolls back to the top when you open a different item. Reading halfway down one entry and clicking another used to open the new one in the middle of itself.',
+      'A comment written in the wrong form inside a JSX tag would have failed the build; found by a scan that now runs over every component.',
+    ],
+  },
+  {
     version: '0.38.0',
     date: '2026-08-10',
     headline: 'Headlines on the timeline, and one organisation gets one shape.',
@@ -112,16 +123,6 @@ export const RELEASES: Release[] = [
       'Opens the sources behind published items and checks the claim against them, the evidence level against the source type, the readiness against the evidence.',
       'It corrects downward on its own judgement and never upward. Anything that would raise a claim is escalated, capped at three items a run.',
       'New provenance state agent-reviewed — checked by a machine, not read by a person — which still counts toward the unreviewed figure, because it is not review.',
-    ],
-  },
-  {
-    version: '0.19.0',
-    date: '2026-08-08',
-    headline: 'The board becomes a workspace.',
-    ui: [
-      'Galaxy and timeline live in frames that move, resize and minimise. Three panels on a wide screen: galaxy dominant, what changed, and the journals beside it.',
-      'Constellation orbits drift slowly when idle, and a body you drag eases back into its orbit over about eight seconds.',
-      'Q-Day in three places, including a shaded band across the actual years on the timeline — the forecast drawn in its own units.',
     ],
   },
 ]

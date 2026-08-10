@@ -13,7 +13,14 @@ import {
   glyphFor,
   type Node,
 } from './tower'
-import { drawBody } from './glyphs'
+import {
+  drawBody,
+  glyphForType,
+  actorType,
+  ACTOR_TYPES,
+  ACTOR_TYPE_LABEL,
+  type ActorType,
+} from './glyphs'
 import { layoutTimeline, yearFraction, GUTTER, dateOf } from './timeline'
 import {
   DEFAULT_CAMERA,
@@ -659,6 +666,7 @@ export function Board() {
           accent={colour}
           z={zOf('newsitem')}
           onFocus={raise('newsitem')}
+          scrollKey={openNews.id}
         >
           <Suspense fallback={<p className="label">Loading…</p>}>
             <NewsDetail item={openNews} colour={colour} />
@@ -802,6 +810,7 @@ export function Board() {
           accent={colour}
           z={zOf('detail')}
           onFocus={raise('detail')}
+          scrollKey={item.id}
         >
           <Detail item={item} definition={SCALES[item.pillar]?.levels[item.readiness]} />
         </Frame>
@@ -1409,16 +1418,22 @@ function Sky({
 
           if (showLegend) {
             const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
-            // The actors actually present, most prolific first, so the key
-            // explains the shapes on screen rather than every shape possible.
-            const shown = new Map<string, string>()
+            // Types present on this plot, not every type that exists.
+            const typesHere = new Set<ActorType>()
             for (const m of tl.marks) {
               const it = pool.find((i) => i.id === m.id)
-              for (const a of it?.actors ?? []) {
-                if (!shown.has(a) && shown.size < 6) shown.set(a, a)
-              }
+              for (const a of it?.actors ?? []) typesHere.add(actorType(a))
             }
-            const actorRows = [...shown.keys()]
+            const actorRows = ACTOR_TYPES.filter((t) => typesHere.has(t))
+
+            // The organisation under the pointer, named against its own type.
+            const hovered = hoverRef.current
+              ? pool.find((i) => i.id === hoverRef.current)
+              : null
+            const hoveredByType = new Map<ActorType, string>()
+            for (const a of hovered?.actors ?? []) {
+              if (!hoveredByType.has(actorType(a))) hoveredByType.set(actorType(a), a)
+            }
             const lh = 14
             const boxW = 168
             const boxH = entries.length * lh + 14 + (actorRows.length ? actorRows.length * lh + 20 : 0)
@@ -1456,11 +1471,15 @@ function Sky({
               g.globalAlpha = 1
               g.fillStyle = '#66748A'
               g.fillText('SHAPE = WHO', lx + 13, base + 8)
-              actorRows.forEach((a, i) => {
+              actorRows.forEach((t, i) => {
                 const y = base + 22 + i * lh
-                drawBody(g, glyphFor(a), lx + 14, y - 4, 3.6, '#A9B6C9', true)
-                g.fillStyle = '#A9B6C9'
-                g.fillText(a.length > 20 ? a.slice(0, 19) + '…' : a, lx + 26, y)
+                const named = hoveredByType.get(t)
+                drawBody(g, glyphForType(t), lx + 14, y - 4, 3.6, named ? colour : '#A9B6C9', true)
+                g.fillStyle = named ? '#E6EDF7' : '#A9B6C9'
+                const text = named
+                  ? `${ACTOR_TYPE_LABEL[t]} (${named.length > 18 ? named.slice(0, 17) + '…' : named})`
+                  : ACTOR_TYPE_LABEL[t]
+                g.fillText(text, lx + 26, y)
               })
             }
             g.globalAlpha = 1
