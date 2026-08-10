@@ -158,15 +158,32 @@ export function normaliseTypes(v) {
   return v
 }
 
-let validateItem = null
+/**
+ * One compiled validator per schema, not one for the whole process.
+ *
+ * The cache was keyed on nothing, so the first schema compiled became the only
+ * schema used — which meant a run that touched the frontier then validated
+ * every news file against the frontier shape, and reported missing `readiness`
+ * on a headline. Caching by path is the whole fix.
+ */
+const validators = new Map()
 function itemValidator(schemaPath) {
-  if (validateItem) return validateItem
+  const hit = validators.get(schemaPath)
+  if (hit) return hit
   const Ajv = require('ajv')
   const addFormats = require('ajv-formats')
   const ajv = new (Ajv.default ?? Ajv)({ allErrors: true, strict: false })
   ;(addFormats.default ?? addFormats)(ajv)
-  validateItem = ajv.compile(JSON.parse(readFileSync(schemaPath, 'utf8')))
-  return validateItem
+  const v = ajv.compile(JSON.parse(readFileSync(schemaPath, 'utf8')))
+  validators.set(schemaPath, v)
+  return v
+}
+
+/** The schema a path is governed by, inferred from its collection. */
+export function schemaForPath(path) {
+  return path.includes('/news/')
+    ? 'content/schema/news.schema.json'
+    : 'content/schema/frontier.schema.json'
 }
 
 /**

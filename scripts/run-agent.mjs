@@ -16,7 +16,7 @@
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { execSync } from 'node:child_process'
-import { extractJson, normaliseFile, checkFile } from './agent-io.mjs'
+import { extractJson, normaliseFile, checkFile, schemaForPath } from './agent-io.mjs'
 
 /**
  * Focus picked up from the issues themselves.
@@ -451,7 +451,8 @@ for (const f of files) {
   }
 
   const content = withIdentity(normaliseFile(f.content), f.path)
-  const check = checkFile(content)
+  // Validate against the schema that actually governs this collection.
+  const check = checkFile(content, schemaForPath(f.path))
 
   /**
    * Some agents may only revise what is already on the board.

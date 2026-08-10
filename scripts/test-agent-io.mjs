@@ -7,7 +7,13 @@
  * blocks. Both were invisible to the type checker and cost a full round trip
  * to discover. This runs in CI instead.
  */
-import { normaliseFile, extractJson, balancedObjects, FRONT_MATTER } from './agent-io.mjs'
+import {
+  normaliseFile,
+  extractJson,
+  balancedObjects,
+  schemaForPath,
+  FRONT_MATTER,
+} from './agent-io.mjs'
 let pass = 0
 let fail = 0
 const t = (name, cond) => {
@@ -132,6 +138,13 @@ const split = [
 t('JSON split across text blocks', extractJson(split)?.files?.length === 1)
 t('ignores braces in prose', extractJson(['Consider {this}.', '{"summary":"s","files":[]}'])?.files?.length === 0)
 t('braces inside strings', balancedObjects('{"a":"} not the end"}').length === 1)
+
+// The validator cache was keyed on nothing, so the first schema compiled
+// became the only schema used for the rest of the process — and every news
+// file was checked for `readiness`.
+t('news paths take the news schema', schemaForPath('content/news/a.md').includes('news.schema'))
+t('  frontier paths take the frontier schema',
+  schemaForPath('content/frontier/_inbox/a.md').includes('frontier.schema'))
 
 console.log(`\n  ${pass} passed, ${fail} failed`)
 process.exit(fail ? 1 : 0)

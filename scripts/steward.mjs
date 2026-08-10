@@ -20,7 +20,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { execSync } from 'node:child_process'
-import { extractJson, normaliseFile, checkFile } from './agent-io.mjs'
+import { extractJson, normaliseFile, checkFile, schemaForPath } from './agent-io.mjs'
 
 const DIR = 'agents/steward'
 const cfg = JSON.parse(readFileSync(`${DIR}/agent.json`, 'utf8'))
@@ -210,7 +210,7 @@ for (const f of (out.files ?? []).slice(0, cfg.budget?.proposals ?? 8)) {
     continue
   }
   const content = normaliseFile(f.content)
-  const check = checkFile(content)
+  const check = checkFile(content, schemaForPath(f.path))
   if (!check.ok) {
     refused.push(`${f.path} — ${check.reason}`)
     continue
