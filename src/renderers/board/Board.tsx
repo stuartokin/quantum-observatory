@@ -29,6 +29,9 @@ import { VERSION } from '../../version'
 import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
 import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
+import { Ticker, NewsDetail } from '../../components/Ticker'
+import { recentNews, newsAbout } from '../../content/newsroom'
+import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
 import { RELEASES } from '../../releases'
@@ -76,15 +79,17 @@ export function Board() {
   /** Years excluded from view. Filtering time frees space in both views. */
   const [hiddenYears, setHiddenYears] = useState<Set<number>>(new Set())
   const [showLegend, setShowLegend] = useState(true)
-  /** Below roughly 13 inches the figures move behind an icon rather than going. */
-  const [narrow, setNarrow] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 1180 : false,
-  )
-  useEffect(() => {
-    const onResize = () => setNarrow(window.innerWidth < 1180)
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+  const [openNews, setOpenNews] = useState<NewsItem | null>(null)
+  /** Headlines are off by default — there will eventually be a great many. */
+  const [showNewsOverlay, setShowNewsOverlay] = useState(false)
+  /**
+   * The figures live behind the icon at every width now.
+   *
+   * Shown inline they took most of the header, squeezed the title to
+   * "The frontier, b…" and still collided with the Q-Day bar. They are
+   * reference, consulted occasionally; the title is what the page is.
+   */
+  const narrow = true
 
   const [cons, setCons] = useState<string[]>([...CONSTELLATIONS])
   const [levels, setLevels] = useState<Readiness[]>([...LEVELS])
@@ -108,7 +113,7 @@ export function Board() {
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'teaser', 'news', 'filters', 'help', 'qday', 'detail',
+    'galaxy', 'teaser', 'news', 'headlines', 'newsitem', 'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
@@ -174,6 +179,7 @@ export function Board() {
   const news = useMemo(() => buildNews(pool), [pool])
   const teaserEntries = useMemo(() => headlines(news), [news])
   const changedCon = useMemo(() => mostChanged(teaserEntries), [teaserEntries])
+  const headlines14 = useMemo(() => recentNews(galaxy, 14), [galaxy])
   const changedIds = useMemo(() => new Set(teaserEntries.map((e) => e.id)), [teaserEntries])
   const forecast = useMemo(() => forecastFor(galaxy), [galaxy])
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
@@ -255,7 +261,14 @@ export function Board() {
       ? []
       : [
         ]),
-    { key: 'news', icon: '◰', label: 'News', active: !frames.news.docked, onClick: toggle('news') },
+    { key: 'news', icon: '◰', label: 'Journals', active: !frames.news.docked, onClick: toggle('news') },
+    {
+      key: 'headlines',
+      icon: '⌁',
+      label: 'Headlines',
+      active: !frames.headlines.docked,
+      onClick: toggle('headlines'),
+    },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     {
@@ -328,8 +341,7 @@ export function Board() {
               )
             })}
           </select>
-          {/* Truncates to nothing rather than wrapping. With the Q-Day bar and
-              the figures both present, this is the element that must give. */}
+          {/* With the figures behind the icon there is room for this again. */}
           <h2
             onDoubleClick={openQDay}
             title="Double-click for the Q-Day forecast"
@@ -367,7 +379,7 @@ export function Board() {
         >
           <QDayBar forecast={forecast} colour={colour} onOpen={openQDay} />
 
-          {narrow && (
+          {(
             <button
               className="board-stats__toggle"
               onClick={() => setStatsOpen((v) => !v)}
@@ -392,7 +404,7 @@ export function Board() {
             </button>
           )}
 
-          {(!narrow || statsOpen) && (
+          {statsOpen && (
             <div
               className="board-stats"
               style={{
@@ -481,6 +493,12 @@ export function Board() {
           showLegend={showLegend}
           onToggleLegend={() => setShowLegend((v) => !v)}
           pool={pool}
+          newsOverlay={showNewsOverlay}
+          onOpenNews={(n) => {
+            setOpenNews(n)
+            setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
+            raise('newsitem')()
+          }}
         />
       </Frame>
 
@@ -510,7 +528,7 @@ export function Board() {
       </Frame>
 
       <Frame
-        title="News"
+        title="Journals"
         state={frames.news}
         onChange={setFrame('news')}
         onDock={dock('news')}
@@ -520,6 +538,40 @@ export function Board() {
       >
         <News weeks={news} colour={colour} onSelect={setSelected} />
       </Frame>
+
+      <Frame
+        title="Headlines"
+        state={frames.headlines}
+        onChange={setFrame('headlines')}
+        onDock={dock('headlines')}
+        accent={colour}
+        z={zOf('headlines')}
+        onFocus={raise('headlines')}
+      >
+        <Ticker
+          items={headlines14}
+          colour={colour}
+          onOpen={(n) => {
+            setOpenNews(n)
+            setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
+            raise('newsitem')()
+          }}
+        />
+      </Frame>
+
+      {openNews && (
+        <Frame
+          title="Headline"
+          state={frames.newsitem}
+          onChange={setFrame('newsitem')}
+          onClose={() => setOpenNews(null)}
+          accent={colour}
+          z={zOf('newsitem')}
+          onFocus={raise('newsitem')}
+        >
+          <NewsDetail item={openNews} colour={colour} />
+        </Frame>
+      )}
 
       <Frame
         title="Q-Day forecast"
@@ -679,6 +731,8 @@ function Sky({
   showLegend,
   onToggleLegend,
   pool,
+  newsOverlay,
+  onOpenNews,
 }: {
   nodes: Node[]
   colour: string
@@ -699,6 +753,8 @@ function Sky({
   showLegend: boolean
   onToggleLegend: () => void
   pool: FrontierItem[]
+  newsOverlay: boolean
+  onOpenNews: (n: NewsItem) => void
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -759,6 +815,9 @@ function Sky({
   )
 
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes])
+
+  /** Where the headline satellites landed, so a click can find one. */
+  const newsHits = useRef<{ x: number; y: number; r: number; item: NewsItem }[]>([])
 
   /** Ids nobody has read. Marked on the board, not only in the detail panel. */
   const unreviewed = useMemo(
@@ -1421,6 +1480,16 @@ function Sky({
           a.rank - b.rank
         )
       })
+      /**
+       * Headlines as satellites.
+       *
+       * A news item is not a development, so it never becomes a body — it
+       * orbits the item it bears on, small and dim. Off by default, because
+       * there will eventually be far more headlines than items and a board
+       * showing every announcement is a news reader rather than a map.
+       */
+      const newsMarks: { x: number; y: number; r: number; item: NewsItem }[] = []
+
       const dimmed = selected !== null
       // With little room, only the highest-ranked items keep a label.
       const roomy = W * H > 520000
@@ -1489,6 +1558,30 @@ function Sky({
           g.setLineDash([])
         }
 
+        if (newsOverlay) {
+          const attached = newsAbout(n.id)
+          attached.slice(0, 6).forEach((item, k) => {
+            const big = item.significance === 'headline'
+            const ang = -0.6 + k * 0.7
+            const orbit = r + (big ? 13 : 10)
+            const nx = px + Math.cos(ang) * orbit
+            const ny = py + Math.sin(ang) * orbit * 0.7
+            const nr = big ? 3.4 : 1.9
+            g.globalAlpha = (big ? 0.95 : 0.5) * fade
+            g.fillStyle = big ? '#FFB020' : '#8697B0'
+            if (big) {
+              g.shadowColor = '#FFB020'
+              g.shadowBlur = 7
+            }
+            g.beginPath()
+            g.arc(nx, ny, nr, 0, Math.PI * 2)
+            g.fill()
+            g.shadowBlur = 0
+            newsMarks.push({ x: nx, y: ny, r: nr + 4, item })
+          })
+          g.globalAlpha = 1
+        }
+
         if (sel || hov) {
           g.globalAlpha = 1
           g.strokeStyle = colour
@@ -1543,6 +1636,7 @@ function Sky({
       }
       g.globalAlpha = 1
 
+      newsHits.current = newsMarks
       raf = requestAnimationFrame(safeDraw)
     }
 
@@ -1560,7 +1654,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, showLegend, pool, fitScale])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, showLegend, pool, fitScale, newsOverlay])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
@@ -1609,6 +1703,18 @@ function Sky({
 
   function onPointerDown(e: React.PointerEvent) {
     idleSince.current = performance.now()
+
+    // A headline satellite takes the pointer before the body it orbits.
+    if (newsOverlay && newsHits.current.length) {
+      const r = cv.current!.getBoundingClientRect()
+      const px = e.clientX - r.left
+      const py = e.clientY - r.top
+      const hit = newsHits.current.find((m) => Math.hypot(m.x - px, m.y - py) < m.r)
+      if (hit) {
+        onOpenNews(hit.item)
+        return
+      }
+    }
 
     if (tl) {
       // Timeline pans only; marks are selected on release.

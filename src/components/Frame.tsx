@@ -208,6 +208,16 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
       h: mainH - Math.round(mainH * 0.42) - pad,
       docked: !wide,
     },
+    // Headlines sits under the news column on a wide screen and is docked
+    // below that — three panels plus a ticker is too much for a laptop.
+    headlines: {
+      x: wide ? mainW + pad * 2 : 120,
+      y: wide ? top + Math.round(mainH * 0.42) + pad : 150,
+      w: rightW,
+      h: 190,
+      docked: true,
+    },
+    newsitem: { x: Math.max(16, w - 460), y: 120, w: 430, h: 520, docked: true },
     filters: { x: 24, y: 110, w: 288, h: Math.min(620, h - 190), docked: true },
     help: { x: 70, y: 96, w: 520, h: Math.min(700, h - 160), docked: true },
     detail: { x: Math.max(16, w - 424), y: 96, w: 400, h: 470, docked: true },

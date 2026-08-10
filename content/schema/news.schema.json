@@ -1,0 +1,257 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://horizonqltd.com/schema/news/v1",
+  "title": "Horizon Q news item",
+  "description": "A dated event, not a readiness claim. News and frontier items are kept in separate collections deliberately: the board maps how close things are to real, and a stream of announcements mixed into it would corrupt that map. News points AT the board through `about`, and at the research behind it through `establishedBy`.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "headline",
+    "pillar",
+    "date",
+    "source",
+    "plain",
+    "validation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "news/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "headline": {
+      "type": "string",
+      "maxLength": 160,
+      "description": "What happened, in the board's own words. Never a copied headline."
+    },
+    "pillar": {
+      "enum": [
+        "ai",
+        "quantum",
+        "materials",
+        "energy",
+        "cyber"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "When it happened, not when it was found."
+    },
+    "plain": {
+      "type": "string",
+      "maxLength": 1600,
+      "description": "What this means for a reader who is not a specialist, and why it matters. The field most people will read."
+    },
+    "significance": {
+      "enum": [
+        "headline",
+        "notable",
+        "routine"
+      ],
+      "description": "headline = would change what someone plans around \u00b7 notable = worth knowing \u00b7 routine = the record. Only headline items are prominent."
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "url",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "kind": {
+          "enum": [
+            "paper",
+            "preprint",
+            "standard",
+            "authority",
+            "vendor",
+            "press",
+            "journalism"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "doi": {
+          "type": "string"
+        }
+      }
+    },
+    "corroboration": {
+      "type": "array",
+      "maxItems": 4,
+      "description": "Independent reports of the same event. A single vendor press release with no corroboration is not a story.",
+      "items": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "status",
+        "checks"
+      ],
+      "additionalProperties": false,
+      "description": "Why this is believed. An unvalidated item is not published.",
+      "properties": {
+        "status": {
+          "enum": [
+            "verified",
+            "single-source",
+            "contested",
+            "rejected"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "What was actually done: which primary source was opened, what independent report was found, what was ruled out."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 600
+        }
+      }
+    },
+    "about": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Frontier item ids this bears on. How news attaches to the map."
+    },
+    "establishedBy": {
+      "type": "array",
+      "description": "The research this rests on. The link that makes an announcement traceable to the work behind it.",
+      "items": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "doi": {
+            "type": "string"
+          },
+          "relation": {
+            "enum": [
+              "reports",
+              "builds-on",
+              "applies",
+              "contradicts"
+            ]
+          }
+        }
+      }
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "country": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "reviewed",
+            "agent-reviewed",
+            "agent-merged",
+            "vetoed"
+          ]
+        },
+        "by": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        },
+        "on": {
+          "type": "string"
+        },
+        "agentMergedOn": {
+          "type": "string"
+        },
+        "reviewedOn": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 800
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ]
+    },
+    "added": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

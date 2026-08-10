@@ -1,0 +1,11 @@
+{
+  "name": "newsroom",
+  "description": "Daily headlines for the galaxy, validated before publication and linked to the research behind them.",
+  "model": "claude-sonnet-4-6",
+  "everyWeeks": 1,
+  "maxTokens": 32000,
+  "write_scope": ["content/news/**"],
+  "output": "pull_request",
+  "enabled": false,
+  "budget": { "searches": 30, "proposals": 8 }
+}
