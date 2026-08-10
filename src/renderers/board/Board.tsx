@@ -83,7 +83,7 @@ export function Board() {
   /** Headlines are off by default — there will eventually be a great many. */
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
   /** Strip across the page, or a window with the whole history. */
-  const [headlineMode, setHeadlineMode] = useState<'strip' | 'frame'>('strip')
+  const [headlineMode, setHeadlineMode] = useState<'ticker' | 'archive'>('ticker')
   /**
    * The figures live behind the icon at every width now.
    *
@@ -273,16 +273,9 @@ export function Board() {
     {
       key: 'headlines',
       icon: '⌁',
-      label: headlineMode === 'strip' ? 'Headlines' : 'Headlines window',
-      active: headlineMode === 'frame' && !frames.headlines.docked,
-      onClick: () => {
-        if (headlineMode === 'frame' && !frames.headlines.docked) setHeadlineMode('strip')
-        else {
-          setHeadlineMode('frame')
-          setFrames((f) => ({ ...f, headlines: { ...f.headlines, docked: false } }))
-          raise('headlines')()
-        }
-      },
+      label: 'Headlines',
+      active: !frames.headlines.docked,
+      onClick: toggle('headlines'),
     },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
@@ -478,19 +471,6 @@ export function Board() {
 
       {/* Full width, under the header. A ticker in a panel is a list; across
           the page it is a wire, which is what it is for. */}
-      {headlineMode === 'strip' && (
-        <Ticker
-          items={headlines14}
-          colour={colour}
-          onOpen={openHeadline}
-          onExpand={() => {
-            setHeadlineMode('frame')
-            setFrames((f) => ({ ...f, headlines: { ...f.headlines, docked: false } }))
-            raise('headlines')()
-          }}
-        />
-      )}
-
       <Frame
         title={timeline ? 'Timeline' : mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
         state={frames.galaxy}
@@ -565,24 +545,36 @@ export function Board() {
         <News weeks={news} colour={colour} onSelect={setSelected} />
       </Frame>
 
-      {headlineMode === 'frame' && (
-        <Frame
-          title="Headlines"
-          state={frames.headlines}
-          onChange={setFrame('headlines')}
-          onDock={dock('headlines')}
-          accent={colour}
-          z={zOf('headlines')}
-          onFocus={raise('headlines')}
-        >
+      {/* One window, two views. Moveable, resizable, minimisable in either —
+          and the mode is remembered, which is the first step toward saving a
+          layout per reader. */}
+      <Frame
+        title={headlineMode === 'ticker' ? 'Headlines' : 'Headlines by month'}
+        state={frames.headlines}
+        onChange={setFrame('headlines')}
+        onDock={dock('headlines')}
+        accent={colour}
+        z={zOf('headlines')}
+        onFocus={raise('headlines')}
+        minWidth={280}
+        minHeight={headlineMode === 'ticker' ? 96 : 200}
+      >
+        {headlineMode === 'ticker' ? (
+          <Ticker
+            items={headlines14}
+            colour={colour}
+            onOpen={openHeadline}
+            onArchive={() => setHeadlineMode('archive')}
+          />
+        ) : (
           <NewsArchive
             items={allHeadlines}
             colour={colour}
             onOpen={openHeadline}
-            onCollapse={() => setHeadlineMode('strip')}
+            onTicker={() => setHeadlineMode('ticker')}
           />
-        </Frame>
-      )}
+        )}
+      </Frame>
 
       {openNews && (
         <Frame

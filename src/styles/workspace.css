@@ -437,16 +437,14 @@
 
 /* ---------- Headlines strip ---------- */
 
+/* Inside its own window now, so it fills the box rather than the page. */
 .strip {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--gap-s);
-  height: 30px;
-  flex: 0 0 auto;
-  padding: 0 var(--gap-m);
-  border-bottom: 1px solid var(--hairline);
-  background: color-mix(in oklab, var(--ground-panel) 60%, transparent);
+  width: 100%;
+  min-height: 34px;
   overflow: hidden;
 }
 
@@ -496,8 +494,9 @@
 
 /* Controls appear on approach — permanently visible they are clutter on a
    strip this slim. */
-.strip__controls { display: flex; gap: 2px; flex: 0 0 auto; opacity: 0; transition: opacity 140ms ease; }
+.strip__controls { display: flex; gap: 2px; flex: 0 0 auto; opacity: 0.55; transition: opacity 140ms ease; }
 .strip__controls[data-active] { opacity: 1; }
+.strip:hover .strip__controls { opacity: 1; }
 .strip__controls button {
   background: transparent; border: 1px solid var(--hairline);
   border-radius: var(--radius); color: var(--ink-faint); cursor: pointer;

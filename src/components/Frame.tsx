@@ -187,7 +187,7 @@ export function Frame({
 export function defaultLayout(w: number, h: number): Record<string, FrameState> {
   const wide = w >= 1100
   const pad = 12
-  const top = 108  // header plus the headlines strip
+  const top = 74
   const rightW = wide ? Math.min(400, Math.round(w * 0.28)) : 320
   const mainW = wide ? w - rightW - pad * 3 : w - pad * 2
   const mainH = h - top - pad - 62
@@ -210,11 +210,13 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
     },
     // Headlines sits under the news column on a wide screen and is docked
     // below that — three panels plus a ticker is too much for a laptop.
+    // Opens as a wide, shallow window — a ticker wants width and almost no
+    // height. Switching to the month view resizes it in place.
     headlines: {
-      x: wide ? Math.round(w * 0.28) : 40,
-      y: top + 20,
-      w: Math.min(520, w - 80),
-      h: Math.min(560, h - top - 90),
+      x: pad,
+      y: h - 190,
+      w: Math.min(880, w - pad * 2),
+      h: 120,
       docked: true,
     },
     newsitem: { x: Math.max(16, w - 460), y: 120, w: 430, h: 520, docked: true },

@@ -26,13 +26,13 @@ export function Ticker({
   items,
   colour,
   onOpen,
-  onExpand,
+  onArchive,
 }: {
   items: NewsItem[]
   colour: string
   onOpen: (n: NewsItem) => void
-  /** Swap the strip for a window with the full history. */
-  onExpand: () => void
+  /** Swap the rolling view for the month archive. */
+  onArchive: () => void
 }) {
   const track = useRef<HTMLDivElement>(null)
   const inner = useRef<HTMLDivElement>(null)
@@ -73,13 +73,12 @@ export function Ticker({
   if (items.length === 0) {
     return (
       <div className="strip strip--empty">
-        <span className="strip__label">Headlines</span>
         <span className="strip__none">
           Nothing yet — the newsroom agent gathers daily, validates before
           publishing, and links each item to the research behind it.
         </span>
         <div className="strip__controls" data-active>
-          <button onClick={onExpand} aria-label="Open as a window">⊞</button>
+          <button onClick={onArchive} title="By month">☰</button>
         </div>
       </div>
     )
@@ -100,10 +99,6 @@ export function Ticker({
         setShowState(false)
       }}
     >
-      <span className="strip__label" style={{ color: colour }}>
-        Headlines
-      </span>
-
       <div className="strip__window">
         <div className="strip__inner" ref={inner}>
           {row.map((n, k) => (
@@ -132,12 +127,10 @@ export function Ticker({
         </div>
       </div>
 
-      <div className="strip__controls" data-active={showState || undefined}>
+      <div className="strip__controls" data-active>
         <button onClick={() => nudge(-1)} aria-label="Back">‹</button>
         <button onClick={() => nudge(1)} aria-label="Forward">›</button>
-        <button onClick={onExpand} aria-label="Open as a window" title="Open as a window">
-          ⊞
-        </button>
+        <button onClick={onArchive} title="By month">☰</button>
       </div>
     </div>
   )
@@ -240,12 +233,12 @@ export function NewsArchive({
   items,
   colour,
   onOpen,
-  onCollapse,
+  onTicker,
 }: {
   items: NewsItem[]
   colour: string
   onOpen: (n: NewsItem) => void
-  onCollapse: () => void
+  onTicker: () => void
 }) {
   const months = useMemo(() => {
     const by = new Map<string, NewsItem[]>()
@@ -280,7 +273,7 @@ export function NewsArchive({
           {items.length} headline{items.length > 1 ? 's' : ''} · {months.length} month
           {months.length > 1 ? 's' : ''}
         </span>
-        <button onClick={onCollapse} title="Back to the ticker">Ticker</button>
+        <button onClick={onTicker} title="Back to the rolling view">Rolling</button>
       </div>
 
       {months.map(([key, list]) => {
