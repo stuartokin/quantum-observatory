@@ -28,7 +28,7 @@ metrics:
     unit: '%'
     note: 'Average infidelity 3.3(5)×10⁻⁴; Ransford et al. Nature 655 (2026)'
 evidence:
-  claim: 'Ransford et al. (Quantinuum and Sandia National Laboratories, Nature 655, 81-86, June 2026) report Helios, a 98-qubit trapped-ion QCCD processor using 137Ba+ hyperfine qubits with all-to-all connectivity. Averaged over all operational zones, average infidelities are 2.5(1)×10⁻⁵ for single-qubit gates, 7.9(2)×10⁻⁴ for two-qubit gates, and 3.3(5)×10⁻⁴ for SPAM. Sandia National Laboratories evaluated and verified the system under a DOE Cooperative Research and Development Agreement. The paper demonstrates performance beyond the reach of classical simulation on random circuit sampling benchmarks. Separate preprint work (Dasu et al., arXiv:2602.22211) shows 48 error-corrected logical qubits from the same 98-qubit hardware using iceberg codes at 2:1 overhead.'
+  claim: 'Ransford et al. (Quantinuum and Sandia National Laboratories, Nature 655, 81-86, June 2026) report Helios, a 98-qubit trapped-ion QCCD processor using 137Ba+ hyperfine qubits with all-to-all connectivity. Averaged over all operational zones in the system, average infidelities are 2.5(1)×10⁻⁵ for single-qubit gates, 7.9(2)×10⁻⁴ for two-qubit gates, and 3.3(5)×10⁻⁴ for SPAM. Sandia National Laboratories evaluated and verified the system under a DOE Cooperative Research and Development Agreement. The paper demonstrates performance beyond the reach of classical simulation on random circuit sampling benchmarks. Separate preprint work (Dasu et al., arXiv:2602.22211) shows 48 error-corrected logical qubits from the same 98-qubit hardware using iceberg codes at 2:1 overhead.'
   verified: '2026-08-09'
   level: E4
   sources:
@@ -78,7 +78,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'Nature 655, 81-86 opened; single-qubit infidelity 2.5(1)×10⁻⁵, two-qubit 7.9(2)×10⁻⁴, SPAM 3.3(5)×10⁻⁴ confirmed against paper. Sandia co-authorship and DOE CRADA verification confirmed. Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) already documented. E4 correct; no independent replication by a different institution found. No changes made.'
+  note: 'Nature 655, 81-86 opened; single-qubit infidelity 2.5(1)×10⁻⁵, two-qubit 7.9(2)×10⁻⁴, SPAM 3.3(5)×10⁻⁴ confirmed against published paper and against Sandia co-authorship (DOE CRADA). Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) already documented correctly. E4 correct; Sandia co-authorship constitutes institutional verification but is not independent replication in a separate paper. No changes made.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.

@@ -72,15 +72,16 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-09'
-  note: 'Focus instruction (issue #29): confirmed Luo et al. arXiv:2504.05660 is published in Physical Review Letters as Phys. Rev. Lett. 136, 240801 (2026), published 17 June 2026 (DOI 10.1103/PhysRevLett.136.240801). Source role changed from preprint to primary; arXiv entry retained as preprint. Evidence raised E3 → E4. Readiness stays experimental: published in PRL but not yet independently replicated.'
+  reviewedOn: '2026-08-10'
+  note: 'PRL 136, 240801 confirmed as published 17 June 2026 via APS website and multiple secondary sources citing Luo et al. 2026. 420 km, telecom S-band conversion, USTC/Hefei team confirmed. E4 correct for peer-reviewed PRL paper. Not yet independently replicated. No changes made.'
 ---
 
 Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., Phys. Rev. Lett. 136, 240801, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
 
 The technique uses the DLCZ heralding scheme: photons emitted by laser-cooled rubidium atomic ensembles (Alice and Bob) are converted to 1,350 nm telecom S-band and routed to a central relay (Charlie), which performs a Bell-state measurement. Successful interference heralds that Alice and Bob are now entangled. Phase stability over 420 km is maintained by a two-stage locking scheme.
 
-Readiness is **experimental** — the result is peer-reviewed and published in Physical Review Letters but comes from a single group and has not yet been independently replicated. Evidence is raised to E4 following peer-reviewed publication.
+Readiness is **experimental** — the result is peer-reviewed and published in Physical Review Letters but comes from a single group and has not yet been independently replicated. Evidence is E4 following peer-reviewed publication.

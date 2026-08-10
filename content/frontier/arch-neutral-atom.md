@@ -40,7 +40,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-10'
-  note: 'Nature 645, 620-625 (2025) confirmed open access via Nature website. Source entry was missing title, doi, and note fields — added for completeness. Claim and E4 level are correct. No evidence or readiness changes made. A subsequent paper (Bluvstein et al., Nature 649, 39-46, January 2026) demonstrates universal fault-tolerant architecture on neutral atoms; flagged for Scout as a potential new board item.'
+  note: 'Nature 645, 620-625 confirmed. Source entry doi and note fields added. Bluvstein et al. Nature 649, 39-46 (January 2026) — fault-tolerant neutral-atom architecture for universal quantum computation, Harvard/MIT/QuEra, up to 448 atoms — confirmed as a significant subsequent paper and already flagged for Scout in prior run. A further paper (Bluvstein et al. arXiv:2506.20661, June 2026) extends this work; flagged for Scout under worth-noting. E4 and readiness experimental confirmed; no changes made.'
 confidence: high
 status: published
 added: '2026-08-04'
