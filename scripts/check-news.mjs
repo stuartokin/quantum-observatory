@@ -109,6 +109,17 @@ for (const f of files) {
     errors.push(`${path}: validation.checks is empty — say what was actually done`)
   }
 
+  // A story dated the day the file was written is usually dated by discovery
+  // rather than by the event, which defeats every duplicate check including
+  // the agent's own.
+  if (data.added && data.date === data.added && data.source?.date &&
+      data.source.date.slice(0, 10) !== data.date) {
+    errors.push(
+      `${path}: date ${data.date} is the day this was written, but the source is ` +
+        `dated ${data.source.date}. Date the event, not the discovery.`,
+    )
+  }
+
   for (const id of data.about ?? []) {
     if (!frontierIds.has(id)) {
       errors.push(`${path}: about -> "${id}" is not an item on the board`)

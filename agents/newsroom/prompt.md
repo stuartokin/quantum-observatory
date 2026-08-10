@@ -130,6 +130,18 @@ one run, none of them are.
 
 ## Writing it
 
+**`date`** — when the thing happened. The paper's publication date, the day the
+order was signed, the day the standard was released. **Never the day you found
+it.**
+
+This matters more than it looks. Two files describing one event with different
+dates do not read as duplicates to anything checking, including you on a later
+run — which is exactly how the same Microsoft and Quantinuum paper reached this
+board twice, once dated by publication and once dated by discovery.
+
+If you cannot establish when something happened, that is a reason to doubt the
+story rather than a reason to use today.
+
 **`headline`** — what happened, in your own words. Never a copied headline; they
 are written to be clicked, and this board is not.
 
