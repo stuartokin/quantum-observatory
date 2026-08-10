@@ -89,7 +89,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'arXiv:2505.15917 opened; Gidney <1M qubits, <1 week, same 0.1%/1µs assumptions as 2019 confirmed. Luo arXiv:2607.13816 confirmed 835 qubits for P-256 (not in this item but in algo-shor). E3 correct — all sources are preprints or conference proceedings, none peer-reviewed in a journal. No changes made.'
+  note: 'arXiv:2505.15917 opened; Gidney <1M qubits, <1 week, same 0.1%/1µs assumptions as 2019 confirmed. E3 correct — all three sources are preprints or conference proceedings, none peer-reviewed in a journal. No changes made.'
 ---
 
 Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.

@@ -38,9 +38,12 @@ priority: P1
 horizon: 1
 country: [US]
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-07'
+  state: agent-reviewed
+  by: agent
+  agent: reviewer
+  agentMergedOn: '2026-08-08'
+  reviewedOn: '2026-08-10'
+  note: 'Nature 638, 920-926 opened; Λ=2.14, 0.143% per cycle, 2.4× breakeven confirmed against paper. E4 correct for the Google Willow result. Note: IBM Nighthawk metrics (120 qubits, 218 couplers) appear in metrics but no IBM source is listed in evidence.sources — IBM portion of the claim rests on vendor announcements not captured here. No level change: E4 is defensible for the Google result, which is the primary evidence. IBM roadmap statement is background context. Prior human review noted; amending only the reviewedOn date and adding this note.'
 confidence: high
 status: published
 added: '2026-08-04'
