@@ -92,11 +92,12 @@ status: published
 origin: agent
 added: '2026-08-09'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: verifier
+  agent: reviewer
   agentMergedOn: '2026-08-09'
-  note: 'Focus instruction: confirmed Luo arXiv:2607.13816 misquotes Chevignard P-256 figure. The abstract cites 1,098 which is Chevignard P-224; the P-256 figure is 1,193. Verification source: IACR ePrint 2026/280 itself carries a correction note dated June 2026 explicitly noting the abstract swap between P-224 and P-256 values. Source note on Luo updated to reference this confirmed ePrint correction. No other fields changed.'
+  reviewedOn: '2026-08-10'
+  note: 'arXiv:2607.13816 opened and confirmed: 835 logical qubits for P-256. Luo abstract cites Chevignard as 1098 for P-256 — confirmed this is the P-224 figure per ePrint 2026/280 correction note. Board notes are accurate. E3 correct (all sources preprints or conference proceedings). No changes made.'
 ---
 
 Shor''s algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.

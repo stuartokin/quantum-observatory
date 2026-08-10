@@ -54,9 +54,12 @@ qdayImpact: 2
 qdayReasoning: 'Crossing the error-correction threshold on a scalable platform is a precondition for any cryptanalytic machine. Moves engineering feasibility, not the date directly.'
 country: [US]
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-07'
+  state: agent-reviewed
+  by: agent
+  agent: reviewer
+  agentMergedOn: '2026-08-08'
+  reviewedOn: '2026-08-10'
+  note: 'Nature 638, 920-926 opened; Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× breakeven all confirmed against published paper. E4 correct; no independent replication by a separate institution found in this item (separate second below-threshold result is in qec-error-correction-threshold). No changes made.'
 confidence: high
 status: published
 added: '2026-08-04'

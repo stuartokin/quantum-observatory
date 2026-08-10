@@ -63,11 +63,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-10'
+  note: 'GRI 2025b report opened; 28-49% (10 years) and 51-70% (15 years) figures confirmed with 26 respondents. 2024 survey had 32 respondents at 19-34% (10 years) — correctly captured in note. E3 correct for review + expert survey sources. No changes made.'
 ---
 
 A CRQC does not exist. The item marks the threat threshold against which all migration timelines are calibrated. The primary source is a peer-reviewed review (E3 ceiling per schema), not an experimental result. Resource requirements published in 2025 and 2026 (see algo-resource-estimation and algo-shor) have materially reduced the estimated hardware needed, which is the main reason expert surveys show accelerating timelines.

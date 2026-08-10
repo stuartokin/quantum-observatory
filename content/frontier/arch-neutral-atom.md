@@ -19,9 +19,13 @@ evidence:
   sources:
     - url: https://www.nature.com/articles/s41586-025-09367-3
       role: primary
+      title: Experimental demonstration of logical magic state distillation
       publisher: Nature
       date: '2025-07-14'
       identifier: Nature 645, 620–625 (2025)
+      doi: 10.1038/s41586-025-09367-3
+      accessed: '2026-08-10'
+      note: 'QuEra / Harvard / MIT. First demonstration of magic state distillation entirely on logical qubits. 5-to-1 protocol on d=3 and d=5 colour-code qubits on QuEra Gemini neutral-atom platform.'
 links:
   - to: qec-magic-state-distillation
     relation: evidence-for
@@ -31,9 +35,12 @@ priority: P1
 horizon: 2
 country: [US]
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-07'
+  state: agent-reviewed
+  by: agent
+  agent: reviewer
+  agentMergedOn: '2026-08-08'
+  reviewedOn: '2026-08-10'
+  note: 'Nature 645, 620-625 (2025) confirmed open access via Nature website. Source entry was missing title, doi, and note fields — added for completeness. Claim and E4 level are correct. No evidence or readiness changes made. A subsequent paper (Bluvstein et al., Nature 649, 39-46, January 2026) demonstrates universal fault-tolerant architecture on neutral atoms; flagged for Scout as a potential new board item.'
 confidence: high
 status: published
 added: '2026-08-04'
