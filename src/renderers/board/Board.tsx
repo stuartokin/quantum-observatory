@@ -1271,7 +1271,12 @@ function Sky({
           if (newsOverlay && item) {
             const attached = newsAbout(item.id)
             attached.forEach((n, k) => {
-              const nf = yearFraction(n.date, tl.from, tl.to)
+              // yearFraction takes a year, and a headline needs a position
+              // within one — which is the whole point of aligning by month.
+              const d = new Date(n.date)
+              const fractionalYear =
+                d.getFullYear() + (d.getMonth() + (d.getDate() - 1) / 31) / 12
+              const nf = yearFraction(fractionalYear, tl.from, tl.to)
               const nx = TX(nf)
               if (nx < AXIS || nx > W) return
               const big = n.significance === 'headline'
