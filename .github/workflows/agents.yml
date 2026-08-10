@@ -201,6 +201,12 @@ jobs:
       # reporting "eight checked, nothing to correct, one thing needs you"
       # produced no issue at all — and the escalation was lost. For an agent
       # whose normal outcome is no change, that is precisely backwards.
+      # After the merge, so it sees what actually landed. Warnings go into the
+      # weekly issue rather than into build output nobody reads.
+      - name: Check the news collection
+        if: success()
+        run: npm run validate:news || true
+
       - name: Log the run
         if: success()
         run: |
@@ -231,6 +237,15 @@ jobs:
             echo "---"
             echo
             cat .agent-run/pr-body.md 2>/dev/null || echo "_No summary returned._"
+
+            if [ -s .agent-run/news-warnings.txt ]; then
+              echo
+              echo "### Worth a look"
+              echo
+              echo "Not errors — the check cannot tell, and says so rather than guessing."
+              echo
+              sed 's/^/- /' .agent-run/news-warnings.txt
+            fi
           } > /tmp/issue-body.md
 
           EXISTING=$(gh issue list --search "$TITLE" --state open --json number,title \
