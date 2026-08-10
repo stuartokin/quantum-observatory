@@ -140,6 +140,34 @@ function existingItems() {
   return out
 }
 
+/**
+ * Headlines already published.
+ *
+ * The newsroom was shown the frontier board and never its own back catalogue,
+ * so every run started from nothing and had no way to avoid repeating itself.
+ * Nineteen items across eighteen months looked like caution; some of it was
+ * the same ground being covered twice and rejected.
+ */
+function existingNews() {
+  const dir = 'content/news'
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md') && f !== 'README.md')
+    .map((f) => {
+      const raw = readFileSync(join(dir, f), 'utf8')
+      const date = (raw.match(/^date:\s*'?([\d-]+)'?$/m) || [])[1] ?? ''
+      const headline = (raw.match(/^headline:\s*'?(.+?)'?$/m) || [])[1] ?? ''
+      const about = (raw.match(/^about:\n((?:\s+- .*\n)+)/m) || [])[1] ?? ''
+      return {
+        id: f.replace(/\.md$/, ''),
+        date,
+        headline,
+        about: about.split('\n').map((l) => l.replace(/^\s*-\s*/, '').trim()).filter(Boolean),
+      }
+    })
+    .sort((a, b) => b.date.localeCompare(a.date))
+}
+
 const items = existingItems()
 const existingIds = new Set(items.map((i) => i.id))
 
@@ -165,6 +193,7 @@ const schemaPath = writesNews
   ? 'content/schema/news.schema.json'
   : 'content/schema/frontier.schema.json'
 const schema = readFileSync(schemaPath, 'utf8')
+const priorNews = writesNews ? existingNews() : []
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 // Shared across every agent, so changing it changes all four at once.
 const sources = existsSync('agents/_sources.md')
@@ -189,7 +218,35 @@ ${fullItems()}
 # Index
 `
     : writesNews
-      ? '# The board these headlines attach to'
+      ? `# Headlines already published — ${priorNews.length}
+
+Do not write any of these again. Check by subject, not by wording: the same
+result reported twice with different phrasing is still the same result.
+
+${
+  priorNews.length
+    ? priorNews.map((n) => `- ${n.date} · ${n.id} · ${n.headline}`).join('\n')
+    : '(none yet)'
+}
+
+Coverage by month, so you can see where the gaps are:
+
+${
+  priorNews.length
+    ? Object.entries(
+        priorNews.reduce((acc, n) => {
+          const m = n.date.slice(0, 7)
+          acc[m] = (acc[m] ?? 0) + 1
+          return acc
+        }, {}),
+      )
+        .sort()
+        .map(([m, c]) => `- ${m}: ${c}`)
+        .join('\n')
+    : '(nothing yet — every month is a gap)'
+}
+
+# The board these headlines attach to`
       : `# Existing board — ${items.length} items`
 }
 

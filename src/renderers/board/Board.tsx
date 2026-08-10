@@ -210,6 +210,37 @@ export function Board() {
   const changedCon = useMemo(() => mostChanged(teaserEntries), [teaserEntries])
   const headlines14 = useMemo(() => recentNews(galaxy, 14), [galaxy])
   const allHeadlines = useMemo(() => newsFor(galaxy), [galaxy])
+
+  /** What the ticker is showing, and what is behind it. */
+  const headlineSpan = useMemo(() => {
+    const span = (list: typeof allHeadlines) => {
+      if (list.length === 0) return null
+      const dates = list.map((n) => n.date).sort()
+      return { from: dates[0], to: dates[dates.length - 1] }
+    }
+    return {
+      rolling: { count: headlines14.length, ...(span(headlines14) ?? {}) },
+      all: { count: allHeadlines.length, ...(span(allHeadlines) ?? {}) },
+      linked: allHeadlines.filter((n) => n.establishedBy?.length).length,
+      verified: allHeadlines.filter((n) => n.validation?.status === 'verified').length,
+    }
+  }, [headlines14, allHeadlines])
+
+  const [headlineInfo, setHeadlineInfo] = useState(false)
+
+  /**
+   * Resizing chooses the view.
+   *
+   * Drag the window past a couple of rows and it becomes the archive; pull it
+   * back down to a strip and it rolls again. Only the mode changes here — the
+   * size is already whatever the reader just made it, and setting it again
+   * would fight them.
+   */
+  useEffect(() => {
+    const h = frames.headlines.h
+    if (h > 90 && headlineMode === 'ticker') setHeadlineMode('archive')
+    else if (h <= 90 && headlineMode === 'archive') setHeadlineMode('ticker')
+  }, [frames.headlines.h, headlineMode])
   const changedIds = useMemo(() => new Set(teaserEntries.map((e) => e.id)), [teaserEntries])
   const forecast = useMemo(() => forecastFor(galaxy), [galaxy])
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
@@ -561,6 +592,32 @@ export function Board() {
         minWidth={280}
         minHeight={headlineMode === 'ticker' ? 34 : 200}
         barOnly={headlineMode === 'ticker'}
+        onInfo={() => setHeadlineInfo((v) => !v)}
+        info={
+          headlineInfo ? (
+            <div className="headline-info">
+              <p>
+                <strong>{headlineSpan.rolling.count}</strong> in the rolling view
+                {headlineSpan.rolling.from && (
+                  <> — the last fortnight, {headlineSpan.rolling.from} to {headlineSpan.rolling.to}</>
+                )}
+                .
+              </p>
+              <p>
+                <strong>{headlineSpan.all.count}</strong> held in total
+                {headlineSpan.all.from && (
+                  <> — {headlineSpan.all.from} to {headlineSpan.all.to}</>
+                )}
+                . Switch to the month view to read them.
+              </p>
+              <p className="prov-note">
+                {headlineSpan.verified} verified against a primary source or an
+                independent report; {headlineSpan.linked} traced back to the
+                research behind them. Anything not verified says so on the item.
+              </p>
+            </div>
+          ) : undefined
+        }
         bar={
           headlineMode === 'ticker' ? (
             <Ticker

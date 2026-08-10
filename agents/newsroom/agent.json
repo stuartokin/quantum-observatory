@@ -4,8 +4,13 @@
   "model": "claude-sonnet-4-6",
   "everyWeeks": 1,
   "maxTokens": 32000,
-  "write_scope": ["content/news/**"],
+  "write_scope": [
+    "content/news/**"
+  ],
   "output": "pull_request",
-  "enabled": true,
-  "budget": { "searches": 30, "proposals": 8 }
+  "enabled": false,
+  "budget": {
+    "searches": 40,
+    "proposals": 12
+  }
 }

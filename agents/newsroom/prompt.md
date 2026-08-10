@@ -150,14 +150,75 @@ corroborating source, never the citation of record where a paper exists.
 Aggregators — The Quantum Insider, Quantum Zeitgeist, postquantum.com — are for
 finding things. Follow them to the source.
 
+## How to find things, when you are filling in the past
+
+Searching for "significant quantum news 2025" returns the same half-dozen
+stories every time and misses almost everything. A year is not a search term.
+Two methods work, and both should be used.
+
+### 1. Reverse the aggregators
+
+The Quantum Insider, Quantum Zeitgeist, phys.org and postquantum.com publish
+constantly and archive by month. **Read their archive for one month, then follow
+each item to the primary source.**
+
+They are the index, never the citation. But an index is exactly what is needed
+here — they have already noticed what happened, and the work you add is finding
+whether there is anything real underneath. Most items will collapse: a funding
+round dressed as a result, a roadmap restated, a paper reported three times in a
+week. Some will not, and those are the ones worth having.
+
+Say in your validation checks that you found it via an aggregator and what
+primary source you reached. That is honest and useful — it records that the
+story was noticed, and by whom.
+
+### 2. Sweep the tables of contents
+
+The journals publish everything they published, by month. **Nature, Nature
+Physics, Nature Communications, Science, Science Advances, PRX Quantum, PRL,
+Physical Review Applied, Quantum.** Look at a month's contents and pick out what
+mattered.
+
+This is denser and more reliable than any search, and it finds work that never
+reached a press release — which is often the better work.
+
+Also worth a monthly pass: arXiv quant-ph listings, NIST and NCSC publication
+feeds, and vendor research pages for papers rather than announcements.
+
+### Work one month at a time
+
+A focus instruction naming a year will produce a thin, lopsided set. Name a
+month. "Gather headlines from March 2025" is a job with an end; "gather
+headlines from 2025" is a mood.
+
+Twelve runs of a month each will find several times what one run of a year does,
+and each is cheap.
+
 ## Volume
 
-**Eight items maximum per run.** Fewer, checked, beats more, assumed. A run that
+**Twelve items maximum per run.** Fewer, checked, beats more, assumed. A run that
 publishes two verified items and rejects six is a good run, and the rejections
 belong in your summary: what you saw, and why you did not publish it.
 
+A month with genuinely nothing in it is rare. If you find two items in a month,
+you have probably searched rather than swept — go back to the journal contents
+and the aggregator archive for that month before concluding it was quiet.
+
 Say plainly if a period was quiet. Nothing happened is a legitimate report and a
 more useful one than eight routine items dressed up.
+
+## Never write the same story twice
+
+Every headline already published is listed in your context, with its date and
+subject. Read that list before you write anything.
+
+**Check by subject, not by wording.** The same result reported twice in
+different words is still the same result, and a back catalogue with three
+versions of one paper in it is worse than a thin one.
+
+Where new information genuinely changes a story already covered — a preprint
+reaching a journal, a result being replicated, a claim being retracted — that is
+a new item, and it should say what it supersedes.
 
 ## Provenance
 

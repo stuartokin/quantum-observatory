@@ -40,6 +40,8 @@ export function Frame({
   flush,
   bar,
   barOnly,
+  onInfo,
+  info,
 }: {
   title: string
   state: FrameState
@@ -63,6 +65,9 @@ export function Frame({
   bar?: ReactNode
   /** With a bar and no body, the frame is just that line. */
   barOnly?: boolean
+  /** An `i` button in the title bar, and what it reveals. */
+  onInfo?: () => void
+  info?: ReactNode
 }) {
   const ref = useRef<HTMLElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
@@ -147,6 +152,17 @@ export function Frame({
             {bar}
           </div>
         )}
+        {onInfo && (
+          <button
+            className="frame__btn frame__btn--info"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={onInfo}
+            aria-label="About this panel"
+            title="About this panel"
+          >
+            i
+          </button>
+        )}
         <button
           className="frame__btn"
           onPointerDown={(e) => e.stopPropagation()}
@@ -190,6 +206,8 @@ export function Frame({
           <span className="frame__resize" onPointerDown={begin('resize')} aria-hidden="true" />
         </>
       )}
+      {info && <div className="frame__info">{info}</div>}
+
       {!state.minimised && barOnly && (
         <span className="frame__resize frame__resize--bar" onPointerDown={begin('resize')} aria-hidden="true" />
       )}
