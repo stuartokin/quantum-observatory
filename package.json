@@ -1,11 +1,11 @@
 {
   "name": "horizonq",
   "private": true,
-  "version": "0.39.1",
+  "version": "0.39.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:order && npm run validate && npm run validate:news && npm run provenance && tsc --noEmit && vite build && npm run budget",
+    "build": "npm run check:order && npm run check:exports && npm run validate && npm run validate:news && npm run provenance && tsc --noEmit && vite build && npm run budget",
     "preview": "vite preview",
     "validate": "node scripts/validate-content.mjs",
     "budget": "node scripts/check-budget.mjs",
@@ -16,7 +16,8 @@
     "review": "node scripts/review.mjs",
     "steward": "node scripts/steward.mjs",
     "validate:news": "node scripts/check-news.mjs",
-    "check:order": "node scripts/check-order.mjs"
+    "check:order": "node scripts/check-order.mjs",
+    "check:exports": "node scripts/check-exports.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -1,4 +1,5 @@
 import type { FrontierItem, Readiness } from '../../content/frontierTypes'
+import { glyphFor, type Glyph } from './glyphs'
 
 /**
  * TOWER LAYOUT
@@ -46,20 +47,13 @@ export const CONSTELLATION_LABEL: Record<string, string> = {
 }
 
 /**
- * Actor glyphs, drawn from the sky rather than from a shape palette. A form
- * per organisation, so influence is readable without a legend lookup.
+ * Glyphs live in ./glyphs, and only there.
+ *
+ * This module used to define its own GLYPHS array, Glyph type and glyphFor —
+ * a complete parallel vocabulary. Both were exported, the board imported this
+ * one, and rewriting the rules in the other changed nothing on screen while
+ * every version number went up. Two functions with one name is a trap.
  */
-export const GLYPHS = [
-  'star',      // classic five-point
-  'ringed',    // a disc with a ring
-  'binary',    // two bodies
-  'nova',      // burst of rays
-  'crescent',
-  'cluster',   // three small bodies
-  'comet',     // body with a tail
-  'pulsar',    // body with concentric rings
-] as const
-export type Glyph = (typeof GLYPHS)[number]
 
 export interface Node {
   id: string
@@ -92,11 +86,6 @@ export function hash(s: string): number {
     h = Math.imul(h, 16777619)
   }
   return ((h >>> 0) % 100000) / 100000
-}
-
-export function glyphFor(actor?: string): Glyph {
-  if (!actor) return 'star'
-  return GLYPHS[Math.floor(hash(actor) * GLYPHS.length)]
 }
 
 export const isSourced = (i: FrontierItem) =>
@@ -167,7 +156,7 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
       level,
       radius: 5.5 + weight * 6.5,
       weight,
-      glyph: glyphFor(item.actors?.[0]),
+      glyph: item.actors?.[0] ? glyphFor(item.actors[0]) : 'crescent',
       actor: item.actors?.[0],
       constellation: item.constellation ?? '',
       sourced,
