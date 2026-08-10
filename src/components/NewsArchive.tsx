@@ -13,12 +13,10 @@ export default function NewsArchive({
   items,
   colour,
   onOpen,
-  onTicker,
 }: {
   items: NewsItem[]
   colour: string
   onOpen: (n: NewsItem) => void
-  onTicker: () => void
 }) {
   /**
    * Year, then month.
@@ -94,7 +92,6 @@ export default function NewsArchive({
           >
             {allYearsOpen ? 'Collapse all' : 'Expand all'}
           </button>
-          <button onClick={onTicker} title="Back to the rolling view">Rolling</button>
         </span>
       </div>
 

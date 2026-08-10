@@ -53,6 +53,8 @@ function normalise(v) {
 
 const files = readdirSync(DIR).filter((f) => f.endsWith('.md') && f !== 'README.md')
 const errors = []
+/** Kept for the duplicate pass below. */
+const published = []
 const counts = { verified: 0, 'single-source': 0, contested: 0, rejected: 0 }
 let linked = 0
 
@@ -114,6 +116,50 @@ for (const f of files) {
   }
 
   if (data.establishedBy?.length) linked++
+  published.push({ id: data.id, date: data.date, headline: data.headline })
+}
+
+/**
+ * The same story twice, in different words.
+ *
+ * "Microsoft and Quantinuum 800x logical error rate improvement peer-reviewed
+ * and published in Nature" and "Microsoft and Quantinuum publish peer-reviewed
+ * 800x logical error rate improvement in Nature" are one event and two files.
+ * Telling an agent not to repeat itself is necessary and not sufficient.
+ *
+ * Same date, mostly the same words, is a duplicate. Compared on meaningful
+ * tokens only, so word order and filler cannot disguise it.
+ */
+const STOP = new Set([
+  'the','a','an','and','or','of','in','on','to','for','with','at','by','from',
+  'as','is','are','its','it','that','this','into','over','after','first',
+])
+const tokens = (t) =>
+  new Set(
+    t.toLowerCase().replace(/[^a-z0-9× ]/g, ' ').split(/\s+/)
+      .filter((w) => w.length > 2 && !STOP.has(w)),
+  )
+const overlap = (a, b) => {
+  const A = tokens(a), B = tokens(b)
+  if (!A.size || !B.size) return 0
+  let shared = 0
+  for (const w of A) if (B.has(w)) shared++
+  return shared / Math.min(A.size, B.size)
+}
+
+for (let i = 0; i < published.length; i++) {
+  for (let j = i + 1; j < published.length; j++) {
+    const a = published[i], b = published[j]
+    const sim = overlap(a.headline, b.headline)
+    const sameDay = a.date === b.date
+    const sameWeek = Math.abs(new Date(a.date) - new Date(b.date)) < 8 * 864e5
+    if ((sameDay && sim > 0.5) || (sameWeek && sim > 0.72)) {
+      errors.push(
+        `duplicate: "${a.id}" and "${b.id}" describe the same event ` +
+          `(${Math.round(sim * 100)}% of the significant words shared). Keep one.`,
+      )
+    }
+  }
 }
 
 console.log(`  news: ${files.length} items`)

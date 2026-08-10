@@ -42,6 +42,7 @@ export function Frame({
   barOnly,
   onInfo,
   info,
+  action,
 }: {
   title: string
   state: FrameState
@@ -68,6 +69,8 @@ export function Frame({
   /** An `i` button in the title bar, and what it reveals. */
   onInfo?: () => void
   info?: ReactNode
+  /** A control that belongs in the title bar rather than the body. */
+  action?: ReactNode
 }) {
   const ref = useRef<HTMLElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
@@ -146,22 +149,27 @@ export function Frame({
     >
       <header className="frame__bar" onPointerDown={begin('move')}>
         <span className="frame__grip" aria-hidden="true" />
-        <span className="frame__title">{title}</span>
+        {onInfo ? (
+          <button
+            className="frame__title frame__title--button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={onInfo}
+            title="What is in this panel"
+          >
+            {title}
+          </button>
+        ) : (
+          <span className="frame__title">{title}</span>
+        )}
+        {action && (
+          <span className="frame__action" onPointerDown={(e) => e.stopPropagation()}>
+            {action}
+          </span>
+        )}
         {bar && (
           <div className="frame__inline" onPointerDown={(e) => e.stopPropagation()}>
             {bar}
           </div>
-        )}
-        {onInfo && (
-          <button
-            className="frame__btn frame__btn--info"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={onInfo}
-            aria-label="About this panel"
-            title="About this panel"
-          >
-            i
-          </button>
         )}
         <button
           className="frame__btn"

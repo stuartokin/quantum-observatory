@@ -185,6 +185,16 @@ reached a press release — which is often the better work.
 Also worth a monthly pass: arXiv quant-ph listings, NIST and NCSC publication
 feeds, and vendor research pages for papers rather than announcements.
 
+### One month per run, even when asked for three
+
+If a focus instruction names several months, **do the earliest one properly and
+say the others are still outstanding.** Three months in one run produces eight
+items and the impression that eight is all there was.
+
+A single month, swept properly — the journal contents, the aggregator archive,
+the arXiv listing — should yield somewhere between six and twelve items. If you
+finish a month with two, you searched instead of sweeping.
+
 ### Work one month at a time
 
 A focus instruction naming a year will produce a thin, lopsided set. Name a
@@ -196,7 +206,8 @@ and each is cheap.
 
 ## Volume
 
-**Twelve items maximum per run.** Fewer, checked, beats more, assumed. A run that
+**Twelve items maximum per run, and twelve is the target for a backfill month,
+not a ceiling to stay well under.** Fewer, checked, beats more, assumed. A run that
 publishes two verified items and rejects six is a good run, and the rejections
 belong in your summary: what you saw, and why you did not publish it.
 

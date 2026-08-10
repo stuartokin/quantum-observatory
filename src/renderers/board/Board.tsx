@@ -590,9 +590,19 @@ export function Board() {
         z={zOf('headlines')}
         onFocus={raise('headlines')}
         minWidth={280}
-        minHeight={headlineMode === 'ticker' ? 34 : 200}
+        // Both views shrink to a strip. A floor of 200 in the month view meant
+        // it could never be dragged small enough to turn back into a ticker,
+        // which is the gesture that is supposed to do it.
+        minHeight={34}
         barOnly={headlineMode === 'ticker'}
         onInfo={() => setHeadlineInfo((v) => !v)}
+        action={
+          headlineMode === 'archive' ? (
+            <button className="frame__mode" onClick={() => setHeadlineView('ticker')}>
+              Rolling
+            </button>
+          ) : undefined
+        }
         info={
           headlineInfo ? (
             <div className="headline-info">
@@ -635,7 +645,6 @@ export function Board() {
               items={allHeadlines}
               colour={colour}
               onOpen={openHeadline}
-              onTicker={() => setHeadlineView('ticker')}
             />
           </Suspense>
         )}
