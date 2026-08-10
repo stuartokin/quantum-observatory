@@ -38,6 +38,8 @@ export function Frame({
   minWidth = 220,
   minHeight = 140,
   flush,
+  bar,
+  barOnly,
 }: {
   title: string
   state: FrameState
@@ -53,6 +55,14 @@ export function Frame({
   minHeight?: number
   /** Canvas frames own their whole box: no padding, no scrollbars. */
   flush?: boolean
+  /**
+   * Content rendered inside the title bar itself, between the name and the
+   * window buttons. A ticker in a body below its own title bar wastes a row on
+   * a panel whose whole purpose is to be one line.
+   */
+  bar?: ReactNode
+  /** With a bar and no body, the frame is just that line. */
+  barOnly?: boolean
 }) {
   const ref = useRef<HTMLElement>(null)
   const drag = useRef<{ mode: 'move' | 'resize'; ox: number; oy: number; s: FrameState } | null>(null)
@@ -132,6 +142,11 @@ export function Frame({
       <header className="frame__bar" onPointerDown={begin('move')}>
         <span className="frame__grip" aria-hidden="true" />
         <span className="frame__title">{title}</span>
+        {bar && (
+          <div className="frame__inline" onPointerDown={(e) => e.stopPropagation()}>
+            {bar}
+          </div>
+        )}
         <button
           className="frame__btn"
           onPointerDown={(e) => e.stopPropagation()}
@@ -167,13 +182,16 @@ export function Frame({
         )}
       </header>
 
-      {!state.minimised && (
+      {!state.minimised && !barOnly && (
         <>
           <div className={flush ? 'frame__body frame__body--flush' : 'frame__body'}>
             {children}
           </div>
           <span className="frame__resize" onPointerDown={begin('resize')} aria-hidden="true" />
         </>
+      )}
+      {!state.minimised && barOnly && (
+        <span className="frame__resize frame__resize--bar" onPointerDown={begin('resize')} aria-hidden="true" />
       )}
     </section>
   )
@@ -191,7 +209,7 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
   // it. Docking it does not reclaim the space — a layout that reflows when a
   // panel closes moves everything the reader had arranged.
   const strip = 74
-  const top = strip + 46
+  const top = strip + 42
   const rightW = wide ? Math.min(400, Math.round(w * 0.28)) : 320
   const mainW = wide ? w - rightW - pad * 3 : w - pad * 2
   const mainH = h - top - pad - 62
@@ -225,7 +243,7 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
       x: pad,
       y: strip,
       w: w - pad * 2,
-      h: 40,
+      h: 34,
       docked: false,
     },
     newsitem: { x: Math.max(16, w - 460), y: 120, w: 430, h: 520, docked: true },
