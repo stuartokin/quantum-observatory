@@ -187,7 +187,11 @@ export function Frame({
 export function defaultLayout(w: number, h: number): Record<string, FrameState> {
   const wide = w >= 1100
   const pad = 12
-  const top = 74
+  // The headlines window opens across the top, so the workspace starts below
+  // it. Docking it does not reclaim the space — a layout that reflows when a
+  // panel closes moves everything the reader had arranged.
+  const strip = 74
+  const top = strip + 46
   const rightW = wide ? Math.min(400, Math.round(w * 0.28)) : 320
   const mainW = wide ? w - rightW - pad * 3 : w - pad * 2
   const mainH = h - top - pad - 62
@@ -210,14 +214,19 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
     },
     // Headlines sits under the news column on a wide screen and is docked
     // below that — three panels plus a ticker is too much for a laptop.
-    // Opens as a wide, shallow window — a ticker wants width and almost no
-    // height. Switching to the month view resizes it in place.
+    /**
+     * Open at the top, full width, from the first paint.
+     *
+     * A ticker wants width and almost no height, and it belongs where a wire
+     * belongs — across the top, read at a glance before anything else. It is
+     * still a window: move it, resize it, dock it, switch it to the month view.
+     */
     headlines: {
       x: pad,
-      y: h - 190,
-      w: Math.min(880, w - pad * 2),
-      h: 120,
-      docked: true,
+      y: strip,
+      w: w - pad * 2,
+      h: 40,
+      docked: false,
     },
     newsitem: { x: Math.max(16, w - 460), y: 120, w: 430, h: 520, docked: true },
     filters: { x: 24, y: 110, w: 288, h: Math.min(620, h - 190), docked: true },

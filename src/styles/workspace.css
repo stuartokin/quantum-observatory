@@ -579,3 +579,7 @@
   text-transform: uppercase; color: var(--ink-faint);
 }
 .archive__meta em { font-style: normal; }
+
+
+/* A ticker window is mostly ticker: the bar shrinks so the wire has the room. */
+.frame__body--flush .strip { padding: 0 var(--gap-s); min-height: 100%; }

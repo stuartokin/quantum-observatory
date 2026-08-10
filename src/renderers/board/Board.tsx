@@ -557,7 +557,8 @@ export function Board() {
         z={zOf('headlines')}
         onFocus={raise('headlines')}
         minWidth={280}
-        minHeight={headlineMode === 'ticker' ? 96 : 200}
+        minHeight={headlineMode === 'ticker' ? 40 : 200}
+        flush={headlineMode === 'ticker'}
       >
         {headlineMode === 'ticker' ? (
           <Ticker
