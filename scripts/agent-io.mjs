@@ -43,7 +43,23 @@ export function balancedObjects(text) {
  * joined, and take the last object matching the output contract.
  */
 export function extractJson(chunks) {
-  const candidates = [...[...chunks].reverse(), chunks.join('\n')]
+  /**
+   * Blocks are streaming fragments, not sentences.
+   *
+   * A block boundary can fall anywhere — including inside a JSON string — so
+   * joining with a newline inserts a literal newline into that string and makes
+   * the whole object unparseable. Concatenating with nothing is the faithful
+   * reconstruction; the newline join stays last, for the older case where a
+   * model emitted one object per block.
+   *
+   * This cost a full run: sixteen searches and a finished answer, discarded
+   * because of a separator.
+   */
+  const candidates = [
+    ...[...chunks].reverse(),
+    chunks.join(''),
+    chunks.join('\n'),
+  ]
   for (const chunk of candidates) {
     const cleaned = chunk.replace(/```(?:json)?/g, '')
     for (const obj of balancedObjects(cleaned).reverse()) {

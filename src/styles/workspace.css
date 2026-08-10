@@ -659,3 +659,7 @@
   text-transform: uppercase; padding: 2px 8px; min-height: 0;
 }
 .frame__mode:hover { color: var(--ink); }
+
+/* A frame normally clips its contents; the info panel hangs outside it. */
+.frame[data-info] { overflow: visible; }
+.frame[data-info] .frame__bar { overflow: visible; }

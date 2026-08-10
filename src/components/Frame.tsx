@@ -137,6 +137,10 @@ export function Frame({
       className="frame"
       data-active={active}
       data-minimised={state.minimised || undefined}
+      // The info panel hangs below the title bar, outside the frame's own box.
+      // A frame that clips its overflow swallows it, which is why clicking the
+      // title appeared to do nothing at all.
+      data-info={info ? '' : undefined}
       onPointerDown={onFocus}
       style={{
         zIndex: z,
