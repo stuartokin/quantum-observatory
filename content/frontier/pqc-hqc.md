@@ -47,5 +47,5 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-04'
   reviewedOn: '2026-08-10'
-  note: 'NIST IR 8545 confirmed as formally published at csrc.nist.gov/pubs/ir/8545/final (DOI 10.6028/NIST.IR.8545) and via nvlpubs.nist.gov PDF. HQC selection on 11 March 2025 confirmed. E4 defensible: NIST IR 8545 is a formally published NIST Interagency Report — not a draft or project page. Draft FIPS standard expected ~2027 per NIST announcement. Readiness experimental is correct (selected but FIPS not published). No changes made.'
+  note: 'NIST IR 8545 confirmed as formally published at csrc.nist.gov/pubs/ir/8545/final (DOI 10.6028/NIST.IR.8545) and via nvlpubs.nist.gov PDF. NIST.gov announcement page and NIST CSRC news page both confirm HQC selection on 11 March 2025. E4 defensible: NIST IR 8545 is a formally published NIST Interagency Report — not a draft or project page. Draft FIPS standard expected ~2027 per NIST announcement. Readiness experimental is correct (selected but FIPS not published). No changes made.'
 ---

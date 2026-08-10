@@ -37,11 +37,16 @@ priority: P2
 horizon: 3
 country: [US]
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-07'
+  state: agent-reviewed
+  by: agent
+  agent: reviewer
+  agentMergedOn: '2026-08-08'
+  reviewedOn: '2026-08-10'
+  note: 'arXiv:2506.03094 (Tour de gross) confirmed as IBM Quantum preprint, June 2025. IBM blog confirmed roadmap: Starling system by 2029 targeting 200 logical qubits, 100M gate circuits. E3 correct — preprint as primary source. IBM blog source is vendor material (E2 at most), does not upgrade the level. Roadmap is a vendor commercial statement; qdayImpact correctly not set. Human review (2026-08-07) noted; no corrections required.'
 confidence: medium
 status: published
 added: '2026-08-04'
 origin: human
 ---
+
+Quantum chips cannot grow indefinitely — yield, wiring and cooling all set limits. The alternative is many smaller error-corrected modules wired together, the way data centres scale by adding servers rather than one giant computer. Announced as a plan with dates, not yet a demonstrated result.

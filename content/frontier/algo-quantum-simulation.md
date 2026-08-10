@@ -68,7 +68,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-10'
-  note: 'Tindall et al. Science 2026 (adx2728) confirmed published May 22 2026 via science.org, Science 392, 868. D-Wave dispute (arXiv:2504.06283) confirmed active and accurately described. BP-TNS methods confirmed to match D-Wave on 2D/3D lattice geometries; D-Wave argues BP-TNS does not cover full scope. Both papers peer-reviewed and published in Science. E4 correct. No changes made.'
+  note: 'Tindall et al. Science 2026 (adx2728) confirmed published May 22 2026 via science.org. D-Wave dispute (arXiv:2504.06283) confirmed and accurately described. BP-TNS methods confirmed to match D-Wave on 2D/3D lattice geometries; D-Wave argues higher-dimensional problems and largest 3D simulations remain beyond BP-TNS. Both papers peer-reviewed and published in Science. E4 correct. No changes made.'
 ---
 
 The most valuable early application of quantum computers is expected to be simulating quantum physics itself — chemistry, materials, and condensed matter — where the quantum state space grows exponentially and classical computers must approximate. D-Wave published the first result in a high-profile peer-reviewed venue (Science, 2025) claiming that their annealing processor outperforms the world-class Frontier supercomputer on a specific spin-glass simulation relevant to magnetic materials research.
