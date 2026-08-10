@@ -113,7 +113,7 @@ export function Board() {
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'teaser', 'news', 'headlines', 'newsitem', 'filters', 'help', 'qday', 'detail',
+    'galaxy', 'teaser', 'news', 'newsitem', 'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
@@ -262,24 +262,8 @@ export function Board() {
       : [
         ]),
     { key: 'news', icon: '◰', label: 'Journals', active: !frames.news.docked, onClick: toggle('news') },
-    {
-      key: 'headlines',
-      icon: '⌁',
-      label: 'Headlines',
-      active: !frames.headlines.docked,
-      onClick: toggle('headlines'),
-    },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
-    {
-      // Off by default: there will eventually be far more headlines than
-      // items, and a board showing every announcement is a news reader.
-      key: 'overlay',
-      icon: '⌁',
-      label: showNewsOverlay ? 'Hide headlines' : 'Show headlines',
-      active: showNewsOverlay,
-      onClick: () => setShowNewsOverlay((v) => !v),
-    },
     {
       key: 'reset',
       icon: '⟲',
@@ -470,6 +454,18 @@ export function Board() {
         </div>
       </header>
 
+      {/* Full width, under the header. A ticker in a panel is a list; across
+          the page it is a wire, which is what it is for. */}
+      <Ticker
+        items={headlines14}
+        colour={colour}
+        onOpen={(n) => {
+          setOpenNews(n)
+          setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
+          raise('newsitem')()
+        }}
+      />
+
       <Frame
         title={timeline ? 'Timeline' : mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
         state={frames.galaxy}
@@ -548,26 +544,6 @@ export function Board() {
         <News weeks={news} colour={colour} onSelect={setSelected} />
       </Frame>
 
-      <Frame
-        title="Headlines"
-        state={frames.headlines}
-        onChange={setFrame('headlines')}
-        onDock={dock('headlines')}
-        accent={colour}
-        z={zOf('headlines')}
-        onFocus={raise('headlines')}
-      >
-        <Ticker
-          items={headlines14}
-          colour={colour}
-          onOpen={(n) => {
-            setOpenNews(n)
-            setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
-            raise('newsitem')()
-          }}
-        />
-      </Frame>
-
       {openNews && (
         <Frame
           title="Headline"
@@ -632,6 +608,32 @@ export function Board() {
           }}
           note="Shape is the organisation; colour is the constellation. Every body on the board is a development, never an organisation."
         />
+
+        <section className="filter-group">
+          <header>
+            <span className="label">Headlines</span>
+          </header>
+          <ul className="filter-list">
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showNewsOverlay}
+                  onChange={() => setShowNewsOverlay((v) => !v)}
+                />
+                <span style={{ opacity: showNewsOverlay ? 1 : 0.45 }}>
+                  Show on the board
+                </span>
+              </label>
+            </li>
+          </ul>
+          <p className="filter-group__note">
+            Draws each headline as a small satellite orbiting the item it bears
+            on. Off by default — there will eventually be far more headlines
+            than items, and a board showing every announcement is a news reader
+            rather than a map.
+          </p>
+        </section>
 
         <section className="filter-group">
           <header>

@@ -187,7 +187,7 @@ export function Frame({
 export function defaultLayout(w: number, h: number): Record<string, FrameState> {
   const wide = w >= 1100
   const pad = 12
-  const top = 74
+  const top = 108  // header plus the headlines strip
   const rightW = wide ? Math.min(400, Math.round(w * 0.28)) : 320
   const mainW = wide ? w - rightW - pad * 3 : w - pad * 2
   const mainH = h - top - pad - 62
@@ -210,13 +210,6 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
     },
     // Headlines sits under the news column on a wide screen and is docked
     // below that — three panels plus a ticker is too much for a laptop.
-    headlines: {
-      x: wide ? mainW + pad * 2 : 120,
-      y: wide ? top + Math.round(mainH * 0.42) + pad : 150,
-      w: rightW,
-      h: 190,
-      docked: true,
-    },
     newsitem: { x: Math.max(16, w - 460), y: 120, w: 430, h: 520, docked: true },
     filters: { x: 24, y: 110, w: 288, h: Math.min(620, h - 190), docked: true },
     help: { x: 70, y: 96, w: 520, h: Math.min(700, h - 160), docked: true },

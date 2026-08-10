@@ -10,6 +10,18 @@ import type { NewsItem } from '../content/newsTypes'
  *
  * Headline items are marked; everything else is deliberately quiet.
  */
+/**
+ * A ticker across the full width of the page.
+ *
+ * The transform is written straight to the DOM from an animation frame and
+ * never through React state. Sixty state updates a second would re-render the
+ * board beneath it — the same mistake that made the constellation rotation
+ * fight itself, and worth not repeating one component later.
+ *
+ * The content is rendered twice so the loop is seamless: when the first copy
+ * has scrolled fully out, the offset resets by exactly its width and nothing
+ * appears to move.
+ */
 export function Ticker({
   items,
   colour,
@@ -19,66 +31,105 @@ export function Ticker({
   colour: string
   onOpen: (n: NewsItem) => void
 }) {
-  const [i, setI] = useState(0)
-  const [paused, setPaused] = useState(false)
-  const timer = useRef<number>()
+  const track = useRef<HTMLDivElement>(null)
+  const inner = useRef<HTMLDivElement>(null)
+  const offset = useRef(0)
+  const paused = useRef(false)
+  const [showState, setShowState] = useState(false)
 
   useEffect(() => {
-    if (paused || items.length < 2) return
-    timer.current = window.setInterval(() => setI((n) => (n + 1) % items.length), 7000)
-    return () => window.clearInterval(timer.current)
-  }, [paused, items.length])
+    if (items.length === 0) return
+    let raf = 0
+    let last = performance.now()
 
-  useEffect(() => setI(0), [items.length])
+    const step = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      const el = inner.current
+      if (el) {
+        if (!paused.current) offset.current -= 34 * dt // pixels per second
+        const half = el.scrollWidth / 2
+        if (half > 0 && -offset.current >= half) offset.current += half
+        if (offset.current > 0) offset.current -= half
+        el.style.transform = `translateX(${offset.current}px)`
+      }
+      raf = requestAnimationFrame(step)
+    }
+
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [items.length])
+
+  /** Step by roughly one item, so the controls feel like paging not scrubbing. */
+  const nudge = (dir: number) => {
+    paused.current = true
+    setShowState(true)
+    offset.current += dir * -260
+  }
 
   if (items.length === 0) {
     return (
-      <p className="label" style={{ lineHeight: 1.6 }}>
-        Nothing yet. The newsroom agent gathers headlines daily, validates them
-        before publishing, and links each to the research behind it.
-      </p>
+      <div className="strip strip--empty">
+        <span className="strip__label">Headlines</span>
+        <span className="strip__none">
+          Nothing yet — the newsroom agent gathers daily, validates before
+          publishing, and links each item to the research behind it.
+        </span>
+      </div>
     )
   }
 
-  const n = items[Math.min(i, items.length - 1)]
-  const step = (d: number) => {
-    setPaused(true)
-    setI((x) => (x + d + items.length) % items.length)
-  }
+  const row = [...items, ...items]
 
   return (
     <div
-      className="ticker"
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
+      className="strip"
+      ref={track}
+      onPointerEnter={() => {
+        paused.current = true
+        setShowState(true)
+      }}
+      onPointerLeave={() => {
+        paused.current = false
+        setShowState(false)
+      }}
     >
-      <div className="ticker__bar">
-        <button onClick={() => step(-1)} aria-label="Previous">‹</button>
-        <span className="ticker__count">
-          {Math.min(i + 1, items.length)}/{items.length}
-        </span>
-        <button onClick={() => step(1)} aria-label="Next">›</button>
-        <span className="ticker__state">{paused ? 'paused' : 'rolling'}</span>
+      <span className="strip__label" style={{ color: colour }}>
+        Headlines
+      </span>
+
+      <div className="strip__window">
+        <div className="strip__inner" ref={inner}>
+          {row.map((n, k) => (
+            <button
+              key={`${n.id}-${k}`}
+              className="strip__item"
+              data-sig={n.significance}
+              onClick={() => onOpen(n)}
+              title={n.plain}
+            >
+              <span className="strip__date">{n.date}</span>
+              {n.significance === 'headline' && (
+                <span className="strip__flag" style={{ background: colour }} />
+              )}
+              <span className="strip__headline">{n.headline}</span>
+              {n.validation?.status !== 'verified' && (
+                <span className="strip__caveat">{n.validation?.status}</span>
+              )}
+              {n.establishedBy?.length ? (
+                <span className="strip__linked">
+                  {n.establishedBy.length} paper{n.establishedBy.length > 1 ? 's' : ''}
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <button className="ticker__item" onClick={() => onOpen(n)} data-sig={n.significance}>
-        <span className="ticker__meta">
-          {n.date}
-          {n.significance === 'headline' && (
-            <em style={{ color: colour }}> · headline</em>
-          )}
-          {n.validation?.status !== 'verified' && (
-            <em className="ticker__caveat"> · {n.validation?.status}</em>
-          )}
-        </span>
-        <span className="ticker__headline">{n.headline}</span>
-        <span className="ticker__plain">{n.plain}</span>
-        {n.establishedBy?.length ? (
-          <span className="ticker__linked">
-            {n.establishedBy.length} linked paper{n.establishedBy.length > 1 ? 's' : ''}
-          </span>
-        ) : null}
-      </button>
+      <div className="strip__controls" data-active={showState || undefined}>
+        <button onClick={() => nudge(-1)} aria-label="Back">‹</button>
+        <button onClick={() => nudge(1)} aria-label="Forward">›</button>
+      </div>
     </div>
   )
 }
