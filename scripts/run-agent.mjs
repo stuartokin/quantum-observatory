@@ -294,92 +294,123 @@ const body = {
   stream: true,
 }
 
-const res = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: {
-    'content-type': 'application/json',
-    'x-api-key': KEY,
-    'anthropic-version': '2023-06-01',
-  },
-  body: JSON.stringify(body),
-})
+/**
+ * Call the model, retrying when the service is busy.
+ *
+ * An `overloaded_error` arriving mid-stream used to end the run — thirteen
+ * searches of real work discarded because a server was briefly busy. It is not
+ * a failure of the request, so it should not be a failure of the run.
+ *
+ * Retries are whole-request: the stream cannot be resumed, and a partial
+ * response is worse than none.
+ */
+async function callModel(attempt = 1) {
+  const MAX = 4
 
-if (!res.ok) {
-  console.error(`API error ${res.status}: ${await res.text()}`)
-  process.exit(1)
-}
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify(body),
+  })
 
-/* ---------- read the stream ---------- */
-
-const blocks = []
-let current = null
-let stopReason = null
-let searches = 0
-let lastTick = Date.now()
-
-const decoder = new TextDecoder()
-let buffer = ''
-
-for await (const chunk of res.body) {
-  buffer += decoder.decode(chunk, { stream: true })
-  const lines = buffer.split('\n')
-  buffer = lines.pop() ?? ''
-
-  for (const line of lines) {
-    if (!line.startsWith('data:')) continue
-    const payload = line.slice(5).trim()
-    if (!payload || payload === '[DONE]') continue
-
-    let ev
-    try {
-      ev = JSON.parse(payload)
-    } catch {
-      continue
+  if (!res.ok) {
+    const text = await res.text()
+    const busy = res.status === 429 || res.status === 529 || res.status >= 500
+    if (busy && attempt < MAX) {
+      const wait = Math.round(2 ** attempt * 5)
+      console.log(`\n  ${res.status} from the API. Waiting ${wait}s, attempt ${attempt + 1}/${MAX}.`)
+      await new Promise((r) => setTimeout(r, wait * 1000))
+      return callModel(attempt + 1)
     }
+    console.error(`API error ${res.status}: ${text}`)
+    process.exit(1)
+  }
 
-    switch (ev.type) {
-      case 'content_block_start':
-        if (ev.content_block?.type === 'text') current = ''
-        else if (ev.content_block?.type === 'server_tool_use') {
-          searches++
-          process.stdout.write(`\r  searching… ${searches}`)
-        }
-        break
+  const blocks = []
+  let current = null
+  let stopReason = null
+  let searches = 0
+  let lastTick = Date.now()
+  let buffer = ''
+  const decoder = new TextDecoder()
 
-      case 'content_block_delta':
-        if (ev.delta?.type === 'text_delta' && current !== null) {
-          current += ev.delta.text
-          // Something on the log every 15 seconds, so a long run does not look
-          // like a hung one.
-          if (Date.now() - lastTick > 15000) {
-            lastTick = Date.now()
-            process.stdout.write(`\r  writing… ${current.length} chars, ${searches} searches`)
+  for await (const chunk of res.body) {
+    buffer += decoder.decode(chunk, { stream: true })
+    const lines = buffer.split('\n')
+    buffer = lines.pop() ?? ''
+
+    for (const line of lines) {
+      if (!line.startsWith('data:')) continue
+      const payload = line.slice(5).trim()
+      if (!payload || payload === '[DONE]') continue
+
+      let ev
+      try {
+        ev = JSON.parse(payload)
+      } catch {
+        continue
+      }
+
+      switch (ev.type) {
+        case 'content_block_start':
+          if (ev.content_block?.type === 'text') current = ''
+          else if (ev.content_block?.type === 'server_tool_use') {
+            searches++
+            process.stdout.write(`\r  searching… ${searches}`)
           }
+          break
+
+        case 'content_block_delta':
+          if (ev.delta?.type === 'text_delta' && current !== null) {
+            current += ev.delta.text
+            if (Date.now() - lastTick > 15000) {
+              lastTick = Date.now()
+              process.stdout.write(`\r  writing… ${current.length} chars, ${searches} searches`)
+            }
+          }
+          break
+
+        case 'content_block_stop':
+          if (current !== null) {
+            blocks.push(current)
+            current = null
+          }
+          break
+
+        case 'message_delta':
+          if (ev.delta?.stop_reason) stopReason = ev.delta.stop_reason
+          break
+
+        case 'error': {
+          const kind = ev.error?.type ?? 'unknown'
+          const transient = kind === 'overloaded_error' || kind === 'api_error'
+          if (transient && attempt < MAX) {
+            const wait = Math.round(2 ** attempt * 5)
+            console.log(
+              `\n  Stream ended: ${kind}. Waiting ${wait}s and starting again, ` +
+                `attempt ${attempt + 1}/${MAX}.`,
+            )
+            await new Promise((r) => setTimeout(r, wait * 1000))
+            return callModel(attempt + 1)
+          }
+          console.error(`\nStream error: ${JSON.stringify(ev.error)}`)
+          process.exit(1)
         }
-        break
-
-      case 'content_block_stop':
-        if (current !== null) {
-          blocks.push(current)
-          current = null
-        }
-        break
-
-      case 'message_delta':
-        if (ev.delta?.stop_reason) stopReason = ev.delta.stop_reason
-        break
-
-      case 'error':
-        console.error('\nStream error:', JSON.stringify(ev.error))
-        process.exit(1)
+      }
     }
   }
+  if (current !== null) blocks.push(current)
+
+  return { blocks, stopReason, searches }
 }
-if (current !== null) blocks.push(current)
+
+const { blocks, stopReason, searches } = await callModel()
 console.log(`\n  ${searches} search(es), ${blocks.length} text block(s)`)
 
-// Keep everything. When something goes wrong the raw output is the only
-// evidence of what the agent actually did, and losing it costs a rerun.
 mkdirSync('.agent-run', { recursive: true })
 writeFileSync('.agent-run/raw.json', JSON.stringify({ stopReason, searches, blocks }, null, 2))
 

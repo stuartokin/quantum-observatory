@@ -179,6 +179,12 @@ for await (const chunk of res.body) {
       }
     } else if (ev.type === 'message_delta' && ev.delta?.stop_reason) {
       stopReason = ev.delta.stop_reason
+    } else if (ev.type === 'error') {
+      // Transient, and not worth losing the run over. The steward runs on a
+      // trigger, so the simplest recovery is to let the next event start it.
+      console.error(`\nStream error: ${JSON.stringify(ev.error)}`)
+      console.error('If this is overloaded_error, re-run the workflow.')
+      process.exit(1)
     }
   }
 }

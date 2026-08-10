@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { NewsItem } from '../content/newsTypes'
 
 /**
@@ -26,10 +26,13 @@ export function Ticker({
   items,
   colour,
   onOpen,
+  onExpand,
 }: {
   items: NewsItem[]
   colour: string
   onOpen: (n: NewsItem) => void
+  /** Swap the strip for a window with the full history. */
+  onExpand: () => void
 }) {
   const track = useRef<HTMLDivElement>(null)
   const inner = useRef<HTMLDivElement>(null)
@@ -75,6 +78,9 @@ export function Ticker({
           Nothing yet — the newsroom agent gathers daily, validates before
           publishing, and links each item to the research behind it.
         </span>
+        <div className="strip__controls" data-active>
+          <button onClick={onExpand} aria-label="Open as a window">⊞</button>
+        </div>
       </div>
     )
   }
@@ -129,6 +135,9 @@ export function Ticker({
       <div className="strip__controls" data-active={showState || undefined}>
         <button onClick={() => nudge(-1)} aria-label="Back">‹</button>
         <button onClick={() => nudge(1)} aria-label="Forward">›</button>
+        <button onClick={onExpand} aria-label="Open as a window" title="Open as a window">
+          ⊞
+        </button>
       </div>
     </div>
   )
@@ -214,6 +223,110 @@ export function NewsDetail({ item, colour }: { item: NewsItem; colour: string })
           <p className="news-detail__about">{item.about.join(' · ')}</p>
         </>
       ) : null}
+    </div>
+  )
+}
+
+
+/**
+ * The archive.
+ *
+ * A ticker is for what is happening; this is for what happened. Grouped by
+ * month and collapsed, because a flat list of a year's headlines is a wall
+ * rather than a record — the month is the unit people actually think in when
+ * they ask when something changed.
+ */
+export function NewsArchive({
+  items,
+  colour,
+  onOpen,
+  onCollapse,
+}: {
+  items: NewsItem[]
+  colour: string
+  onOpen: (n: NewsItem) => void
+  onCollapse: () => void
+}) {
+  const months = useMemo(() => {
+    const by = new Map<string, NewsItem[]>()
+    for (const n of items) {
+      const key = n.date.slice(0, 7)
+      if (!by.has(key)) by.set(key, [])
+      by.get(key)!.push(n)
+    }
+    return [...by.entries()].sort((a, b) => b[0].localeCompare(a[0]))
+  }, [items])
+
+  const [open, setOpen] = useState<Set<string>>(
+    () => new Set(months.length ? [months[0][0]] : []),
+  )
+
+  const label = (key: string) =>
+    new Date(key + '-01').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
+
+  if (items.length === 0) {
+    return (
+      <p className="label" style={{ lineHeight: 1.6 }}>
+        No headlines yet. The newsroom agent gathers them daily, validates each
+        before publishing, and links it to the research behind it.
+      </p>
+    )
+  }
+
+  return (
+    <div className="archive">
+      <div className="archive__bar">
+        <span className="label">
+          {items.length} headline{items.length > 1 ? 's' : ''} · {months.length} month
+          {months.length > 1 ? 's' : ''}
+        </span>
+        <button onClick={onCollapse} title="Back to the ticker">Ticker</button>
+      </div>
+
+      {months.map(([key, list]) => {
+        const isOpen = open.has(key)
+        return (
+          <section key={key} className="archive__month" data-open={isOpen || undefined}>
+            <button
+              className="archive__head"
+              aria-expanded={isOpen}
+              onClick={() =>
+                setOpen((s) => {
+                  const n = new Set(s)
+                  n.has(key) ? n.delete(key) : n.add(key)
+                  return n
+                })
+              }
+            >
+              <span className="archive__caret">{isOpen ? '▾' : '▸'}</span>
+              {label(key)}
+              <em>{list.length}</em>
+            </button>
+
+            {isOpen && (
+              <ul className="archive__list">
+                {list.map((n) => (
+                  <li key={n.id} data-sig={n.significance}>
+                    <button onClick={() => onOpen(n)}>
+                      <span className="archive__date">{n.date.slice(8)}</span>
+                      <span className="archive__headline">{n.headline}</span>
+                      <span className="archive__meta">
+                        {n.significance === 'headline' && (
+                          <em style={{ color: colour }}>headline · </em>
+                        )}
+                        {n.validation?.status}
+                        {n.establishedBy?.length
+                          ? ` · ${n.establishedBy.length} linked`
+                          : ''}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )
+      })}
     </div>
   )
 }

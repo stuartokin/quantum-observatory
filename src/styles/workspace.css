@@ -532,3 +532,49 @@
   font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint);
   overflow-wrap: anywhere;
 }
+
+/* ---------- Headline archive ---------- */
+
+.archive__bar {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--gap-s); margin-bottom: var(--gap-s);
+  padding-bottom: 6px; border-bottom: 1px solid var(--hairline);
+}
+.archive__bar button {
+  background: transparent; border: 1px solid var(--hairline);
+  border-radius: var(--radius); color: var(--ink-faint); cursor: pointer;
+  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 3px 9px; min-height: 0;
+}
+.archive__bar button:hover { color: var(--ink); }
+
+.archive__month + .archive__month { border-top: 1px solid var(--hairline); }
+.archive__head {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: transparent; border: 0; cursor: pointer; text-align: left;
+  color: var(--ink-muted); padding: 8px 0;
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.archive__head:hover { color: var(--ink); }
+.archive__month[data-open] .archive__head { color: var(--ink); }
+.archive__head em { margin-left: auto; font-style: normal; opacity: 0.6; }
+.archive__caret { opacity: 0.6; width: 10px; }
+
+.archive__list { list-style: none; margin: 0 0 8px; padding: 0; }
+.archive__list li { border-left: 2px solid var(--hairline); }
+.archive__list li[data-sig='headline'] { border-left-color: var(--line-ai); }
+.archive__list button {
+  display: grid; gap: 2px; width: 100%; text-align: left;
+  background: transparent; border: 0; cursor: pointer; padding: 6px 0 6px 10px;
+}
+.archive__list button:hover { background: rgb(255 255 255 / 0.02); }
+.archive__date {
+  font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint);
+}
+.archive__headline { color: var(--ink); font-size: var(--step--1); line-height: 1.35; }
+.archive__meta {
+  font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.archive__meta em { font-style: normal; }

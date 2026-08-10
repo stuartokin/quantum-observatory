@@ -210,6 +210,13 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
     },
     // Headlines sits under the news column on a wide screen and is docked
     // below that — three panels plus a ticker is too much for a laptop.
+    headlines: {
+      x: wide ? Math.round(w * 0.28) : 40,
+      y: top + 20,
+      w: Math.min(520, w - 80),
+      h: Math.min(560, h - top - 90),
+      docked: true,
+    },
     newsitem: { x: Math.max(16, w - 460), y: 120, w: 430, h: 520, docked: true },
     filters: { x: 24, y: 110, w: 288, h: Math.min(620, h - 190), docked: true },
     help: { x: 70, y: 96, w: 520, h: Math.min(700, h - 160), docked: true },

@@ -29,8 +29,8 @@ import { VERSION } from '../../version'
 import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
 import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
-import { Ticker, NewsDetail } from '../../components/Ticker'
-import { recentNews, newsAbout } from '../../content/newsroom'
+import { Ticker, NewsArchive, NewsDetail } from '../../components/Ticker'
+import { recentNews, newsFor, newsAbout } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
@@ -82,6 +82,8 @@ export function Board() {
   const [openNews, setOpenNews] = useState<NewsItem | null>(null)
   /** Headlines are off by default — there will eventually be a great many. */
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
+  /** Strip across the page, or a window with the whole history. */
+  const [headlineMode, setHeadlineMode] = useState<'strip' | 'frame'>('strip')
   /**
    * The figures live behind the icon at every width now.
    *
@@ -107,13 +109,18 @@ export function Board() {
     defaultLayout(window.innerWidth, window.innerHeight),
   )
   const setFrame = (k: string) => (s: FrameState) => setFrames((f) => ({ ...f, [k]: s }))
+  const openHeadline = (n: NewsItem) => {
+    setOpenNews(n)
+    setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
+    setOrder((o) => [...o.filter((x) => x !== 'newsitem'), 'newsitem'])
+  }
   const openQDay = () => {
     setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
     setOrder((o) => [...o.filter((x) => x !== 'qday'), 'qday'])
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'teaser', 'news', 'newsitem', 'filters', 'help', 'qday', 'detail',
+    'galaxy', 'teaser', 'news', 'headlines', 'newsitem', 'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
@@ -180,6 +187,7 @@ export function Board() {
   const teaserEntries = useMemo(() => headlines(news), [news])
   const changedCon = useMemo(() => mostChanged(teaserEntries), [teaserEntries])
   const headlines14 = useMemo(() => recentNews(galaxy, 14), [galaxy])
+  const allHeadlines = useMemo(() => newsFor(galaxy), [galaxy])
   const changedIds = useMemo(() => new Set(teaserEntries.map((e) => e.id)), [teaserEntries])
   const forecast = useMemo(() => forecastFor(galaxy), [galaxy])
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
@@ -262,6 +270,20 @@ export function Board() {
       : [
         ]),
     { key: 'news', icon: '◰', label: 'Journals', active: !frames.news.docked, onClick: toggle('news') },
+    {
+      key: 'headlines',
+      icon: '⌁',
+      label: headlineMode === 'strip' ? 'Headlines' : 'Headlines window',
+      active: headlineMode === 'frame' && !frames.headlines.docked,
+      onClick: () => {
+        if (headlineMode === 'frame' && !frames.headlines.docked) setHeadlineMode('strip')
+        else {
+          setHeadlineMode('frame')
+          setFrames((f) => ({ ...f, headlines: { ...f.headlines, docked: false } }))
+          raise('headlines')()
+        }
+      },
+    },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked, onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked, onClick: toggle('help') },
     {
@@ -456,15 +478,18 @@ export function Board() {
 
       {/* Full width, under the header. A ticker in a panel is a list; across
           the page it is a wire, which is what it is for. */}
-      <Ticker
-        items={headlines14}
-        colour={colour}
-        onOpen={(n) => {
-          setOpenNews(n)
-          setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
-          raise('newsitem')()
-        }}
-      />
+      {headlineMode === 'strip' && (
+        <Ticker
+          items={headlines14}
+          colour={colour}
+          onOpen={openHeadline}
+          onExpand={() => {
+            setHeadlineMode('frame')
+            setFrames((f) => ({ ...f, headlines: { ...f.headlines, docked: false } }))
+            raise('headlines')()
+          }}
+        />
+      )}
 
       <Frame
         title={timeline ? 'Timeline' : mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
@@ -499,11 +524,7 @@ export function Board() {
           onToggleLegend={() => setShowLegend((v) => !v)}
           pool={pool}
           newsOverlay={showNewsOverlay}
-          onOpenNews={(n) => {
-            setOpenNews(n)
-            setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
-            raise('newsitem')()
-          }}
+          onOpenNews={openHeadline}
         />
       </Frame>
 
@@ -543,6 +564,25 @@ export function Board() {
       >
         <News weeks={news} colour={colour} onSelect={setSelected} />
       </Frame>
+
+      {headlineMode === 'frame' && (
+        <Frame
+          title="Headlines"
+          state={frames.headlines}
+          onChange={setFrame('headlines')}
+          onDock={dock('headlines')}
+          accent={colour}
+          z={zOf('headlines')}
+          onFocus={raise('headlines')}
+        >
+          <NewsArchive
+            items={allHeadlines}
+            colour={colour}
+            onOpen={openHeadline}
+            onCollapse={() => setHeadlineMode('strip')}
+          />
+        </Frame>
+      )}
 
       {openNews && (
         <Frame
