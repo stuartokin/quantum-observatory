@@ -45,11 +45,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-10'
+  note: 'npj Quantum Information 10, 23 (2024) confirmed via Nature website and ResearchGate cross-check; DOI 10.1038/s41534-023-00794-6 verified. Better-than-classical at up to 5 qubits, 99.5% success at 2 qubits with [[4,2,2]] QED, dynamical decoupling confirmed. E4 correct for peer-reviewed result. No independent replication by a separate institution found. No changes made.'
 ---
 
 Grover's algorithm provides a provable quantum speedup for unstructured database search, requiring O(√N) oracle queries versus O(N) classically. Its cryptographic significance is that it halves the effective bit-security of symmetric ciphers — AES-128 has ~64 bits of quantum security rather than 128 — which defines NIST's post-quantum security categories.
