@@ -82,18 +82,23 @@ jobs:
           npm run validate
           node scripts/check-provenance.mjs
 
-          if git diff --quiet && git diff --staged --quiet; then
+          UNTRACKED=$(git ls-files --others --exclude-standard content | wc -l)
+          if git diff --quiet && git diff --staged --quiet && [ "$UNTRACKED" -eq 0 ]; then
             echo "Nothing to commit."
           else
-            git fetch origin main
-            git rebase origin/main || {
-              echo "::warning::Rebase conflict. Leaving changes uncommitted."
-              exit 1
-            }
+            # Commit BEFORE rebasing. A rebase refuses to run against a dirty
+            # tree, and promoting files out of the inbox is exactly what makes
+            # it dirty — so rebasing first could never have worked.
             git add content agents/_decisions.md
             git commit -m "steward: $COUNT item(s), $(node -e "
               const a=require('./.agent-run/actions.json');
               console.log(a.decisionsAdded + ' precedent(s)')")"
+
+            git fetch origin main
+            git rebase origin/main || {
+              echo "::error::Rebase conflict. The commit is on this runner and not pushed."
+              exit 1
+            }
             git push origin main
           fi
 
