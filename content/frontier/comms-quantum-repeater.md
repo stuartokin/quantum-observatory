@@ -51,10 +51,10 @@ evidence:
       role: preprint
       title: A Metropolitan-scale Multiplexed Quantum Repeater with Bell Nonlocality
       publisher: arXiv
-      date: '2026-04-16'
+      date: '2025-08-25'
       identifier: arXiv:2508.17940
       accessed: '2026-08-08'
-      note: 'Preprint version; published in Nature Photonics as s41566-026-01911-5'
+      note: 'Submitted August 25, 2025 (v1); revised April 15, 2026 (v2, accepted version). Published in Nature Photonics as s41566-026-01911-5. Lead author Tian-Xiang Zhu et al.'
 links:
   - to: comms-quantum-memory
     relation: depends-on
@@ -70,11 +70,12 @@ moved:
   from: experimental
   on: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Corrected preprint source date from 2026-04-16 to 2025-08-25: arXiv:2508.17940 was submitted 25 Aug 2025 (v1) and last revised 15 Apr 2026 (v2). The board had recorded the revision date as the submission date. Nature Photonics DOI s41566-026-01911-5 confirmed published 7 May 2026. Fidelity 78.6%±2.0%, CHSH 3.7 sigma, 0.94 Hz EDR, 14.5 km all confirmed via arXiv HTML and Nature abstract. E4 correct.'
 ---
 
 Quantum repeaters are the missing infrastructure for long-distance quantum networks. By combining heralded entanglement generation with entanglement swapping at intermediate nodes, they circumvent the exponential photon-loss barrier of optical fibre. The 2026 Nature Photonics result from USTC is the first metropolitan-scale demonstration that certifies the non-classical quality of the distributed entanglement through a Bell inequality violation, closing a loophole in earlier demonstrations that produced entanglement too noisy to certify.

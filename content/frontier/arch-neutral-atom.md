@@ -13,7 +13,7 @@ metrics:
     value: 'd=3, d=5'
     note: colour code, Gemini
 evidence:
-  claim: Logical magic state distillation was demonstrated on a neutral-atom processor using dynamically reconfigurable atom transport.
+  claim: Logical magic state distillation was demonstrated on a neutral-atom processor using dynamically reconfigurable atom transport. A separate paper (Bluvstein et al., Nature 649, 39-46, Jan 2026) demonstrated all key elements of a universal fault-tolerant quantum processing architecture using up to 448 atoms, including surface code below-threshold performance, transversal gates, lattice surgery, and transversal teleportation.
   verified: '2026-08-04'
   level: E4
   sources:
@@ -26,6 +26,15 @@ evidence:
       doi: 10.1038/s41586-025-09367-3
       accessed: '2026-08-10'
       note: 'QuEra / Harvard / MIT. First demonstration of magic state distillation entirely on logical qubits. 5-to-1 protocol on d=3 and d=5 colour-code qubits on QuEra Gemini neutral-atom platform.'
+    - url: https://www.nature.com/articles/s41586-025-09848-5
+      role: corroborating
+      title: A fault-tolerant neutral-atom architecture for universal quantum computation
+      publisher: Nature
+      date: '2026-01-01'
+      identifier: Nature 649, 39-46 (2026)
+      doi: 10.1038/s41586-025-09848-5
+      accessed: '2026-08-11'
+      note: 'Bluvstein, Geim, Li, Evered et al.; Harvard / MIT / Caltech / Maryland. Reconfigurable arrays of up to 448 atoms. Surface code 2.14(13)x below-threshold, transversal gates, lattice surgery, transversal teleportation with 3D [[15,1,3]] codes. Publisher correction: Nature 650, E3 (2026) — figure label only, results unchanged.'
 links:
   - to: qec-magic-state-distillation
     relation: evidence-for
@@ -39,8 +48,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-10'
-  note: 'Nature 645, 620-625 confirmed via Nature website cross-check. DOI 10.1038/s41586-025-09367-3 verified. 5-to-1 magic state distillation on d=3 and d=5 colour-code qubits on QuEra Gemini, Harvard/MIT/QuEra team confirmed. E4 correct for peer-reviewed experimental result. No independent replication by a separate institution found. Bluvstein et al. Nature 649, 39-46 (Jan 2026) — fault-tolerant neutral-atom architecture for universal quantum computation using up to 448 atoms — confirmed as published and flagged for Scout as a significant update to this entry or potential new item.'
+  reviewedOn: '2026-08-11'
+  note: 'Added Bluvstein et al. Nature 649, 39-46 (Jan 2026) as corroborating source. Paper confirmed via nature.com, NIST, Weizmann, and multiple citation sources. Uses up to 448 atoms; demonstrates surface code at 2.14(13)x below-threshold, transversal gates, lattice surgery, teleportation. Publisher correction (Nature 650, E3, 2026) is a figure label fix only. This is a substantial update to the entry — Scout should consider a dedicated item. E4 maintained (both sources are peer-reviewed Nature papers). Claim updated to include the Bluvstein result.'
 confidence: high
 status: published
 added: '2026-08-04'

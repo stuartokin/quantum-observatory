@@ -19,7 +19,7 @@ metrics:
   - name: 'Share of human HTTPS traffic using hybrid PQ key exchange at Cloudflare'
     value: '52'
     unit: '%'
-    note: 'Cloudflare end-2025 Radar Year in Review; 38% by March 2025, 52% by year-end'
+    note: 'Cloudflare Radar 2025 Year in Review (Dec 2025); 38% by March 2025, 52% by early December 2025. Apple iOS mid-September 2025 update drove late-year acceleration.'
   - name: 'Client key_exchange size for X25519MLKEM768'
     value: '1216'
     unit: bytes
@@ -30,7 +30,7 @@ qdayReasoning: 'Widespread hybrid TLS deployment reduces the practical window of
 horizon: 1
 novelty: 'First quantum-safe protection deployed at global web scale'
 evidence:
-  claim: 'IETF draft-ietf-tls-ecdhe-mlkem (active standard-track, adopted by TLS WG) specifies X25519MLKEM768 as a hybrid key agreement for TLS 1.3, combining ML-KEM-768 with X25519 ECDH. Chrome, Edge, and Firefox deploy this by default. Cloudflare measured 38% of human HTTPS traffic using hybrid PQC by March 2025, rising to 52% by end-2025. The IETF draft is not yet a finalised RFC; it remains an Internet-Draft as of the verification date.'
+  claim: 'IETF draft-ietf-tls-ecdhe-mlkem (active standard-track, adopted by TLS WG) specifies X25519MLKEM768 as a hybrid key agreement for TLS 1.3, combining ML-KEM-768 with X25519 ECDH. Chrome, Edge, and Firefox deploy this by default. Cloudflare measured 38% of human HTTPS traffic using hybrid PQC by March 2025, rising to 52% by early December 2025 (Cloudflare Radar 2025 Year in Review). The IETF draft is not yet a finalised RFC; it remains an Internet-Draft as of the verification date.'
   level: E3
   verified: '2026-08-08'
   sources:
@@ -54,8 +54,8 @@ evidence:
       title: 'Cloudflare Radar 2025 Year in Review'
       publisher: Cloudflare
       date: '2025-12-15'
-      accessed: '2026-08-08'
-      note: 'Reports 52% of human HTTPS traffic post-quantum encrypted by end-2025 following Apple iOS PQC update in September 2025.'
+      accessed: '2026-08-11'
+      note: 'Reports 52% of human HTTPS traffic post-quantum encrypted by early December 2025, following Apple iOS PQC update in September 2025. Confirmed via multiple independent sources (heise.de, siliconangle.com, infoq.com).'
 links:
   - to: pqc-fips-203
     relation: depends-on
@@ -66,15 +66,16 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Cloudflare Radar 2025 Year in Review confirmed at blog.cloudflare.com/radar-2025-year-in-review/: 52% by early December 2025. March 2025 figure of 38% confirmed via Cloudflare blog and third-party sources (intelligentliving.co). Apple iOS mid-September 2025 update confirmed as driver of late-2025 spike per Cloudflare blog. E3 correct — IETF draft not yet RFC; 52% figure is vendor self-reported measurement. No level or readiness changes.'
 ---
 
 Hybrid TLS key exchange combines a classical elliptic-curve key agreement (X25519) with a post-quantum key encapsulation mechanism (ML-KEM-768) in a single TLS 1.3 handshake. The session key is derived from both shared secrets, so the connection is secure as long as either algorithm remains unbroken — protecting against a future quantum computer without sacrificing security against current classical attackers if ML-KEM were to be broken.
 
-The IETF TLS Working Group adopted the draft specification (draft-ietf-tls-ecdhe-mlkem) and it is progressing toward RFC status. Browser vendors deployed ahead of standardisation: Chrome enabled it by default in version 124 (April 2024), with Edge and Firefox following. Cloudflare rolled out hybrid PQC by default across its network and measured adoption rising from 38% of human HTTPS traffic in March 2025 to 52% by year-end, partly driven by Apple iOS adding PQC support in September 2025.
+The IETF TLS Working Group adopted the draft specification (draft-ietf-tls-ecdhe-mlkem) and it is progressing toward RFC status. Browser vendors deployed ahead of standardisation: Chrome enabled it by default in version 124 (April 2024), with Edge and Firefox following. Cloudflare rolled out hybrid PQC by default across its network and measured adoption rising from 38% of human HTTPS traffic in March 2025 to 52% by early December 2025, with a major jump in September 2025 driven by Apple adding PQC support in iOS operating system updates.
 
 The item was previously evidenced at E1 (proposal/theory) which materially understates the state of deployment. Readiness of `adopted` is correct — the mechanism ships in named browser versions and CDN defaults — but the IETF draft is not yet a finalised RFC, justifying E3 rather than E4.
