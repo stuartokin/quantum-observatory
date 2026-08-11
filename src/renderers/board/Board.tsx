@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { lazyWithReload } from '../../components/lazyWithReload'
 import { allFrontier } from '../../content/frontier'
 import type { FrontierItem, Readiness } from '../../content/frontierTypes'
 import { PILLAR_SPECTRUM } from '../../palette'
@@ -48,9 +49,9 @@ import { GlyphMark } from '../../components/GlyphMark'
  * Help carries the markdown renderer and every document in the project. Most
  * readers never open it, and it was costing everyone the download.
  */
-const Help = lazy(() => import('../../components/Help'))
-const NewsArchive = lazy(() => import('../../components/NewsArchive'))
-const NewsDetail = lazy(() => import('../../components/NewsDetail'))
+const Help = lazyWithReload('Help', () => import('../../components/Help'))
+const NewsArchive = lazyWithReload('NewsArchive', () => import('../../components/NewsArchive'))
+const NewsDetail = lazyWithReload('NewsDetail', () => import('../../components/NewsDetail'))
 import { recentNews, newsFor, newsAbout } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
