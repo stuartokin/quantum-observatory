@@ -133,3 +133,14 @@ the one it evidences, not split.** Three items where two would sit unsourced for
 months is not an improvement.
 *Decided 9 Aug 2026, on arch-topological, which conflated Majorana zero modes,
 fractional quantum Hall anyons and Floquet codes.*
+
+## Proposed by the steward, 2026-08-11
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A peer-reviewed theoretical or architectural paper is E1. Peer review alone does not lift theoretical work above E1; E4 requires a peer-reviewed experimental result.**
+
+E4 is the line for experiments. A theoretical blueprint — however authoritative and however thoroughly peer-reviewed — describes what could or should be done, not what was measured. Rating it E4 inflates confidence that an experiment was performed.
+
+*Proposed 2026-08-11, after qec-surface-code was set to E4 on Fowler et al. 2012 (Phys. Rev. A 86, 032324), a 54-page theoretical architecture paper, not an experimental result. Not yet confirmed by a person.*
