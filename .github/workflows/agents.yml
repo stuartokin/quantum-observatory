@@ -47,6 +47,8 @@ jobs:
               .filter(d=>{
                 const c=JSON.parse(fs.readFileSync(`agents/${d}/agent.json`,"utf8"));
                 if(!c.enabled) return false;
+                // Agents with their own runner have their own workflow.
+                if(c.runner && c.runner!=="generic") return false;
                 const every=c.everyWeeks??1;
                 // 0 means never scheduled — a campaign agent, run by hand.
                 if(every===0) return false;
