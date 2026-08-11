@@ -77,8 +77,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-10'
-  note: 'Nature 655, 81-86 confirmed via nature.com and multiple independent sources (Sandia press release, phys.org, Quantum Computing Report). Fidelities 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM) confirmed. Sandia DOE CRADA co-authorship confirmed. Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) correctly documented. E4 correct. No changes made.'
+  reviewedOn: '2026-08-11'
+  note: 'Nature 655, 81-86 re-confirmed this run via nature.com, phys.org, QCR, Sandia press release, PubMed (PMID 42310465). Fidelities 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM) confirmed against multiple independent sources. Sandia DOE CRADA co-authorship confirmed. Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) correctly documented. E4 correct. No changes made.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.

@@ -34,7 +34,7 @@ evidence:
       identifier: Nature 649, 39-46 (2026)
       doi: 10.1038/s41586-025-09848-5
       accessed: '2026-08-11'
-      note: 'Bluvstein, Geim, Li, Evered et al.; Harvard / MIT / Caltech / Maryland. Reconfigurable arrays of up to 448 atoms. Surface code 2.14(13)x below-threshold, transversal gates, lattice surgery, transversal teleportation with 3D [[15,1,3]] codes. Publisher correction: Nature 650, E3 (2026) — figure label only, results unchanged.'
+      note: 'Bluvstein, Geim, Li, Evered et al.; Harvard / MIT / Caltech / Maryland. Reconfigurable arrays of up to 448 atoms. Surface code 2.14(13)x below-threshold, transversal gates, lattice surgery, transversal teleportation with 3D [[15,1,3]] codes. Publisher correction: Nature 650, E3 (2026) — figure label in Fig 3d corrected from "corrected decoding" to "correlated decoding" only; results unchanged. Confirmed via published correction PDF.'
 links:
   - to: qec-magic-state-distillation
     relation: evidence-for
@@ -49,7 +49,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'Added Bluvstein et al. Nature 649, 39-46 (Jan 2026) as corroborating source. Paper confirmed via nature.com, NIST, Weizmann, and multiple citation sources. Uses up to 448 atoms; demonstrates surface code at 2.14(13)x below-threshold, transversal gates, lattice surgery, teleportation. Publisher correction (Nature 650, E3, 2026) is a figure label fix only. This is a substantial update to the entry — Scout should consider a dedicated item. E4 maintained (both sources are peer-reviewed Nature papers). Claim updated to include the Bluvstein result.'
+  note: 'Bluvstein Nature 649, 39-46 re-confirmed this run via nature.com abstract (2.14(13)x below-threshold confirmed), Weizmann repository, NIST publication page, ResearchGate. Publisher correction Nature 650, E3 confirmed: label change in Fig 3d from "corrected decoding" to "correlated decoding" — results unchanged per published correction PDF. No changes to entry.'
 confidence: high
 status: published
 added: '2026-08-04'

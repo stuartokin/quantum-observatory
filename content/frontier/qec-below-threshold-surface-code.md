@@ -45,7 +45,7 @@ evidence:
       identifier: 'Nature 649, 39-46 (2026)'
       doi: 10.1038/s41586-025-09848-5
       accessed: '2026-08-11'
-      note: 'Bluvstein et al.; Harvard / MIT / Caltech. Independently demonstrates 2.14(13)x below-threshold performance on neutral-atom platform with surface codes. Confirms Google Willow Λ value on a different hardware modality.'
+      note: 'Bluvstein et al.; Harvard / MIT / Caltech. Independently demonstrates 2.14(13)x below-threshold performance on neutral-atom platform with surface codes. Confirms Google Willow Λ value on a different hardware modality. Confirmed via nature.com abstract and NIST publication page.'
 links:
   - to: qec-qldpc-bivariate-bicycle
     relation: competes-with
@@ -68,7 +68,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'Added Bluvstein et al. Nature 649, 39-46 (2026) as corroborating source. The Bluvstein paper reports the same Λ=2.14(13) below-threshold performance on a neutral-atom processor — this constitutes independent replication of the threshold crossing on a different hardware modality. Updated claim to reflect this. E4 maintained and now better supported by two independent hardware platforms.'
+  note: 'Bluvstein et al. Nature 649, 39-46 re-confirmed this run via nature.com (2.14(13)x below-threshold confirmed from abstract), NIST publication page, Weizmann repository. Independent replication confirmed on different hardware modality. E4 correct and well-supported by two independent platforms. No changes made.'
 confidence: high
 status: published
 added: '2026-08-04'

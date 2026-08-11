@@ -61,7 +61,7 @@ evidence:
       identifier: 'arXiv:2505.15917'
       doi: 10.48550/arXiv.2505.15917
       accessed: '2026-08-09'
-      note: 'Craig Gidney, Google Quantum AI. Not peer-reviewed as of access date. CC BY 4.0. The current leading surface-code estimate. Confirmed: <1M qubits, <1 week, 0.1%/1µs/10µs assumptions, ~20x reduction vs 2019.'
+      note: 'Craig Gidney, Google Quantum AI. Not peer-reviewed as of access date. CC BY 4.0. The current leading surface-code estimate. Confirmed: <1M qubits, <1 week, 0.1%/1µs/10µs assumptions, ~20x reduction vs 2019. Approximately 897,864 physical qubits at peak per secondary source analysis.'
     - url: https://eprint.iacr.org/2026/280
       role: corroborating
       title: 'Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves'
@@ -98,7 +98,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-11'
-  note: 'Added Luo et al. arXiv:2607.13816 as corroborating source (835 logical qubits for ECC-256, confirmed from arXiv abstract). Updated ECC-256 metric note and evidence claim to reflect ~20x Toffoli gate tradeoff (per postquantum.com analysis). All other figures unchanged from prior run. E3 correct.'
+  note: 'Gidney arXiv:2505.15917 re-confirmed as preprint only via arXiv and ResearchGate. E3 correct. ~897,864 peak physical qubits noted from secondary analysis. No new peer-reviewed publication found. All other figures unchanged.'
 ---
 
 Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.

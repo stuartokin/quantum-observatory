@@ -59,7 +59,7 @@ evidence:
       identifier: 'Phys. Rev. Lett. 135, 260601 (2025)'
       doi: '10.1103/rqkg-dw31'
       accessed: '2026-08-11'
-      note: 'He, Lin, Wang et al. Independent below-threshold demonstration using all-microwave leakage suppression on distance-7 surface code; Lambda = 1.40 +/- 0.06. PRL Editors'' Suggestion. Published 22 December 2025. Confirmed via journals.aps.org.'
+      note: 'Tan He et al. Independent below-threshold demonstration using all-microwave leakage suppression on distance-7 surface code; Lambda = 1.40 +/- 0.06. PRL Editors'' Suggestion. Published 22 December 2025. Confirmed via APS journals index and published paper PDF.'
 confidence: high
 status: published
 links:
@@ -76,7 +76,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'He et al. PRL 135, 260601 (22 Dec 2025) confirmed via journals.aps.org (DOI 10.1103/rqkg-dw31) and ResearchGate. Confirmed as PRL Editors'' Suggestion. Lambda value of 1.40±0.06 stated in board claim — not directly verifiable from abstract alone but consistent with PRL publication. Source URL updated from physics.aps.org featured PDF to canonical link.aps.org DOI. E4 correct — both sources are peer-reviewed experimental results from different institutions. No level or readiness changes.'
+  note: 'He et al. PRL 135, 260601 re-confirmed via APS PRL issue 26 index page, PRL cover page, physics.aps.org viewpoint. Lead author confirmed as Tan He (100+ authors total). Lambda=1.40(6) confirmed from published paper PDF. PRL Editors'' Suggestion confirmed. No changes made.'
 ---
 
 The error correction threshold is the boundary below which quantum error correction actually helps. Google Willow crossed it in 2024 on superconducting hardware; a second independent team confirmed it in 2025. Both use surface codes. The result is a necessary but far-from-sufficient step toward a fault-tolerant quantum computer.
