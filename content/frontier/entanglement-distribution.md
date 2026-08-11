@@ -16,7 +16,7 @@ metrics:
   - name: Matter-to-matter entanglement distance
     value: '420'
     unit: km
-    note: 'Atomic ensemble quantum memories, telecom S-band conversion, Wang, Luo et al. Phys. Rev. Lett. 136, 240601 (2026)'
+    note: 'Atomic ensemble quantum memories, telecom S-band conversion, Luo, Wang et al. Phys. Rev. Lett. 136, 240601 (2026)'
   - name: Previous record
     value: '~100'
     unit: km
@@ -36,7 +36,7 @@ moved:
   from: emerging
   on: '2026-08-08'
 evidence:
-  claim: 'Wang, Luo et al. (Physical Review Letters 136, 240601, June 2026; preprint arXiv:2504.05660) report entanglement between two atomic ensemble quantum memories separated by 420 km of optical fibre. Photons from the memories are converted to telecom S-band (1,350 nm) via quantum frequency conversion to exploit low fibre loss (0.17 dB/km). Phase is stabilised using combined far-off-resonant and dual-band locking. The result exceeds the previous memory-memory entanglement record by more than four times and is published in a peer-reviewed journal, though not yet independently replicated by a different group.'
+  claim: 'Luo et al. (Physical Review Letters 136, 240601, June 2026; preprint arXiv:2504.05660) report entanglement between two atomic ensemble quantum memories separated by 420 km of optical fibre. Photons from the memories are converted to telecom S-band (1,350 nm) via quantum frequency conversion to exploit low fibre loss (0.17 dB/km). Phase is stabilised using combined far-off-resonant and dual-band locking. The result exceeds the previous memory-memory entanglement record by more than four times and is published in a peer-reviewed journal, though not yet independently replicated by a different group.'
   level: E4
   verified: '2026-08-10'
   sources:
@@ -48,7 +48,7 @@ evidence:
       identifier: 'Phys. Rev. Lett. 136, 240601 (2026)'
       doi: 10.1103/PhysRevLett.136.240601
       accessed: '2026-08-10'
-      note: 'Bin Wang, Xi-Yu Luo, Bo-Feng Gao et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 16 June 2026. Identifier corrected from 240801 (which is a different paper about a memory-assisted nonlocal optical interferometer) to 240601 per APS PRL issue 24 listing. Not yet independently replicated.'
+      note: 'Xi-Yu Luo, Chao-Yang Wang, Ming-Yang Zheng, Bin Wang et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 16 June 2026. Luo is first author (Bin Wang is 4th author). Not yet independently replicated.'
     - url: https://arxiv.org/abs/2504.05660
       role: preprint
       title: Entangling quantum memories over 420 km in fiber
@@ -77,10 +77,10 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-11'
-  note: 'Previously reviewed 2026-08-10 (citation error corrected: PRL 136, 240601 not 240801). No new sources checked this run. All figures unchanged. E4 correct for peer-reviewed PRL paper. Not yet independently replicated.'
+  note: 'Corrected author attribution: prior source note listed "Bin Wang, Xi-Yu Luo, Bo-Feng Gao et al." but arXiv:2504.05660 confirms Xi-Yu Luo is first author (Bin Wang is 4th). Claim corrected from "Wang, Luo et al." to "Luo et al." Metric note also updated. E4 correct for peer-reviewed PRL paper. Not yet independently replicated.'
 ---
 
-Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Wang, Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
+Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
 
 The technique uses the DLCZ heralding scheme: photons emitted by laser-cooled rubidium atomic ensembles (Alice and Bob) are converted to 1,350 nm telecom S-band and routed to a central relay (Charlie), which performs a Bell-state measurement. Successful interference heralds that Alice and Bob are now entangled. Phase stability over 420 km is maintained by a two-stage locking scheme.
 

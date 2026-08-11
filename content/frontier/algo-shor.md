@@ -97,7 +97,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-11'
-  note: 'arXiv:2607.13816 confirmed: 835 logical qubits for 256-bit prime-field curve per abstract. Luo abstract cites Chevignard as 1,098 for P-256 — confirmed to be P-224 figure per ePrint 2026/280 correction (last revised June 2026). Added note to Luo source that the paper uses ~20x more Toffoli gates (depth tradeoff not yet analysed). No level or readiness changes.'
+  note: 'All sources confirmed in prior runs. No new sources checked this run. E3 correct — primary source is arXiv preprint. No level or readiness changes.'
 ---
 
 Shor''s algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.
