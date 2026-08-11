@@ -33,7 +33,7 @@ links:
     relation: enables
 evidence:
   claim: 'Dasu et al. (Quantinuum, February 2026) demonstrate beyond-break-even performance on a 98-qubit trapped-ion processor using high-rate iceberg codes, with up to 94 error-detected logical qubits (iceberg QED codes) and up to 48 error-corrected logical qubits (concatenated iceberg QEC codes) in separate experiments. Encoded algorithms outperform unencoded counterparts on GHZ state preparation, cycle benchmarking, and 3D XY-model dynamics.'
-  verified: '2026-08-09'
+  verified: '2026-08-11'
   level: E3
   sources:
     - url: https://arxiv.org/abs/2602.22211
@@ -43,7 +43,7 @@ evidence:
       date: '2026-02-25'
       identifier: arXiv:2602.22211
       doi: 10.48550/arXiv.2602.22211
-      accessed: '2026-08-09'
+      accessed: '2026-08-11'
       note: 'Quantinuum Helios 98-qubit trapped-ion processor. Preprint; not yet peer-reviewed at time of verification. The 94 and 48 qubit results are in separate experiments using different code types.'
 confidence: high
 status: published
@@ -62,8 +62,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-09'
-  note: 'Claim corrected: removed "simultaneously" — the 94 (error-detected) and 48 (error-corrected) results are separate experiments using different code types, not concurrent; metrics split accordingly.'
+  reviewedOn: '2026-08-11'
+  note: 'arXiv:2602.22211 confirmed via multiple citations in recent arXiv papers (arch-trapped-ion item confirms this is the Dasu et al. Helios iceberg codes result). 48 error-corrected and 94 error-detected logical qubits in separate experiments confirmed. E3 correct — preprint, not peer-reviewed. No changes made.'
 ---
 
-The path to a fault-tolerant quantum computer requires not just one good logical qubit but many of them running in concert. Quantinuum''s February 2026 preprint is the most significant step yet: up to 48 error-corrected or 94 error-detected logical qubits on a single 98-qubit device, all performing better encoded than unencoded. The iceberg codes they use are high-rate — they pack many logical qubits into relatively few physical qubits, which is essential for scaling. This is a preprint and has not yet been replicated by an independent group, but the experimental detail is extensive and the result sits comfortably at E3.
+The path to a fault-tolerant quantum computer requires not just one good logical qubit but many of them running in concert. Quantinuum's February 2026 preprint is the most significant step yet: up to 48 error-corrected or 94 error-detected logical qubits on a single 98-qubit device, all performing better encoded than unencoded. The iceberg codes they use are high-rate — they pack many logical qubits into relatively few physical qubits, which is essential for scaling. This is a preprint and has not yet been replicated by an independent group, but the experimental detail is extensive and the result sits comfortably at E3.

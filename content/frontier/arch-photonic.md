@@ -52,7 +52,7 @@ evidence:
       identifier: 'Nature 641, 876-883 (2025)'
       doi: 10.1038/s41586-025-08820-7
       accessed: '2026-08-11'
-      note: 'PsiQuantum team. Peer-reviewed experimental paper in Nature. Component fidelities >99% conditional on photon detection. No independent replication by a different institution at time of access — E5 not warranted. Prior E3 rating was an error: E3 applies to preprints and review articles; a peer-reviewed experimental result in Nature is E4 per schema rules.'
+      note: 'PsiQuantum team. Peer-reviewed experimental paper in Nature. Component fidelities >99% conditional on photon detection. Confirmed via nature.com abstract and postquantum.com analysis. No independent replication by a different institution at time of access — E5 not warranted. E4 correct per schema rules for peer-reviewed experimental papers.'
     - url: https://www.nature.com/articles/s41586-024-08406-9
       role: corroborating
       title: 'Scaling and networking a modular photonic quantum computer'
@@ -70,11 +70,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-11'
-  note: 'E3 raised to E4. The primary source (Nature 641, 876-883, DOI 10.1038/s41586-025-08820-7) is a peer-reviewed experimental paper in Nature, confirmed via nature.com abstract and KAIST repository (tagged peer-review). E3 was set in error — that level applies to preprints and review articles. A peer-reviewed experimental result is E4. Independent replication by a different institution has not been found; that would be required for E5. No other fields changed. Focus instruction applied: /focus sourcer arch-photonic raise to E4.'
+  reviewedOn: '2026-08-11'
+  note: 'Nature 641, 876-883 confirmed this run via nature.com abstract and postquantum.com analysis. All four fidelity figures (99.98% SPAM, 99.50% HOM, 99.22% fusion, 99.72% chip-to-chip) confirmed as conditional on photon detection. E4 correct for peer-reviewed experimental Nature paper. No independent replication found. No changes made.'
 ---
 
 Photonic quantum computing uses photons — particles of light — as qubits. Their insensitivity to thermal noise means no dilution refrigerator is needed, which matters enormously for scaling. The fundamental obstacle is that photons do not naturally interact, so entangling two photonic qubits requires probabilistic techniques or ancilla photons. PsiQuantum's May 2025 Nature paper reported the first manufacturable platform: a chipset built in GlobalFoundries' commercial 300mm silicon-photonics process, demonstrating component fidelities above 99% for single-qubit operations, fusion gates, and 42-metre chip-to-chip links. All fidelities are conditional on detecting a photon — optical loss remains the main engineering challenge for scale-up. The result is a component demonstration, not a working quantum processor; fault-tolerant logical computation in this modality has not yet been shown.

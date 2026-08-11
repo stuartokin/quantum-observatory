@@ -31,7 +31,7 @@ metrics:
     value: '2.4x'
     note: 'versus best physical qubit lifetime, +/- 0.3 (Google Willow)'
 evidence:
-  claim: 'Below-threshold surface code memory has been demonstrated independently on two distinct hardware platforms by different institutions, meeting the E5 criterion. Google Quantum AI demonstrated two below-threshold surface code memories on the Willow superconducting processor (Nature 638, 920-926, 2025): the distance-7 code achieved logical error suppression factor Lambda=2.14+/-0.02 per two units of code distance, with 0.143% error per cycle, exceeding the best physical qubit lifetime by 2.4+/-0.3x. Bluvstein et al. (Harvard/MIT/Caltech/Maryland, Nature 649, 39-46, 2026) independently confirmed below-threshold surface code operation on a neutral-atom platform using reconfigurable arrays of up to 448 atoms, achieving Lambda=2.14(13)x below-threshold performance. The two Lambda values are numerically coincident but this is a coincidence across different code distances, error models, and qubit types — what is replicated is below-threshold operation itself, not the specific numerical factor. He et al. (PRL 135, 260601, 2025) provide a third independent below-threshold demonstration on superconducting hardware from a different institution (non-Google), achieving Lambda=1.40(6) using an all-microwave leakage suppression architecture on a distance-7 surface code. Three independent demonstrations across two hardware modalities from at least three separate institutions confirm that below-threshold QEC is a reproducible, platform-agnostic result.'
+  claim: 'Below-threshold surface code memory has been demonstrated independently on two distinct hardware platforms by different institutions, meeting the E5 criterion. Google Quantum AI demonstrated two below-threshold surface code memories on the Willow superconducting processor (Nature 638, 920-926, 2025): the distance-7 code achieved logical error suppression factor Lambda=2.14+/-0.02 per two units of code distance, with 0.143% error per cycle, exceeding the best physical qubit lifetime by 2.4+/-0.3x. Bluvstein et al. (Harvard/MIT/Caltech/Maryland, Nature 649, 39-46, 2026) independently confirmed below-threshold surface code operation on a neutral-atom platform using reconfigurable arrays of up to 448 atoms, achieving Lambda=2.14(13)x below-threshold performance. The two Lambda values are numerically coincident but this is a coincidence across different code distances, error models, and qubit types — what is replicated is below-threshold operation itself, not the specific numerical factor. He et al. (PRL 135, 260601, 2025) provide a third independent below-threshold demonstration on superconducting hardware from a different institution (USTC/Jian-Wei Pan group, Zuchongzhi 3.2 processor, 97 qubits), achieving Lambda=1.40(6) using an all-microwave leakage suppression architecture on a distance-7 surface code. Three independent demonstrations across two hardware modalities from at least three separate institutions confirm that below-threshold QEC is a reproducible, platform-agnostic result.'
   verified: '2026-08-11'
   level: E5
   sources:
@@ -68,7 +68,7 @@ evidence:
       identifier: 'Phys. Rev. Lett. 135, 260601 (2025)'
       doi: 10.1103/rqkg-dw31
       accessed: '2026-08-11'
-      note: 'Tan He et al.; independent superconducting group (non-Google). Lambda=1.40(6); all-microwave leakage suppression architecture on distance-7 surface code, 97 qubits. PRL Editors'' Suggestion. Third independent below-threshold demonstration.'
+      note: 'Tan He et al.; USTC / Jian-Wei Pan group (Zuchongzhi 3.2 processor, 97 qubits). Lambda=1.40(6); all-microwave leakage suppression architecture on distance-7 surface code. PRL Editors'' Suggestion. Third independent below-threshold demonstration. Institution confirmed via phys.org news report.'
 links:
   - to: qec-qldpc-bivariate-bicycle
     relation: competes-with
@@ -92,19 +92,20 @@ added: '2026-08-04'
 origin: human
 novelty: 'Below-threshold QEC replicated across superconducting and neutral-atom platforms by independent institutions'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-11'
-  note: 'E4 promoted to E5 per explicit /focus sourcer instruction from a person. Basis: independent replication by Bluvstein et al. (Harvard/MIT/Caltech/Maryland, Nature 649, 2026) on neutral-atom hardware — different institution, different modality, different error model. He et al. (PRL 135, 2025) added as third corroborating source. Claim updated to explicitly state that what is replicated is below-threshold operation itself, not the coincident Lambda value. actors expanded to include Harvard/MIT/Caltech/Maryland contributors. Upward correction (E4 to E5) normally escalates but focus instruction constitutes explicit person approval for this run.'
+  reviewedOn: '2026-08-11'
+  note: 'All three sources confirmed this run. He et al. PRL 135, 260601 institution confirmed via phys.org: USTC/Jian-Wei Pan group on Zuchongzhi 3.2 processor (97 qubits). Source note updated to record this. Google Willow Lambda=2.14±0.02 confirmed; Bluvstein et al. 2.14(13)x confirmed via nature.com. E5 correct — three independent institutions, two modalities. Amended a sourcer-merged item; no changes to evidence level or readiness.'
 ---
 
 Below-threshold surface code operation — where adding more physical qubits suppresses logical errors exponentially — has been confirmed independently across two hardware platforms and at least three research groups, meeting the E5 standard for independent replication.
 
-**Google Willow (superconducting, 2025).** The 101-qubit distance-7 surface code on Google''s Willow processor achieved logical error suppression factor Λ=2.14±0.02 per two units of code distance, with 0.143% error per cycle and a logical lifetime 2.4× that of the best physical qubit. Real-time decoding at distance-5 achieved 63 µs average latency.
+**Google Willow (superconducting, 2025).** The 101-qubit distance-7 surface code on Google's Willow processor achieved logical error suppression factor Λ=2.14±0.02 per two units of code distance, with 0.143% error per cycle and a logical lifetime 2.4× that of the best physical qubit. Real-time decoding at distance-5 achieved 63 µs average latency.
 
 **Bluvstein et al. (neutral atom, Harvard/MIT, 2026).** An independent team at Harvard and MIT, using reconfigurable arrays of up to 448 neutral atoms, demonstrated Λ=2.14(13)× below-threshold performance on a surface code. This is a different institution, a different hardware modality (neutral atoms, not superconducting circuits), and a different error model — erasure-based decoding with atom loss detection rather than Pauli noise with a minimum-weight matching decoder. The numerical coincidence Λ≈2.14 across both platforms is not a shared experimental artefact; it reflects independent physics operating below the threshold.
 
-**He et al. (superconducting, non-Google, 2025).** A third group demonstrated below-threshold operation on a superconducting distance-7 surface code using all-microwave leakage suppression, achieving Λ=1.40(6). Published in Physical Review Letters as an Editors'' Suggestion.
+**He et al. (superconducting, USTC/Pan group, 2025).** A third group at the University of Science and Technology of China demonstrated below-threshold operation on a superconducting distance-7 surface code using all-microwave leakage suppression on a 97-qubit Zuchongzhi 3.2 processor, achieving Λ=1.40(6). Published in Physical Review Letters as an Editors' Suggestion.
 
 Three independent demonstrations across two hardware modalities confirm that below-threshold QEC is reproducible and platform-agnostic. The remaining challenge is not whether the threshold can be crossed, but how to scale to the logical qubit counts and gate fidelities required for useful fault-tolerant algorithms.
