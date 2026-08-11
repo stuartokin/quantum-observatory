@@ -26,7 +26,7 @@ qdayImpact: 0
 evidence:
   level: E3
   claim: NIST demonstrated Rydberg-atom electrometry in room-temperature vapour cells as SI-traceable field probes covering DC to THz; reviewed in Nature Reviews Physics (2024).
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://www.nature.com/articles/s42254-024-00756-7
       role: primary
@@ -35,8 +35,8 @@ evidence:
       date: '2024-09-16'
       identifier: Nat. Rev. Phys. 6, 606–620 (2024)
       doi: 10.1038/s42254-024-00756-7
-      accessed: '2026-08-08'
-      note: Technical review by NIST authors; free-access PDF at tsapps.nist.gov/publication/get_pdf.cfm?pub_id=958010.
+      accessed: '2026-08-11'
+      note: 'Schlossberger, Prajapati, Berweger, Rotunno, Artusio-Glimpse, Simons, Sheikh, Norrgard, Eckel, Holloway; NIST Boulder. Technical Review article; schema caps review/survey articles at E3. Publisher correction (figure label only) issued; results unchanged. Free PDF at tsapps.nist.gov.'
 links:
   - to: quantum-sensing-grid
     relation: enables
@@ -45,11 +45,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Nature Reviews Physics 6, 606-620 (2024) confirmed via nature.com abstract and NIST publications page (tsapps.nist.gov). Schlossberger et al., NIST confirmed as lead institution. Technical Review article — schema caps at E3, correct. Publisher correction (figure y-axis labels only) confirmed via nature.com correction page; results unchanged. Item was agent-merged; this is its first agent-review. No corrections needed.'
 ---
 
 Rydberg RF sensing uses electromagnetically induced transparency (EIT) to read out the spin state of highly excited atoms in a glass vapour cell. The cell acts as an all-dielectric, self-calibrating receiver whose sensitivity is tied to fundamental atomic transition frequencies rather than to an engineered antenna. NIST's 2024 review covers SI traceability, sensitivity limits, and applications including voltage standards and communications receivers, consolidating work from multiple experimental groups.

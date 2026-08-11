@@ -21,7 +21,7 @@ horizon: 1
 novelty: 'First FIPS 140-3 certified TPM with PQC firmware authentication path'
 evidence:
   claim: 'STMicroelectronics announced FIPS 140-3 certification of the ST33KTPM2X TPM family in October 2024, the first TPMs to receive this certification. The devices use LMS (SP800-208, a post-quantum hash-based signature scheme) to authenticate firmware updates, and support field firmware upgrades adding ML-KEM and ML-DSA (FIPS 203/204). The NIST CMVP security policy confirms FIPS 140-3 Level 1 module status. As of mid-2025, no vendor has obtained FIPS 140-3 Level 3 with PQC algorithm support combined; those submissions remain in process.'
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   level: E2
   sources:
     - url: 'https://newsroom.st.com/media-center/press-item.html/n4643.html'
@@ -29,15 +29,15 @@ evidence:
       title: 'STMicroelectronics delivers industry''s first FIPS 140-3 certified TPMs'
       publisher: STMicroelectronics
       date: '2024-10-08'
-      accessed: '2026-08-08'
-      note: 'Named vendor announcement; FIPS 140-3 certification confirmed by NIST CMVP. First TPM family with this certification.'
+      accessed: '2026-08-11'
+      note: 'Named vendor announcement; FIPS 140-3 certification confirmed by NIST CMVP. LMS (SP800-208) firmware signing and ML-KEM/ML-DSA upgrade path confirmed at ST product page (st.com/st33ktpm2x). First TPM family with FIPS 140-3 certification.'
     - url: 'https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp4702.pdf'
       role: standard
       title: 'FIPS 140-3 Security Policy — ST33KTPM2XSPI / ST33KTPM2XI2C'
       publisher: 'NIST CMVP'
       date: '2024-01-01'
-      accessed: '2026-08-08'
-      note: 'Non-proprietary NIST CMVP security policy document confirming FIPS 140-3 Level 1 module status.'
+      accessed: '2026-08-11'
+      note: 'Non-proprietary NIST CMVP security policy document confirming FIPS 140-3 Level 1 module status for ST33KTPM2XSPI/ST33KTPM2XI2C. Confirmed accessible at csrc.nist.gov.'
 confidence: medium
 status: published
 links:
@@ -49,11 +49,12 @@ links:
     relation: depends-on
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'ST newsroom press release (n4643.html) and NIST CMVP security policy 140sp4702.pdf both confirmed accessible. LMS (SP800-208) firmware signing confirmed at ST product page. FIPS 140-3 Level 1 module status confirmed from CMVP security policy. E2 correct — primary source is vendor press release; CMVP policy is a non-proprietary government document confirming the certification fact. Item was agent-merged; this is its first agent-review. No corrections needed.'
 ---
 
 Hardware roots of trust are the bottom of the cryptographic stack. The first FIPS 140-3 certified TPMs now use a PQC algorithm (LMS) to authenticate firmware updates and support ML-KEM/ML-DSA via field upgrade. Full combined PQC and FIPS 140-3 Level 3 validation remains in process across all major HSM vendors.

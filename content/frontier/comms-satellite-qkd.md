@@ -38,7 +38,7 @@ priority: P2
 evidence:
   claim: 'Liao et al. (2017) report decoy-state QKD from the Micius LEO satellite to a ground station at Xinglong, achieving a key rate exceeding 1 kbps over distances up to 1,200 km — 20 orders of magnitude more channel-efficient than the equivalent fibre link at that distance. A 2024 preprint (arXiv 2408.10994) demonstrates the same capability on a 23 kg microsatellite payload with portable ground stations, generating up to 0.59 Mbit of secure key per pass.'
   level: E4
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://www.nature.com/articles/nature23655
       role: primary
@@ -47,7 +47,8 @@ evidence:
       date: '2017-09-07'
       identifier: 'Nature 549, 43-47 (2017)'
       doi: 10.1038/nature23655
-      accessed: '2026-08-08'
+      accessed: '2026-08-11'
+      note: 'Liao et al.; Micius LEO satellite (~500 km altitude); decoy-state BB84; >1 kHz key rate at 1200 km; 20 orders of magnitude more efficient than fibre at equivalent distance. Confirmed via phys.org news report and multiple secondary citations.'
     - url: https://arxiv.org/abs/2408.10994
       role: corroborating
       title: Microsatellite-based real-time quantum key distribution
@@ -61,11 +62,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Nature 549, 43-47 (2017) confirmed via phys.org report and multiple arXiv papers citing Liao et al. 2017: >1 kHz key rate at 1200 km, Micius LEO at ~500 km altitude, 20 orders of magnitude efficiency over fibre confirmed. E4 correct for peer-reviewed Nature paper. Item was agent-merged; this is its first agent-review. No corrections needed.'
 ---
 
 The Micius satellite (launched August 2016, ~500 km LEO) was the first platform to demonstrate QKD across intercontinental distances. Liao et al. (2017) showed decoy-state QKD to the Xinglong ground station over distances from 645 km to 1,200 km, with key rates exceeding 1 kbps — vastly more efficient than any fibre alternative at those distances. The experiment ran on 23 different days, confirming operational reliability across varied atmospheric conditions.

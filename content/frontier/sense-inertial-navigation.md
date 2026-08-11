@@ -34,7 +34,7 @@ qdayImpact: 0
 evidence:
   level: E4
   claim: ONERA demonstrated a compact cold-atom accelerometer-gyroscope with 700 ppm gyroscope scale factor stability and 100-fold accelerometer stability improvement when hybridised with a classical sensor — published in Science Advances (2024).
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://www.science.org/doi/10.1126/sciadv.adq4498
       role: primary
@@ -43,8 +43,8 @@ evidence:
       date: '2024-10-30'
       identifier: Sci. Adv. 10, eadq4498 (2024)
       doi: 10.1126/sciadv.adq4498
-      accessed: '2026-08-08'
-      note: Open access. arXiv preprint at arXiv:2405.13689.
+      accessed: '2026-08-11'
+      note: 'Salducci, Bidel et al.; ONERA, Université Paris-Saclay. Open access via PMC (confirmed). Compact magnetically-launched cold-atom interferometer for accelerometry and gyroscopy. Received 2024-05-22, accepted 2024-09-16.'
     - url: https://arxiv.org/abs/2405.13689
       role: preprint
       title: Quantum sensing of acceleration and rotation by interfering magnetically-launched atoms
@@ -62,11 +62,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Science Advances 10, eadq4498 confirmed via PMC (PMID confirmed) and science.org abstract. ONERA (Salducci, Bidel et al.) confirmed as authors. Magnetically launched atom interferometer for accelerometry and gyroscopy confirmed. E4 correct for peer-reviewed Science Advances paper. Item was agent-merged; this is its first agent-review. No corrections needed.'
 ---
 
 Quantum inertial navigation exploits the extreme stability of cold-atom interferometers to correct the drift of classical inertial measurement units. The magnetically-launched architecture demonstrated by ONERA in 2024 is scalable to a full six-axis unit and operates without the large physical separation required by traditional atom fountains, making it a candidate for vehicle-mounted navigation in GPS-denied environments.
