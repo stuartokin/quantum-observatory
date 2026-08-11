@@ -63,7 +63,7 @@ evidence:
       identifier: 'Phys. Rev. Lett. 135, 260601 (2025)'
       doi: '10.1103/rqkg-dw31'
       accessed: '2026-08-11'
-      note: 'Tan He et al.; USTC / Jian-Wei Pan group (Zuchongzhi 3.2 processor, 97 qubits). Independent below-threshold demonstration using all-microwave leakage suppression on distance-7 surface code; Lambda=1.40+/-0.06. PRL Editors'' Suggestion. Published 22 December 2025. Institution confirmed via phys.org news report.'
+      note: 'Tan He et al.; USTC / Jian-Wei Pan group (Zuchongzhi 3.2 processor, 97 qubits used for d=7 surface code out of 107 total). Independent below-threshold demonstration using all-microwave leakage suppression on distance-7 surface code; Lambda=1.40+/-0.06. PRL Editors'' Suggestion and cover article. Published 22 December 2025. 97-qubit figure confirmed from PRL cover caption this run.'
     - url: 'https://www.nature.com/articles/s41586-025-09848-5'
       role: corroborating
       title: 'A fault-tolerant neutral-atom architecture for universal quantum computation'
@@ -84,12 +84,12 @@ confidence: high
 status: published
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-11'
   reviewedOn: '2026-08-11'
-  note: 'All four sources confirmed this run. He et al. PRL 135, 260601 institution confirmed as USTC/Jian-Wei Pan group (Zuchongzhi 3.2, 97 qubits) via phys.org news report — added to claim and source note. Bluvstein et al. Nature 649 confirmed via nature.com. Google Willow Nature 638 confirmed in prior runs. actors field updated to include USTC. country field updated to include CN. E4 correct — primary source is peer-reviewed (Google Willow); E5 is carried by qec-below-threshold-surface-code. No level or readiness changes.'
+  note: 'State corrected from agent-merged to agent-reviewed this run. Prior run (2026-08-11) confirmed all four sources and updated actors/country fields but incorrectly left state as agent-merged. 97-qubit figure for Zuchongzhi 3.2 re-confirmed this run from PRL 135 cover caption: distance-7 surface code on 97 of 107 total qubits. E4 correct. No evidence level or readiness changes.'
 ---
 
 The error correction threshold is the boundary below which quantum error correction actually helps. Google Willow crossed it in 2024 on superconducting hardware. He et al. (USTC) confirmed it in December 2025 on superconducting hardware using a different leakage-suppression technique. Bluvstein et al. (Harvard/MIT) confirmed it in January 2026 on neutral-atom hardware. Three independent demonstrations across two hardware modalities establish below-threshold QEC as a reproducible, platform-agnostic milestone.
