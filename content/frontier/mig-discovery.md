@@ -33,33 +33,34 @@ links:
 evidence:
   claim: 'CISA published a Strategy for Migrating to Automated Post-Quantum Cryptography Discovery and Inventory Tools in September 2024, mandating Federal Civilian Executive Branch agencies to deploy automated cryptographic discovery tools (ACDI). NIST SP 1800-38B (preliminary draft, December 2023) evaluated public-key application discovery tools in a lab with more than 28 industry collaborators and found that most required inventory data items cannot yet be collected automatically.'
   level: E2
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://www.cisa.gov/sites/default/files/2024-09/Strategy-for-Migrating-to-Automated-PQC-Discovery-and-Inventory-Tools.pdf
       role: standard
       title: Strategy for Migrating to Automated Post-Quantum Cryptography Discovery and Inventory Tools
       publisher: CISA / NIST / NSA
       date: '2024-09-01'
-      accessed: '2026-08-08'
-      note: Sets phased mandate for FCEB agencies; references NCCoE SP 1800-38 and CDM integration.
+      accessed: '2026-08-11'
+      note: 'Sets phased mandate for FCEB agencies; references NCCoE SP 1800-38 and CDM integration. E2 ceiling: government strategy document, not a peer-reviewed study or formal standard.'
     - url: https://www.nccoe.nist.gov/publications/practice-guide/migration-post-quantum-cryptography-nist-sp-1800-38-practice-guide
       role: corroborating
       title: 'NIST SP 1800-38B: Public Key Application Discovery Tools (Preliminary Draft)'
       publisher: NIST NCCoE
       date: '2023-12-19'
-      accessed: '2026-08-08'
-      note: Documents discovery tool demonstrations with 28+ industry collaborators; preliminary draft.
+      accessed: '2026-08-11'
+      note: 'Documents discovery tool demonstrations with 28+ industry collaborators; preliminary draft. E2 ceiling: preliminary draft practice guide.'''
 confidence: medium
 status: published
 moved:
   from: demonstrated
   on: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'First reviewer pass on this agent-merged item. CISA September 2024 strategy document and NIST SP 1800-38B (preliminary draft) confirmed as correct sources. E2 correct: primary source is a government strategy document (not a peer-reviewed study or formal standard). readiness experimental correct: tools in pilot, not routine enterprise deployment. No changes made.'
 ---
 
 Cryptographic discovery is the unglamorous prerequisite for every quantum migration: you cannot replace what you cannot find. The CISA September 2024 strategy mandates pilot deployment of automated tools across US civilian agencies. NIST SP 1800-38B is honest that most required data items cannot yet be collected automatically. Readiness is revised from demonstrated to experimental — the tools exist and are being piloted, but routine enterprise-scale deployment is not established. Evidence is E2: the sources describe prototype demonstrations and a federal strategy document, not a peer-reviewed experimental result.

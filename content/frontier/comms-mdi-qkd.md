@@ -33,7 +33,7 @@ priority: P2
 evidence:
   claim: 'Liu et al. (2023, Phys. Rev. A 108, 022605) experimentally demonstrate five-intensity decoy-state MDI-QKD and achieve a positive secure key rate over 442 km of ultralow-loss optical fibre, surpassing the previous 404 km record and confirming that the five-intensity protocol outperforms four-intensity schemes in both distance and key rate.'
   level: E4
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://journals.aps.org/pra/abstract/10.1103/PhysRevA.108.022605
       role: primary
@@ -42,7 +42,7 @@ evidence:
       date: '2023-08-09'
       identifier: 'Phys. Rev. A 108, 022605 (2023)'
       doi: 10.1103/PhysRevA.108.022605
-      accessed: '2026-08-08'
+      accessed: '2026-08-11'
     - url: https://www.nature.com/articles/s41534-021-00394-2
       role: corroborating
       title: Gigahertz measurement-device-independent quantum key distribution using directly modulated lasers
@@ -50,18 +50,19 @@ evidence:
       date: '2021-04-08'
       identifier: 'npj Quantum Inf. 7, 58 (2021)'
       doi: 10.1038/s41534-021-00394-2
-      accessed: '2026-08-08'
+      accessed: '2026-08-11'
       note: Demonstrates 1 GHz clock-rate MDI-QKD, improving key rate by an order of magnitude over prior art.
 confidence: high
 status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'First reviewer pass on this agent-merged item. Primary source PRA 108, 022605 confirmed via DOI and APS abstract page. Claim — 442 km, five-intensity MDI-QKD, positive secure key rate surpassing prior 404 km record — consistent with PRA 2023 paper and multiple secondary citations in the board. E4 correct for peer-reviewed PRA paper. readiness demonstrated correct. No changes made.'
 ---
 
 MDI-QKD closes the detector loophole that affected earlier QKD deployments. Rather than trusting the measurement apparatus, both communicating parties (Alice and Bob) send photons toward a central node (Charlie) that performs a Bell-state measurement. The result tells Alice and Bob whether their bits are correlated, but not what the values are — so a compromised or malicious Charlie learns nothing useful.

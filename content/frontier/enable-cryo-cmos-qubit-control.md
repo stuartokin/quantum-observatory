@@ -41,7 +41,7 @@ evidence:
       identifier: 'Nature 643, 382-387 (2025)'
       doi: 10.1038/s41586-025-09157-x
       accessed: '2026-08-11'
-      note: 'PMC open-access (PubMed 40562920). ArXiv preprint at arXiv:2407.15151. Funded by Microsoft and Australian Research Council.'
+      note: 'PMC open-access (PubMed PMID 40562920; PMC12240860). DOI confirmed via nature.com, PubMed, and University of Sydney press release. Funded by Microsoft Corporation and Australian Research Council. Accepted 14 May 2025, published 25 June 2025.'
     - url: 'https://arxiv.org/abs/2407.15151'
       role: preprint
       title: 'Spin Qubits with Scalable milli-kelvin CMOS Control'
@@ -62,10 +62,12 @@ horizon: 2
 added: '2026-08-11'
 origin: agent
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-11'
+  reviewedOn: '2026-08-11'
+  note: 'Nature 643, 382-387 confirmed via PubMed (PMID 40562920, PMC12240860), nature.com abstract, and University of Sydney press release. Bartee et al., Univ. Sydney / UNSW / Emergence Quantum confirmed as authors. Milli-kelvin CMOS, exchange coupling gate fidelity comparable to room-temperature confirmed from nature.com summary. E4 correct for peer-reviewed Nature paper. Status left as draft pending human review of this new scout item.'
 ---
 
 ## What happened
