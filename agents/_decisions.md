@@ -126,3 +126,20 @@ only resource estimates exist, name the gap rather than the achievement —
 "Hardware gap to X" rather than "X at scale". Four separate runs independently
 flagged `algo-shor` for this before it was changed.
 *Decided 9 Aug 2026.*
+
+## Proposed by the steward, 2026-08-11
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A P0 or P1 item must include summary, plain, qdayImpact, qdayReasoning, and novelty in addition to the schema-required fields. Schema validity alone is not sufficient for items the board highlights.**
+
+A P1 item that passes schema validation but omits qdayImpact, qdayReasoning, and novelty cannot do its job of informing decision-makers; the schema permits omission but the board's purpose does not.
+
+*Proposed 2026-08-11, after arch-neutral-atom was P1 and lacked qdayImpact, qdayReasoning, and novelty across multiple review runs despite passing schema validation. Not yet confirmed by a person.*
+
+**A formally published NIST Interagency or Internal Report (NIST IR) with a DOI is E4. A NIST project page for a forthcoming standard, a preliminary draft, or an initial public draft is E3 at most. The line is publication, not selection or announcement.**
+
+NIST IRs are formally published with DOIs and editorial review, equivalent in authority to NIST SPs and FIPS for evidence purposes. A project page or draft document lacks that status regardless of the importance of what it describes.
+
+*Proposed 2026-08-11, after pqc-hqc (NIST IR 8545, formally published) correctly rated E4; pqc-fips-206-falcon (CSRC project page, unpublished FIPS) correctly rated E3 — the distinction between these two cases needed a recorded rule. Not yet confirmed by a person.*
