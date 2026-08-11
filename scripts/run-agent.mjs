@@ -85,6 +85,32 @@ if (!existsSync(`${dir}/agent.json`)) {
 const cfg = JSON.parse(readFileSync(`${dir}/agent.json`, 'utf8'))
 const prompt = readFileSync(`${dir}/prompt.md`, 'utf8')
 
+/**
+ * Some agents have their own runner.
+ *
+ * The steward reads issues and writes precedents, which this script knows
+ * nothing about — and being handed to it produced a TypeError on a missing
+ * write_scope rather than anything a person could act on. An agent that says
+ * which runner it needs should be sent there.
+ */
+if (cfg.runner && cfg.runner !== 'generic') {
+  console.error(
+    `${agent} has its own runner: scripts/${cfg.runner}.mjs\n` +
+      `Run it from Actions → ${cfg.runner[0].toUpperCase()}${cfg.runner.slice(1)}, ` +
+      `not from Actions → Agents.`,
+  )
+  process.exit(1)
+}
+
+if (!Array.isArray(cfg.write_scope)) {
+  console.error(
+    `${agent}/agent.json has no write_scope. Every agent must declare where it ` +
+      `may write, and a missing one is a configuration error rather than ` +
+      `permission to write anywhere.`,
+  )
+  process.exit(2)
+}
+
 if (!cfg.enabled) {
   console.log(`${agent} is disabled. Nothing to do.`)
   console.log(`Set "enabled": true in ${dir}/agent.json to allow it to run.`)

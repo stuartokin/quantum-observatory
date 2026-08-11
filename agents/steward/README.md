@@ -9,8 +9,13 @@ down so a person only sees what needs judgement.
 agents/steward/agent.json  →  "enabled": true
 ```
 
-Then Actions → **Steward** → Run workflow, to try it by hand before letting it
+Then **Actions → Steward → Run workflow**, to try it by hand before letting it
 trigger itself.
+
+**Not Actions → Agents.** The steward has its own runner — it reads issues and
+writes precedents, neither of which the generic runner knows anything about.
+Running it there used to produce a TypeError; it now refuses and says where to
+go instead, and the Agents workflow no longer offers it at all.
 
 After that it fires on issues opened or reopened, and on new comments — but
 **not on its own**, and not on the other agents'. Without that guard an agent

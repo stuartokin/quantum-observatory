@@ -4,6 +4,16 @@
   "model": "claude-sonnet-4-6",
   "trigger": "issues",
   "maxTokens": 32000,
-  "enabled": true,
-  "budget": { "issues": 3, "proposals": 8, "decisions": 5, "searches": 20 }
+  "enabled": false,
+  "budget": {
+    "issues": 3,
+    "proposals": 8,
+    "decisions": 5,
+    "searches": 20
+  },
+  "runner": "steward",
+  "write_scope": [
+    "content/frontier/_inbox/**",
+    "agents/_decisions.md"
+  ]
 }
