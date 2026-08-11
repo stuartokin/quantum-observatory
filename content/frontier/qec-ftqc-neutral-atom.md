@@ -45,7 +45,7 @@ evidence:
       identifier: 'Nature 649, 39-46 (2026)'
       doi: 10.1038/s41586-025-09848-5
       accessed: '2026-08-11'
-      note: 'Peer-reviewed. Epub 2025-11-10. Publisher correction (figure label only) in Nature 650, E3 (doi:10.1038/s41586-026-10108-3). PMC open-access (PMID 41214350).'
+      note: 'Peer-reviewed. Epub 2025-11-10. Publisher correction (figure label only) in Nature 650, E3 (doi:10.1038/s41586-026-10108-3). PMC open-access (PMID 41214350). Confirmed via nature.com abstract and NIST publications page (tsapps.nist.gov). 448 atoms, 2.14(13)x below-threshold confirmed from nature.com.'
 confidence: high
 status: draft
 priority: P1
@@ -58,10 +58,12 @@ horizon: 2
 added: '2026-08-11'
 origin: agent
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-11'
+  reviewedOn: '2026-08-11'
+  note: 'Nature 649, 39-46 confirmed this run via nature.com abstract (2.14(13)x below-threshold, 448 atoms confirmed) and NIST publications page (tsapps.nist.gov/publication confirms paper and full author list including Bluvstein, Geim, Li, Evered et al.). Publisher correction Nature 650, E3 confirmed as figure-label only. E4 correct for peer-reviewed Nature paper. Status left as draft pending human review of this new scout item.'
 ---
 
 ## What happened

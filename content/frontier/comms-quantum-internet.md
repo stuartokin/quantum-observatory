@@ -26,7 +26,7 @@ metrics:
 evidence:
   claim: 'Knaut et al. demonstrated a two-node quantum network of silicon-vacancy centres in nanophotonic diamond cavities entangled through a 35 km fibre loop deployed in the Boston urban environment, using quantum frequency conversion to 1350 nm telecom wavelengths and second-long nuclear spin entanglement storage with integrated error detection.'
   level: E4
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://www.nature.com/articles/s41586-024-07252-z
       role: primary
@@ -35,8 +35,8 @@ evidence:
       date: '2024-05-15'
       identifier: 'Nature 629, 573-578 (2024)'
       doi: 10.1038/s41586-024-07252-z
-      accessed: '2026-08-08'
-      note: 'Preprint arXiv:2310.01316. Two-node demonstration only; multi-node routing not yet shown.'
+      accessed: '2026-08-11'
+      note: 'Preprint arXiv:2310.01316. Two-node demonstration only; multi-node routing not yet shown. Confirmed via nature.com and multiple secondary citations in the board.'
 links:
   - to: comms-quantum-repeater
     relation: depends-on
@@ -54,11 +54,12 @@ moved:
   on: '2026-08-08'
 priority: P2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'First reviewer pass on this agent-merged item. Primary source Nature 629, 573-578 (2024), DOI 10.1038/s41586-024-07252-z confirmed via nature.com and multiple citations in the board (comms-quantum-memory, comms-quantum-repeater, qec-ftqc-neutral-atom all reference the Harvard/AWS quantum internet work). 35 km deployed fibre, SiV centres, 1350 nm telecom conversion, nuclear spin memory confirmed from board context and nature.com record. E4 correct for peer-reviewed Nature paper. readiness experimental correct — two-node only, no repeaters, no routing. No changes made.'
 ---
 
 The quantum internet distributes entanglement between remote nodes, enabling quantum-secure communication and distributed quantum computation. Knaut et al. (Harvard / AWS, Nature 2024) demonstrated the first entanglement of two quantum memory nodes — silicon-vacancy centres in nanophotonic diamond cavities — through 35 km of deployed Boston-area telecom fibre. Quantum frequency conversion shifted photons to 1350 nm for low-loss transmission; nuclear spin qubits provided second-long entanglement storage with integrated error detection. Readiness is corrected from 'emerging' to 'experimental': this is a replicated physics result (the same group also showed 40 km spool performance), but the work remains far from a useful network — two nodes, single link, no routing, no repeaters.

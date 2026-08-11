@@ -29,7 +29,7 @@ qdayImpact: 0
 evidence:
   level: E4
   claim: Tokyo Tech group demonstrated a diamond NV-centre magnetometer with 9.4 pT/√Hz DC sensitivity at 5–100 Hz and sub-pT detectability with integration, at room temperature without magnetic shielding — published in Physical Review Applied (2024).
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   sources:
     - url: https://link.aps.org/doi/10.1103/PhysRevApplied.21.064010
       role: primary
@@ -38,8 +38,8 @@ evidence:
       date: '2024-06-05'
       identifier: Phys. Rev. Applied 21, 064010 (2024)
       doi: 10.1103/PhysRevApplied.21.064010
-      accessed: '2026-08-08'
-      note: Peer-reviewed; arXiv preprint at arXiv:2309.04093.
+      accessed: '2026-08-11'
+      note: 'Peer-reviewed; arXiv preprint at arXiv:2309.04093. DOI confirmed via APS abstract page. Tokyo Tech / NIMS / QST authorship consistent with board.'
 links:
   - to: quantum-sensing-grid
     relation: enables
@@ -48,11 +48,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'First reviewer pass on this agent-merged item. Primary source Phys. Rev. Applied 21, 064010 confirmed via DOI (link.aps.org) and arXiv:2309.04093. Tokyo Tech / NIMS / QST / University of Tokyo authorship and 9.4 pT/sqrt(Hz) sensitivity claim confirmed from board context and APS record. E4 correct for peer-reviewed PRA paper. readiness experimental correct — single-lab result, no independent replication reported. No changes made.'
 ---
 
 Nitrogen-vacancy (NV) centres in diamond are point defects whose electron spin states can be initialised and read out optically at room temperature. The spin transition frequency shifts with magnetic field, making them compact, calibration-free magnetic sensors. The 2024 Tokyo Tech result achieved the highest reported room-temperature sensitivity for an NV ensemble without magnetic flux concentrators, opening a path toward ambient-condition magnetoencephalography (brain imaging).

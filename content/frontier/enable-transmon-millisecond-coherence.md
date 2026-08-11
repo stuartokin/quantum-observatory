@@ -44,7 +44,7 @@ evidence:
       identifier: 'Nat Commun 16, 5421 (2025)'
       doi: 10.1038/s41467-025-61126-0
       accessed: '2026-08-11'
-      note: 'Open access. ArXiv preprint at arXiv:2407.18778 (2024).'
+      note: 'Open access. ArXiv preprint at arXiv:2407.18778 (2024). Confirmed via nature.com. T1 666 µs, T2 1057 µs confirmed from abstract.'
     - url: 'https://arxiv.org/abs/2407.18778'
       role: preprint
       title: 'Methods to achieve near-millisecond energy relaxation and dephasing times for a superconducting transmon qubit'
@@ -65,10 +65,12 @@ horizon: 2
 added: '2026-08-11'
 origin: agent
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-11'
+  reviewedOn: '2026-08-11'
+  note: 'Nature Communications 16, 5421 confirmed via nature.com (DOI 10.1038/s41467-025-61126-0). T1 up to 666(33) µs and T2 up to 1057(138) µs confirmed from abstract. Aalto University and VTT authorship confirmed. E4 correct for peer-reviewed Nature Communications paper. Status left as draft pending human review of this new scout item.'
 ---
 
 ## What happened
