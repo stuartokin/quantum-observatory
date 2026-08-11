@@ -12,8 +12,13 @@ import { lazy, type ComponentType } from 'react'
  * is to reload once and get the current index. The sessionStorage flag stops
  * that becoming a loop if the module is genuinely broken rather than merely
  * stale.
+ *
+ * The generic mirrors React.lazy's own constraint, ComponentType<any>.
+ * ComponentType<never> reads as stricter and means the opposite: a component
+ * accepting no props at all, which none of these are.
  */
-export function lazyWithReload<T extends ComponentType<never>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function lazyWithReload<T extends ComponentType<any>>(
   name: string,
   factory: () => Promise<{ default: T }>,
 ) {
