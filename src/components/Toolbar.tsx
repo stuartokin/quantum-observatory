@@ -84,7 +84,11 @@ export function Toolbar({
     if (el) {
       el.style.left = ''
       el.style.top = ''
+      el.style.right = ''
+      el.style.bottom = ''
+      el.style.margin = ''
       el.style.width = ''
+      el.style.height = ''
       el.style.transform = ''
     }
   }, [resetSignal])
@@ -112,11 +116,20 @@ export function Toolbar({
       const d = move.current
       if (!d) return
       if (Math.hypot(e.clientX - d.ox, e.clientY - d.oy) > 3) d.moved = true
-      // Keep it on screen and keep it a bar: never taller than its content,
-      // never wider than the viewport, never off the top.
+      /**
+       * Clear the opposite anchors before setting these.
+       *
+       * The bar is centred by being pinned to both left and right with auto
+       * margins. Setting `left` while `right` is still pinned leaves it
+       * stretched between the two — so grabbing it to move made it fill the
+       * page, which looked like a resize bug and was an anchoring one.
+       */
+      el.style.right = 'auto'
+      el.style.bottom = 'auto'
+      el.style.margin = '0'
+      el.style.height = ''
       el.style.left = `${Math.max(4, Math.min(window.innerWidth - 120, d.x + e.clientX - d.ox))}px`
       el.style.top = `${Math.max(4, Math.min(window.innerHeight - 52, d.y + e.clientY - d.oy))}px`
-      el.style.height = ''
       el.style.transform = 'none'
     }
 
@@ -146,6 +159,12 @@ export function Toolbar({
     e.preventDefault()
     const el = ref.current!
     const r = el.getBoundingClientRect()
+    // Pin the current size before switching anchors, so nothing reflows at the
+    // moment the drag starts.
+    el.style.width = `${r.width}px`
+    el.style.right = 'auto'
+    el.style.bottom = 'auto'
+    el.style.margin = '0'
     el.style.left = `${r.left}px`
     el.style.top = `${r.top}px`
     el.style.transform = 'none'
@@ -156,7 +175,10 @@ export function Toolbar({
     e.preventDefault()
     e.stopPropagation()
     const el = ref.current!
-    size.current = { ox: e.clientX, w: el.getBoundingClientRect().width }
+    const r = el.getBoundingClientRect()
+    el.style.right = 'auto'
+    el.style.margin = '0'
+    size.current = { ox: e.clientX, w: r.width }
   }
 
   const style: React.CSSProperties = {
@@ -197,7 +219,7 @@ export function Toolbar({
         <span
           className="toolbar__resize"
           onPointerDown={beginResize}
-          title="Drag to resize"
+          title="Drag to set the width. Height follows the rows."
           aria-hidden="true"
         />
       )}
