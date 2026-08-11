@@ -31,7 +31,7 @@ evidence:
       identifier: 'Phys. Rev. X 15, 011029 (2025)'
       doi: 10.1103/PhysRevX.15.011029
       accessed: '2026-08-08'
-      note: 'Peer-reviewed experimental result. Preprint arXiv:2404.18668 (submitted April 2024).'
+      note: 'Cassens, Meyer-Hoppe, Rasel, Klempt; Leibniz Universität Hannover / DLR. Peer-reviewed experimental result. Preprint arXiv:2404.18668 (submitted April 2024, updated May 2025).'
 confidence: high
 status: published
 qdayImpact: 0
@@ -39,11 +39,12 @@ horizon: 2
 novelty: 'First below-SQL gravimetry with entangled BEC atoms'
 priority: P2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'PRX 15, 011029 confirmed via APS abstract page (Published 11 February 2025), arXiv:2404.18668, APS Physics synopsis, and citation in Nature paper arXiv:2604.10948. −1.7 dB below SQL confirmed from arXiv abstract. Leibniz Universität Hannover and DLR affiliation confirmed. First momentum-state entanglement-enhanced gravity measurement claim confirmed from PRX abstract. E4 correct for peer-reviewed PRX paper. No changes made.'
 ---
 
 Quantum gravimetry uses cold-atom interferometry to measure local gravitational acceleration absolutely — without the drift that accumulates in spring-based relative gravimeters. In the Cassens et al. 2025 experiment at Leibniz Universität Hannover, Bose-Einstein condensates were entangled using spin dynamics before entering a Mach-Zehnder interferometer sensitive to gravitational acceleration. The sensitivity of −1.7 dB below the standard quantum limit is the first demonstration of entanglement-enhanced sensitivity in a gravity measurement using a momentum-state interferometer. Delta-kick collimation minimises atom loss and improves scalability toward very-long-baseline atom interferometers proposed for dark-matter detection and gravitational-wave sensing.

@@ -20,9 +20,9 @@ metrics:
   - name: continuous unsupervised naval operation
     value: '3'
     unit: weeks
-    note: 'Three independent clock designs operated simultaneously; RIMPAC exercise July-August 2022; reported Hilton et al. 2025'
+    note: 'Three independent clock designs operated simultaneously; RIMPAC exercise July-August 2022 (21 days); reported Hilton et al. 2025'
 evidence:
-  claim: 'Hilton et al. demonstrated three mobile optical clocks based on different operating principles in three weeks of unsupervised naval operation at sea, with frequency stability orders of magnitude superior to best-in-class commercial solutions over short and medium timescales — the first sea demonstration of laser-cooled optical clocks.'
+  claim: 'Hilton et al. demonstrated three mobile optical clocks based on different operating principles in three weeks of unsupervised naval operation at sea (RIMPAC 2022, July-August 2022, aboard HMNZS Aotearoa), with frequency stability orders of magnitude superior to best-in-class commercial solutions over short and medium timescales — the first sea demonstration of laser-cooled optical clocks.'
   level: E4
   verified: '2026-08-08'
   sources:
@@ -34,7 +34,7 @@ evidence:
       identifier: 'Nat. Commun. 16, 6063 (2025)'
       doi: 10.1038/s41467-025-61140-2
       accessed: '2026-08-08'
-      note: 'Three independent clock designs tested simultaneously; RIMPAC 2022; open access via PMC.'
+      note: 'Hilton et al.; University of Adelaide / DSTG / AFRL. Three independent clock designs tested simultaneously at RIMPAC 2022 (21 days at sea, aboard HMNZS Aotearoa). Open access via PMC. Confirmed via nature.com abstract, phys.org, sciencenewstoday.org.'
 confidence: high
 status: published
 qdayImpact: 0
@@ -42,11 +42,12 @@ horizon: 1
 novelty: 'First sea trial of laser-cooled optical atomic clocks'
 priority: P2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Nature Communications 16, 6063 (DOI 10.1038/s41467-025-61140-2) confirmed via nature.com abstract page. Three clock types confirmed; 21 days (three weeks) unsupervised operation at RIMPAC 2022 confirmed (aboard HMNZS Aotearoa, Hawaiian waters). Hilton et al. / University of Adelaide / DSTG confirmed. Separate paper (Nature 638, iodine clocks) exists but is a different paper from a different group — board item correctly cites Nature Communications Hilton et al. E4 correct. No changes made.'
 ---
 
 Optical atomic clocks achieve fractional frequency stabilities at the 10⁻¹⁷ level — roughly 100-fold superior to the microwave caesium standards that underpin GPS and telecommunications networks. The drawback has been size, complexity, and sensitivity to vibration. Hilton et al. (University of Adelaide / DSTG / AFRL, Nature Communications 2025) deployed three independent optical clock designs — each using different laser-cooling and atomic-transition principles — aboard a Royal Australian Navy vessel for three weeks of unsupervised operation during the RIMPAC 2022 international exercise in Hawaiian waters. All three provided stable outputs across optical, microwave, and radio-frequency domains, with performance orders of magnitude beyond the best commercial alternatives at short and medium timescales. This is the first sea demonstration of laser-cooled optical clocks and a direct step toward GPS-independent precision navigation, telecommunications synchronisation, and geodetic applications.

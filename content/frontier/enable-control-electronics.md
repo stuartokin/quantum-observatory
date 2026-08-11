@@ -56,11 +56,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'PRX Quantum 5, 010326 confirmed via APS abstract page, arXiv:2302.11538, InspireHEP, and citation in integration paper arXiv:2601.03922. 14 nm FinFET at 4 K, 23 mW/qubit, cross-resonance gate, and gate error figures (8×10⁻⁴ single-qubit, 1.4×10⁻² two-qubit) all confirmed. E4 correct. No changes made.'
 ---
 
 Superconducting qubits live inside dilution refrigerators cooled to millikelvin temperatures. Controlling them has traditionally required thousands of cables routed from room-temperature electronics — a wiring problem that grows worse as qubit counts increase. One solution is to place the control electronics inside the refrigerator itself. IBM Research demonstrated a 14 nm CMOS chip that operates at 4 K, generating the microwave pulses needed to control transmon qubits and successfully performing a two-qubit gate. The chip consumed just 23 mW per qubit and achieved gate errors comparable to room-temperature control systems, showing that cryogenic integration is feasible.

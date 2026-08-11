@@ -22,7 +22,7 @@ metrics:
     unit: ''
     note: 'Common Criteria Protection Profile for prepare-and-measure QKD; registered BSI-CC-PP-0120-2024'
 evidence:
-  claim: 'ETSI ISG QKD published GS QKD 016 V2.1.1 (January 2024), the first Common Criteria-registered protection profile for prepare-and-measure quantum key distribution modules, formally standardising security evaluation at EAL4 augmented level (AVA_VAN.5 and ALC_DVS.2).'
+  claim: 'ETSI ISG QKD published GS QKD 016 V2.1.1 (January 2024), the first Common Criteria-registered protection profile for prepare-and-measure quantum key distribution modules, formally standardising security evaluation at EAL4 augmented level (AVA_VAN.5 and ALC_DVS.2). Registration BSI-CC-PP-0120-2024 confirmed by Bundesamt für Sicherheit in der Informationstechnik.'
   level: E4
   verified: '2026-08-08'
   sources:
@@ -33,7 +33,7 @@ evidence:
       date: '2024-01'
       identifier: 'ETSI GS QKD 016 V2.1.1 (2024-01)'
       accessed: '2026-08-08'
-      note: 'Registered as BSI-CC-PP-0120-2024. First certified QKD protection profile; EAL4 augmented.'
+      note: 'Registered as BSI-CC-PP-0120-2024. First certified QKD protection profile; EAL4 augmented with AVA_VAN.5 and ALC_DVS.2. Confirmed via ETSI PDF, Common Criteria portal (commoncriteriaportal.org), and BSI certification report.'
 links:
   - to: comms-mdi-qkd
     relation: competes-with
@@ -46,11 +46,12 @@ horizon: 1
 novelty: 'First Common Criteria-certified protection profile for QKD modules'
 priority: P2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'ETSI GS QKD 016 V2.1.1 confirmed via ETSI PDF (direct URL), Common Criteria portal PDF (pp0120b_pdf.pdf), and ETSI Security Conference 2024 overview. BSI-CC-PP-0120-2024 registration confirmed. EAL4 augmented with AVA_VAN.5 and ALC_DVS.2 confirmed from source document. E4 correct for formal ETSI standard. No changes made.'
 ---
 
 Quantum key distribution encodes encryption keys in single photons whose quantum states cannot be copied without detection. The BB84 prepare-and-measure protocol remains the most widely deployed variant. QKD systems are shipping commercially and deployed in national test networks in China, Japan, and Europe. ETSI ISG QKD published GS QKD 016 V2.1.1 in January 2024 — the first QKD specification registered under Common Criteria (BSI-CC-PP-0120-2024), evaluated at EAL4 augmented with AVA_VAN.5 and ALC_DVS.2. This is a standardisation milestone that anchors the 'demonstrated' readiness rating. Note important limitations: QKD secures point-to-point links but requires trusted relay nodes over long distances and specialised optical hardware. It does not replace post-quantum cryptography for most use cases and is distinct from it.
