@@ -37,17 +37,31 @@ has looked. Conflating them once made surface codes — demonstrated
 experimentally since 2014 — read as untested.
 *Decided 9 Aug 2026.*
 
+**A peer-reviewed experimental paper is E4 whoever wrote it**, including a
+vendor's own laboratory. Peer review and replication are different things: E4 is
+the first, E5 the second. Rating a vendor's Nature paper E3 because it has not
+been replicated confuses the two and applies a standard the board does not apply
+to universities.
+*Decided 11 Aug 2026, after arch-photonic sat at E3 on a Nature paper through
+three reviewer runs.*
+
 **E5 requires independent replication by a different institution.** A follow-up
 by the same team is not replication, however many papers deep.
 
+**Replication on a different physical platform counts for E5, and counts more
+than replication on the same one.** Two groups reaching the same result with
+unrelated hardware is stronger evidence than two groups with identical kit.
+
+**The claim must state the phenomenon replicated, not the number.** Where two
+experiments report similar figures on different platforms, the agreement of the
+figures is usually coincidence — different code distances, different error
+models. What is established is that the effect is real. Say that, and do not
+imply the measurement itself was reproduced.
+*Decided 11 Aug 2026, on below-threshold surface code operation demonstrated by
+Google on superconducting hardware and by Harvard/MIT on neutral atoms.*
+
 **A preprint is E3**, including a preprint from a large laboratory, and
 including one cited widely by others. Peer review is the line.
-
-**A preprint that has since appeared in a peer-reviewed journal may be promoted
-to E4 only against the journal record itself** — volume, page or DOI. Secondary
-reports that publication has occurred are not sufficient, however many agree. If
-the record cannot be reached directly, leave the level where it is and say so.
-*Decided 9 Aug 2026, after entanglement-distribution.*
 
 ---
 
@@ -96,6 +110,13 @@ and report how many were suppressed and of what kind.
 
 ## Scope
 
+**A result repeatedly cited as corroboration for another item probably deserves
+its own.** When three or more runs flag the same paper as bigger than the note
+it sits in, that repetition is the signal. Corroboration supports a claim; a
+distinct result makes one.
+*Decided 11 Aug 2026, after four runs flagged Bluvstein et al. Nature 649 as
+warranting its own entry rather than a footnote on arch-neutral-atom.*
+
 **Only Scout may add topics.** Sourcer, Verifier and Reviewer revise what exists.
 A genuine new finding goes in the summary under *Worth Scout's attention*, not
 into a file.
@@ -112,34 +133,3 @@ the one it evidences, not split.** Three items where two would sit unsourced for
 months is not an improvement.
 *Decided 9 Aug 2026, on arch-topological, which conflated Majorana zero modes,
 fractional quantum Hall anyons and Floquet codes.*
-
-**Readiness describes the technology, not the risk it addresses.** An item that
-conflates the two should be reframed around the technology, with the risk stated
-in the claim rather than the level. Where a threat model is recognised but no
-instance is evidenced, that is `emerging` — not `demonstrated`.
-*Decided 9 Aug 2026, after sense-grid-timing framed GPS-spoofing risk as a
-timing capability, and harvest-now-decrypt-later used `demonstrated` to mean the
-threat model is acknowledged.*
-
-**An item's title must not imply a demonstration that does not exist.** Where
-only resource estimates exist, name the gap rather than the achievement —
-"Hardware gap to X" rather than "X at scale". Four separate runs independently
-flagged `algo-shor` for this before it was changed.
-*Decided 9 Aug 2026.*
-
-## Proposed by the steward, 2026-08-11
-
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
-
-**A P0 or P1 item must include summary, plain, qdayImpact, qdayReasoning, and novelty in addition to the schema-required fields. Schema validity alone is not sufficient for items the board highlights.**
-
-A P1 item that passes schema validation but omits qdayImpact, qdayReasoning, and novelty cannot do its job of informing decision-makers; the schema permits omission but the board's purpose does not.
-
-*Proposed 2026-08-11, after arch-neutral-atom was P1 and lacked qdayImpact, qdayReasoning, and novelty across multiple review runs despite passing schema validation. Not yet confirmed by a person.*
-
-**A formally published NIST Interagency or Internal Report (NIST IR) with a DOI is E4. A NIST project page for a forthcoming standard, a preliminary draft, or an initial public draft is E3 at most. The line is publication, not selection or announcement.**
-
-NIST IRs are formally published with DOIs and editorial review, equivalent in authority to NIST SPs and FIPS for evidence purposes. A project page or draft document lacks that status regardless of the importance of what it describes.
-
-*Proposed 2026-08-11, after pqc-hqc (NIST IR 8545, formally published) correctly rated E4; pqc-fips-206-falcon (CSRC project page, unpublished FIPS) correctly rated E3 — the distinction between these two cases needed a recorded rule. Not yet confirmed by a person.*

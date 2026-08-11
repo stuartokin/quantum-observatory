@@ -336,3 +336,21 @@ you think the filename or the source implies it: `schema`, `id`, `headline`,
 Begins with `---` on the first line, closes its front matter with `---`. No code
 fence, no heading above it. Quote any value containing a colon. YAML doubles an
 apostrophe inside single quotes and has no backslash escape.
+
+## A focus instruction is the whole job
+
+When a focus instruction names something specific — an item to add, a paper to
+attach, a claim to check — **do that and stop.** Do not carry on with your
+standing work in the same run.
+
+A person writing a focused instruction is asking for one thing, usually because
+they have decided it and want it done. Adding three items when one was asked for
+means they now have to review two they did not request, which costs them exactly
+the attention the instruction was meant to save.
+
+If you notice something else worth doing while you are there, put it under
+**Worth Scout's attention** in your summary. That is what the section is for.
+
+The exception is an instruction that plainly invites breadth — "sweep January",
+"look at the applications constellation". Then the focus *is* the standing work
+and you do as much of it as the budget allows.

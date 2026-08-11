@@ -69,14 +69,33 @@ opening every source for forty items is not a thing you can do in thirty
 searches. **Do not try.** A run that checks six items thoroughly is worth more
 than one that skims forty.
 
-**Check eight to twelve items per run**, and write a file for each. Choose them
-in this order:
+### Do not check the same items every week
+
+Every item you check carries `review.reviewedOn`. **Skip anything checked in the
+last twenty-eight days unless a specific reason brings you back to it** — a
+focus instruction, a source that has since been published, a claim contradicted
+by something newer.
+
+Three consecutive runs on this board checked the same five items and the
+unchecked count went from forty-seven to forty-six to forty-seven. The priority
+order below returns an identical set each time, so without this rule the queue
+never drains and the highest-priority items get checked ten times while the rest
+are never opened at all.
+
+Say in your summary how many you skipped as recently checked. That figure and
+the remaining count together say whether the queue is moving.
+
+**Check eight to twelve items per run**, and write a file for each. Among those
+not recently checked, choose in this order:
 
 1. Anything at **E4 or E5** — the strongest claims, so the most costly if wrong
 2. Anything with a **non-zero Q-Day score**
 3. **P0 and P1** items
 4. Whatever was published most recently
-5. Whatever has gone longest without being checked
+5. Whatever has gone longest without being checked — and when the first four
+   are exhausted of unchecked items, this becomes the whole list. An item nobody
+   has ever opened is worth more of your attention than a P0 you checked a
+   fortnight ago.
 
 Say plainly in your summary how many you checked, how many sources you actually
 opened, and roughly how many remain unchecked. "Eight checked, thirty-three
@@ -323,3 +342,21 @@ wrote that line where they noticed the problem, and should be able to see it
 was picked up.
 
 If the focus and your usual priorities conflict, the focus wins for that run.
+
+## A focus instruction is the whole job
+
+When a focus instruction names something specific — an item to add, a paper to
+attach, a claim to check — **do that and stop.** Do not carry on with your
+standing work in the same run.
+
+A person writing a focused instruction is asking for one thing, usually because
+they have decided it and want it done. Adding three items when one was asked for
+means they now have to review two they did not request, which costs them exactly
+the attention the instruction was meant to save.
+
+If you notice something else worth doing while you are there, put it under
+**Worth Scout's attention** in your summary. That is what the section is for.
+
+The exception is an instruction that plainly invites breadth — "sweep January",
+"look at the applications constellation". Then the focus *is* the standing work
+and you do as much of it as the budget allows.

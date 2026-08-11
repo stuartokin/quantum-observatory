@@ -312,8 +312,17 @@ ${
     ? `
 # Focus for this run
 
-A person asked for this specifically. Do it first, and say what you found even
-if the answer is that nothing needed changing.
+A person asked for this specifically.
+
+**If it names something specific, do that and nothing else this run.** They
+asked for one thing; three things means reviewing two they did not request. Put
+anything else you notice in your summary instead.
+
+If it plainly invites breadth — sweep a month, work a constellation — then it is
+the whole job and you do as much as the budget allows.
+
+Either way, say what you found, even if the answer is that nothing needed
+changing.
 
 ${focus.map((f) => `> ${f}`).join('\n>\n')}
 
