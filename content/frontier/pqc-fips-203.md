@@ -37,9 +37,12 @@ qdayImpact: 0
 qdayReasoning: 'A defence, not a capability. Changes exposure, not the date.'
 country: [US]
 review:
-  state: reviewed
-  by: human
-  'on': '2026-08-07'
+  state: agent-reviewed
+  by: agent
+  agent: reviewer
+  agentMergedOn: '2026-08-04'
+  reviewedOn: '2026-08-11'
+  note: 'NIST news release and csrc.nist.gov/pubs/fips/203/final confirmed FIPS 203 published 2024-08-13. Federal Register (2024-08-14) confirms simultaneous publication of FIPS 203, 204, and 205. E4 correct for formally published FIPS standard. Human review 2026-08-07 noted; no corrections required.'
 confidence: high
 status: published
 added: '2026-08-04'

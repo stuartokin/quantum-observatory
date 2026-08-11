@@ -38,8 +38,8 @@ evidence:
       date: '2026-04-11'
       identifier: 'arXiv:2604.10243 [quant-ph]'
       doi: 10.48550/arXiv.2604.10243
-      accessed: '2026-08-08'
-      note: 'Krelina, Tefek, Seskir, Durak (QUBITRIUM B.V. / KIT). 24-page assessment; conclusion is cautionary for near-term grid deployment.'
+      accessed: '2026-08-11'
+      note: 'Krelina, Tefek, Seskir, Durak (QUBITRIUM B.V., Delft / KIT Karlsruhe / Özyeğin University). 24-page assessment; conclusion is cautionary for near-term grid deployment. Confirmed via arXiv abstract and HTML version.'
 confidence: high
 status: published
 links:
@@ -48,11 +48,12 @@ links:
   - to: quantum-sensing-grid
     relation: evidence-for
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'arXiv:2604.10243 confirmed via arxiv.org abstract and HTML: Krelina, Tefek, Seskir, Durak (QUBITRIUM B.V. / KIT). Cautionary conclusion on quantum timing for grid applications confirmed from abstract. E3 correct for preprint. Item was agent-merged; this is its first agent-review. No corrections needed.'
 ---
 
 The primary source is cautionary: quantum timing cannot practically replace GPS-based grid synchronisation in the near-to-medium term. Readiness correctly stays at emerging. The paper is a preprint (E3); no independent replication has been found. The board item may be slightly badly framed — the risk being addressed is GPS spoofing vulnerability, not quantum sensing capability per se; a better frame might be "GPS-independent timing for grid protection".
