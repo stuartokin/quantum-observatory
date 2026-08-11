@@ -35,7 +35,7 @@ evidence:
       identifier: 'Sci. Adv. 11, eadx3223 (2025)'
       doi: '10.1126/sciadv.adx3223'
       accessed: '2026-08-08'
-      note: 'First quantum memory integrated into a complete cryptographic protocol. Cold-atom EIT memory, Laboratoire Kastler Brossel, Sorbonne/CNRS Paris. Open access.'
+      note: 'First quantum memory integrated into a complete cryptographic protocol. Cold-atom EIT memory, Laboratoire Kastler Brossel, Sorbonne/CNRS Paris. Open access via PMC (PMID confirmed). Wiesner quantum money protocol.'
 confidence: high
 status: published
 links:
@@ -47,11 +47,12 @@ links:
     relation: enables
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Science Advances 11(38) eadx3223 confirmed via science.org abstract, PMC full text, phys.org news article, and CNRS press page. Mamann et al., Laboratoire Kastler Brossel / Sorbonne / CNRS / ENS-Université PSL confirmed as authors. First-quantum-memory-in-complete-cryptographic-protocol claim confirmed (direct quote from Mamann in press coverage). Wiesner quantum money protocol correctly identified. E4 correct for peer-reviewed Science Advances paper. No changes made.'
 ---
 
 Quantum memories are essential nodes in any quantum repeater architecture. The 2025 Science Advances result is the first time a quantum memory met the noise and efficiency requirements of a real cryptographic primitive, not just a laboratory benchmark.

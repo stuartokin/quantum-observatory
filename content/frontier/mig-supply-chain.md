@@ -39,7 +39,7 @@ evidence:
       publisher: 'CISA / NSA / NIST'
       date: '2023-08-01'
       accessed: '2026-08-08'
-      note: 'Joint national authority factsheet. Supply chain assessment, vendor engagement, and vendor responsibilities are named sections. Not a peer-reviewed experiment; E2 ceiling.'
+      note: 'Joint national authority factsheet. Supply chain assessment, vendor engagement, and vendor responsibilities are named sections. Confirmed accessible via cisa.gov and media.defense.gov mirrors. Not a peer-reviewed experiment; E2 ceiling.'
     - url: https://www.ncsc.gov.uk/guidance/pqc-migration-timelines
       role: corroborating
       title: 'Timelines for migration to post-quantum cryptography'
@@ -52,11 +52,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'CISA factsheet confirmed accessible at cisa.gov resource page and media.defense.gov (DoD mirror). Factsheet content confirmed via CISA news release and multiple secondary sources — supply chain assessment, technology vendor engagement, and vendor responsibilities are explicitly named sections. No empirical supplier readiness data in the factsheet. E2 correct — authoritative government advisory, not a peer-reviewed experiment. NCSC March 2025 URL not independently verified this run but was confirmed in prior sourcer pass. No changes made.'
 ---
 
 Supply chain PQC readiness is a named risk category in the joint CISA/NSA/NIST factsheet and in NCSC''s March 2025 migration guidance. No empirical study of actual supplier readiness rates exists. This item is correctly at E2: authoritative guidance, not measured data. Raising it requires published measurement.

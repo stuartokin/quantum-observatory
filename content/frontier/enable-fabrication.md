@@ -58,11 +58,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Nature 634, 74-79 confirmed via nature.com abstract (DOI 10.1038/s41586-024-07941-9), PMC full text, ResearchGate, and imec blog. 98.25% yield (393/400 qubits), >100 µs relaxation and coherence, 300 mm CMOS pilot line, optical lithography and reactive-ion etching — all confirmed. imec and KU Leuven authorship confirmed. E4 correct for peer-reviewed Nature paper. No changes made.'
 ---
 
 Building quantum computers at the scale required for fault-tolerant computation will require manufacturing millions of qubits reliably and cheaply. Imec, Belgium's leading semiconductor research centre, demonstrated in 2024 that superconducting transmon qubits can be made on 300 mm silicon wafers in a standard CMOS foundry — the same industrial equipment used for modern microchips. The result: 98.25% of qubits worked correctly, with coherence times over 100 microseconds, matching what smaller research laboratories achieve with bespoke techniques. This is a significant step toward industrial quantum computing supply chains.

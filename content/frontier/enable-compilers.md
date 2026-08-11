@@ -52,11 +52,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'Quantum 8, 1354 (2024) confirmed via five independent citations in recent arXiv papers (arXiv:2511.20947, 2311.18042, 2410.14891, 2605.14042, and dl.acm.org). DOI 10.22331/q-2024-05-22-1354 resolves correctly. 80M instructions for 128-qubit QFT at streaming speed confirmed. E4 correct for peer-reviewed Quantum journal paper. No changes made.'
 ---
 
 Fault-tolerant quantum computers must translate human-readable algorithms into millions of precise physical operations suited to the error-correction code they run. Compilers do this. Watkins et al. built and published the first compiler capable of handling very large surface-code computations using lattice surgery, processing 80 million logical instructions for a 128-qubit quantum Fourier transform in seconds — fast enough to keep pace with a real device. The compiler is open source and includes a resource estimator, making it a practical tool for planning future fault-tolerant systems.

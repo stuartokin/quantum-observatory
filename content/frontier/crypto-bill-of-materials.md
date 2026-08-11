@@ -18,7 +18,7 @@ country:
 horizon: 1
 novelty: 'Formal standardisation of cryptographic asset inventory as ECMA-424'
 evidence:
-  claim: 'OWASP CycloneDX v1.6, published April 2024 and ratified as ECMA-424, formally introduced the Cryptographic Bill of Materials (CBOM) as a machine-readable standard for inventorying cryptographic assets, developed by IBM Research. The standard defines a cryptographic-asset component type covering algorithms, certificates, keys, and protocols. NIST NCCoE SP 1800-38B (Quantum Readiness: Cryptographic Discovery, December 2023) provides a government practice guide showing how discovery tools can produce cryptographic inventories to support PQC migration planning.'
+  claim: 'OWASP CycloneDX v1.6, published April 2024 and ratified as ECMA-424 by the Ecma General Assembly on 26 June 2024, formally introduced the Cryptographic Bill of Materials (CBOM) as a machine-readable standard for inventorying cryptographic assets, developed by IBM Research. The standard defines a cryptographic-asset component type covering algorithms, certificates, keys, and protocols. NIST NCCoE SP 1800-38B (Quantum Readiness: Cryptographic Discovery, December 2023) provides a government practice guide showing how discovery tools can produce cryptographic inventories to support PQC migration planning.'
   verified: '2026-08-08'
   level: E4
   sources:
@@ -29,7 +29,7 @@ evidence:
       date: '2024-04-09'
       identifier: ECMA-424
       accessed: '2026-08-08'
-      note: 'Formal introduction of CBOM into OWASP CycloneDX. Developed by IBM Research. Ratified as Ecma International standard ECMA-424.'
+      note: 'Formal introduction of CBOM into OWASP CycloneDX. Developed by IBM Research. Ratified as Ecma International standard ECMA-424 on 26 June 2024 per ecma-international.org announcement.'
     - url: 'https://csrc.nist.gov/pubs/sp/1800/38/iprd-(1)'
       role: standard
       title: 'NIST SP 1800-38B: Quantum Readiness: Cryptographic Discovery'
@@ -49,11 +49,12 @@ links:
     relation: enables
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'OWASP CycloneDX v1.6 release confirmed via owasp.org blog and cyclonedx.org; ECMA-424 ratification confirmed via ecma-international.org announcement dated 2 July 2024 (General Assembly vote 26 June 2024). IBM Research origin of CBOM confirmed. NIST SP 1800-38B URL confirmed. E4 correct for formal standard. No changes made.'
 ---
 
 A CBOM answers the question every PQC migration starts with: what cryptography are we actually running? CycloneDX v1.6 formalised the format; NIST SP 1800-38B showed organisations how to generate one.

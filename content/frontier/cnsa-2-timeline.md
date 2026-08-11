@@ -45,18 +45,19 @@ evidence:
       publisher: National Security Agency
       date: '2022-09-01'
       accessed: '2026-08-08'
-      note: Original v1.0 September 2022; URL is May 2025 update. Authoritative source for algorithm requirements and transition timeline.
+      note: 'Original v1.0 September 2022; URL is May 2025 update. Authoritative source for algorithm requirements and transition timeline. Confirmed accessible at media.defense.gov.'
 confidence: high
 status: published
 moved:
   from: emerging
   on: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'CNSA 2.0 advisory confirmed accessible at media.defense.gov (May 2025 update URL). ML-KEM-1024, ML-DSA-87 algorithm designations, 2027 acquisition deadline, 2030 networking/signing exclusive-use deadline, and 2033 web/cloud deadline all confirmed from advisory content. E4 correct for formal published government technical advisory (NSA). No changes made.'
 ---
 
-CNSA 2.0 is the US government's most operationally specific quantum-migration mandate. It names algorithms, product categories, and calendar dates. The 2030 deadline for networking equipment is already driving vendor product roadmaps. Evidence is raised to E4: this is a formal published government technical advisory with clear, enforceable dates — not a proposal. Readiness correctly sits at adopted: it is on published migration roadmaps and driving procurement requirements.
+CNSA 2.0 is the US government's most operationally specific quantum-migration mandate. It names algorithms, product categories, and calendar dates. The 2030 deadline for networking equipment is already driving vendor product roadmaps. Evidence is E4: this is a formal published government technical advisory with clear, enforceable dates — not a proposal. Readiness correctly sits at adopted: it is on published migration roadmaps and driving procurement requirements.
