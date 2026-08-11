@@ -13,7 +13,7 @@ import type { FrontierItem } from '../../content/frontierTypes'
  * consequential change float to the top.
  */
 
-export type NewsKind = 'moved' | 'sourced' | 'agent' | 'reviewed' | 'vetoed'
+export type NewsKind = 'added' | 'moved' | 'sourced' | 'agent' | 'reviewed' | 'vetoed'
 
 export interface NewsEntry {
   id: string
@@ -39,6 +39,7 @@ export interface NewsWeek {
 }
 
 const KIND_WEIGHT: Record<NewsKind, number> = {
+  added: 0.45,
   moved: 0.55,
   sourced: 0.3,
   agent: 0.2,
@@ -101,6 +102,27 @@ function entriesFor(item: FrontierItem): NewsEntry[] {
       date: item.review.on,
       line: item.review.note ? `Vetoed — ${item.review.note}` : 'Vetoed and removed from the board',
       weight: Math.min(1, KIND_WEIGHT.vetoed + boost),
+    })
+  }
+
+  /**
+   * A new topic on the board is a change, sourced or not.
+   *
+   * This only recorded an item once evidence was attached — so Scout adding
+   * three topics produced nothing in Journals at all, and the first anyone
+   * knew of them was seeing unfamiliar bodies on the board. What Scout does is
+   * decide something belongs here; that decision is the news.
+   */
+  if (item.added && !isSourced(item)) {
+    out.push({
+      ...base,
+      kind: 'added',
+      date: item.added,
+      line:
+        item.origin === 'agent'
+          ? `Added by the ${item.review?.agent ?? 'scout'} agent — no evidence attached yet`
+          : 'Added to the board — no evidence attached yet',
+      weight: Math.min(1, KIND_WEIGHT.added + boost),
     })
   }
 

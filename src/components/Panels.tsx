@@ -5,6 +5,7 @@ import type { Forecast } from '../content/forecast'
 /* ---------------------------------------------------------------- */
 
 const KIND_LABEL: Record<string, string> = {
+  added: 'added',
   moved: 'moved',
   sourced: 'sourced',
   agent: 'agent',

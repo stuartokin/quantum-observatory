@@ -28,7 +28,16 @@ const FALLBACK_ICON = (label: string) =>
 
 const MIN_W = 132
 
-export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent: string }) {
+export function Toolbar({
+  buttons,
+  accent,
+  resetSignal,
+}: {
+  buttons: ToolbarButton[]
+  accent: string
+  /** Changes when Reset is pressed. Puts the bar back where it started. */
+  resetSignal?: number
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const move = useRef<{ ox: number; oy: number; x: number; y: number; moved: boolean } | null>(null)
   const size = useRef<{ ox: number; w: number } | null>(null)
@@ -59,6 +68,27 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
    */
   const compact = (width ?? Infinity) < 560 || viewport < 760
 
+  /**
+   * Reset puts it back.
+   *
+   * A window that has been dragged somewhere unhelpful should have a way home
+   * that does not require working out what went wrong. Clearing position and
+   * width returns it to the centre at its natural size.
+   */
+  useEffect(() => {
+    if (resetSignal === undefined) return
+    setPos(null)
+    setWidth(null)
+    setCollapsed(false)
+    const el = ref.current
+    if (el) {
+      el.style.left = ''
+      el.style.top = ''
+      el.style.width = ''
+      el.style.transform = ''
+    }
+  }, [resetSignal])
+
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       const el = ref.current
@@ -69,7 +99,10 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
           MIN_W,
           Math.min(window.innerWidth - 24, size.current.w + (e.clientX - size.current.ox) * 2),
         )
+        // Width only. Height comes from the content, and anything that sets it
+        // turns a toolbar into a blob.
         el.style.width = `${w}px`
+        el.style.height = ''
         // Commit live, not on release. Committing at pointerup meant the bar
         // only became icons after you let go, which reads as it not working.
         setWidth(w)
@@ -79,8 +112,11 @@ export function Toolbar({ buttons, accent }: { buttons: ToolbarButton[]; accent:
       const d = move.current
       if (!d) return
       if (Math.hypot(e.clientX - d.ox, e.clientY - d.oy) > 3) d.moved = true
-      el.style.left = `${Math.max(4, Math.min(window.innerWidth - 90, d.x + e.clientX - d.ox))}px`
-      el.style.top = `${Math.max(4, Math.min(window.innerHeight - 44, d.y + e.clientY - d.oy))}px`
+      // Keep it on screen and keep it a bar: never taller than its content,
+      // never wider than the viewport, never off the top.
+      el.style.left = `${Math.max(4, Math.min(window.innerWidth - 120, d.x + e.clientX - d.ox))}px`
+      el.style.top = `${Math.max(4, Math.min(window.innerHeight - 52, d.y + e.clientY - d.oy))}px`
+      el.style.height = ''
       el.style.transform = 'none'
     }
 

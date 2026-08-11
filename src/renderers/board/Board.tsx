@@ -4,6 +4,7 @@ import { allFrontier } from '../../content/frontier'
 import type { FrontierItem, Readiness } from '../../content/frontierTypes'
 import { PILLAR_SPECTRUM } from '../../palette'
 import { constellationColour, constellationMuted } from '../../constellationPalette'
+import { formatBuildTime } from '../../buildInfo'
 import {
   LEVELS,
   CONSTELLATIONS,
@@ -173,6 +174,8 @@ export function Board() {
   /** Canvases inside frames need telling when their box changed. */
   const [resizeTick, setResizeTick] = useState(0)
   const bump = () => setResizeTick((n) => n + 1)
+  /** Reset puts the toolbar back too, not only the frames. */
+  const [resetTick, setResetTick] = useState(0)
 
   /** Stacking order. Last in the list is nearest the reader. */
 
@@ -376,6 +379,7 @@ export function Board() {
       onClick: () => {
         setView({ k: 1, tx: 0, ty: 0 })
         setFrames(defaultLayout(window.innerWidth, window.innerHeight))
+        setResetTick((n) => n + 1)
         bump()
       },
     },
@@ -533,6 +537,9 @@ export function Board() {
                   reviewed <b>{debt.weeks}w</b> ago
                 </span>
               )}
+              <span title={`Site built ${formatBuildTime()}`}>
+                built <b>{formatBuildTime().replace(/,.*/, '')}</b>
+              </span>
               <span style={{ opacity: 0.5 }}>v{VERSION}</span>
             </div>
           )}
@@ -877,7 +884,7 @@ export function Board() {
         </Frame>
       )}
 
-      <Toolbar buttons={buttons} accent={colour} />
+      <Toolbar buttons={buttons} accent={colour} resetSignal={resetTick} />
     </main>
   )
 }

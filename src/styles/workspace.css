@@ -539,3 +539,28 @@
   margin-right: 6px;
 }
 .frame__action { align-items: center; gap: 6px; }
+
+/* ---------- Data change log ---------- */
+
+.data-log { list-style: none; margin: 4px 0 10px; padding: 0; }
+.data-log li {
+  display: grid; gap: 2px; padding: 6px 0 6px 10px;
+  border-left: 2px solid var(--hairline);
+}
+.data-log li[data-by='human'] { border-left-color: var(--line-cyber); }
+.data-log li[data-kind='moved'] { border-left-color: var(--line-quantum); }
+.data-log li[data-kind='vetoed'] { border-left-color: var(--line-energy); }
+.data-log li[data-kind='headline'] { border-left-color: var(--line-ai); }
+.data-log__kind {
+  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.data-log__title { font-size: var(--step--1); color: var(--ink); line-height: 1.35; }
+.data-log__detail { font-size: 0.7rem; color: var(--ink-muted); line-height: 1.5; }
+
+/* A toolbar is a bar. Height comes from its content and nothing else. */
+.toolbar {
+  height: auto !important;
+  max-height: 40vh;
+  touch-action: none;
+}

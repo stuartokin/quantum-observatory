@@ -4,6 +4,14 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
 
 export default defineConfig({
+  /**
+   * When the site was last built, which is when content last reached a reader.
+   * Front matter records dates but not times, so this is the only honest
+   * timestamp available — and it is the one that answers "how fresh is this".
+   */
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   plugins: [frontmatter(), react()],
   // Content lives outside /src so agents have one obvious place to write.
   resolve: {

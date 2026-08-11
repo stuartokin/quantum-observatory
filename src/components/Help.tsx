@@ -4,6 +4,9 @@ import { items as articles } from '../content/loader'
 import { GlyphMark } from './GlyphMark'
 import { Markdown } from './Markdown'
 import { buildDecisions, tally } from '../renderers/board/decisions'
+import { buildDataLog, lastDataChange } from '../renderers/board/dataLog'
+import { allNews } from '../content/newsroom'
+import { BUILD_TIME, formatBuildTime } from '../buildInfo'
 import { RELEASES } from '../releases'
 import sourceRegister from '/agents/_sources.md?raw'
 import decisionsDoc from '/agents/_decisions.md?raw'
@@ -62,7 +65,7 @@ export default function Help({ colour, pool }: { colour: string; pool: FrontierI
 
   const SECTIONS = [
     'reading', 'controls', 'provenance', 'decisions', 'sources',
-    'prompts', 'design', 'operating', 'plan', 'versions', 'elsewhere',
+    'prompts', 'design', 'operating', 'plan', 'data', 'versions', 'elsewhere',
   ]
   const allOpen = SECTIONS.every((id) => open.has(id))
 
@@ -90,6 +93,8 @@ export default function Help({ colour, pool }: { colour: string; pool: FrontierI
   }, [pool])
 
   const decisions = useMemo(() => buildDecisions(pool), [pool])
+  const dataLog = useMemo(() => buildDataLog(pool, allNews), [pool])
+  const lastChange = useMemo(() => lastDataChange(dataLog), [dataLog])
   const counts = useMemo(() => tally(decisions), [decisions])
   const [agentDoc, setAgentDoc] = useState<'scout' | 'sourcer' | 'verifier' | 'reviewer'>('scout')
   const PROMPTS = {
@@ -295,6 +300,43 @@ export default function Help({ colour, pool }: { colour: string; pool: FrontierI
 
       <Section id="plan" title="The agent plan" open={open.has('plan')} onToggle={toggle}>
         <Markdown source={agentPlan} />
+      </Section>
+
+      <Section id="data" title="What changed in the data" open={open.has('data')} onToggle={toggle}>
+        <dl className="metrics">
+          <div><dt>Content last changed</dt><dd>{lastChange ?? '—'}</dd></div>
+          <div><dt>Site last built</dt><dd>{formatBuildTime(BUILD_TIME)}</dd></div>
+          <div><dt>Days recorded</dt><dd>{dataLog.length}</dd></div>
+        </dl>
+        <p className="filter-group__note">
+          Front matter records dates but not times, so a change is dated to the
+          day. The build time is when that content last reached a reader, which
+          is the other half of the freshness question.
+        </p>
+
+        <p className="label">The last {Math.min(10, dataLog.length)} days on which anything changed</p>
+        {dataLog.slice(0, 10).map((day) => (
+          <details key={day.date} className="release">
+            <summary>
+              <strong>{day.date}</strong>
+              <span>
+                {day.changes.length} change{day.changes.length > 1 ? 's' : ''}
+              </span>
+            </summary>
+            <ul className="data-log">
+              {day.changes.map((c, i) => (
+                <li key={`${c.id}-${c.kind}-${i}`} data-kind={c.kind} data-by={c.by}>
+                  <span className="data-log__kind">
+                    {c.kind}
+                    {c.agent ? ` · ${c.agent}` : c.by === 'human' ? ' · person' : ''}
+                  </span>
+                  <span className="data-log__title">{c.title}</span>
+                  <span className="data-log__detail">{c.detail}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ))}
       </Section>
 
       <Section id="versions" title="What changed, by version" open={open.has('versions')} onToggle={toggle}>

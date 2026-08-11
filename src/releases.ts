@@ -24,6 +24,17 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.41.0',
+    date: '2026-08-11',
+    headline: 'A record of what changed in the content, not just the code.',
+    ui: [
+      'Help gains "What changed in the data": every addition, sourcing, readiness move, machine check, confirmation and veto, grouped by day, most recent ten days. Derived from the content itself, so it cannot drift from what the board holds.',
+      'The header statistics show when the site was last built. Front matter records dates but not times, so a change is dated to the day and the build time answers the other half of the freshness question.',
+      'A new topic now appears in Journals. It only recorded an item once evidence was attached, so Scout adding three topics produced nothing at all — and the first anyone knew of them was seeing unfamiliar bodies on the board.',
+      'The toolbar can no longer be dragged into a shape that is not a toolbar, and Reset puts it back where it started along with the frames.',
+    ],
+  },
+  {
     version: '0.40.0',
     date: '2026-08-11',
     headline: 'The key explains both halves of the grammar, in both views.',
@@ -115,16 +126,6 @@ export const RELEASES: Release[] = [
     agents: [
       'agents/_decisions.md holds every settled question and is read by all five agents before anything escalates. Vendor documents are E2 whatever their legal status; reviews cap at E3; downward corrections need no permission.',
       'That last rule was an over-restriction of mine: corrections to human-reviewed items were escalating even when the agent had already reached the right answer.',
-    ],
-  },
-  {
-    version: '0.23.0',
-    date: '2026-08-09',
-    headline: 'Help becomes the record.',
-    ui: [
-      'Eleven collapsible sections with expand all. The design log, operating guide, agent plan, source register and all agent prompts render from source rather than from copies, so they cannot drift.',
-      'A decision record derived from the board itself: every readiness change, downward correction and veto, tagged with who settled it.',
-      'Content statistics counted live rather than written into a changelog, where a number is wrong within a week.',
     ],
   },
 ]
