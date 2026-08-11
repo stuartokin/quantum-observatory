@@ -97,7 +97,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-11'
-  note: 'All sources confirmed in prior runs. No new sources checked this run. E3 correct — primary source is arXiv preprint. No level or readiness changes.'
+  note: 'All sources confirmed in prior runs. No new sources checked this run beyond confirming Gidney 2025 remains preprint-only (confirmed via arXiv and ResearchGate). E3 correct — primary source is arXiv preprint. No level or readiness changes.'
 ---
 
 Shor''s algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.

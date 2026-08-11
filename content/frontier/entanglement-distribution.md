@@ -20,7 +20,7 @@ metrics:
   - name: Previous record
     value: '~100'
     unit: km
-    note: Prior memory-memory demonstrations using quantum frequency conversion
+    note: 'Prior memory-memory demonstrations using quantum frequency conversion (Liu et al. Nature 2024 metropolitan network; Yu et al. Nature 2020 demonstrated 50 km). Paper states result exceeds previous demonstrations by more than four times.'
 horizon: 3
 qdayImpact: 0
 links:
@@ -47,8 +47,8 @@ evidence:
       date: '2026-06-16'
       identifier: 'Phys. Rev. Lett. 136, 240601 (2026)'
       doi: 10.1103/PhysRevLett.136.240601
-      accessed: '2026-08-10'
-      note: 'Xi-Yu Luo, Chao-Yang Wang, Ming-Yang Zheng, Bin Wang et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 16 June 2026. Luo is first author (Bin Wang is 4th author). Not yet independently replicated.'
+      accessed: '2026-08-11'
+      note: 'Xi-Yu Luo, Chao-Yang Wang, Ming-Yang Zheng, Bin Wang et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 16 June 2026. Luo is first author (Bin Wang is 4th author). Confirmed via ScienceAlert, DigiconAsia, ICO-Optics all citing published PRL paper. Not yet independently replicated.'
     - url: https://arxiv.org/abs/2504.05660
       role: preprint
       title: Entangling quantum memories over 420 km in fiber
@@ -77,7 +77,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-11'
-  note: 'Corrected author attribution: prior source note listed "Bin Wang, Xi-Yu Luo, Bo-Feng Gao et al." but arXiv:2504.05660 confirms Xi-Yu Luo is first author (Bin Wang is 4th). Claim corrected from "Wang, Luo et al." to "Luo et al." Metric note also updated. E4 correct for peer-reviewed PRL paper. Not yet independently replicated.'
+  note: 'PRL 136, 240601 re-confirmed this run via ScienceAlert, DigiconAsia, ICO-Optics all citing the published PRL paper. Author order confirmed: Xi-Yu Luo is first author (Bin Wang 4th). Previous record metric note updated to note both Yu et al. 2020 (50 km) and Liu et al. 2024 metropolitan context; paper states >4× improvement. E4 correct. No level or readiness changes.'
 ---
 
 Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
