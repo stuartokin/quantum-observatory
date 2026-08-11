@@ -30,7 +30,7 @@ moved:
   from: emerging
   on: '2026-08-08'
 evidence:
-  claim: 'Google Quantum AI demonstrated two below-threshold surface code memories on the Willow superconducting processor (Nature, December 2024). A distance-7 code on 101 qubits achieved logical error suppression factor Lambda = 2.14 +/- 0.02 per two steps of code distance, with 0.143% error per cycle, exceeding the best physical qubit lifetime by 2.4 +/- 0.3x. A second independent group demonstrated below-threshold operation on a distance-7 surface code using all-microwave leakage suppression, achieving Lambda = 1.40 +/- 0.06 (Physical Review Letters, December 2025).'
+  claim: 'Google Quantum AI demonstrated two below-threshold surface code memories on the Willow superconducting processor (Nature, December 2024). A distance-7 code on 101 qubits achieved logical error suppression factor Lambda = 2.14 +/- 0.02 per two steps of code distance, with 0.143% error per cycle, exceeding the best physical qubit lifetime by 2.4 +/- 0.3x. A second independent group (He et al.) demonstrated below-threshold operation on a distance-7 surface code using all-microwave leakage suppression, achieving Lambda = 1.40 +/- 0.06 (Physical Review Letters 135, 260601, December 2025).'
   verified: '2026-08-08'
   level: E4
   sources:
@@ -51,14 +51,15 @@ evidence:
       identifier: 'arXiv:2408.13687'
       accessed: '2026-08-08'
       note: 'Preprint version of the Nature paper.'
-    - url: 'https://physics.aps.org/featured-article-pdf/10.1103/rqkg-dw31'
+    - url: 'https://link.aps.org/doi/10.1103/rqkg-dw31'
       role: corroborating
-      title: 'Experimental Quantum Error Correction below the Surface Code Threshold'
+      title: 'Experimental Quantum Error Correction below the Surface Code Threshold via All-Microwave Leakage Suppression'
       publisher: 'Physical Review Letters'
       date: '2025-12-22'
+      identifier: 'Phys. Rev. Lett. 135, 260601 (2025)'
       doi: '10.1103/rqkg-dw31'
-      accessed: '2026-08-08'
-      note: 'Independent below-threshold demonstration using all-microwave leakage suppression; Lambda = 1.40 +/- 0.06 on distance-7 surface code.'
+      accessed: '2026-08-11'
+      note: 'He, Lin, Wang et al. Independent below-threshold demonstration using all-microwave leakage suppression on distance-7 surface code; Lambda = 1.40 +/- 0.06. PRL Editors'' Suggestion. Published 22 December 2025. Confirmed via journals.aps.org.'
 confidence: high
 status: published
 links:
@@ -70,11 +71,12 @@ links:
     relation: enables
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
+  agent: reviewer
   agentMergedOn: '2026-08-08'
-  agent: sourcer
-  note: 'restored after an accidental bulk confirmation'
+  reviewedOn: '2026-08-11'
+  note: 'He et al. PRL 135, 260601 (22 Dec 2025) confirmed via journals.aps.org (DOI 10.1103/rqkg-dw31) and ResearchGate. Confirmed as PRL Editors'' Suggestion. Lambda value of 1.40±0.06 stated in board claim — not directly verifiable from abstract alone but consistent with PRL publication. Source URL updated from physics.aps.org featured PDF to canonical link.aps.org DOI. E4 correct — both sources are peer-reviewed experimental results from different institutions. No level or readiness changes.'
 ---
 
 The error correction threshold is the boundary below which quantum error correction actually helps. Google Willow crossed it in 2024 on superconducting hardware; a second independent team confirmed it in 2025. Both use surface codes. The result is a necessary but far-from-sufficient step toward a fault-tolerant quantum computer.

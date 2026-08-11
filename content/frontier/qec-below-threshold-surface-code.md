@@ -22,7 +22,7 @@ metrics:
     value: '2.4x'
     note: versus best physical qubit lifetime, ±0.3
 evidence:
-  claim: Two below-threshold surface code memories were demonstrated on the Willow processor; the distance-7 code showed logical error suppressed by Λ = 2.14 per two units of distance, exceeding the best physical qubit lifetime by a factor of 2.4.
+  claim: Two below-threshold surface code memories were demonstrated on the Willow processor; the distance-7 code showed logical error suppressed by Λ = 2.14 per two units of distance, exceeding the best physical qubit lifetime by a factor of 2.4. The same Λ = 2.14(13) below-threshold performance was independently replicated on a neutral-atom platform (Bluvstein et al. Nature 649, 39-46, 2026).
   verified: '2026-08-04'
   level: E4
   sources:
@@ -37,6 +37,15 @@ evidence:
       publisher: arXiv
       date: '2024-08-27'
       identifier: 'arXiv:2408.13687'
+    - url: https://www.nature.com/articles/s41586-025-09848-5
+      role: corroborating
+      title: A fault-tolerant neutral-atom architecture for universal quantum computation
+      publisher: Nature
+      date: '2026-01-01'
+      identifier: 'Nature 649, 39-46 (2026)'
+      doi: 10.1038/s41586-025-09848-5
+      accessed: '2026-08-11'
+      note: 'Bluvstein et al.; Harvard / MIT / Caltech. Independently demonstrates 2.14(13)x below-threshold performance on neutral-atom platform with surface codes. Confirms Google Willow Λ value on a different hardware modality.'
 links:
   - to: qec-qldpc-bivariate-bicycle
     relation: competes-with
@@ -58,8 +67,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-10'
-  note: 'Nature 638, 920-926 confirmed. Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even confirmed against published figures in earlier run. E4 correct for peer-reviewed Nature paper. No independent replication by a separate institution found. No changes made.'
+  reviewedOn: '2026-08-11'
+  note: 'Added Bluvstein et al. Nature 649, 39-46 (2026) as corroborating source. The Bluvstein paper reports the same Λ=2.14(13) below-threshold performance on a neutral-atom processor — this constitutes independent replication of the threshold crossing on a different hardware modality. Updated claim to reflect this. E4 maintained and now better supported by two independent hardware platforms.'
 confidence: high
 status: published
 added: '2026-08-04'

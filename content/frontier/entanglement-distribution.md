@@ -76,8 +76,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-10'
-  note: 'Citation error corrected: APS PRL issue 24 listing confirms Bin Wang, Xi-Yu Luo, Bo-Feng Gao et al. (420 km paper) is PRL 136, 240601 (16 June 2026), not 240801. PRL 136, 240801 is a distinct paper about a memory-assisted nonlocal optical interferometer. DOI, identifier, URL, date, and source note updated accordingly. Claim updated to reflect Wang, Luo et al. author order per APS record. E4 level unchanged; correction is a citation fix, not an evidence reassessment.'
+  reviewedOn: '2026-08-11'
+  note: 'Previously reviewed 2026-08-10 (citation error corrected: PRL 136, 240601 not 240801). No new sources checked this run. All figures unchanged. E4 correct for peer-reviewed PRL paper. Not yet independently replicated.'
 ---
 
 Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Wang, Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
