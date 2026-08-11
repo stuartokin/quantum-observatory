@@ -29,7 +29,7 @@ metrics:
     note: 'Average infidelity 3.3(5)×10⁻⁴; Ransford et al. Nature 655 (2026)'
 evidence:
   claim: 'Ransford et al. (Quantinuum and Sandia National Laboratories, Nature 655, 81-86, June 2026) report Helios, a 98-qubit trapped-ion QCCD processor using 137Ba+ hyperfine qubits with all-to-all connectivity. Averaged over all operational zones in the system, average infidelities are 2.5(1)×10⁻⁵ for single-qubit gates, 7.9(2)×10⁻⁴ for two-qubit gates, and 3.3(5)×10⁻⁴ for SPAM. Sandia National Laboratories evaluated and verified the system under a DOE Cooperative Research and Development Agreement. The paper demonstrates performance beyond the reach of classical simulation on random circuit sampling benchmarks. Separate preprint work (Dasu et al., arXiv:2602.22211) shows 48 error-corrected logical qubits from the same 98-qubit hardware using iceberg codes at 2:1 overhead.'
-  verified: '2026-08-09'
+  verified: '2026-08-11'
   level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-026-10676-4
@@ -40,7 +40,7 @@ evidence:
       identifier: 'Nature 655, 81-86 (2026)'
       doi: 10.1038/s41586-026-10676-4
       accessed: '2026-08-11'
-      note: 'Ransford et al.; Quantinuum and Sandia National Laboratories. Peer-reviewed. Sandia co-authored and independently verified fidelity figures under DOE CRADA. Publisher correction issued 7 July 2026 (DOI 10.1038/s41586-026-10882-0); fidelity claims unchanged. Infidelities confirmed: 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM). Confirmed via PubMed PMID 42310465 and NatureAsia press release.'
+      note: 'Ransford et al.; Quantinuum and Sandia National Laboratories. Peer-reviewed. Sandia co-authored and independently verified fidelity figures under DOE CRADA (renewed May 2026 per Sandia LabNews). Publisher correction issued 7 July 2026 (DOI 10.1038/s41586-026-10882-0); fidelity claims unchanged. Infidelities confirmed: 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM). Confirmed via nature.com, Sandia LabNews, quantumcomputingreport.com.'
     - url: https://arxiv.org/abs/2511.05465
       role: preprint
       title: 'Helios: A 98-qubit trapped-ion quantum computer'
@@ -78,7 +78,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-09'
   reviewedOn: '2026-08-11'
-  note: 'Nature 655, 81-86 re-confirmed this run via nature.com abstract, PubMed PMID 42310465, NatureAsia press release. Fidelities 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM) confirmed from published paper. Sandia DOE CRADA co-authorship confirmed. Preprint SPAM discrepancy (4.8 vs 3.3 ×10⁻⁴) correctly documented. E4 correct. No changes made.'
+  note: 'Nature 655, 81-86 re-confirmed this run via nature.com abstract and quantumcomputingreport.com and Sandia LabNews (July 2026). Fidelities 2.5(1)×10⁻⁵ (1Q), 7.9(2)×10⁻⁴ (2Q), 3.3(5)×10⁻⁴ (SPAM) confirmed from nature.com. Sandia DOE CRADA confirmed as renewed May 2026. E4 correct. No changes made.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.

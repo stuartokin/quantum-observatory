@@ -32,7 +32,7 @@ horizon: 2
 novelty: major breakthrough
 evidence:
   claim: 'Google Quantum AI (Nature 638, 2025): 101-qubit distance-7 surface code on Willow processor achieves 0.143% logical error per cycle, suppresses errors by factor Λ=2.14 per two code-distance steps, and exceeds the best physical qubit lifetime by 2.4×, confirming below-threshold operation and the break-even milestone.'
-  verified: '2026-08-08'
+  verified: '2026-08-11'
   level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-024-08449-y
@@ -43,7 +43,7 @@ evidence:
       identifier: 'Nature 638, 920-926 (2025)'
       doi: 10.1038/s41586-024-08449-y
       accessed: '2026-08-11'
-      note: 'Google Quantum AI and Collaborators; Willow superconducting processor. Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even all confirmed from paper.'
+      note: 'Google Quantum AI and Collaborators; Willow superconducting processor. Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even all confirmed from arXiv preprint and multiple secondary citations.'
     - url: https://arxiv.org/abs/2408.13687
       role: preprint
       title: Quantum error correction below the surface code threshold
@@ -71,7 +71,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'Nature 638, 920-926 confirmed in prior runs; Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even all confirmed. This item and qec-below-threshold-surface-code share the same primary source; neither is a duplicate — one covers below-threshold milestone, this covers break-even metric specifically. E4 correct. No changes made this run.'
+  note: 'Nature 638, 920-926 primary source confirmed this run via arXiv preprint (arXiv:2408.13687 confirmed Lambda=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3x break-even). This item and qec-below-threshold-surface-code share the same primary source; neither is a duplicate — one covers below-threshold milestone, this covers break-even metric specifically. E4 correct. No changes made.'
 ---
 
-Break-even logical fidelity — where the error-corrected logical qubit outlives the best physical qubit — is a foundational milestone for fault-tolerant quantum computing. Google''s 2025 Nature paper demonstrates this on the 105-qubit Willow superconducting processor using a distance-7 surface code spanning 101 physical qubits. The logical error rate of 0.143% per cycle halves when the code distance is increased from 5 to 7, confirming exponential suppression and below-threshold operation. Real-time decoding at distance 5 achieves 63 µs average latency across one million cycles. The result does not demonstrate logical gate operations or an algorithm — those remain future work.
+Break-even logical fidelity — where the error-corrected logical qubit outlives the best physical qubit — is a foundational milestone for fault-tolerant quantum computing. Google's 2025 Nature paper demonstrates this on the 105-qubit Willow superconducting processor using a distance-7 surface code spanning 101 physical qubits. The logical error rate of 0.143% per cycle halves when the code distance is increased from 5 to 7, confirming exponential suppression and below-threshold operation. Real-time decoding at distance 5 achieves 63 µs average latency across one million cycles. The result does not demonstrate logical gate operations or an algorithm — those remain future work.

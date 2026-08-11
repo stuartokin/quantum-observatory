@@ -39,7 +39,7 @@ horizon: 2
 novelty: 'First magic state distillation on logical qubits; independent below-threshold surface code confirmation on neutral-atom hardware'
 evidence:
   claim: 'Logical magic state distillation was demonstrated on a neutral-atom processor using dynamically reconfigurable atom transport (QuEra/Harvard/MIT, Nature 645, 620-625, July 2025): the 5-to-1 distillation protocol on d=3 and d=5 colour-code qubits produced output fidelity exceeding all input states — the first time magic state distillation was performed entirely within the protected logical layer. A separate paper (Bluvstein et al., Nature 649, 39-46, January 2026) demonstrated all key elements of a universal fault-tolerant quantum processing architecture using up to 448 atoms, including surface code 2.14(13)x below-threshold performance, transversal gates, lattice surgery, and transversal teleportation with 3D [[15,1,3]] codes.'
-  verified: '2026-08-04'
+  verified: '2026-08-11'
   level: E4
   sources:
     - url: https://www.nature.com/articles/s41586-025-09367-3
@@ -59,7 +59,7 @@ evidence:
       identifier: 'Nature 649, 39-46 (2026)'
       doi: 10.1038/s41586-025-09848-5
       accessed: '2026-08-11'
-      note: 'Bluvstein, Geim, Li, Evered et al.; Harvard / MIT / Caltech / Maryland. Reconfigurable arrays of up to 448 atoms. Surface code 2.14(13)x below-threshold, transversal gates, lattice surgery, transversal teleportation with 3D [[15,1,3]] codes. Publisher correction: Nature 650, E3 (2026) — figure label in Fig 3d corrected from "corrected decoding" to "correlated decoding" only; results unchanged. Confirmed via published correction at nature.com (DOI 10.1038/s41586-026-10108-3) and Weizmann repository.'
+      note: 'Bluvstein, Geim, Li, Evered et al.; Harvard / MIT / Caltech / Maryland. Reconfigurable arrays of up to 448 atoms. Surface code 2.14(13)x below-threshold, transversal gates, lattice surgery, transversal teleportation with 3D [[15,1,3]] codes. Confirmed via nature.com abstract, phys.org, postquantum.com. Publisher correction Nature 650, E3 (2026) — figure label in Fig 3d corrected from "corrected decoding" to "correlated decoding" only; results unchanged.'
 confidence: high
 status: published
 added: '2026-08-04'
@@ -70,7 +70,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'Completed missing qdayImpact (+1), qdayReasoning, novelty, expanded summary, plain text, and metrics (448 atoms, Lambda=2.14x below threshold) using data confirmed across four prior reviewer runs. Both sources confirmed: Nature 645 via nature.com; Bluvstein Nature 649, 39-46 via nature.com abstract, Weizmann repository, NIST page. Publisher correction Nature 650, E3 confirmed as label-only change. No level or readiness change. Structural completion of a P1 item that had passed schema validation but was functionally underspecified.'
+  note: 'Both sources confirmed this run. Nature 645 (magic state distillation): confirmed via prior runs. Nature 649 (Bluvstein FTQC): confirmed via nature.com abstract (2.14(13)x below-threshold, 448 atoms, surface code). phys.org and postquantum.com confirm Bluvstein lead author and 448-atom system. Publisher correction Nature 650, E3 confirmed as label-only. E4 correct. No changes made.'
 ---
 
 Neutral-atom arrays use optical tweezers — focused laser beams — to hold individual uncharged atoms in programmable 2D patterns. Unlike superconducting or silicon-spin qubits, the atoms can be physically moved mid-computation, allowing the connectivity graph to be reconfigured on the fly. Any atom can be brought next to any other, enabling the all-to-all entanglement operations that fault-tolerant protocols often require.

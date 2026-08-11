@@ -25,7 +25,7 @@ metrics:
   - name: CHSH violation
     value: '3.7'
     unit: 'standard deviations'
-    note: 'first Bell non-locality certification at metropolitan scale'
+    note: 'first Bell non-locality certification at metropolitan scale; CHSH parameter S=2.22 (>2 classical bound)'
   - name: entanglement distribution rate
     value: '0.94'
     unit: Hz
@@ -36,8 +36,8 @@ qdayReasoning: ''
 horizon: 2
 novelty: major breakthrough
 evidence:
-  claim: 'Nature Photonics 2026: a multiplexed quantum repeater protocol (MQR-TM) achieves heralded entanglement between two solid-state quantum memories over 14.5 km, generating a Bell state with 78.6% ± 2.0% fidelity and a CHSH-Bell inequality violation of 3.7 standard deviations — the first certification of Bell non-locality in a metropolitan-scale quantum repeater.'
-  verified: '2026-08-08'
+  claim: 'Nature Photonics 2026: a multiplexed quantum repeater protocol (MQR-TM) achieves heralded entanglement between two solid-state quantum memories over 14.5 km, generating a Bell state with 78.6% ± 2.0% fidelity and a CHSH-Bell inequality violation of 3.7 standard deviations (S=2.22) — the first certification of Bell non-locality in a metropolitan-scale quantum repeater.'
+  verified: '2026-08-11'
   level: E4
   sources:
     - url: https://www.nature.com/articles/s41566-026-01911-5
@@ -48,7 +48,7 @@ evidence:
       identifier: 'Nature Photonics 20, 812 (2026)'
       doi: 10.1038/s41566-026-01911-5
       accessed: '2026-08-11'
-      note: 'Zhu, Zhang, Ou et al.; USTC / Hefei National Laboratory. Peer-reviewed. Received 15 Oct 2025, accepted 6 Apr 2026, published 7 May 2026 per Crossmark. 78.6%±2.0% fidelity and 3.7σ CHSH violation confirmed from nature.com abstract. EDR 0.94 Hz is highest in supplementary comparison table but at 0.606 fidelity; main Bell-test result achieves 0.47 Hz at 78.6% fidelity.'
+      note: 'Zhu, Zhang, Ou et al.; USTC / Hefei National Laboratory. Peer-reviewed. 78.6%±2.0% fidelity and 3.7σ CHSH violation confirmed from nature.com abstract and arXiv preprint. CHSH S=2.22 confirmed from Nature Photonics issue table. EDR 0.94 Hz is highest in supplementary comparison table but at 0.606 fidelity; main Bell-test result achieves 0.47 Hz at 78.6% fidelity.'
     - url: https://arxiv.org/abs/2508.17940
       role: preprint
       title: A Metropolitan-scale Multiplexed Quantum Repeater with Bell Nonlocality
@@ -77,7 +77,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'Nature Photonics DOI confirmed via nature.com and USTC faculty page (Zhou group). 78.6%±2.0% and 3.7σ CHSH confirmed from abstract. EDR metric note clarified: 0.94 Hz is the highest value in supplementary comparison table but achieved at 0.606 fidelity; the main Bell-test result achieves 0.47 Hz at 78.6% fidelity. Both values appear in the paper; metric note now distinguishes them. No level or readiness change.'
+  note: 'Nature Photonics s41566-026-01911-5 confirmed this run via nature.com abstract and USTC faculty page (Zhou group). 78.6%±2.0% and 3.7σ CHSH confirmed from abstract. CHSH S=2.22 confirmed from Nature Photonics issue table — consistent with 3.7σ statement (S=2.22 exceeds classical bound of 2). Metric note for CHSH updated to include S value. E4 correct. No level or readiness changes.'
 ---
 
 Quantum repeaters are the missing infrastructure for long-distance quantum networks. By combining heralded entanglement generation with entanglement swapping at intermediate nodes, they circumvent the exponential photon-loss barrier of optical fibre. The 2026 Nature Photonics result from USTC is the first metropolitan-scale demonstration that certifies the non-classical quality of the distributed entanglement through a Bell inequality violation, closing a loophole in earlier demonstrations that produced entanglement too noisy to certify.

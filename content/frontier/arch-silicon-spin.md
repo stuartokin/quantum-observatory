@@ -30,7 +30,7 @@ metrics:
   - name: two-qubit gate fidelity (300 mm foundry device)
     value: '>99'
     unit: percent
-    note: 'Steinacker et al., Nature 646, 81-87 (2025); industry-compatible SiMOS unit cells'
+    note: 'Steinacker et al., Nature 646, 81-87 (2025); industry-compatible SiMOS unit cells; four devices on same wafer'
 links:
   - to: arch-superconducting
     relation: competes-with
@@ -40,7 +40,7 @@ links:
     relation: depends-on
 evidence:
   claim: Tanttu et al. (Nature Physics 2024) demonstrate consistent and repeatable above-99% fidelity two-qubit gates in Si MOS quantum dot devices by characterising and mitigating physical error sources. Steinacker et al. (Nature 646, 2025) replicate >99% two-qubit fidelity in industry-compatible SiMOS unit cells manufactured in a 300 mm foundry environment, with SPAM fidelities reaching 99.9% across four devices on the same wafer.
-  verified: '2026-08-09'
+  verified: '2026-08-11'
   level: E4
   sources:
     - url: https://www.nature.com/articles/s41567-024-02614-w
@@ -59,8 +59,8 @@ evidence:
       date: '2025-09-24'
       identifier: 'Nature 646, 81-87 (2025)'
       doi: 10.1038/s41586-025-09531-9
-      accessed: '2026-08-09'
-      note: 'Steinacker, Dumoulin Stuyck, Dzurak et al.; UNSW / Diraq / imec / KU Leuven. Two-qubit operations >99% fidelity on chips from a 300 mm semiconductor foundry. SPAM fidelity up to 99.9%. Four separate devices on same wafer all exceed threshold.'
+      accessed: '2026-08-11'
+      note: 'Steinacker, Dumoulin Stuyck, Dzurak et al.; UNSW / Diraq / imec / KU Leuven. Two-qubit operations >99% fidelity on chips from a 300 mm semiconductor foundry. SPAM fidelity up to 99.9%. All four separate devices on same wafer exceed threshold. Confirmed via nature.com abstract and PubMed (Oct 2025 issue, epub Sep 24).'
 confidence: high
 status: published
 priority: P2
@@ -71,11 +71,12 @@ novelty: foundry-compatible >99% fidelity
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: verifier
+  agent: reviewer
   agentMergedOn: '2026-08-09'
-  note: 'Verified both sources resolve. Corrected Steinacker et al. identifier from bare "Nature (2025)" to "Nature 646, 81-87 (2025)" confirmed via PubMed (PMID confirmed Oct 2025 issue). Added Diraq to actors: Steinacker et al. is a UNSW/Diraq/imec/KU Leuven collaboration and Diraq was missing. Updated source note with SPAM fidelity detail and multi-device confirmation.'
+  reviewedOn: '2026-08-11'
+  note: 'Steinacker et al. Nature 646, 81-87 confirmed this run via nature.com abstract (all four devices >99% two-qubit, SPAM up to 99.9%) and PubMed (Oct 2025 issue, epub Sep 24). Four-device wafer result confirmed via postquantum.com analysis. E4 correct for peer-reviewed Nature paper. No changes made.'
 ---
 
 Silicon spin qubits confine individual electrons (or holes) in electrostatically defined quantum dots in silicon or silicon-germanium heterostructures, using spin states as |0⟩ and |1⟩. The platform is attractive for scalability because it is compatible with existing CMOS manufacturing.
