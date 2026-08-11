@@ -29,7 +29,7 @@ metrics:
   - name: entanglement distribution rate
     value: '0.94'
     unit: Hz
-    note: 'highest reported among surveyed metropolitan-scale demonstrations'
+    note: 'highest reported among surveyed metropolitan-scale demonstrations per supplementary table; achieved at 0.606 fidelity. Main Bell-test result achieves 0.47 Hz at 78.6% fidelity.'
 priority: P1
 qdayImpact: 0
 qdayReasoning: ''
@@ -48,7 +48,7 @@ evidence:
       identifier: 'Nature Photonics 20, 812 (2026)'
       doi: 10.1038/s41566-026-01911-5
       accessed: '2026-08-11'
-      note: 'Zhu, Zhang, Ou et al.; USTC / Hefei National Laboratory. Peer-reviewed. Received 15 Oct 2025, accepted 6 Apr 2026, published 7 May 2026 per Crossmark. Identifier confirmed via USTC faculty page (Zhou group).'
+      note: 'Zhu, Zhang, Ou et al.; USTC / Hefei National Laboratory. Peer-reviewed. Received 15 Oct 2025, accepted 6 Apr 2026, published 7 May 2026 per Crossmark. 78.6%±2.0% fidelity and 3.7σ CHSH violation confirmed from nature.com abstract. EDR 0.94 Hz is highest in supplementary comparison table but at 0.606 fidelity; main Bell-test result achieves 0.47 Hz at 78.6% fidelity.'
     - url: https://arxiv.org/abs/2508.17940
       role: preprint
       title: A Metropolitan-scale Multiplexed Quantum Repeater with Bell Nonlocality
@@ -77,7 +77,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-08'
   reviewedOn: '2026-08-11'
-  note: 'Nature Photonics DOI confirmed via nature.com and Crossmark (received 15 Oct 2025, accepted 6 Apr 2026, published 7 May 2026). 78.6%±2.0% and 3.7σ CHSH violation confirmed from nature.com abstract. EDR 0.94 Hz confirmed as highest among surveyed demonstrations per arXiv:2508.17940 supplementary. Added identifier Nature Photonics 20, 812 (2026) from USTC faculty page. No other changes.'
+  note: 'Nature Photonics DOI confirmed via nature.com and USTC faculty page (Zhou group). 78.6%±2.0% and 3.7σ CHSH confirmed from abstract. EDR metric note clarified: 0.94 Hz is the highest value in supplementary comparison table but achieved at 0.606 fidelity; the main Bell-test result achieves 0.47 Hz at 78.6% fidelity. Both values appear in the paper; metric note now distinguishes them. No level or readiness change.'
 ---
 
 Quantum repeaters are the missing infrastructure for long-distance quantum networks. By combining heralded entanglement generation with entanglement swapping at intermediate nodes, they circumvent the exponential photon-loss barrier of optical fibre. The 2026 Nature Photonics result from USTC is the first metropolitan-scale demonstration that certifies the non-classical quality of the distributed entanglement through a Bell inequality violation, closing a loophole in earlier demonstrations that produced entanglement too noisy to certify.

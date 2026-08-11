@@ -42,8 +42,8 @@ evidence:
       date: '2025-02-01'
       identifier: 'Nature 638, 920-926 (2025)'
       doi: 10.1038/s41586-024-08449-y
-      accessed: '2026-08-08'
-      note: 'Google Quantum AI and Collaborators; Willow superconducting processor'
+      accessed: '2026-08-11'
+      note: 'Google Quantum AI and Collaborators; Willow superconducting processor. Λ=2.14±0.02, 0.143%±0.003% per cycle, 2.4±0.3× break-even all confirmed from paper.'
     - url: https://arxiv.org/abs/2408.13687
       role: preprint
       title: Quantum error correction below the surface code threshold
