@@ -121,8 +121,14 @@ export function Board() {
   /** The timeline has its own camera; sharing one made each view jump. */
   const [tlView, setTlView] = useState({ k: 1, tx: 0, ty: 0 })
 
-  /** The axis range the timeline is currently drawing, so a view can frame it. */
-  const tlRange = useRef<{ from: number; to: number } | null>(null)
+  /**
+   * The axis range the timeline is drawing.
+   *
+   * These are Dates, not years — the same values yearFraction takes — so the
+   * framing below uses that function rather than its own arithmetic. Doing the
+   * maths twice is how a view and the thing it frames drift apart.
+   */
+  const tlRange = useRef<{ from: Date; to: Date; plot: number } | null>(null)
 
   /**
    * Frame the last N years without removing anything.
@@ -136,12 +142,14 @@ export function Board() {
       setTlView({ k: 1, tx: 0, ty: 0 })
       return
     }
-    const span = Math.max(1, t.to - t.from)
-    const start = Math.max(t.from, t.to - years)
-    const f0 = (start - t.from) / span
-    const f1 = 1
-    const width = Math.max(0.05, f1 - f0)
-    setTlView({ k: 1 / width, tx: -f0 / width, ty: 0 })
+    const lastYear = t.to.getFullYear()
+    const startYear = Math.max(t.from.getFullYear(), lastYear - years)
+    const f0 = Math.max(0, Math.min(0.92, yearFraction(startYear, t.from, t.to)))
+
+    // TX(x) = AXIS + (x * plot + tx) * k. Solving TX(f0) = AXIS and TX(1) =
+    // AXIS + plot gives k = 1/(1-f0) and tx = -f0 * plot. tx is in pixels, not
+    // fractions, which is why the plot width has to come back with the range.
+    setTlView({ k: 1 / (1 - f0), tx: -f0 * t.plot, ty: 0 })
   }
   /** The constellation window has its own camera too. */
   const [orbitView, setOrbitView] = useState({ k: 1, tx: 0, ty: 0 })
@@ -793,9 +801,9 @@ export function Board() {
           onSelect={setSelected}
           view={tlView}
           setView={setTlView}
-          onRange={(from, to) => {
+          onRange={(from, to, plot) => {
             const had = tlRange.current
-            tlRange.current = { from, to }
+            tlRange.current = { from, to, plot }
             // Frame the opening window once the range is known, not before.
             if (!had && timelineYears) frameYears(timelineYears)
           }}
@@ -1193,7 +1201,7 @@ function Sky({
   resizeTick: number
   forecast?: Forecast
   /** Reports the axis range it drew, so a caller can frame a slice of it. */
-  onRange?: (from: number, to: number) => void
+  onRange?: (from: Date, to: Date, plot: number) => void
   onHover: (id: string | null) => void
   pool: FrontierItem[]
   newsOverlay: boolean
@@ -1484,7 +1492,7 @@ function Sky({
         const TX = (x: number) => AXIS + (x * (W - AXIS - R) + v.tx) * v.k
         const TY = (y: number) => 40 + (y * (H - 78) + v.ty) * v.k
         tlProject.current = { TX, TY }
-        onRange?.(tl.from, tl.to)
+        onRange?.(tl.from, tl.to, W - AXIS - R)
 
         g.font = '11px ui-monospace, monospace'
 
