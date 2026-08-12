@@ -680,7 +680,15 @@ export function Board() {
             items={pool}
             news={allNews}
             colour={colour}
-            onSelect={setSelected}
+            onSelect={(id) => {
+              setSelected(id)
+              setFrames((f) => ({ ...f, detail: { ...f.detail, docked: false } }))
+              setOrder((o) => [...o.filter((x) => x !== 'detail'), 'detail'])
+            }}
+            onOpenNews={(id) => {
+              const n = allNews.find((x) => x.id === id)
+              if (n) openHeadline(n)
+            }}
           />
         </Suspense>
       </Frame>

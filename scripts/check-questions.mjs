@@ -36,6 +36,16 @@ function normalise(v) {
   return v
 }
 
+/** Ids a question may cite. A citation that resolves to nothing is a dead link. */
+const knownIds = new Set()
+for (const [dir, re] of [['content/frontier', /^id:\s*(\S+)$/m], ['content/news', /^id:\s*(\S+)$/m]]) {
+  if (!existsSync(dir)) continue
+  for (const f of readdirSync(dir).filter((x) => x.endsWith('.md'))) {
+    const m = readFileSync(join(dir, f), 'utf8').match(re)
+    if (m) knownIds.add(m[1])
+  }
+}
+
 const files = readdirSync(DIR).filter((f) => f.endsWith('.md') && f !== 'README.md')
 const errors = []
 const warnings = []
@@ -64,6 +74,16 @@ for (const f of files) {
     errors.push(`${path}: id "${d.id}" does not match the filename`)
   }
   states[d.state] = (states[d.state] ?? 0) + 1
+
+  for (const e of d.evidence ?? []) {
+    if (e.kind === 'url') continue
+    if (!knownIds.has(e.ref)) {
+      errors.push(
+        `${path}: cites "${e.ref}", which is not on the board. A citation that ` +
+          `opens nothing looks like evidence and is not.`,
+      )
+    }
+  }
   if (d.lastChanged) dated++
 
   // An answer that says something happened must say when.

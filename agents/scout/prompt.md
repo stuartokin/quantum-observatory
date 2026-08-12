@@ -220,6 +220,12 @@ than about the field.
 Cite `evidence` as frontier ids and news ids wherever possible, so the answer is
 traceable to something on the board rather than to your own recollection.
 
+**Those ids become clickable links**, so they must be exact. A citation that
+opens nothing is worse than none: it looks like evidence and is not. Use the ids
+from the board list in your context, copied character for character, and set
+`kind` to `frontier` or `news` so the reader is taken to the right place. Where
+what you are citing is not on the board, use `kind: url` and give the URL.
+
 ## The twelve questions — answer these in your checklist
 
 1. What has changed since the last scan?

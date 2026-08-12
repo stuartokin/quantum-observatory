@@ -751,3 +751,26 @@
   font-size: 0.66rem; line-height: 1.5; color: var(--ink-faint);
   margin: 4px 0 4px 28px; font-style: italic;
 }
+
+.questions__refs {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin: 6px 0 0 28px;
+}
+.questions__refs button {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  min-height: 0;
+}
+.questions__refs button:hover { color: var(--ink); border-color: var(--ink-faint); }
+.questions__refs button[data-kind='news'] { color: var(--line-ai); }
+.questions__more {
+  font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint);
+  align-self: center; padding-left: 2px;
+}

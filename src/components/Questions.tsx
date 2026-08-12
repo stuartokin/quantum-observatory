@@ -41,6 +41,7 @@ export default function Questions({
   news,
   colour,
   onSelect,
+  onOpenNews,
 }: {
   questions: StandingQuestion[]
   items: FrontierItem[]
@@ -48,6 +49,8 @@ export default function Questions({
   colour: string
   /** Open a frontier item cited as evidence. */
   onSelect: (id: string) => void
+  /** Open a headline cited as evidence. */
+  onOpenNews?: (id: string) => void
 }) {
   const [openId, setOpenId] = useState<string | null>(null)
 
@@ -148,6 +151,34 @@ export default function Questions({
                 </span>
                 {q.asOf && <span> · confirmed current {q.asOf}</span>}
               </p>
+
+              {/* The evidence, on the surface rather than behind a click.
+                  An answer a reader cannot follow to its source is an
+                  assertion, and the whole point of the board is that nothing
+                  here is only an assertion. */}
+              {evidence.length > 0 && (
+                <p className="questions__refs">
+                  {evidence.slice(0, 5).map((e, i) => (
+                    <button
+                      key={i}
+                      onClick={() =>
+                        e.kind === 'news' ? onOpenNews?.(e.ref) : onSelect(e.ref)
+                      }
+                      title={
+                        e.kind === 'news'
+                          ? 'Open this headline'
+                          : 'Open this item on the board'
+                      }
+                      data-kind={e.kind ?? 'frontier'}
+                    >
+                      {e.ref}
+                    </button>
+                  ))}
+                  {evidence.length > 5 && (
+                    <span className="questions__more">+{evidence.length - 5}</span>
+                  )}
+                </p>
+              )}
 
               {open && (
                 <div className="questions__detail">
