@@ -44,7 +44,7 @@ evidence:
       date: '2026-01-27'
       identifier: 'arXiv:2601.19976'
       accessed: '2026-08-12'
-      note: 'Multi-institution collaboration: U Chicago, Northwestern, Hebrew University. 27 authors. Preprint only; peer review pending.'
+      note: 'Zheng, Utama, Gao et al.; University of Chicago (Pritzker School of Molecular Engineering and Physics), Northwestern University (Materials Science, Chemistry). 27 authors including Awschalom, Alivisatos, Goldsmith, Schatz, Hersam, Maurer. Preprint only; confirmed as preprint on Maurer Lab publications page as of Aug 2026 with no journal listed. 22 µs Hahn-echo and 214 µs dynamical-decoupling coherence confirmed from arXiv abstract. ODMR from cryogenic to ambient confirmed.'
 qdayImpact: 0
 qdayReasoning: 'Molecular qubits are far from cryptanalytic relevance. The result is an enabling advance for a new architecture, not a computing capability milestone.'
 confidence: medium
@@ -52,10 +52,12 @@ status: draft
 origin: agent
 added: '2026-08-12'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass (prior state was agent-merged with no review). arXiv:2601.19976 confirmed as preprint submitted Jan 27 2026 by Zheng, Utama, Gao et al. at University of Chicago / Northwestern University. Maurer Lab publications page lists paper as arXiv:2601.19976 (2026) with no journal identifier, confirming preprint-only status. Claim confirmed: 22 µs Hahn-echo and 214 µs dynamical-decoupling coherence from arXiv abstract match item. ODMR confirmed. Outperforms shallow NV centres confirmed. E3 correct for preprint. Readiness emerging correct — single-qubit demonstration, no two-qubit gates, no replication. No changes to evidence level or readiness.'
 ---
 
 ## What happened

@@ -155,3 +155,14 @@ into the sections above once you have read them — or delete them if wrong.
 Citing a preprint URL when a peer-reviewed paper exists gives a false picture of the evidence and may prevent the board from correctly assessing whether E4 applies.
 
 *Proposed 2026-08-12, after app-quantum-chemistry-catalyst cited arXiv:2204.11890 as role:preprint when Phys. Rev. A 106, 032428 (2022) exists as the peer-reviewed publication. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-12
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**The actors field must name the actual authors and their institutions, not a description of who a review article covers. A review of 'multiple academic groups' is written by specific people at a specific institution; that institution is what goes in actors.**
+
+enable-microwave-optical listed 'Multiple academic groups (survey)' when the paper has three named authors at BUET/BRAC Bangladesh — a material misrepresentation of provenance.
+
+*Proposed 2026-08-12, after enable-microwave-optical actors field corrected from generic survey description to actual authors' institutions on 2026-08-12. Not yet confirmed by a person.*
