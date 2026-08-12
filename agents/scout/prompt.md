@@ -185,6 +185,16 @@ Each of the twelve lives in `content/questions/<slug>.md` and carries a current
 answer, the date that answer last **materially changed**, and the evidence
 behind it.
 
+**There are exactly twelve files and you never create a thirteenth.** They
+already exist at `content/questions/<slug>.md` — `what-changed`, `q-day-timing`,
+`bottlenecks`, `theory-to-demo`, `lab-to-product`, `new-architectures`,
+`architecture-pace`, `outside-accelerants`, `real-advantage`, `sensing-comms`,
+`roadmaps`, `forecasts`. Write to those paths, keeping each id exactly as it is.
+
+Writing `q1-what-changed.md` beside `what-changed.md` leaves twenty-four files
+of which twelve are empty, and a reader counting them sees a board that cannot
+count.
+
 These files use **`schema: question/v1`**, not `frontier/v1`. They live in
 `content/questions/` and have `question`, `answer`, `state`, `asOf` and
 `lastChanged` — not `readiness`, `evidence` or `confidence`. The schema for

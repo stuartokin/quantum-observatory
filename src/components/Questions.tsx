@@ -65,15 +65,25 @@ export default function Questions({
     [questions, items, news],
   )
 
+  /**
+   * Count what the reader is actually shown.
+   *
+   * This counted the raw files, so a question with a derived answer was
+   * reported as unanswered while displaying an answer — the summary and the
+   * list disagreed on the same screen.
+   */
   const summary = useMemo(() => {
-    const by = (s: string) => questions.filter((q) => q.state === s).length
+    const states = resolved.map(({ q, derived }) => derived?.state ?? q.state)
+    const by = (s: string) => states.filter((x) => x === s).length
     return {
+      total: states.length,
       moving: by('moving'),
       steady: by('steady'),
       contested: by('contested'),
       unknown: by('unknown'),
+      written: resolved.filter(({ derived }) => !derived).length,
     }
-  }, [questions])
+  }, [resolved])
 
   if (questions.length === 0) {
     return <p className="label">No questions recorded for this galaxy.</p>
@@ -83,9 +93,14 @@ export default function Questions({
     <div className="questions">
       <div className="questions__summary">
         <span className="label">
-          {summary.moving} moving · {summary.steady} steady
+          {summary.total} question{summary.total === 1 ? '' : 's'} ·{' '}
+          {summary.moving} moving
+          {summary.steady ? ` · ${summary.steady} steady` : ''}
           {summary.contested ? ` · ${summary.contested} contested` : ''}
           {summary.unknown ? ` · ${summary.unknown} unanswered` : ''}
+          {summary.written < summary.total
+            ? ` · ${summary.total - summary.written} counted, not written`
+            : ''}
         </span>
       </div>
 

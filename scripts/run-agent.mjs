@@ -608,6 +608,32 @@ for (const f of files) {
    * four brand-new topics instead — a scope failure the prompt asked it to
    * avoid and could not prevent. An instruction is a request; this is a rule.
    */
+  /**
+   * A collection with a fixed membership may not grow.
+   *
+   * The twelve questions are twelve. Asked to populate them, Scout wrote six
+   * new files alongside the existing ones — leaving eighteen, of which twelve
+   * were empty placeholders. The instruction said populate; nothing enforced
+   * that "the twelve files" meant the ones already there.
+   */
+  const fixed = (cfg.fixedCollections ?? []).find((c) => f.path.includes(`/${c}/`))
+  if (check.ok && fixed) {
+    const dir = `content/${fixed}`
+    const known = existsSync(dir)
+      ? readdirSync(dir).filter((x) => x.endsWith('.md')).map((x) => x.replace(/\.md$/, ''))
+      : []
+    if (!known.includes(check.id)) {
+      rejected.push({
+        path: f.path,
+        reason:
+          `"${check.id}" is not one of the existing ${fixed}. This collection has a ` +
+          `fixed membership — update a file that is already there. Known: ${known.join(', ')}`,
+        head: content.slice(0, 240),
+      })
+      continue
+    }
+  }
+
   if (check.ok && cfg.existingIdsOnly && !existingIds.has(check.id)) {
     rejected.push({
       path: f.path,
