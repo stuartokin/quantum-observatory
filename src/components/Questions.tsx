@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import type { StandingQuestion } from '../content/questionTypes'
 import { daysSinceChange } from '../content/questions'
+import { deriveAnswer, isDerived } from '../renderers/board/deriveQuestions'
+import type { FrontierItem } from '../content/frontierTypes'
+import type { NewsItem } from '../content/newsTypes'
 
 /**
  * THE TWELVE QUESTIONS.
@@ -34,15 +37,33 @@ function since(days: number | null): string {
 
 export default function Questions({
   questions,
+  items,
+  news,
   colour,
   onSelect,
 }: {
   questions: StandingQuestion[]
+  items: FrontierItem[]
+  news: NewsItem[]
   colour: string
   /** Open a frontier item cited as evidence. */
   onSelect: (id: string) => void
 }) {
   const [openId, setOpenId] = useState<string | null>(null)
+
+  /**
+   * An agent's answer wins. Where there is none, the board answers what it can
+   * count — which is a poor answer and a great deal better than a blank one,
+   * provided it says which it is.
+   */
+  const resolved = useMemo(
+    () =>
+      questions.map((q) => {
+        if (!isDerived(q)) return { q, derived: null }
+        return { q, derived: deriveAnswer(q, items, news) }
+      }),
+    [questions, items, news],
+  )
 
   const summary = useMemo(() => {
     const by = (s: string) => questions.filter((q) => q.state === s).length
@@ -69,13 +90,20 @@ export default function Questions({
       </div>
 
       <ol className="questions__list">
-        {questions.map((q) => {
-          const days = daysSinceChange(q)
+        {resolved.map(({ q, derived }) => {
+          const answer = derived?.answer ?? q.answer
+          const state = derived?.state ?? q.state
+          const evidence = derived
+            ? derived.evidence.map((e) => ({ ref: e.ref, kind: e.kind }))
+            : (q.evidence ?? [])
+          const days = derived?.lastChanged
+            ? Math.floor((Date.now() - new Date(derived.lastChanged).getTime()) / 864e5)
+            : daysSinceChange(q)
           const open = openId === q.id
           const stale = days !== null && days > 180
 
           return (
-            <li key={q.id} data-state={q.state} data-open={open || undefined}>
+            <li key={q.id} data-state={state} data-open={open || undefined}>
               <button
                 className="questions__head"
                 onClick={() => setOpenId(open ? null : q.id)}
@@ -85,13 +113,19 @@ export default function Questions({
                 <span className="questions__q">{q.question}</span>
                 <span
                   className="questions__state"
-                  style={q.state === 'moving' ? { color: colour } : undefined}
+                  style={state === 'moving' ? { color: colour } : undefined}
                 >
-                  {STATE_LABEL[q.state] ?? q.state}
+                  {STATE_LABEL[state] ?? state}
                 </span>
               </button>
 
-              <p className="questions__answer">{q.answer}</p>
+              <p className="questions__answer">{answer}</p>
+              {derived && (
+                <p className="questions__derived">
+                  Counted from the board — no agent has written an answer to this
+                  one yet. A count can say what happened, not what it means.
+                </p>
+              )}
 
               <p className="questions__when">
                 <span className={stale ? 'questions__stale' : undefined}>
@@ -109,20 +143,20 @@ export default function Questions({
                     </>
                   )}
 
-                  {q.evidence?.length ? (
+                  {evidence.length ? (
                     <>
                       <span className="label">Resting on</span>
                       <ul className="questions__evidence">
-                        {q.evidence.map((e, i) => (
+                        {evidence.map((e, i) => (
                           <li key={i}>
-                            {e.kind === 'url' && e.url ? (
+                            {'url' in e && e.kind === 'url' && e.url ? (
                               <a href={e.url} target="_blank" rel="noopener noreferrer">
-                                {e.note ?? e.url}
+                                {('note' in e && e.note) || e.url}
                               </a>
                             ) : (
                               <button onClick={() => onSelect(e.ref)}>{e.ref}</button>
                             )}
-                            {e.note && e.kind !== 'url' && <span> — {e.note}</span>}
+                            {'note' in e && e.note && e.kind !== 'url' && <span> — {e.note}</span>}
                           </li>
                         ))}
                       </ul>

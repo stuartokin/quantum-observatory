@@ -746,3 +746,8 @@
 .dock .frame__grip { cursor: grab; padding: 5px 4px; align-self: center; }
 .dock .frame__grip:active { cursor: grabbing; }
 .dock .toolbar__resize { right: 4px; bottom: 4px; }
+
+.questions__derived {
+  font-size: 0.66rem; line-height: 1.5; color: var(--ink-faint);
+  margin: 4px 0 4px 28px; font-style: italic;
+}

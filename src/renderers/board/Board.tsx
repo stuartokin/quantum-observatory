@@ -55,7 +55,7 @@ const Help = lazyWithReload('Help', () => import('../../components/Help'))
 const NewsArchive = lazyWithReload('NewsArchive', () => import('../../components/NewsArchive'))
 const NewsDetail = lazyWithReload('NewsDetail', () => import('../../components/NewsDetail'))
 const Questions = lazyWithReload('Questions', () => import('../../components/Questions'))
-import { recentNews, newsFor, newsAbout } from '../../content/newsroom'
+import { recentNews, newsFor, newsAbout, allNews } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
@@ -352,6 +352,8 @@ export function Board() {
     ...(mode === 'orbit'
       ? [{ key: 'back', icon: '←', label: '← Galaxy', onClick: leaveOrbit }]
       : []),
+    { key: 'galaxy', icon: '✦', label: 'Galaxy', active: !frames.galaxy.docked,
+      isWindow: true, onClick: toggle('galaxy') },
     {
       key: 'timeline',
       icon: '◷',
@@ -568,6 +570,7 @@ export function Board() {
         title={mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
         state={frames.galaxy}
         onChange={setFrame('galaxy')}
+        onDock={dock('galaxy')}
         accent={colour}
         z={zOf('galaxy')}
         onFocus={raise('galaxy')}
@@ -672,7 +675,13 @@ export function Board() {
         onFocus={raise('questions')}
       >
         <Suspense fallback={<p className="label">Loading…</p>}>
-          <Questions questions={questions} colour={colour} onSelect={setSelected} />
+          <Questions
+            questions={questions}
+            items={pool}
+            news={allNews}
+            colour={colour}
+            onSelect={setSelected}
+          />
         </Suspense>
       </Frame>
 
