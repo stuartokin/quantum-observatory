@@ -77,6 +77,10 @@ const KB = 1024
  *         open the thing. Generous, but not unbounded: everything deferred is
  *         still a download for somebody.
  *
+ * news    Headlines. Grows fastest of anything here — a backfill month adds
+ *         dozens — and is barely needed at first paint. Its own chunk, so the
+ *         newsroom doing its job does not slow the board for everyone.
+ *
  * content The frontier items. Grows as agents fill the board, which is the
  *         point, so the ceiling is generous. At ~200 items it should move to a
  *         JSON file fetched at runtime rather than bundled.
@@ -85,6 +89,7 @@ const BUDGET = {
   app: 88 * KB,
   deferred: 60 * KB,
   content: 220 * KB,
+  news: 120 * KB,
   css: 20 * KB,
 }
 
@@ -108,17 +113,34 @@ const js = files.filter((f) => f.endsWith('.js'))
  * the server.
  */
 const isContent = (f) => f.startsWith('content-')
+const isNews = (f) => f.startsWith('news-')
 const isEntry = (f) => f.startsWith('index-')
 
 const groups = {
   app: js.filter((f) => isEntry(f)),
-  deferred: js.filter((f) => !isEntry(f) && !isContent(f)),
+  deferred: js.filter((f) => !isEntry(f) && !isContent(f) && !isNews(f)),
   content: js.filter(isContent),
+  news: js.filter(isNews),
   css: files.filter((f) => f.endsWith('.css')),
 }
 
 const fail = []
 console.log('Performance budget (gzipped):')
+
+/**
+ * Name every file, not just the totals.
+ *
+ * A chunk that lands in the wrong bucket is invisible in a summary — the news
+ * chunk was counted as deferred for a build, and the only symptom was a number
+ * being wrong by 48 KB. Listing what went where costs four lines of output and
+ * makes a misfiled chunk obvious.
+ */
+for (const [name, list] of Object.entries(groups)) {
+  if (list.length) {
+    console.log(`  ${name}: ${list.join(', ')}`)
+  }
+}
+console.log()
 
 for (const [name, list] of Object.entries(groups)) {
   const bytes = list.reduce((t, f) => t + gz(f), 0)
@@ -133,6 +155,47 @@ for (const [name, list] of Object.entries(groups)) {
 
 if (groups.content.length === 0) {
   console.log('\n  Note: no separate content chunk. Check manualChunks in vite.config.ts.')
+}
+
+/**
+ * When content fails, say what is in it.
+ *
+ * "Content is too big" is not actionable; "news is two thirds of it and only a
+ * fortnight is shown at load" tells you what to do. The counts come from the
+ * source tree rather than the bundle, so they are approximate — but the ratio
+ * is what matters for deciding where to cut.
+ */
+if (fail.some((f) => f.startsWith('content'))) {
+  const { readdirSync, statSync } = await import('node:fs')
+  const { join } = await import('node:path')
+  const raw = (dir) => {
+    try {
+      return readdirSync(dir)
+        .filter((f) => f.endsWith('.md'))
+        .reduce((t, f) => t + statSync(join(dir, f)).size, 0)
+    } catch {
+      return 0
+    }
+  }
+  const parts = {
+    frontier: raw('content/frontier'),
+    news: raw('content/news'),
+    articles: raw('content/items'),
+  }
+  const total = Object.values(parts).reduce((a, b) => a + b, 0) || 1
+  console.error('\nWhat is in the content chunk, by source size:')
+  for (const [name, bytes] of Object.entries(parts).sort((a, b) => b[1] - a[1])) {
+    if (!bytes) continue
+    console.error(
+      `  ${name.padEnd(9)} ${(bytes / KB).toFixed(0).padStart(4)} KB raw  ` +
+        `${String(Math.round((bytes / total) * 100)).padStart(3)}%`,
+    )
+  }
+  console.error(
+    '\nBefore raising the ceiling: is all of this needed at first paint? News is\n' +
+      'shown a fortnight at a time and the archive is opened rarely, so it is the\n' +
+      'first candidate for loading on demand rather than up front.',
+  )
 }
 
 if (fail.length) {

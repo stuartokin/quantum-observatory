@@ -32,6 +32,15 @@ export default defineConfig({
     // research agent does its job.
     rollupOptions: {
       output: {
+        /**
+         * Name chunks predictably.
+         *
+         * A manual chunk is usually named for its key, but not always — one
+         * pulled in by a dynamic import can be named after the module instead,
+         * and then the budget script filters on a prefix that never appears.
+         * Being explicit removes the guesswork from both ends.
+         */
+        chunkFileNames: 'assets/[name]-[hash].js',
         manualChunks(id) {
           // import.meta.glob with ?raw yields ids like
           // "/content/frontier/x.md?raw", so match on the path, not the
