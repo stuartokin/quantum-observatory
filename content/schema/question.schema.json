@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://horizonqltd.com/schema/question/v1",
+  "title": "Standing question",
+  "description": "One of the twelve questions the board exists to answer. Unlike an item, a question is never finished \u2014 it has a current answer, a date that answer last changed, and the evidence behind it. 'No change since March' is a legitimate and useful answer; the date is what makes it so.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "number",
+    "question",
+    "pillar",
+    "answer",
+    "state",
+    "asOf"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "question/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "number": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 24
+    },
+    "question": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "pillar": {
+      "enum": [
+        "ai",
+        "quantum",
+        "materials",
+        "energy",
+        "cyber"
+      ]
+    },
+    "answer": {
+      "type": "string",
+      "maxLength": 900,
+      "description": "The current answer in plain English. Two or three sentences."
+    },
+    "state": {
+      "enum": [
+        "moving",
+        "steady",
+        "slowing",
+        "contested",
+        "unknown"
+      ],
+      "description": "moving = the answer changed recently \u00b7 steady = settled, nothing new \u00b7 slowing = progress has decelerated \u00b7 contested = credible parties disagree \u00b7 unknown = the board cannot answer this yet, which is itself worth showing rather than hiding"
+    },
+    "asOf": {
+      "type": "string",
+      "format": "date",
+      "description": "When this answer was last confirmed as current."
+    },
+    "lastChanged": {
+      "type": "string",
+      "format": "date",
+      "description": "When the answer last MATERIALLY changed \u2014 not when it was last checked. The gap between this and asOf is the useful figure: an answer confirmed yesterday but unchanged for eight months says something."
+    },
+    "changedBy": {
+      "type": "string",
+      "maxLength": 400,
+      "description": "What changed it. The single most important reason."
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Frontier item ids and news ids this answer rests on.",
+      "items": {
+        "type": "object",
+        "required": [
+          "ref"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "frontier",
+              "news",
+              "url"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "history": {
+      "type": "array",
+      "maxItems": 12,
+      "description": "Every time this answer changed, most recent first.",
+      "items": {
+        "type": "object",
+        "required": [
+          "date",
+          "was"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "was": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "why": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "by": {
+            "enum": [
+              "human",
+              "agent"
+            ]
+          },
+          "agent": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "reviewed",
+            "agent-reviewed",
+            "agent-merged",
+            "vetoed"
+          ]
+        },
+        "by": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        },
+        "on": {
+          "type": "string"
+        },
+        "agentMergedOn": {
+          "type": "string"
+        },
+        "reviewedOn": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 600
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ]
+    },
+    "added": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

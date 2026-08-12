@@ -179,6 +179,31 @@ Below the front matter, write a short card: what happened, why it matters, what
 was the previous state of the art, limitations, and what would change your
 assessment. Keep it tight. A reviewer who stops reading is a failed agent.
 
+## The twelve questions are files now, not just a checklist
+
+Each of the twelve lives in `content/questions/<slug>.md` and carries a current
+answer, the date that answer last **materially changed**, and the evidence
+behind it.
+
+**Update them every run.** For each question:
+
+- If nothing changed, set `asOf` to today and leave `lastChanged` alone. That is
+  the useful case: an answer confirmed current but unchanged for eight months
+  tells a reader the field is settled there, which is what somebody deciding
+  not to worry about something needs.
+- If something did change, write the new answer, set both dates, fill
+  `changedBy` with the single most important reason, and push the old answer
+  onto `history` with the date it was superseded.
+- Set `state`: `moving`, `steady`, `slowing`, `contested`, or `unknown`.
+
+**`unknown` is honest and must not be avoided.** A question the board cannot yet
+answer is shown as unanswered rather than hidden, because a board that only
+displays the questions it has answers to is telling a reader about itself rather
+than about the field.
+
+Cite `evidence` as frontier ids and news ids wherever possible, so the answer is
+traceable to something on the board rather than to your own recollection.
+
 ## The twelve questions — answer these in your checklist
 
 1. What has changed since the last scan?

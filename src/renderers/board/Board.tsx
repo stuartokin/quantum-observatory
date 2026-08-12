@@ -42,6 +42,7 @@ import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
 import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
 import { Ticker } from '../../components/Ticker'
+import { questionsFor } from '../../content/questions'
 import { GlyphMark } from '../../components/GlyphMark'
 
 /**
@@ -53,6 +54,7 @@ import { GlyphMark } from '../../components/GlyphMark'
 const Help = lazyWithReload('Help', () => import('../../components/Help'))
 const NewsArchive = lazyWithReload('NewsArchive', () => import('../../components/NewsArchive'))
 const NewsDetail = lazyWithReload('NewsDetail', () => import('../../components/NewsDetail'))
+const Questions = lazyWithReload('Questions', () => import('../../components/Questions'))
 import { recentNews, newsFor, newsAbout } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
@@ -83,7 +85,6 @@ export function Board() {
   const [selected, setSelected] = useState<string | null>(null)
   const [view, setView] = useState({ k: 1, tx: 0, ty: 0 })
   const [mode, setMode] = useState<Mode>('tower')
-  const [timeline, setTimeline] = useState(false)
   const [cam, setCam] = useState<Camera>(DEFAULT_CAMERA)
   const [focusCon, setFocusCon] = useState<string | null>(null)
   const [statsOpen, setStatsOpen] = useState(false)
@@ -98,6 +99,10 @@ export function Board() {
   const [openNews, setOpenNews] = useState<NewsItem | null>(null)
   /** Headlines are off by default — there will eventually be a great many. */
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
+  /** The timeline has its own camera; sharing one made each view jump. */
+  const [tlView, setTlView] = useState({ k: 1, tx: 0, ty: 0 })
+  /** 0 means every year. Two is the default because that is where the news is. */
+  const [timelineYears, setTimelineYears] = useState(2)
   /** Strip across the page, or a window with the whole history. */
   const [headlineMode, setHeadlineMode] = useState<'ticker' | 'archive'>('ticker')
 
@@ -160,7 +165,8 @@ export function Board() {
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'teaser', 'news', 'headlines', 'newsitem', 'filters', 'help', 'qday', 'detail',
+    'galaxy', 'timeline', 'questions', 'teaser', 'news', 'headlines', 'newsitem',
+    'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
@@ -283,6 +289,7 @@ export function Board() {
   }, [frames.headlines.h, headlineMode])
   const changedIds = useMemo(() => new Set(teaserEntries.map((e) => e.id)), [teaserEntries])
   const forecast = useMemo(() => forecastFor(galaxy), [galaxy])
+  const questions = useMemo(() => questionsFor(galaxy), [galaxy])
   const moved = useMemo(() => visible.filter((i) => i.moved?.on).length, [visible])
 
   /**
@@ -347,21 +354,19 @@ export function Board() {
       : []),
     {
       key: 'timeline',
-      icon: timeline ? '✦' : '◷',
-      label: timeline ? 'Galaxy view' : 'Timeline',
-      active: timeline,
-      onClick: () => {
-        setTimeline((v) => !v)
-        setMode('tower')
-        setFocusCon(null)
-        setView({ k: 1, tx: 0, ty: 0 })
-      },
+      icon: '◷',
+      label: 'Timeline',
+      active: !frames.timeline.docked,
+      onClick: toggle('timeline'),
+    },
+    {
+      key: 'questions',
+      icon: '?',
+      label: 'Questions',
+      active: !frames.questions.docked,
+      onClick: toggle('questions'),
     },
     { key: 'filters', icon: '⌗', label: 'Filters', active: !frames.filters.docked, onClick: toggle('filters') },
-    ...(timeline
-      ? []
-      : [
-        ]),
     { key: 'news', icon: '◰', label: 'Journals', active: !frames.news.docked, onClick: toggle('news') },
     {
       key: 'headlines',
@@ -549,7 +554,7 @@ export function Board() {
       {/* Full width, under the header. A ticker in a panel is a list; across
           the page it is a wire, which is what it is for. */}
       <Frame
-        title={timeline ? 'Timeline' : mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
+        title={mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
         state={frames.galaxy}
         onChange={setFrame('galaxy')}
         accent={colour}
@@ -590,7 +595,7 @@ export function Board() {
           focusCon={focusCon}
           onEnterOrbit={enterOrbit}
           onLeaveOrbit={leaveOrbit}
-          timeline={timeline}
+          timeline={false}
           cam={cam}
           setCam={setCam}
           resizeTick={resizeTick}
@@ -600,6 +605,64 @@ export function Board() {
           newsOverlay={showNewsOverlay}
           onOpenNews={openHeadline}
         />
+      </Frame>
+
+      <Frame
+        title="Timeline"
+        state={frames.timeline}
+        onChange={setFrame('timeline')}
+        onDock={dock('timeline')}
+        accent={colour}
+        z={zOf('timeline')}
+        onFocus={raise('timeline')}
+        onResized={bump}
+        minWidth={360}
+        minHeight={220}
+        flush
+        action={
+          <button className="frame__mode" onClick={() => setTimelineYears((y) => (y === 2 ? 0 : 2))}>
+            {timelineYears === 2 ? 'All years' : 'Last 2 years'}
+          </button>
+        }
+      >
+        <Sky
+          onHover={setHoveredId}
+          nodes={nodes}
+          colour={colour}
+          selected={selected}
+          onSelect={setSelected}
+          view={tlView}
+          setView={setTlView}
+          activeCons={cons}
+          mode="tower"
+          focusCon={null}
+          onEnterOrbit={() => {}}
+          onLeaveOrbit={() => {}}
+          timeline
+          cam={cam}
+          setCam={setCam}
+          resizeTick={resizeTick}
+          forecast={forecast}
+          showLegend={showLegend}
+          pool={pool}
+          newsOverlay={showNewsOverlay}
+          onOpenNews={openHeadline}
+          yearsBack={timelineYears}
+        />
+      </Frame>
+
+      <Frame
+        title="The twelve questions"
+        state={frames.questions}
+        onChange={setFrame('questions')}
+        onDock={dock('questions')}
+        accent={colour}
+        z={zOf('questions')}
+        onFocus={raise('questions')}
+      >
+        <Suspense fallback={<p className="label">Loading…</p>}>
+          <Questions questions={questions} colour={colour} onSelect={setSelected} />
+        </Suspense>
       </Frame>
 
       <Frame
@@ -616,14 +679,14 @@ export function Board() {
             constellation={changedCon}
             colour={colour}
             highlight={changedIds}
-            onOpen={() => { setTimeline(false); enterOrbit(changedCon) }}
+            onOpen={() => enterOrbit(changedCon)}
           />
         )}
         <Teaser
           entries={teaserEntries}
           colour={colour}
           onSelect={setSelected}
-          onJump={(c) => { setTimeline(false); enterOrbit(c) }}
+          onJump={(c) => enterOrbit(c)}
         />
       </Frame>
 
@@ -655,7 +718,10 @@ export function Board() {
         // it could never be dragged small enough to turn back into a ticker,
         // which is the gesture that is supposed to do it.
         minHeight={34}
-        barOnly={headlineMode === 'ticker'}
+        barOnly={headlineMode === 'ticker' && !frames.headlines.maximised}
+        // A ticker filling the screen would be one line in a great deal of
+        // nothing. Maximising asks for more, so it gets the archive.
+        onMaximise={() => setHeadlineView('archive')}
         onInfo={() => setHeadlineInfo((v) => !v)}
         action={
           headlineMode === 'archive' ? (
@@ -916,6 +982,7 @@ function Sky({
   pool,
   newsOverlay,
   onOpenNews,
+  yearsBack = 0,
 }: {
   nodes: Node[]
   colour: string
@@ -938,6 +1005,8 @@ function Sky({
   pool: FrontierItem[]
   newsOverlay: boolean
   onOpenNews: (n: NewsItem) => void
+  /** 0 = every year. Otherwise the window back from today, in years. */
+  yearsBack?: number
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -1013,6 +1082,23 @@ function Sky({
       ),
     [],
   )
+
+  /**
+   * The timeline defaults to the last two years.
+   *
+   * Fifteen years of axis for a field whose interesting period is the last
+   * eighteen months spends most of the width on empty space. Zooming out
+   * restores the rest.
+   */
+  const windowed = useMemo(() => {
+    if (!yearsBack) return nodes
+    const cutoff = new Date().getFullYear() - yearsBack
+    return nodes.filter((n) => {
+      const item = pool.find((i) => i.id === n.id)
+      const d = item ? dateOf(item) : null
+      return !d || d.getFullYear() >= cutoff
+    })
+  }, [nodes, pool, yearsBack])
 
   const tl = useMemo(
     () =>

@@ -21,6 +21,13 @@ export interface FrameState {
   h: number
   minimised?: boolean
   docked?: boolean
+  /**
+   * Filling the workspace. The previous box is kept so restore returns it
+   * exactly where it was rather than to a default — a window that forgets
+   * where it lived is one you have to arrange twice.
+   */
+  maximised?: boolean
+  restore?: { x: number; y: number; w: number; h: number }
 }
 
 export function Frame({
@@ -44,6 +51,7 @@ export function Frame({
   info,
   action,
   scrollKey,
+  onMaximise,
 }: {
   title: string
   state: FrameState
@@ -72,6 +80,8 @@ export function Frame({
   info?: ReactNode
   /** A control that belongs in the title bar rather than the body. */
   action?: ReactNode
+  /** Called when the frame is maximised, for anything that should change with it. */
+  onMaximise?: () => void
   /**
    * Change this and the body scrolls back to the top.
    *
@@ -132,6 +142,8 @@ export function Frame({
   }, [onChange, onResized, minWidth, minHeight])
 
   const begin = (mode: 'move' | 'resize') => (e: React.PointerEvent) => {
+    // Dragging a maximised frame would move something pinned to the viewport.
+    if (state.maximised) return
     e.preventDefault()
     const el = ref.current!
     el.style.left = `${state.x}px`
@@ -141,6 +153,26 @@ export function Frame({
     drag.current = { mode, ox: e.clientX, oy: e.clientY, s: state }
     setActive(true)
     onFocus?.()
+  }
+
+  const toggleMaximise = () => {
+    if (state.maximised) {
+      const r = state.restore
+      onChange({
+        ...state,
+        maximised: false,
+        ...(r ?? {}),
+        restore: undefined,
+      })
+    } else {
+      onChange({
+        ...state,
+        maximised: true,
+        restore: { x: state.x, y: state.y, w: state.w, h: state.h },
+      })
+      onMaximise?.()
+    }
+    requestAnimationFrame(() => onResized?.())
   }
 
   if (state.docked) return null
@@ -159,14 +191,19 @@ export function Frame({
       data-minimised={state.minimised || undefined}
       data-info={info ? '' : undefined}
       onPointerDown={onFocus}
-      style={{
-        zIndex: z,
-        left: state.x,
-        top: state.y,
-        width: state.w,
-        height: state.minimised ? undefined : state.h,
-        borderColor: accent,
-      }}
+      data-maximised={state.maximised || undefined}
+      style={
+        state.maximised
+          ? { zIndex: z, borderColor: accent }
+          : {
+              zIndex: z,
+              left: state.x,
+              top: state.y,
+              width: state.w,
+              height: state.minimised ? undefined : state.h,
+              borderColor: accent,
+            }
+      }
     >
       <header className="frame__bar" onPointerDown={begin('move')}>
         <span className="frame__grip" aria-hidden="true" />
@@ -199,10 +236,20 @@ export function Frame({
             onChange({ ...state, minimised: !state.minimised })
             requestAnimationFrame(() => onResized?.())
           }}
-          aria-label={state.minimised ? 'Expand' : 'Minimise'}
-          title={state.minimised ? 'Expand' : 'Minimise'}
+          aria-label={state.minimised ? 'Expand' : 'Collapse'}
+          title={state.minimised ? 'Expand' : 'Collapse to the title bar'}
         >
           {state.minimised ? '▸' : '▾'}
+        </button>
+        <button
+          className="frame__btn"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={toggleMaximise}
+          aria-pressed={state.maximised}
+          aria-label={state.maximised ? 'Restore' : 'Maximise'}
+          title={state.maximised ? 'Restore' : 'Fill the workspace'}
+        >
+          {state.maximised ? '❐' : '□'}
         </button>
         {onDock && (
           <button
@@ -265,7 +312,29 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
   const mainH = h - top - pad - 62
 
   return {
+    /**
+     * Galaxy and timeline are separate windows.
+     *
+     * They answer different questions — how close is this, and when did the
+     * evidence land — and a toggle between them forced a choice that nobody
+     * needed to make. The timeline starts docked so the opening view is not
+     * three plots at once.
+     */
     galaxy: { x: pad, y: top, w: mainW, h: mainH },
+    timeline: {
+      x: pad + 40,
+      y: top + 40,
+      w: Math.max(520, mainW - 80),
+      h: Math.max(320, mainH - 80),
+      docked: true,
+    },
+    questions: {
+      x: wide ? Math.round(w * 0.18) : pad,
+      y: top + 20,
+      w: Math.min(760, w - pad * 2),
+      h: Math.min(640, h - top - 100),
+      docked: true,
+    },
     teaser: {
       x: wide ? mainW + pad * 2 : 60,
       y: top,
