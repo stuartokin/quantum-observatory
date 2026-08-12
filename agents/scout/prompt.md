@@ -185,6 +185,12 @@ Each of the twelve lives in `content/questions/<slug>.md` and carries a current
 answer, the date that answer last **materially changed**, and the evidence
 behind it.
 
+These files use **`schema: question/v1`**, not `frontier/v1`. They live in
+`content/questions/` and have `question`, `answer`, `state`, `asOf` and
+`lastChanged` — not `readiness`, `evidence` or `confidence`. The schema for
+every collection you may write to is in your context; use the one matching the
+folder.
+
 **Update them every run.** For each question:
 
 - If nothing changed, set `asOf` to today and leave `lastChanged` alone. That is

@@ -47,7 +47,12 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith('.mjs'))) {
       if (l.trim().startsWith('/*') || l.trim().startsWith('*/')) continue
       // A parameter of the same name shadows the outer one; not a forward use.
       if (/^\s*(?:export )?(?:async )?function\s/.test(l)) continue
-      const stripped = l.replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '')
+      const stripped = l
+        .replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '')
+        // A property access — c.schema, cfg.write_scope — is not a use of a
+        // top-level binding of the same name. Neither is an object key.
+        .replace(/\.\s*[A-Za-z_$][\w$]*/g, '')
+        .replace(/[A-Za-z_$][\w$]*\s*:/g, '')
       if (new RegExp(`(?<![.\\w$])${name}(?![\\w$])`).test(stripped)) {
         issues.push(`${path}:${i + 1} uses "${name}" — declared at line ${at + 1}`)
         break

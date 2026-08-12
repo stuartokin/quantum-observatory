@@ -16,7 +16,13 @@
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { execSync } from 'node:child_process'
-import { extractJson, normaliseFile, checkFile, schemaForPath } from './agent-io.mjs'
+import {
+  extractJson,
+  normaliseFile,
+  checkFile,
+  schemaForPath,
+  collectionsFor,
+} from './agent-io.mjs'
 
 /**
  * Focus picked up from the issues themselves.
@@ -58,7 +64,12 @@ function focusFromIssues(agent) {
             parts.push(lines[k].trim())
             k++
           }
-          found.push(`(from issue #${i.number}) ${parts.join(' ').trim()}`)
+          const text = parts.join(' ').trim()
+          // The same instruction often appears twice — once in the issue body
+          // and once in a comment quoting it. Doing it twice is at best waste.
+          if (!found.some((f) => f.endsWith(text))) {
+            found.push(`(from issue #${i.number}) ${text}`)
+          }
           n = k - 1
         }
       }
@@ -214,11 +225,18 @@ if (focus.length) {
  * `title` field and `schema: frontier/v1`. It was following the specification
  * it had been given.
  */
-const writesNews = (cfg.write_scope ?? []).some((p) => p.includes('content/news'))
-const schemaPath = writesNews
-  ? 'content/schema/news.schema.json'
-  : 'content/schema/frontier.schema.json'
-const schema = readFileSync(schemaPath, 'utf8')
+/**
+ * Show every schema the agent may write against, not one guessed from a
+ * hard-coded check. Scout writes both frontier items and questions; being
+ * shown only the first is why it wrote questions in the shape of items.
+ */
+const writable = collectionsFor(cfg.write_scope ?? [])
+const schemas = (writable.length ? writable : [{ schema: 'content/schema/frontier.schema.json', name: 'frontier' }])
+  .filter((c) => existsSync(c.schema))
+const writesNews = writable.some((c) => c.name === 'news')
+const schema = schemas
+  .map((c) => `## ${c.name} — for files under content/${c.name}/\n\n\`\`\`json\n${readFileSync(c.schema, 'utf8')}\n\`\`\``)
+  .join('\n\n')
 const priorNews = writesNews ? existingNews() : []
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 // Shared across every agent, so changing it changes all four at once.
@@ -558,7 +576,13 @@ for (const f of files) {
    */
   const withIdentity = (text, path) => {
     const base = path.split('/').pop().replace(/\.md$/, '')
-    const collection = path.includes('/news/') ? 'news/v1' : 'frontier/v1'
+    const collection = path.includes('/news/')
+      ? 'news/v1'
+      : path.includes('/questions/')
+        ? 'question/v1'
+        : path.includes('/forecasts/')
+          ? 'forecast/v1'
+          : 'frontier/v1'
     const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
     if (!fm) return text
     let head = fm[1]

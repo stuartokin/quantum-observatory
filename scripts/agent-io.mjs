@@ -196,10 +196,32 @@ function itemValidator(schemaPath) {
 }
 
 /** The schema a path is governed by, inferred from its collection. */
+/**
+ * One table, consulted by everything.
+ *
+ * This mapping existed twice — once here for validation, once in the runner for
+ * deciding which schema to show an agent — and the second copy only knew about
+ * news. So the questions collection was handed the frontier schema and wrote
+ * frontier-shaped files, which is the same failure the newsroom had one
+ * collection earlier.
+ *
+ * Adding a collection now means adding one line, in one place.
+ */
+export const COLLECTIONS = [
+  { dir: 'content/news/', schema: 'content/schema/news.schema.json', name: 'news' },
+  { dir: 'content/questions/', schema: 'content/schema/question.schema.json', name: 'questions' },
+  { dir: 'content/forecasts/', schema: 'content/schema/forecast.schema.json', name: 'forecasts' },
+  { dir: 'content/frontier/', schema: 'content/schema/frontier.schema.json', name: 'frontier' },
+]
+
 export function schemaForPath(path) {
-  return path.includes('/news/')
-    ? 'content/schema/news.schema.json'
-    : 'content/schema/frontier.schema.json'
+  const hit = COLLECTIONS.find((c) => path.includes(`/${c.name}/`) || path.includes(c.dir))
+  return hit ? hit.schema : 'content/schema/frontier.schema.json'
+}
+
+/** Which collections an agent may write to, from its write_scope. */
+export function collectionsFor(writeScope = []) {
+  return COLLECTIONS.filter((c) => writeScope.some((p) => p.includes(c.name)))
 }
 
 /**
