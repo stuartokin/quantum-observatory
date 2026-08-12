@@ -36,18 +36,19 @@ links:
   - to: algo-classical-femoco
     relation: evidence-for
 evidence:
-  claim: 'Multiple peer-reviewed papers establish resource estimates for fault-tolerant quantum simulation of industrially relevant catalysts. For the FeMoco nitrogen-fixation cofactor: approximately 100–200 logical qubits and 10^9–10^10 Toffoli gates using state-of-the-art algorithms (DFTHC representation with spectrum amplification). For cytochrome P450: similar resource range. For Li-ion battery electrolyte molecules: resource estimates published by PsiQuantum / Mercedes-Benz (Kim et al. Phys Rev Research 2022) using photonic fault-tolerant architecture. The classical solution of the standard FeMoco model (Zhai et al. 2026, arXiv:2601.04621) shifts the quantum target to larger, more realistic representations but does not eliminate the application case. Readiness placed at emerging because no demonstrated quantum computation of a chemically useful result exists; the application relies on hardware not yet built.'
+  claim: 'Multiple peer-reviewed papers establish resource estimates for fault-tolerant quantum simulation of industrially relevant catalysts. For the FeMoco nitrogen-fixation cofactor: approximately 100–200 logical qubits and 10^9–10^10 Toffoli gates using state-of-the-art algorithms (DFTHC representation with spectrum amplification). For cytochrome P450: similar resource range. For Li-ion battery electrolyte molecules: resource estimates published by Xanadu and collaborators (Delgado et al. Phys. Rev. A 106, 032428, 2022) using fault-tolerant quantum phase estimation. The classical solution of the standard FeMoco model (Zhai et al. 2026, arXiv:2601.04621) shifts the quantum target to larger, more realistic representations but does not eliminate the application case. Readiness placed at emerging because no demonstrated quantum computation of a chemically useful result exists; the application relies on hardware not yet built.'
   verified: '2026-08-12'
   level: E3
   sources:
-    - url: 'https://arxiv.org/abs/2204.11890'
+    - url: 'https://journals.aps.org/pra/abstract/10.1103/PhysRevA.106.032428'
       role: primary
       title: 'Simulating key properties of lithium-ion batteries with a fault-tolerant quantum computer'
-      publisher: arXiv
-      date: '2022-04-25'
-      identifier: 'arXiv:2204.11890'
+      publisher: 'Physical Review A'
+      date: '2022-09-21'
+      identifier: 'Phys. Rev. A 106, 032428 (2022)'
+      doi: '10.1103/PhysRevA.106.032428'
       accessed: '2026-08-12'
-      note: 'End-to-end quantum algorithm for battery electrolyte simulation; resource estimates for a photonic fault-tolerant architecture.'
+      note: 'Delgado, Casares, dos Reis et al.; Xanadu and collaborators. Peer-reviewed in Physical Review A, September 2022. Preprint version at arXiv:2204.11890. End-to-end quantum algorithm for battery electrolyte simulation with resource estimates. FLAGGED: this source is peer-reviewed (E4 individually); the overall item evidence level is E3 because the application claim spans multiple unpeer-reviewed estimates. A person should confirm whether to raise the item level to E4 — see review note.'
     - url: 'https://arxiv.org/abs/2601.04621'
       role: corroborating
       title: 'Classical solution of the FeMo-cofactor model to chemical accuracy and its implications'
@@ -63,10 +64,12 @@ status: draft
 origin: agent
 added: '2026-08-12'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'Source correction: primary source was cited as arXiv:2204.11890 (preprint). This paper was published as Phys. Rev. A 106, 032428 (September 2022) — peer-reviewed in a Physical Review A journal. Source URL, role, publisher, date, identifier, and doi corrected to the published version; claim text updated accordingly. Evidence level remains E3 pending human decision: the PRA paper individually would be E4, but the item''s claim spans application-level resource estimates across multiple sources, some of which are not individually peer-reviewed. This is an upward level change that requires human confirmation. Escalated in needsHuman.'
 ---
 
 ## What this is
@@ -81,7 +84,7 @@ Quantum chemistry is the application area with the most concrete resource estima
 
 **Drug metabolism**: Cytochrome P450 enzymes process most drugs in the human liver. Their reactivity is governed by a strongly correlated iron centre that classical methods approximate poorly. Accurate simulation would improve drug design and toxicity prediction.
 
-**Battery materials**: Li-ion battery electrolyte molecules have been studied using fault-tolerant resource estimates by Kim et al. (Phys. Rev. Research 2022). The estimates are favourable relative to nitrogen fixation, but the classical approximations are less problematic for these systems.
+**Battery materials**: Li-ion battery electrolyte molecules have been studied using fault-tolerant resource estimates by Delgado et al. (Phys. Rev. A 106, 032428, 2022). The estimates are favourable relative to nitrogen fixation, but the classical approximations are less problematic for these systems.
 
 ## The state of the art in early 2026
 

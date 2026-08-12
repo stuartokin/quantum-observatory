@@ -54,10 +54,12 @@ status: draft
 origin: agent
 added: '2026-08-12'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass. arXiv:2601.04621 confirmed as preprint by Zhai, Li, Zhang et al. at Caltech/Flatiron Institute. Confirmed this is distinct from algo-classical-fe4s4-advantage (Legeza et al. arXiv:2603.28648) — different groups, different molecular systems, different papers. E3 correct for preprint. No peer-reviewed publication of arXiv:2601.04621 found at time of review. No changes.'
 ---
 
 ## What happened

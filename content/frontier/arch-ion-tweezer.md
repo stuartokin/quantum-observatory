@@ -61,10 +61,12 @@ country:
 novelty: 'New architecture combining trapped-ion fidelity with tweezer reconfigurability via effective dipole gate mechanism'
 horizon: 2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass. arXiv:2606.27249 confirmed as preprint submitted June 2026, authors at MPQ Munich / Duke / IonQ / Innsbruck. E3 correct for preprint. Architecture proposal (theoretical), readiness emerging correct. Not a duplicate of arch-ion-tweezer-gate-exp (which is the experimental gate paper by Schwerdt et al., PRL 2026) or arch-rf-trap-optical-segmentation (different architecture). No changes.'
 ---
 
 ## What happened

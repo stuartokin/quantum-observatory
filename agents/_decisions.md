@@ -144,3 +144,14 @@ into the sections above once you have read them — or delete them if wrong.
 E4 is the line for experiments. A theoretical blueprint — however authoritative and however thoroughly peer-reviewed — describes what could or should be done, not what was measured. Rating it E4 inflates confidence that an experiment was performed.
 
 *Proposed 2026-08-11, after qec-surface-code was set to E4 on Fowler et al. 2012 (Phys. Rev. A 86, 032324), a 54-page theoretical architecture paper, not an experimental result. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-12
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**When a source cited as a preprint has a known peer-reviewed publication, correct the source URL, role, publisher, date, identifier, and doi to the published version. This is a mechanical metadata correction, separate from the evidence level decision. If correcting the source implies an upward level change, escalate the level question to a person rather than changing the level field.**
+
+Citing a preprint URL when a peer-reviewed paper exists gives a false picture of the evidence and may prevent the board from correctly assessing whether E4 applies.
+
+*Proposed 2026-08-12, after app-quantum-chemistry-catalyst cited arXiv:2204.11890 as role:preprint when Phys. Rev. A 106, 032428 (2022) exists as the peer-reviewed publication. Not yet confirmed by a person.*

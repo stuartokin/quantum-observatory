@@ -38,9 +38,10 @@ evidence:
       title: 'Surpassing 99% detection efficiency by cascading two superconducting nanowires on one waveguide with self-calibration'
       publisher: 'Light: Science & Applications'
       date: '2025-10-17'
+      identifier: 'Light: Sci. Appl. 14, 369 (2025)'
       doi: '10.1038/s41377-025-02031-5'
       accessed: '2026-08-12'
-      note: 'Nanjing University / Peking University collaboration. Peer-reviewed. Self-calibration method allows in-situ efficiency verification despite large fiber-to-chip coupling losses.'
+      note: 'Li, Mao, Zhou et al.; Nanjing University / Peking University / Purple Mountain Laboratory / Hefei National Laboratory. Peer-reviewed in Light: Science & Applications (Nature Publishing Group). Confirmed via PMC full text (PMC12533016) and EurekAlert press release. Self-calibration method allows in-situ efficiency verification despite large fiber-to-chip coupling losses. E4 correct for peer-reviewed experimental result.'
 qdayImpact: 0
 qdayReasoning: 'Enables photonic quantum computing and QKD. No direct cryptanalytic relevance.'
 confidence: high
@@ -48,10 +49,12 @@ status: draft
 origin: agent
 added: '2026-08-12'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass. Nature/Light: Science & Applications DOI 10.1038/s41377-025-02031-5 confirmed via nature.com abstract and PMC full text (PMC12533016). 99.73% on-chip efficiency at 1550 nm, Nanjing University / Peking University, 8-inch SOI wafer, DUV lithography all confirmed. E4 correct for peer-reviewed paper. No changes.'
 ---
 
 ## What happened

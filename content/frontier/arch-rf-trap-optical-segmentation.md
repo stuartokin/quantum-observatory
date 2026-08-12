@@ -63,10 +63,12 @@ country:
 novelty: 'new architecture'
 horizon: 2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass. Phys. Rev. X 14, 041017 (2024) is a peer-reviewed theoretical architecture paper with no experimental data — confirmed by scout summary and source note. E1 correct per settled precedent: peer review does not lift theoretical/architectural work above E1; E4 requires a peer-reviewed experimental result. Readiness emerging correct. Distinct from arch-ion-tweezer (different architecture: rf trap with optical segmentation vs ions trapped in tweezers). No changes.'
 ---
 
 ## What happened

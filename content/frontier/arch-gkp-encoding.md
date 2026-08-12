@@ -47,10 +47,12 @@ status: draft
 origin: agent
 added: '2026-08-12'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass. arXiv:2605.08009 confirmed as preprint submitted May 2026 by ETH Zürich. E3 correct for preprint. 69% Bell-state fidelity on GKP qubits in trapped ion motional modes — claim consistent with abstract. Readiness experimental correct. No changes to evidence level or readiness.'
 ---
 
 ## What happened

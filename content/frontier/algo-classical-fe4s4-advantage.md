@@ -60,18 +60,19 @@ country:
 novelty: Classical algorithm advance narrowing quantum advantage claim for listed benchmark
 horizon: 2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: reviewer
   agentMergedOn: '2026-08-12'
-  note: 'Focus run. Human should verify whether algo-classical-femoco already sources Legeza et al. arXiv:2603.28648. If so, collapse this into that item as a corroborating source rather than a new entry.'
+  reviewedOn: '2026-08-12'
+  note: 'First reviewer pass. arXiv:2603.28648 confirmed as preprint by Legeza et al. (Wigner Research Centre / TU Munich / PNNL), targeting Fe4S4 CAS(54,36) and Fe5S12 CAS(89,102). This is distinct from algo-classical-femoco (Zhai et al. arXiv:2601.04621, FeMoco benchmark, Caltech/Flatiron) — different groups, different molecular systems, no overlap. E3 correct for preprint primary source; companion JCTC method paper is peer-reviewed but covers the GPU method, not the chemistry application directly. Scout note asking whether Legeza was already in femoco resolved: it was not. No changes.'
 ---
 
 **What happened.** A team at the Wigner Research Centre for Physics (Budapest), the Technical University of Munich, and Pacific Northwest National Laboratory used the Density Matrix Renormalization Group (DMRG) algorithm in mixed-precision mode on NVIDIA Blackwell GPUs to compute high-accuracy classical ground-state energies for Fe4S4 at CAS(54,36) active space. Fe4S4 is explicitly listed on the IBM/RIKEN Quantum Advantage Tracker as a benchmark where quantum computation is expected to be necessary. The team also extended the classical frontier to CAS(89,102) for a larger Fe5S12H4(5-) complex — the largest active space reported classically for this system. The authors argue that rigorous DMRG must serve as a required classical reference before any quantum advantage claim in electronic structure is accepted, and note that GPU implementations of DMRG are not yet fully optimised, meaning the classical frontier will continue to advance.
 
 **Previous state of the art.** The Zhai/Chan group (Caltech, arXiv:2601.04621, January 2026) had classically solved the FeMo-co benchmark at chemical accuracy, removing the flagship nitrogenase cofactor from the list of problems claiming to require quantum computers. Legeza et al. extend this pattern to Fe4S4 — a separately listed Quantum Advantage Tracker target — and to larger active spaces than previously achieved classically.
 
-**Why it matters.** IBM and RIKEN publish specific chemistry problems on their Quantum Advantage Tracker as validation targets for quantum hardware. This paper directly addresses one of those listed problems with a classical result available on hardware today. The assumption that must change is: Fe4S4 at CAS(54,36) scale lies beyond classical reach. As of March 2026, it does not. Combined with the Zhai/Chan FeMo-co result, this represents a systematic classical challenge to the benchmark problems used to motivate quantum chemistry hardware development. If the classical frontier continues advancing with each GPU generation, the Tracker will need harder targets or revised benchmarking criteria.
+**Why it matters.** IBM and RIKEN publish specific chemistry problems on their Quantum Advantage Tracker as validation targets for quantum hardware. This paper directly addresses one of those listed problems with a classical result available on hardware today. The assumption that must change is: Fe4S4 at CAS(54,36) scale lies beyond classical reach. As of March 2026, it does not. Combined with the Zhai/Chan FeMoco result, this represents a systematic classical challenge to the benchmark problems used to motivate quantum chemistry hardware development. If the classical frontier continues advancing with each GPU generation, the Tracker will need harder targets or revised benchmarking criteria.
 
 **Limitations.** The main chemistry result (arXiv:2603.28648) is a preprint and has not been peer-reviewed (E3). The companion GPU-DMRG method paper (Menczer et al., JCTC July 2026) is peer-reviewed at E4 for the method, not specifically the Fe4S4 chemistry application. The authors note DMRG GPU exploitation remains immature — a limitation that also implies the classical frontier will move further. The result addresses ground-state energies in a model active space; it does not resolve all chemically relevant aspects of these systems.
 
