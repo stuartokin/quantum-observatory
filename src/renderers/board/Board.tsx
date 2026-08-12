@@ -1275,38 +1275,6 @@ function Sky({
     const PAD = 108
     const W = size.w
     const H = size.h
-      /**
-       * LEVEL OF DETAIL.
-       *
-       * Zoom decides how much of the selected set is drawn prominently. It
-       * never decides what is *in* the set — that is the filters' job, and a
-       * zoom level that brought back something a reader filtered out, or hid
-       * something they filtered in, would be lying about what they asked for.
-       *
-       * Nothing is ever hidden. Demoted items draw as small dim dots: still
-       * there, still hoverable, still clickable, still counted. A reader who
-       * cannot see something is told it does not exist; a reader who sees it
-       * small is told it is there and quiet. Only one of those is true.
-       */
-      const detail: 0 | 1 | 2 = v.k < 1.35 ? 0 : v.k < 2.4 ? 1 : 2
-
-      /** Full size and a label, or a dim dot. */
-      const prominent = (n: (typeof nodes)[number]) => {
-        if (detail === 2) return true
-        const item = itemById.get(n.id)
-        const moved = item?.moved?.on
-          ? (Date.now() - new Date(item.moved.on).getTime()) / 864e5 < 120
-          : false
-        const fresh = item?.added
-          ? (Date.now() - new Date(item.added).getTime()) / 864e5 < 45
-          : false
-        const priority = item?.priority === 'P0' || item?.priority === 'P1'
-        // Level 1 adds P1 and anything with real attention; level 0 is the
-        // shortest possible list — what moved, what is new, and the handful of
-        // P0 items that carry weight.
-        if (detail === 1) return moved || fresh || priority || n.attention > 0.45
-        return moved || fresh || (item?.priority === 'P0' && n.attention > 0.6)
-      }
 
     let raf = 0
     const t0 = performance.now()
@@ -1422,6 +1390,39 @@ function Sky({
       cur.current.tx += (view.tx - cur.current.tx) * e
       cur.current.ty += (view.ty - cur.current.ty) * e
       const v = cur.current
+
+      /**
+       * LEVEL OF DETAIL.
+       *
+       * Zoom decides how much of the selected set is drawn prominently. It
+       * never decides what is *in* the set — that is the filters' job, and a
+       * zoom level that brought back something a reader filtered out, or hid
+       * something they filtered in, would be lying about what they asked for.
+       *
+       * Nothing is ever hidden. Demoted items draw as small dim dots: still
+       * there, still hoverable, still clickable, still counted. A reader who
+       * cannot see something is told it does not exist; a reader who sees it
+       * small is told it is there and quiet. Only one of those is true.
+       */
+      const detail: 0 | 1 | 2 = v.k < 1.35 ? 0 : v.k < 2.4 ? 1 : 2
+
+      /** Full size and a label, or a dim dot. */
+      const prominent = (n: (typeof nodes)[number]) => {
+        if (detail === 2) return true
+        const item = itemById.get(n.id)
+        const moved = item?.moved?.on
+          ? (Date.now() - new Date(item.moved.on).getTime()) / 864e5 < 120
+          : false
+        const fresh = item?.added
+          ? (Date.now() - new Date(item.added).getTime()) / 864e5 < 45
+          : false
+        const priority = item?.priority === 'P0' || item?.priority === 'P1'
+        // Level 1 adds P1 and anything with real attention; level 0 is the
+        // shortest possible list — what moved, what is new, and the handful of
+        // P0 items that carry weight.
+        if (detail === 1) return moved || fresh || priority || n.attention > 0.45
+        return moved || fresh || (item?.priority === 'P0' && n.attention > 0.6)
+      }
       const X = (x: number) => PAD + (x * (W - PAD - 16) + v.tx) * v.k
       const Y = (y: number) => 10 + (y * (H - 30) + v.ty) * v.k
 
@@ -1961,9 +1962,8 @@ function Sky({
       // Sixty faint lines behind sixty dim dots is texture; a dozen between the
       // things a reader is looking at is information.
       for (const { a, b, cross: cr } of detail === 0 ? [] : links) {
-        const na = byId.get(a)
-        const nb = byId.get(b)
-        if (detail === 1 && !(na && nb && prominent(na) && prominent(nb))) continue
+        // a and b are nodes, not ids — no lookup needed.
+        if (detail === 1 && !(prominent(a) && prominent(b))) continue
         const pa = at(a)
         const pb = at(b)
         g.strokeStyle = colour
