@@ -3,7 +3,15 @@ import { lazyWithReload } from '../../components/lazyWithReload'
 import { allFrontier } from '../../content/frontier'
 import type { FrontierItem, Readiness } from '../../content/frontierTypes'
 import { PILLAR_SPECTRUM } from '../../palette'
-import { constellationColour, constellationMuted } from '../../constellationPalette'
+import {
+  constellationColour,
+  constellationMuted,
+  supergroupOf,
+  supergroupColour,
+  supergroupHome,
+  SUPERGROUPS,
+  SUPERGROUP_LABEL,
+} from '../../constellationPalette'
 import { formatBuildTime } from '../../buildInfo'
 import {
   LEVELS,
@@ -1096,6 +1104,8 @@ function Sky({
   )
 
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes])
+  /** Items, not nodes. Prominence asks about moved, added and priority. */
+  const itemById = useMemo(() => new Map(pool.map((i) => [i.id, i])), [pool])
 
   /** Where the headline satellites landed, so a click can find one. */
   const newsHits = useRef<{ x: number; y: number; r: number; item: NewsItem }[]>([])
@@ -1265,6 +1275,39 @@ function Sky({
     const PAD = 108
     const W = size.w
     const H = size.h
+      /**
+       * LEVEL OF DETAIL.
+       *
+       * Zoom decides how much of the selected set is drawn prominently. It
+       * never decides what is *in* the set — that is the filters' job, and a
+       * zoom level that brought back something a reader filtered out, or hid
+       * something they filtered in, would be lying about what they asked for.
+       *
+       * Nothing is ever hidden. Demoted items draw as small dim dots: still
+       * there, still hoverable, still clickable, still counted. A reader who
+       * cannot see something is told it does not exist; a reader who sees it
+       * small is told it is there and quiet. Only one of those is true.
+       */
+      const detail: 0 | 1 | 2 = v.k < 1.35 ? 0 : v.k < 2.4 ? 1 : 2
+
+      /** Full size and a label, or a dim dot. */
+      const prominent = (n: (typeof nodes)[number]) => {
+        if (detail === 2) return true
+        const item = itemById.get(n.id)
+        const moved = item?.moved?.on
+          ? (Date.now() - new Date(item.moved.on).getTime()) / 864e5 < 120
+          : false
+        const fresh = item?.added
+          ? (Date.now() - new Date(item.added).getTime()) / 864e5 < 45
+          : false
+        const priority = item?.priority === 'P0' || item?.priority === 'P1'
+        // Level 1 adds P1 and anything with real attention; level 0 is the
+        // shortest possible list — what moved, what is new, and the handful of
+        // P0 items that carry weight.
+        if (detail === 1) return moved || fresh || priority || n.attention > 0.45
+        return moved || fresh || (item?.priority === 'P0' && n.attention > 0.6)
+      }
+
     let raf = 0
     const t0 = performance.now()
     let last = t0
@@ -1524,6 +1567,23 @@ function Sky({
           const weight = evidenceWeight * 0.55 + priorityWeight * 0.45
           const rr = (3 + weight * 10) * (sel ? 1.5 : hov ? 1.2 : 1)
 
+          // Same rule as the galaxy: what moved, what is new, what carries
+          // weight. Everything else is a dim dot until you zoom in.
+          const tlMoved = item?.moved?.on
+            ? (Date.now() - new Date(item.moved.on).getTime()) / 864e5 < 120
+            : false
+          const tlFresh = item?.added
+            ? (Date.now() - new Date(item.added).getTime()) / 864e5 < 45
+            : false
+          const tlProminent =
+            v.k > 2.2 ||
+            sel ||
+            hov ||
+            tlMoved ||
+            tlFresh ||
+            item?.priority === 'P0' ||
+            (v.k > 1.4 && item?.priority === 'P1')
+
           if (m.attention > 0.02 && !reduced) {
             const ph = (t * 0.45 + m.x * 5) % 1
             g.globalAlpha = (1 - ph) * 0.5 * m.attention
@@ -1541,7 +1601,15 @@ function Sky({
           // The same celestial shapes as the galaxy, so a body is recognisable
           // across both views. A field of identical discs tells you only where
           // things are, never what they are.
-          drawBody(g, item?.actors?.[0] ? glyphFor(item.actors[0]) : 'star', px, py, rr, tint, m.sourced)
+          if (tlProminent) {
+            drawBody(g, item?.actors?.[0] ? glyphFor(item.actors[0]) : 'star', px, py, rr, tint, m.sourced)
+          } else {
+            g.globalAlpha = (dim && !sel ? 0.2 : 0.35) * 1
+            g.fillStyle = tint
+            g.beginPath()
+            g.arc(px, py, Math.max(1.5, rr * 0.28), 0, Math.PI * 2)
+            g.fill()
+          }
           g.shadowBlur = 0
 
           /**
@@ -1629,7 +1697,11 @@ function Sky({
           // above 0.7, so "only the important ones" meant almost all of them.
           // The cap rises as you zoom, so detail arrives when asked for.
           const wantLabel =
-            sel || hov || ((labelRank.get(m.id) ?? 999) < labelBudget && m.importance > 0.35)
+            sel ||
+            hov ||
+            (tlProminent &&
+              (labelRank.get(m.id) ?? 999) < labelBudget &&
+              m.importance > 0.35)
           if (wantLabel) {
             const text = m.label
             const tw = g.measureText(text).width
@@ -1778,7 +1850,34 @@ function Sky({
         // same region, so a body near the top printed straight over the
         // category names. A band nothing else may enter is the only
         // arrangement that holds at every width.
-        const zoomFade = Math.max(0, Math.min(1, (1.7 - v.k) / 0.5))
+        // At the widest level the nine names collide and say less than five
+        // would. The band is the same; what fills it changes with zoom.
+        if (detail === 0) {
+          const active = SUPERGROUPS.filter((gp) =>
+            CONSTELLATIONS.some((c) => activeCons.includes(c) && supergroupOf(c) === gp),
+          )
+          g.globalAlpha = 1
+          const backing = g.createLinearGradient(0, 0, 0, 42)
+          backing.addColorStop(0, 'rgba(7,11,20,0.96)')
+          backing.addColorStop(0.7, 'rgba(7,11,20,0.86)')
+          backing.addColorStop(1, 'rgba(7,11,20,0)')
+          g.fillStyle = backing
+          g.fillRect(0, 0, W, 42)
+
+          active.forEach((gp) => {
+            const home = supergroupHome(gp, (c) => CONSTELLATION_HOME[c] ?? 0.5)
+            const cx = X(home)
+            const label = SUPERGROUP_LABEL[gp].toUpperCase()
+            const tw = g.measureText(label).width
+            const x = Math.max(4, Math.min(W - tw - 4, cx - tw / 2))
+            g.fillStyle = supergroupColour(gp)
+            g.globalAlpha = 0.95
+            g.fillText(label, x, 16)
+          })
+          g.globalAlpha = 1
+        }
+
+        const zoomFade = detail === 0 ? 0 : Math.max(0, Math.min(1, (2.6 - v.k) / 0.6))
         if (zoomFade > 0.02) {
           const active = CONSTELLATIONS.filter((c) => activeCons.includes(c))
           const laneW = (W - PAD) / Math.max(1, active.length)
@@ -1858,7 +1957,13 @@ function Sky({
         g.globalAlpha = 1
       }
 
-      for (const { a, b, cross: cr } of links) {
+      // Links appear when zoomed in, and only between bodies drawn prominently.
+      // Sixty faint lines behind sixty dim dots is texture; a dozen between the
+      // things a reader is looking at is information.
+      for (const { a, b, cross: cr } of detail === 0 ? [] : links) {
+        const na = byId.get(a)
+        const nb = byId.get(b)
+        if (detail === 1 && !(na && nb && prominent(na) && prominent(nb))) continue
         const pa = at(a)
         const pb = at(b)
         g.strokeStyle = colour
@@ -1896,6 +2001,7 @@ function Sky({
        */
       const newsMarks: { x: number; y: number; r: number; item: NewsItem }[] = []
 
+
       const dimmed = selected !== null
       // With little room, only the highest-ranked items keep a label.
       const roomy = W * H > 520000
@@ -1930,9 +2036,11 @@ function Sky({
         const depthFade = mode === 'orbit' ? Math.max(0.35, Math.min(1, persp)) : 1
         const off = (mode === 'orbit' && n.constellation !== focusCon ? 0.12 : 1) * depthFade
         const fade = (dimmed && !sel ? 0.3 : 1) * off
+        const isProminent = prominent(n) || sel || hov
         g.shadowColor = colour
-        g.shadowBlur = n.sourced ? 16 + n.weight * 12 : 5
-        g.globalAlpha = (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) * fade
+        g.shadowBlur = isProminent ? (n.sourced ? 16 + n.weight * 12 : 5) : 0
+        g.globalAlpha =
+          (isProminent ? (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) : 0.3) * fade
         // Hue carries the constellation and nothing else.
         //
         // Actor used to shift the hue by up to 34 degrees, but adjacent
@@ -1947,13 +2055,23 @@ function Sky({
         // shape in the Actors panel are computed by different routes and drift
         // apart, which is exactly what "the icons are mixed up" looks like.
         const glyph = n.actor ? glyphFor(n.actor) : n.glyph
-        drawBody(g, glyph, px, py, r, bodyColour, n.sourced)
+        if (isProminent) {
+          drawBody(g, glyph, px, py, r, bodyColour, n.sourced)
+        } else {
+          // A dim dot. Small enough to recede, large enough to hit — the
+          // hit radius below is unchanged, so a demoted body is exactly as
+          // clickable as a prominent one.
+          g.fillStyle = bodyColour
+          g.beginPath()
+          g.arc(px, py, Math.max(1.6, r * 0.3), 0, Math.PI * 2)
+          g.fill()
+        }
         g.shadowBlur = 0
 
         // Unreviewed items carry a dashed ring wherever they appear. The label
         // in the panel is not enough — someone scanning the board must be able
         // to see which bodies nobody has checked.
-        if (unreviewed.has(n.id)) {
+        if (unreviewed.has(n.id) && isProminent) {
           g.globalAlpha = 0.75 * fade
           g.strokeStyle = '#FFB020'
           g.lineWidth = 1
@@ -2006,7 +2124,7 @@ function Sky({
           n.attention > 0.15 ||
           (n.sourced && n.rank >= labelFloor) ||
           v.k > 2.2
-        const showLabel = sel || hov || inFocus || earns
+        const showLabel = (sel || hov || inFocus || earns) && isProminent
         // Nothing may print into the constellation band at the top.
         const clearOfBand = py > 46 || sel || hov
         if (
@@ -2061,7 +2179,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, showLegend, pool, fitScale, newsOverlay])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, showLegend, pool, fitScale, newsOverlay, itemById])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()

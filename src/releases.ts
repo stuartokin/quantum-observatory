@@ -24,6 +24,18 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.44.0',
+    date: '2026-08-12',
+    headline: 'The board shows less, and hides nothing.',
+    ui: [
+      'Three levels of detail driven by zoom. At the widest, five supergroups — Computing, Cryptography, Communications, Sensing, Applications — and about a dozen items drawn prominently. Zooming in splits the lanes into the nine constellations; zooming further shows everything.',
+      'Cryptography exists as a group because PQC and migration are neither computing nor applications. They are the response to the threat, and folding them into either misdescribes them.',
+      'Nothing is hidden at any level. A demoted item is a small dim dot — still there, still hoverable, still clickable, still counted. A reader who cannot see something is told it does not exist; one who sees it small is told it is there and quiet.',
+      'Links appear only when zoomed in and only between prominent bodies. Sixty hairlines behind sixty dots is texture rather than information.',
+      'Zoom never changes what is on the board, only how much of it is emphasised. Bringing back something a reader filtered out would be lying about what they asked for.',
+    ],
+  },
+  {
     version: '0.41.0',
     date: '2026-08-11',
     headline: 'A record of what changed in the content, not just the code.',
@@ -117,15 +129,6 @@ export const RELEASES: Release[] = [
       'Glyphs rewritten as spheres with a single light source across the whole board — a base gradient toward the light, a terminator, and a rim light on the shadowed limb. Consistent lighting is most of what separates a field of spheres from a field of discs.',
       'Rings draw in two halves so the planet sits between them; a comet tail points away from the light as a real one points away from the sun.',
       'Constellation names moved into a reserved band with its own backing, and item labels are excluded from it. Staggering onto two rows was never going to hold while labels could print into the same region.',
-    ],
-  },
-  {
-    version: '0.25.0',
-    date: '2026-08-09',
-    headline: 'Precedents, so a question answered once is not asked again.',
-    agents: [
-      'agents/_decisions.md holds every settled question and is read by all five agents before anything escalates. Vendor documents are E2 whatever their legal status; reviews cap at E3; downward corrections need no permission.',
-      'That last rule was an over-restriction of mine: corrections to human-reviewed items were escalating even when the agent had already reached the right answer.',
     ],
   },
 ]
