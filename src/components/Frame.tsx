@@ -55,6 +55,7 @@ export function Frame({
   action,
   scrollKey,
   onMaximise,
+  noMaximise,
 }: {
   title: string
   state: FrameState
@@ -85,6 +86,8 @@ export function Frame({
   action?: ReactNode
   /** Called when the frame is maximised, for anything that should change with it. */
   onMaximise?: () => void
+  /** Reference panels have nothing to gain from filling the screen. */
+  noMaximise?: boolean
   /**
    * Change this and the body scrolls back to the top.
    *
@@ -231,6 +234,7 @@ export function Frame({
             {bar}
           </div>
         )}
+        {!noMaximise && (
         <button
           className="frame__btn"
           onPointerDown={(e) => e.stopPropagation()}
@@ -241,6 +245,7 @@ export function Frame({
         >
           {state.maximised ? '❐' : '□'}
         </button>
+        )}
         {onDock && (
           <button
             className="frame__btn"
@@ -324,6 +329,13 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
       y: top + 30,
       w: Math.min(680, w - pad * 2),
       h: Math.min(520, h - top - 120),
+      docked: true,
+    },
+    key: {
+      x: pad,
+      y: top + 60,
+      w: 280,
+      h: Math.min(520, h - top - 140),
       docked: true,
     },
     questions: {

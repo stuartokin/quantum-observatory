@@ -24,6 +24,18 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.45.0',
+    date: '2026-08-12',
+    headline: 'The key becomes a window, and the timeline stops moving its own axis.',
+    ui: [
+      'The key is a window of its own — moveable, closeable, shared by every plot. Asking for it from a second view brings the existing one forward rather than opening another: there is one visual grammar, so there is one key. Drawn on the canvas it was clipped by whichever frame owned it, and could appear twice.',
+      'The last-two-years view is now a camera position rather than a filter. Removing items changed the axis range under them, so a body sat at a different year depending on the window and zooming out could not recover the years that had been removed. Every item is always present; the view starts framed on the recent end.',
+      'The year toggle is labelled with what is showing rather than what the click will do. The other way round reads as a description of the current state, and sent a reader looking for a broken filter.',
+      'A constellation opens in its own window instead of taking over the galaxy, which is the thing a reader navigates from.',
+      'Un-docking a window puts it back inside the viewport. A frame keeps its last position while docked, and that position may since have moved off screen — opening something and not finding it reads as the click having failed.',
+    ],
+  },
+  {
     version: '0.44.0',
     date: '2026-08-12',
     headline: 'The board shows less, and hides nothing.',
@@ -119,16 +131,6 @@ export const RELEASES: Release[] = [
     ui: [
       'Headlines are a distinct content type that points at the board rather than being part of it. A stream of announcements allowed to move a readiness map is what the map exists to resist.',
       'Every item carries a validation block saying what was actually checked, and the research behind it where that could be traced.',
-    ],
-  },
-  {
-    version: '0.29.0',
-    date: '2026-08-10',
-    headline: 'Bodies become lit worlds.',
-    ui: [
-      'Glyphs rewritten as spheres with a single light source across the whole board — a base gradient toward the light, a terminator, and a rim light on the shadowed limb. Consistent lighting is most of what separates a field of spheres from a field of discs.',
-      'Rings draw in two halves so the planet sits between them; a comet tail points away from the light as a real one points away from the sun.',
-      'Constellation names moved into a reserved band with its own backing, and item labels are excluded from it. Staggering onto two rows was never going to hold while labels could print into the same region.',
     ],
   },
 ]

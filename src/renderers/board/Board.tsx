@@ -63,6 +63,7 @@ const Help = lazyWithReload('Help', () => import('../../components/Help'))
 const NewsArchive = lazyWithReload('NewsArchive', () => import('../../components/NewsArchive'))
 const NewsDetail = lazyWithReload('NewsDetail', () => import('../../components/NewsDetail'))
 const Questions = lazyWithReload('Questions', () => import('../../components/Questions'))
+const Key = lazyWithReload('Key', () => import('../../components/Key'))
 import { recentNews, newsFor, newsAbout, allNews } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
@@ -99,7 +100,17 @@ export function Board() {
   /** Years excluded from view. Filtering time frees space in both views. */
   const [hiddenYears, setHiddenYears] = useState<Set<number>>(new Set())
   /** The key starts closed. It is reference, and the plot is the point. */
-  const [showLegend, setShowLegend] = useState(false)
+  /**
+   * One key, shared by every plot.
+   *
+   * Asking for it from a second window brings the existing one forward rather
+   * than opening another — there is only one visual grammar, so there is only
+   * one key.
+   */
+  const showKey = () => {
+    setFrames((f) => ({ ...f, key: { ...intoView(f.key), docked: false } }))
+    setOrder((o) => [...o.filter((x) => x !== 'key'), 'key'])
+  }
   /** The item under the pointer, so the frame bar can name who is behind it. */
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   /** Kinds of organisation to show. Empty is meaningless, so null means all. */
@@ -109,9 +120,39 @@ export function Board() {
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
   /** The timeline has its own camera; sharing one made each view jump. */
   const [tlView, setTlView] = useState({ k: 1, tx: 0, ty: 0 })
+
+  /** The axis range the timeline is currently drawing, so a view can frame it. */
+  const tlRange = useRef<{ from: number; to: number } | null>(null)
+
+  /**
+   * Frame the last N years without removing anything.
+   *
+   * TX maps a 0..1 position across the axis; to show a slice we scale by the
+   * inverse of its width and pan its start to the left edge.
+   */
+  const frameYears = (years: number) => {
+    const t = tlRange.current
+    if (!t || !years) {
+      setTlView({ k: 1, tx: 0, ty: 0 })
+      return
+    }
+    const span = Math.max(1, t.to - t.from)
+    const start = Math.max(t.from, t.to - years)
+    const f0 = (start - t.from) / span
+    const f1 = 1
+    const width = Math.max(0.05, f1 - f0)
+    setTlView({ k: 1 / width, tx: -f0 / width, ty: 0 })
+  }
   /** The constellation window has its own camera too. */
   const [orbitView, setOrbitView] = useState({ k: 1, tx: 0, ty: 0 })
-  /** 0 means every year. Two is the default because that is where the news is. */
+  /**
+   * The last two years, as a camera position rather than a filter.
+   *
+   * Filtering the items changed the axis range under them, so a body moved to a
+   * different year when the window changed and zooming out could not recover
+   * the years that had been removed. Every item is always present; the view
+   * simply starts framed on the recent end.
+   */
   const [timelineYears, setTimelineYears] = useState(2)
   /** Strip across the page, or a window with the whole history. */
   const [headlineMode, setHeadlineMode] = useState<'ticker' | 'archive'>('ticker')
@@ -175,7 +216,7 @@ export function Board() {
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'constellation', 'timeline', 'questions', 'teaser', 'news', 'headlines', 'newsitem',
+    'galaxy', 'constellation', 'timeline', 'questions', 'key', 'teaser', 'news', 'headlines', 'newsitem',
     'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
@@ -630,9 +671,7 @@ export function Board() {
             )}
             <button
               className="frame__mode"
-              onClick={() => setShowLegend((v) => !v)}
-              aria-pressed={showLegend}
-              style={showLegend ? { color: colour, borderColor: colour } : undefined}
+              onClick={showKey}
             >
               Key
             </button>
@@ -657,7 +696,6 @@ export function Board() {
           setCam={setCam}
           resizeTick={resizeTick}
           forecast={forecast}
-          showLegend={showLegend}
           pool={pool}
           newsOverlay={showNewsOverlay}
           onOpenNews={openHeadline}
@@ -681,9 +719,7 @@ export function Board() {
           action={
             <button
               className="frame__mode"
-              onClick={() => setShowLegend((v) => !v)}
-              aria-pressed={showLegend}
-              style={showLegend ? { color: colour, borderColor: colour } : undefined}
+              onClick={showKey}
             >
               Key
             </button>
@@ -707,8 +743,7 @@ export function Board() {
             setCam={setCam}
             resizeTick={resizeTick}
             forecast={forecast}
-            showLegend={showLegend}
-            pool={pool}
+              pool={pool}
             newsOverlay={showNewsOverlay}
             onOpenNews={openHeadline}
           />
@@ -730,7 +765,11 @@ export function Board() {
         action={
           <button
             className="frame__mode"
-            onClick={() => setTimelineYears((y) => (y === 2 ? 0 : 2))}
+            onClick={() => {
+              const next = timelineYears === 2 ? 0 : 2
+              setTimelineYears(next)
+              frameYears(next)
+            }}
             aria-pressed={timelineYears === 2}
             title={
               timelineYears === 2
@@ -754,6 +793,12 @@ export function Board() {
           onSelect={setSelected}
           view={tlView}
           setView={setTlView}
+          onRange={(from, to) => {
+            const had = tlRange.current
+            tlRange.current = { from, to }
+            // Frame the opening window once the range is known, not before.
+            if (!had && timelineYears) frameYears(timelineYears)
+          }}
           activeCons={cons}
           mode="tower"
           focusCon={null}
@@ -764,12 +809,25 @@ export function Board() {
           setCam={setCam}
           resizeTick={resizeTick}
           forecast={forecast}
-          showLegend={showLegend}
           pool={pool}
           newsOverlay={showNewsOverlay}
           onOpenNews={openHeadline}
-          yearsBack={timelineYears}
         />
+      </Frame>
+
+      <Frame
+        title="Key"
+        state={frames.key}
+        onChange={setFrame('key')}
+        onClose={() => setFrames((f) => ({ ...f, key: { ...f.key, docked: true } }))}
+        accent={colour}
+        z={zOf('key')}
+        onFocus={raise('key')}
+        noMaximise
+      >
+        <Suspense fallback={<p className="label">Loading…</p>}>
+          <Key activeCons={cons} colour={colour} hovered={hoveredActor} />
+        </Suspense>
       </Frame>
 
       <Frame
@@ -1112,12 +1170,11 @@ function Sky({
   setCam,
   resizeTick,
   forecast,
-  showLegend,
+  onRange,
   onHover,
   pool,
   newsOverlay,
   onOpenNews,
-  yearsBack = 0,
 }: {
   nodes: Node[]
   colour: string
@@ -1135,13 +1192,12 @@ function Sky({
   setCam: (c: Camera) => void
   resizeTick: number
   forecast?: Forecast
-  showLegend: boolean
+  /** Reports the axis range it drew, so a caller can frame a slice of it. */
+  onRange?: (from: number, to: number) => void
   onHover: (id: string | null) => void
   pool: FrontierItem[]
   newsOverlay: boolean
   onOpenNews: (n: NewsItem) => void
-  /** 0 = every year. Otherwise the window back from today, in years. */
-  yearsBack?: number
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -1220,30 +1276,13 @@ function Sky({
     [],
   )
 
-  /**
-   * The timeline defaults to the last two years.
-   *
-   * Fifteen years of axis for a field whose interesting period is the last
-   * eighteen months spends most of the width on empty space. Zooming out
-   * restores the rest.
-   */
-  const windowed = useMemo(() => {
-    if (!yearsBack) return nodes
-    const cutoff = new Date().getFullYear() - yearsBack
-    return nodes.filter((n) => {
-      const item = pool.find((i) => i.id === n.id)
-      const d = item ? dateOf(item) : null
-      return !d || d.getFullYear() >= cutoff
-    })
-  }, [nodes, pool, yearsBack])
-
   const tl = useMemo(
     () =>
       timeline
         ? layoutTimeline(
             // The year window, not every node — otherwise the axis still spans
             // fifteen years and the filter does nothing visible.
-            windowed
+            nodes
               .map((n) => allFrontier.find((i) => i.id === n.id))
               .filter((i): i is NonNullable<typeof i> => Boolean(i)),
             {
@@ -1253,7 +1292,7 @@ function Sky({
             },
           )
         : null,
-    [timeline, windowed, byId],
+    [timeline, nodes, byId],
   )
 
   /** Orbit members as 3D ring positions, so the camera can move around them. */
@@ -1393,98 +1432,6 @@ function Sky({
       }
       const liveCam = { ...cam, yaw: cam.yaw + spin.current }
 
-      /**
-       * The key, shared by both views.
-       *
-       * It explains colour and shape — which constellation, and what kind of
-       * organisation. It was drawn only on the timeline, so half the grammar
-       * went undocumented on the view most people look at first.
-       *
-       * Closed until asked for: nine names and five shapes take real estate the
-       * plot needs more than they do.
-       */
-      const drawKey = (leftInset: number, idsOnPlot: string[]) => {
-        // it is closed until asked for — and the button stays visible so it is
-        // findable without hunting through a toolbar.
-        {
-          // The toggle is a real DOM button below, not drawn here. Twice I
-          // could not work out why a canvas-drawn one was invisible, and a
-          // control you cannot inspect is a control you cannot fix.
-          const bx = leftInset + 10
-          const by = Math.max(60, H - 46)
-
-          if (showLegend) {
-            const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
-            // Types present on this plot, not every type that exists.
-            const typesHere = new Set<ActorType>()
-            for (const id of idsOnPlot) {
-              const it = pool.find((i) => i.id === id)
-              for (const a of it?.actors ?? []) typesHere.add(actorType(a))
-            }
-            const actorRows = ACTOR_TYPES.filter((t) => typesHere.has(t))
-
-            // The organisation under the pointer, named against its own type.
-            const hovered = hoverRef.current
-              ? pool.find((i) => i.id === hoverRef.current)
-              : null
-            const hoveredByType = new Map<ActorType, string>()
-            for (const a of hovered?.actors ?? []) {
-              if (!hoveredByType.has(actorType(a))) hoveredByType.set(actorType(a), a)
-            }
-            const lh = 14
-            const boxW = 168
-            const boxH = entries.length * lh + 14 + (actorRows.length ? actorRows.length * lh + 20 : 0)
-            // Clamp inside the frame. In a small window the key was drawn
-            // below the bottom edge, so opening it appeared to do nothing.
-            const lx = Math.max(4, Math.min(W - boxW - 4, bx))
-            const ly = Math.max(30, Math.min(H - boxH - 4, by - boxH - 6))
-            g.globalAlpha = 0.94
-            g.fillStyle = '#0B1220'
-            g.beginPath()
-            g.roundRect(lx, ly, boxW, boxH, 3)
-            g.fill()
-            g.globalAlpha = 0.3
-            g.strokeStyle = '#8697B0'
-            g.stroke()
-            entries.forEach((c, i) => {
-              const y = ly + 15 + i * lh
-              g.globalAlpha = 1
-              g.fillStyle = constellationColour(c)
-              g.beginPath()
-              g.arc(lx + 13, y - 3.5, 3.4, 0, Math.PI * 2)
-              g.fill()
-              g.fillStyle = '#A9B6C9'
-              g.fillText(CONSTELLATION_LABEL[c], lx + 24, y)
-            })
-
-            // Shape is the organisation. The key said nothing about that until
-            // now, which left half the visual grammar undocumented.
-            if (actorRows.length) {
-              const base = ly + 15 + entries.length * lh + 8
-              g.globalAlpha = 0.5
-              g.strokeStyle = '#8697B0'
-              g.beginPath()
-              g.moveTo(lx + 10, base - 4)
-              g.lineTo(lx + boxW - 10, base - 4)
-              g.stroke()
-              g.globalAlpha = 1
-              g.fillStyle = '#66748A'
-              g.fillText('SHAPE = WHO', lx + 13, base + 8)
-              actorRows.forEach((t, i) => {
-                const y = base + 22 + i * lh
-                const named = hoveredByType.get(t)
-                drawBody(g, glyphForType(t), lx + 14, y - 4, 3.6, named ? colour : '#A9B6C9', true)
-                g.fillStyle = named ? '#E6EDF7' : '#A9B6C9'
-                const text = named
-                  ? `${ACTOR_TYPE_LABEL[t]} (${named.length > 18 ? named.slice(0, 17) + '…' : named})`
-                  : ACTOR_TYPE_LABEL[t]
-                g.fillText(text, lx + 26, y)
-              })
-            }
-            g.globalAlpha = 1
-          }
-        }
-      }
 
       const e = reduced ? 1 : 0.16
       cur.current.k += (view.k - cur.current.k) * e
@@ -1537,6 +1484,7 @@ function Sky({
         const TX = (x: number) => AXIS + (x * (W - AXIS - R) + v.tx) * v.k
         const TY = (y: number) => 40 + (y * (H - 78) + v.ty) * v.k
         tlProject.current = { TX, TY }
+        onRange?.(tl.from, tl.to)
 
         g.font = '11px ui-monospace, monospace'
 
@@ -1854,7 +1802,6 @@ function Sky({
         g.globalAlpha = 1
 
         newsHits.current = newsMarks
-        drawKey(AXIS, tl.marks.map((m) => m.id))
 
 
         raf = requestAnimationFrame(safeDraw)
@@ -2262,7 +2209,6 @@ function Sky({
       g.globalAlpha = 1
 
       newsHits.current = newsMarks
-      drawKey(PAD, nodes.map((n) => n.id))
       raf = requestAnimationFrame(safeDraw)
     }
 
@@ -2280,7 +2226,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, showLegend, pool, fitScale, newsOverlay, itemById])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, pool, fitScale, newsOverlay, itemById])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
