@@ -1104,7 +1104,9 @@ function Sky({
     () =>
       timeline
         ? layoutTimeline(
-            nodes
+            // The year window, not every node — otherwise the axis still spans
+            // fifteen years and the filter does nothing visible.
+            windowed
               .map((n) => allFrontier.find((i) => i.id === n.id))
               .filter((i): i is NonNullable<typeof i> => Boolean(i)),
             {
@@ -1114,7 +1116,7 @@ function Sky({
             },
           )
         : null,
-    [timeline, nodes, byId],
+    [timeline, windowed, byId],
   )
 
   /** Orbit members as 3D ring positions, so the camera can move around them. */
