@@ -51,6 +51,13 @@ export default defineConfig({
           //
           // Naming collections has now failed twice: once here, once in the
           // workflow that stages files for commit. Match the tree.
+          // News is its own chunk. It grows fastest — a backfill adds a
+          // hundred headlines in a week — and almost none of it is needed at
+          // first paint: the ticker shows a fortnight and the archive is opened
+          // rarely. Keeping it separate stops the newsroom's productivity
+          // showing up as a slower first load for everyone.
+          if (norm.includes('/content/news/')) return 'news'
+
           if (
             norm.includes('/content/') ||
             norm.includes('/agents/') ||
