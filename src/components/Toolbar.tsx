@@ -1,32 +1,36 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * The single toolbar — a small window rather than a bar.
+ * THE DOCK.
  *
- * You size it with the grip on the bottom-right corner, and it reflows to fit:
- * wrapping onto more rows, then dropping to icons when words no longer fit.
- * Two attempts at detecting that automatically were both wrong in different
- * ways, so the width is now yours to set and the layout simply obeys it.
+ * It lists what is put away, not everything that exists. A window on screen is
+ * its own control — you can see it, move it, close it — so repeating it here
+ * said the same thing twice and left the reader to work out which of the two
+ * was authoritative.
  *
- * Nothing is ever hidden behind an overflow menu. A control you cannot find is
- * a control you do not have.
+ * So an open window disappears from the dock, and docking one brings it back.
+ * The dock shrinks as you open things and grows as you put them away, which is
+ * what a dock is for.
  *
- * The grip on the left does double duty: drag to move, click to collapse.
+ * Actions that are not windows — Reset, and the headline overlay — stay
+ * permanently, since there is nowhere else for them to live.
  */
 
 export interface ToolbarButton {
   key: string
   label: string
-  /** Shown when the chosen width is too narrow for words. */
   icon?: string
+  /** True when the thing this opens is currently on screen. */
   active?: boolean
+  /** A window control: hidden from the dock while its window is open. */
+  isWindow?: boolean
   onClick: () => void
 }
 
 const FALLBACK_ICON = (label: string) =>
   label.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase()
 
-const MIN_W = 132
+const MIN_W = 120
 
 export function Toolbar({
   buttons,
@@ -35,7 +39,6 @@ export function Toolbar({
 }: {
   buttons: ToolbarButton[]
   accent: string
-  /** Changes when Reset is pressed. Puts the bar back where it started. */
   resetSignal?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -55,26 +58,9 @@ export function Toolbar({
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  /**
-   * Words or icons, decided from the width you set — nothing measured.
-   *
-   * The previous version measured the rendered rows and set state from a
-   * layout effect, which could oscillate: too many rows, switch to icons,
-   * buttons shrink, now one row with room, switch back to words, too many rows
-   * again. That is React error #185, and no amount of hysteresis truly closes
-   * it, because the thing being measured is changed by the measurement.
-   *
-   * A threshold on the width the reader chose cannot feed back into itself.
-   */
-  const compact = (width ?? Infinity) < 560 || viewport < 760
+  /** Labels below a chosen width become icons only. Derived, never measured. */
+  const compact = (width ?? Infinity) < 420 || viewport < 700
 
-  /**
-   * Reset puts it back.
-   *
-   * A window that has been dragged somewhere unhelpful should have a way home
-   * that does not require working out what went wrong. Clearing position and
-   * width returns it to the centre at its natural size.
-   */
   useEffect(() => {
     if (resetSignal === undefined) return
     setPos(null)
@@ -82,14 +68,7 @@ export function Toolbar({
     setCollapsed(false)
     const el = ref.current
     if (el) {
-      el.style.left = ''
-      el.style.top = ''
-      el.style.right = ''
-      el.style.bottom = ''
-      el.style.margin = ''
-      el.style.width = ''
-      el.style.height = ''
-      el.style.transform = ''
+      el.style.cssText = ''
     }
   }, [resetSignal])
 
@@ -103,12 +82,8 @@ export function Toolbar({
           MIN_W,
           Math.min(window.innerWidth - 24, size.current.w + (e.clientX - size.current.ox) * 2),
         )
-        // Width only. Height comes from the content, and anything that sets it
-        // turns a toolbar into a blob.
         el.style.width = `${w}px`
         el.style.height = ''
-        // Commit live, not on release. Committing at pointerup meant the bar
-        // only became icons after you let go, which reads as it not working.
         setWidth(w)
         return
       }
@@ -116,27 +91,20 @@ export function Toolbar({
       const d = move.current
       if (!d) return
       if (Math.hypot(e.clientX - d.ox, e.clientY - d.oy) > 3) d.moved = true
-      /**
-       * Clear the opposite anchors before setting these.
-       *
-       * The bar is centred by being pinned to both left and right with auto
-       * margins. Setting `left` while `right` is still pinned leaves it
-       * stretched between the two — so grabbing it to move made it fill the
-       * page, which looked like a resize bug and was an anchoring one.
-       */
+      // The dock is centred by opposing anchors; setting one without clearing
+      // the other stretches it across the page.
       el.style.right = 'auto'
       el.style.bottom = 'auto'
       el.style.margin = '0'
       el.style.height = ''
       el.style.left = `${Math.max(4, Math.min(window.innerWidth - 120, d.x + e.clientX - d.ox))}px`
-      el.style.top = `${Math.max(4, Math.min(window.innerHeight - 52, d.y + e.clientY - d.oy))}px`
+      el.style.top = `${Math.max(4, Math.min(window.innerHeight - 60, d.y + e.clientY - d.oy))}px`
       el.style.transform = 'none'
     }
 
     const onUp = () => {
       const el = ref.current
-      if (size.current && el) {
-        setWidth(parseFloat(el.style.width))
+      if (size.current) {
         size.current = null
         return
       }
@@ -144,7 +112,7 @@ export function Toolbar({
       move.current = null
       if (!d || !el) return
       if (d.moved) setPos({ x: parseFloat(el.style.left), y: parseFloat(el.style.top) })
-      else setCollapsed((c) => !c) // a click that never became a drag
+      else setCollapsed((c) => !c)
     }
 
     window.addEventListener('pointermove', onMove)
@@ -159,8 +127,6 @@ export function Toolbar({
     e.preventDefault()
     const el = ref.current!
     const r = el.getBoundingClientRect()
-    // Pin the current size before switching anchors, so nothing reflows at the
-    // moment the drag starts.
     el.style.width = `${r.width}px`
     el.style.right = 'auto'
     el.style.bottom = 'auto'
@@ -181,6 +147,9 @@ export function Toolbar({
     size.current = { ox: e.clientX, w: r.width }
   }
 
+  // A window that is open is not in the dock. Everything else is.
+  const shown = buttons.filter((b) => !(b.isWindow && b.active))
+
   const style: React.CSSProperties = {
     ...(pos ? { left: pos.x, top: pos.y, transform: 'none' } : {}),
     ...(width ? { width } : {}),
@@ -189,7 +158,7 @@ export function Toolbar({
   return (
     <div
       ref={ref}
-      className="toolbar"
+      className="dock"
       data-collapsed={collapsed || undefined}
       data-compact={compact || undefined}
       style={style}
@@ -198,22 +167,30 @@ export function Toolbar({
         className="frame__grip"
         onPointerDown={beginMove}
         title={collapsed ? 'Click to show, drag to move' : 'Click to collapse, drag to move'}
-        aria-label={collapsed ? 'Show toolbar' : 'Collapse toolbar'}
+        aria-label={collapsed ? 'Show the dock' : 'Collapse the dock'}
         role="button"
       />
 
       {!collapsed &&
-        buttons.map((b) => (
+        shown.map((b) => (
           <button
             key={b.key}
+            className="dock__item"
             onClick={b.onClick}
             aria-pressed={b.active}
             title={b.label}
             style={b.active ? { color: accent } : undefined}
           >
-            {compact ? (b.icon ?? FALLBACK_ICON(b.label)) : b.label}
+            <span className="dock__icon" aria-hidden="true">
+              {b.icon ?? FALLBACK_ICON(b.label)}
+            </span>
+            {!compact && <span className="dock__label">{b.label}</span>}
           </button>
         ))}
+
+      {!collapsed && shown.length === 0 && (
+        <span className="dock__empty">Everything is open</span>
+      )}
 
       {!collapsed && (
         <span

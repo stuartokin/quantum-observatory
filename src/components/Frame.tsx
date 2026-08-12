@@ -10,8 +10,12 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
  *
  * Three states, deliberately distinct:
  *   open        normal
- *   minimised   collapsed to its title bar, still on screen
- *   docked      gone from the workspace, recoverable from the toolbar
+ *   maximised   filling the workspace, remembering where it came from
+ *   docked      put away, and named in the dock so it can be brought back
+ *
+ * There was a fourth — collapsed to its own title bar — which did much the
+ * same as docking while leaving a stub on screen. Two ways to put something
+ * away is one too many.
  */
 
 export interface FrameState {
@@ -19,7 +23,6 @@ export interface FrameState {
   y: number
   w: number
   h: number
-  minimised?: boolean
   docked?: boolean
   /**
    * Filling the workspace. The previous box is kept so restore returns it
@@ -188,7 +191,6 @@ export function Frame({
       ref={ref}
       className="frame"
       data-active={active}
-      data-minimised={state.minimised || undefined}
       data-info={info ? '' : undefined}
       onPointerDown={onFocus}
       data-maximised={state.maximised || undefined}
@@ -200,7 +202,7 @@ export function Frame({
               left: state.x,
               top: state.y,
               width: state.w,
-              height: state.minimised ? undefined : state.h,
+              height: state.h,
               borderColor: accent,
             }
       }
@@ -229,18 +231,6 @@ export function Frame({
             {bar}
           </div>
         )}
-        <button
-          className="frame__btn"
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={() => {
-            onChange({ ...state, minimised: !state.minimised })
-            requestAnimationFrame(() => onResized?.())
-          }}
-          aria-label={state.minimised ? 'Expand' : 'Collapse'}
-          title={state.minimised ? 'Expand' : 'Collapse to the title bar'}
-        >
-          {state.minimised ? '▸' : '▾'}
-        </button>
         <button
           className="frame__btn"
           onPointerDown={(e) => e.stopPropagation()}
@@ -274,7 +264,7 @@ export function Frame({
         )}
       </header>
 
-      {!state.minimised && !barOnly && (
+      {!barOnly && (
         <>
           <div
             ref={body}
@@ -287,7 +277,7 @@ export function Frame({
       )}
       {info && <div className="frame__info">{info}</div>}
 
-      {!state.minimised && barOnly && (
+      {barOnly && (
         <span className="frame__resize frame__resize--bar" onPointerDown={begin('resize')} aria-hidden="true" />
       )}
     </section>
