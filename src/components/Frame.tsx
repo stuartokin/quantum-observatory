@@ -318,6 +318,14 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
       h: Math.max(320, mainH - 80),
       docked: true,
     },
+    /** Opens when you enter a constellation, offset so the galaxy stays visible. */
+    constellation: {
+      x: wide ? Math.round(w * 0.30) : pad,
+      y: top + 30,
+      w: Math.min(680, w - pad * 2),
+      h: Math.min(520, h - top - 120),
+      docked: true,
+    },
     questions: {
       x: wide ? Math.round(w * 0.18) : pad,
       y: top + 20,

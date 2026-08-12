@@ -109,6 +109,8 @@ export function Board() {
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
   /** The timeline has its own camera; sharing one made each view jump. */
   const [tlView, setTlView] = useState({ k: 1, tx: 0, ty: 0 })
+  /** The constellation window has its own camera too. */
+  const [orbitView, setOrbitView] = useState({ k: 1, tx: 0, ty: 0 })
   /** 0 means every year. Two is the default because that is where the news is. */
   const [timelineYears, setTimelineYears] = useState(2)
   /** Strip across the page, or a window with the whole history. */
@@ -173,14 +175,37 @@ export function Board() {
   }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
-    'galaxy', 'timeline', 'questions', 'teaser', 'news', 'headlines', 'newsitem',
+    'galaxy', 'constellation', 'timeline', 'questions', 'teaser', 'news', 'headlines', 'newsitem',
     'filters', 'help', 'qday', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
 
+  /**
+   * Bring a window back where it can be seen.
+   *
+   * A frame keeps its last position while docked, and that position may now be
+   * off screen, behind something, or beyond a window that has since been
+   * resized. Opening something and not finding it reads as the click having
+   * failed.
+   */
+  const intoView = (st: FrameState): FrameState => {
+    const W = window.innerWidth
+    const H = window.innerHeight
+    return {
+      ...st,
+      x: Math.max(8, Math.min(W - Math.min(st.w, W - 16) - 8, st.x)),
+      y: Math.max(64, Math.min(H - 120, st.y)),
+      w: Math.min(st.w, W - 16),
+      h: Math.min(st.h, H - st.y - 24),
+    }
+  }
+
   const toggle = (k: string) => () => {
-    setFrames((f) => ({ ...f, [k]: { ...f[k], docked: !f[k].docked } }))
+    setFrames((f) => ({
+      ...f,
+      [k]: f[k].docked ? { ...intoView(f[k]), docked: false } : { ...f[k], docked: true },
+    }))
     // Opening a window behind everything else is the same as not opening it.
     setOrder((o) => [...o.filter((x) => x !== k), k])
   }
@@ -344,15 +369,25 @@ export function Board() {
     }
   }, [item])
 
+  /**
+   * A constellation opens in its own window.
+   *
+   * It used to take over the galaxy frame, so looking at one meant losing the
+   * other — and the galaxy is the thing a reader navigates from. Two windows,
+   * both open, is what they were asking for by clicking.
+   */
   function enterOrbit(con: string) {
     setFocusCon(con)
     setMode('orbit')
+    setFrames((f) => ({ ...f, constellation: { ...intoView(f.constellation), docked: false } }))
+    setOrder((o) => [...o.filter((x) => x !== 'constellation'), 'constellation'])
     setCam(DEFAULT_CAMERA)
     setView({ k: 1, tx: 0, ty: 0 })
   }
   function leaveOrbit() {
     setMode('tower')
     setFocusCon(null)
+    setFrames((f) => ({ ...f, constellation: { ...f.constellation, docked: true } }))
     setView({ k: 1, tx: 0, ty: 0 })
   }
 
@@ -575,7 +610,7 @@ export function Board() {
       {/* Full width, under the header. A ticker in a panel is a list; across
           the page it is a wire, which is what it is for. */}
       <Frame
-        title={mode === 'orbit' && focusCon ? CONSTELLATION_LABEL[focusCon] : 'Galaxy'}
+        title="Galaxy"
         state={frames.galaxy}
         onChange={setFrame('galaxy')}
         onDock={dock('galaxy')}
@@ -613,8 +648,8 @@ export function Board() {
           view={view}
           setView={setView}
           activeCons={cons}
-          mode={mode}
-          focusCon={focusCon}
+          mode="tower"
+          focusCon={null}
           onEnterOrbit={enterOrbit}
           onLeaveOrbit={leaveOrbit}
           timeline={false}
@@ -629,6 +664,57 @@ export function Board() {
         />
       </Frame>
 
+      {focusCon && (
+        <Frame
+          title={CONSTELLATION_LABEL[focusCon]}
+          state={frames.constellation}
+          onChange={setFrame('constellation')}
+          onDock={leaveOrbit}
+          onClose={leaveOrbit}
+          accent={constellationColour(focusCon)}
+          z={zOf('constellation')}
+          onFocus={raise('constellation')}
+          onResized={bump}
+          minWidth={320}
+          minHeight={240}
+          flush
+          action={
+            <button
+              className="frame__mode"
+              onClick={() => setShowLegend((v) => !v)}
+              aria-pressed={showLegend}
+              style={showLegend ? { color: colour, borderColor: colour } : undefined}
+            >
+              Key
+            </button>
+          }
+        >
+          <Sky
+            onHover={setHoveredId}
+            nodes={nodes}
+            colour={colour}
+            selected={selected}
+            onSelect={setSelected}
+            view={orbitView}
+            setView={setOrbitView}
+            activeCons={cons}
+            mode="orbit"
+            focusCon={focusCon}
+            onEnterOrbit={enterOrbit}
+            onLeaveOrbit={leaveOrbit}
+            timeline={false}
+            cam={cam}
+            setCam={setCam}
+            resizeTick={resizeTick}
+            forecast={forecast}
+            showLegend={showLegend}
+            pool={pool}
+            newsOverlay={showNewsOverlay}
+            onOpenNews={openHeadline}
+          />
+        </Frame>
+      )}
+
       <Frame
         title="Timeline"
         state={frames.timeline}
@@ -642,8 +728,21 @@ export function Board() {
         minHeight={220}
         flush
         action={
-          <button className="frame__mode" onClick={() => setTimelineYears((y) => (y === 2 ? 0 : 2))}>
-            {timelineYears === 2 ? 'All years' : 'Last 2 years'}
+          <button
+            className="frame__mode"
+            onClick={() => setTimelineYears((y) => (y === 2 ? 0 : 2))}
+            aria-pressed={timelineYears === 2}
+            title={
+              timelineYears === 2
+                ? 'Showing the last two years. Click for every year.'
+                : 'Showing every year. Click for the last two.'
+            }
+            style={timelineYears === 2 ? { color: colour, borderColor: colour } : undefined}
+          >
+            {/* Labelled with what is shown, not what the click will do. The
+                other way round reads as a description of the current state and
+                sent a reader looking for a broken year filter. */}
+            {timelineYears === 2 ? 'Last 2 years' : 'All years'}
           </button>
         }
       >
@@ -1312,7 +1411,7 @@ function Sky({
           // could not work out why a canvas-drawn one was invisible, and a
           // control you cannot inspect is a control you cannot fix.
           const bx = leftInset + 10
-          const by = H - 46
+          const by = Math.max(60, H - 46)
 
           if (showLegend) {
             const entries = CONSTELLATIONS.filter((c) => activeCons.includes(c))
@@ -1335,8 +1434,10 @@ function Sky({
             const lh = 14
             const boxW = 168
             const boxH = entries.length * lh + 14 + (actorRows.length ? actorRows.length * lh + 20 : 0)
-            const lx = bx
-            const ly = Math.max(30, by - boxH - 6)
+            // Clamp inside the frame. In a small window the key was drawn
+            // below the bottom edge, so opening it appeared to do nothing.
+            const lx = Math.max(4, Math.min(W - boxW - 4, bx))
+            const ly = Math.max(30, Math.min(H - boxH - 4, by - boxH - 6))
             g.globalAlpha = 0.94
             g.fillStyle = '#0B1220'
             g.beginPath()
