@@ -1,0 +1,118 @@
+name: Queue
+
+# Run whatever the steward has queued, on demand.
+#
+# Each agent takes one instruction per run, so clearing a queue of five means
+# five passes. That is deliberate: four instructions drained into one summary
+# would be four runs' work reported as one, and the summary is how anybody
+# judges whether the work was any good.
+#
+# The scheduled Monday run drains one per agent on its own. This is for when you
+# do not want to wait.
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Which agent to run. "all" takes one instruction for each.'
+        required: true
+        default: all
+        type: choice
+        options: [all, scout, sourcer, verifier, reviewer, newsroom]
+      passes:
+        description: 'How many instructions to take per agent (1-5).'
+        required: true
+        default: '1'
+        type: choice
+        options: ['1', '2', '3', '4', '5']
+
+concurrency:
+  group: agents-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  show:
+    runs-on: ubuntu-latest
+    outputs:
+      queued: ${{ steps.read.outputs.queued }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        name: What is queued
+        run: |
+          if [ ! -f agents/_queue.md ]; then
+            echo "No queue file."
+            echo "queued=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          N=$(grep -c '^agent: ' agents/_queue.md || true)
+          echo "queued=$N" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Queue before this run"
+            echo
+            if [ "$N" = "0" ]; then
+              echo "_Nothing queued._"
+            else
+              sed -n '/^## What is queued/,$p' agents/_queue.md | tail -n +2
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  run:
+    needs: show
+    if: needs.show.outputs.queued != '0'
+    runs-on: ubuntu-latest
+    strategy:
+      # One at a time. Two agents rewriting the queue file concurrently would
+      # lose one of the edits, and the lost one would look like it had run.
+      max-parallel: 1
+      matrix:
+        agent: ${{ inputs.agent == 'all' && fromJSON('["scout","sourcer","verifier","reviewer","newsroom"]') || fromJSON(format('["{0}"]', inputs.agent)) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install
+
+      - name: Run queued instructions
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 ${{ inputs.passes }}); do
+            if ! grep -q "^agent: ${{ matrix.agent }}$" agents/_queue.md 2>/dev/null; then
+              echo "Nothing queued for ${{ matrix.agent }}."
+              break
+            fi
+            echo "::group::${{ matrix.agent }} — pass $i"
+            node scripts/run-agent.mjs ${{ matrix.agent }} || echo "::warning::pass $i failed; the entry stays queued"
+            echo "::endgroup::"
+          done
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          UNTRACKED=$(git ls-files --others --exclude-standard content | wc -l)
+          if git diff --quiet && git diff --staged --quiet && [ "$UNTRACKED" -eq 0 ]; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+
+          git add content agents/_queue.md
+          git commit -m "queue: ${{ matrix.agent }}"
+          git fetch origin main
+          git rebase origin/main || {
+            echo "::error::Rebase conflict. The commit is on this runner and not pushed."
+            exit 1
+          }
+          git push origin main

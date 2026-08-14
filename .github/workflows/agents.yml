@@ -150,7 +150,7 @@ jobs:
           # Stage the whole content tree, not named collections. Naming them meant
           # every newsroom run failed with "nothing added to commit", and the fix
           # for that named two collections and would have failed on the third.
-          git add content
+          git add content agents/_queue.md
           git commit -m "${{ matrix.agent }}: $COUNT item(s), agent-merged"
 
           # main moves under us when another agent finishes mid-run, and the

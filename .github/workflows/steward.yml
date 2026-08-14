@@ -89,7 +89,7 @@ jobs:
             # Commit BEFORE rebasing. A rebase refuses to run against a dirty
             # tree, and promoting files out of the inbox is exactly what makes
             # it dirty — so rebasing first could never have worked.
-            git add content agents/_decisions.md
+            git add content agents/_decisions.md agents/_queue.md
             git commit -m "steward: $COUNT item(s), $(node -e "
               const a=require('./.agent-run/actions.json');
               console.log(a.decisionsAdded + ' precedent(s)')")"
