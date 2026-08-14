@@ -211,13 +211,14 @@ export function Board() {
   const intoView = (st: FrameState): FrameState => {
     const W = window.innerWidth
     const H = window.innerHeight
-    return {
-      ...st,
-      x: Math.max(8, Math.min(W - Math.min(st.w, W - 16) - 8, st.x)),
-      y: Math.max(64, Math.min(H - 120, st.y)),
-      w: Math.min(st.w, W - 16),
-      h: Math.min(st.h, H - st.y - 24),
-    }
+    const w = Math.min(st.w, W - 16)
+    const x = Math.max(8, Math.min(W - w - 8, st.x))
+    const y = Math.max(64, Math.min(H - 160, st.y))
+    // Height from the CLAMPED y, not the original. Using the old value gave a
+    // frame near the bottom a height that ran off the screen, so it opened
+    // underneath whatever was already there and looked like it had not opened.
+    const h = Math.max(120, Math.min(st.h, H - y - 24))
+    return { ...st, x, y, w, h }
   }
 
   const toggle = (k: string) => () => {
@@ -797,6 +798,7 @@ export function Board() {
         accent={colour}
         z={zOf('questions')}
         onFocus={raise('questions')}
+        flush
       >
         <Suspense fallback={<p className="label">Loading…</p>}>
           <Questions

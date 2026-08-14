@@ -118,7 +118,9 @@ export default function Questions({
 
   return (
     <div className="questions">
-      <div className="questions__summary">
+      {/* Fixed. Scrolling the cards past the view switch means hunting for it
+          every time you want to change mode. */}
+      <div className="questions__summary questions__summary--fixed">
         <span className="questions__views">
           <button onClick={() => setView('grid')} aria-pressed={view === 'grid'}>
             Overview
@@ -139,6 +141,7 @@ export default function Questions({
         </span>
       </div>
 
+      <div className="questions__scroll">
       {view === 'grid' && (
         <div className="questions__grid">
           {resolved.map(({ q, derived }) => {
@@ -302,7 +305,9 @@ export default function Questions({
         })}
       </ol>
 
-      <p className="filter-group__note">
+      </div>
+
+      <p className="filter-group__note questions__foot">
         A question with nothing new to report is not a gap. Knowing an answer has
         held for eight months is often worth more than knowing it changed
         yesterday — and the date is what makes either statement mean anything.

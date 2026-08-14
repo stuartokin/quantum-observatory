@@ -847,3 +847,37 @@
   border-style: dashed;
   color: var(--ink-faint);
 }
+
+/* ---------- Questions: fixed head, scrolling cards ---------- */
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.questions__summary--fixed {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-s);
+  flex-wrap: wrap;
+}
+/* Smaller: the counts are orientation, not the content. */
+.questions__summary--fixed .label {
+  font-size: 0.54rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+.questions__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.questions__foot { flex: 0 0 auto; padding-top: 8px; }
+
+/* The questions window manages its own scrolling, so the frame must not add
+   a second scrollbar around it. */
+.frame__body--flush .questions { padding: var(--gap-s) var(--gap-m); }
