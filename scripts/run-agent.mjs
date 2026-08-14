@@ -48,10 +48,29 @@ function focusFromIssues(agent) {
     })
     const issues = JSON.parse(raw)
     const found = []
+    // One instruction per run. More than one is several runs' work reported in
+    // a single summary, which cannot be judged.
+    const CAP = 1
     const opener = new RegExp(`^\\s*/focus\\s+${agent}\\s*:\\s*(.*)$`, 'i')
 
     for (const i of issues) {
-      const bodies = [i.body ?? '', ...(i.comments ?? []).map((c) => c.body ?? '')]
+      const bodies = [
+        i.body ?? '',
+        ...(i.comments ?? [])
+          .map((c) => c.body ?? '')
+          /**
+           * A bot quoting an instruction is not a person giving one.
+           *
+           * The steward lists what it queued so a person can read it before it
+           * runs. Those lines are real /focus instructions in an issue comment,
+           * so this function picked all six up and the agent attempted them in
+           * one run — the display of the queue became a second, uncontrolled
+           * copy of it.
+           *
+           * The queue is the only place a queued instruction is taken from.
+           */
+          .filter((b) => !/^Resolved this pass|^Queue entries for|queued instruction/im.test(b)),
+      ]
       for (const b of bodies) {
         const lines = b.split('\n')
         for (let n = 0; n < lines.length; n++) {
@@ -75,7 +94,13 @@ function focusFromIssues(agent) {
         }
       }
     }
-    return found
+    if (found.length > CAP) {
+      console.log(
+        `  ${found.length} instructions found in the issues; taking the first. ` +
+          `The rest stay for later runs.`,
+      )
+    }
+    return found.slice(0, CAP)
   } catch {
     // No gh, no token, or no issues. Not a failure — just no focus.
     return []
@@ -209,11 +234,40 @@ function existingNews() {
 const items = existingItems()
 const existingIds = new Set(items.map((i) => i.id))
 
-// The workflow field wins; otherwise take anything addressed to this agent in
-// the open issues.
+/**
+ * One instruction per run, from one place.
+ *
+ * The queue is authoritative when it holds something for this agent. Issue
+ * comments are the fallback — and only then, because the steward's summary
+ * quotes the instructions it queued, so reading both sources gave this agent
+ * nine instructions in a single run and it attempted all nine.
+ *
+ * A run that does nine jobs writes one summary covering nine jobs, which is
+ * useless for judging any of them.
+ */
+const { head: queueHead, entries: queueEntries } = readQueue()
+const {
+  next: queued,
+  stale: staleQueued,
+  remaining: queueRemaining,
+} = takeFor(agent, queueEntries)
+
+if (staleQueued.length) {
+  console.log(
+    `  ${staleQueued.length} queued instruction(s) dropped as stale: ` +
+      staleQueued.map((e) => e.title).join('; '),
+  )
+}
+
 const focus = process.env.AGENT_FOCUS
   ? [process.env.AGENT_FOCUS]
-  : focusFromIssues(agent)
+  : queued
+    ? [queued.focus]
+    : focusFromIssues(agent)
+
+if (queued) {
+  console.log(`  from the queue: ${queued.title} (${queued.source})`)
+}
 if (focus.length) {
   console.log(`  focus: ${focus.length} instruction(s)`)
   for (const f of focus) console.log('    ' + f.slice(0, 100))

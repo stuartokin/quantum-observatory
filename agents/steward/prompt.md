@@ -186,10 +186,22 @@ an unread queue is worse than none because it looks like a plan.
 Where you had more than six candidates, say how many you left out and why those
 six were chosen.
 
-### Say what you queued
+### Say what you queued, without repeating it
 
-List every entry in your summary — the agent, the job, and the issue it came
-from — so a person can see what will run before it does. Nothing you queue runs
+List every entry in your summary as **one line each** — the agent and the job,
+nothing more:
+
+```
+Queued: scout — find the HRL Nature paper on cryogenic CMOS control (#85)
+Queued: scout — confirm NIST IR 8610 (#74)
+```
+
+**Never reprint the `/focus` text.** A quoted instruction in an issue comment is
+indistinguishable from a fresh one, and an agent reading the issues will take it
+as a job to do. That is how six queued instructions became nine attempted in a
+single run: the display of the queue became a second, uncontrolled copy of it.
+
+The queue file is the record. Your summary is a pointer to it. Nothing you queue runs
 in the same pass that queued it. That gap is deliberate: it is the window in
 which somebody can delete an instruction they disagree with, and it only works
 if they can see what is in it.
