@@ -98,10 +98,15 @@ checks. Read the queue, delete what you disagree with, and the rest runs.
 Every agent drains its own entries. On the **Monday 06:00 UTC** scheduled pass,
 each takes **one** instruction before doing its normal work.
 
-To clear it sooner: **Actions → Queue → Run workflow**. Choose an agent or
-`all`, and how many instructions each should take. Agents run one at a time —
-two rewriting the queue file at once would lose an edit, and the lost one would
-look as though it had run.
+To clear it sooner: **Actions → Agents → Run workflow**, name the agent, and set
+**passes** to how many instructions it should take. Each pass is a complete run
+— its own validation, its own merge, its own issue comment.
+
+There was briefly a separate Queue workflow. It ran the agent and then tried to
+publish with a single `git add`, which is not what publishing is: the Agents
+workflow validates, checks provenance and scope, merges from the inbox and
+comments on the issue. A second copy of that pipeline would have drifted from
+the first within a fortnight, so there is one, and it takes a passes count.
 
 ### Why one at a time
 
