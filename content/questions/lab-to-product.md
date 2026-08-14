@@ -4,30 +4,24 @@ id: lab-to-product
 number: 5
 question: Are laboratory results becoming prototypes or products?
 pillar: quantum
-answer: 'PQC standards (ML-KEM, ML-DSA, SLH-DSA) have moved fully to product: deployed in browsers, TLS stacks, and operating systems. Quantum sensing hardware is at the prototype-to-product boundary: field-deployable gravimeters and compact atom-interferometer inertial sensors are available commercially from vendors including AOSense, Nomad Atomics, and Exail. QKD is in limited commercial deployment in metropolitan networks and demonstrated via satellite. Quantum computing hardware remains at the laboratory and early engineering prototype stage for fault-tolerant systems. IBM''s Kookaburra (2026) and Nighthawk processors are engineering prototypes for fault-tolerance pathways, not production systems. No fault-tolerant quantum computer capable of running commercially useful algorithms is available or on a credible sub-five-year engineering roadmap.'
+answer: 'FIPS 203, 204, and 205 (ML-KEM, ML-DSA, SLH-DSA) are in active product integration by hardware vendors and cloud providers; the first FIPS 140-3 CMVP submission for a PQC-capable module was made in May 2026. HRL Laboratories described its silicon QPU (Nature, July 2026) as a complete prototype for a manufacturable architecture, using commercial foundry processes. IonQ acquired ID Quantique (~$250M, May 2025) to convert laboratory QKD into a commercial product line. IBM''s quantum advantage demonstrations (July 2026) used cloud-accessible, commercially available hardware, indicating the hardware has left the laboratory for at least research-commercial use. Fault-tolerant systems remain prototype-stage.'
 state: moving
 asOf: '2026-08-14'
-lastChanged: '2024-08-01'
-changedBy: 'NIST published FIPS 203, 204, 205 in August 2024, moving ML-KEM, ML-DSA and SLH-DSA to adopted standards — the clearest lab-to-product transition in this cycle.'
+lastChanged: '2026-08-14'
+changedBy: PQC standards in product integration; HRL QPU described as manufacturable prototype; IBM advantage on commercial cloud hardware.
 evidence:
   - ref: pqc-fips-203
     kind: frontier
-    note: ML-KEM adopted; deployed in products.
   - ref: pqc-fips-204
     kind: frontier
-    note: ML-DSA adopted; deployed in products.
   - ref: pqc-fips-205
     kind: frontier
-    note: SLH-DSA adopted; deployed in products.
-  - ref: sense-gravimetry
+  - ref: arch-silicon-spin
     kind: frontier
-    note: Quantum gravimetry demonstrated; commercial field instruments available.
-  - ref: sense-inertial-navigation
+    note: HRL Nature paper July 2026; commercial foundry fabrication.
+  - ref: quantum-key-distribution
     kind: frontier
-    note: Quantum inertial navigation at experimental stage; field-deployable prototypes exist.
-  - ref: comms-satellite-qkd
-    kind: frontier
-    note: Satellite QKD demonstrated; limited commercial deployment underway.
+    note: IonQ/ID Quantique acquisition consolidates QKD into commercial portfolio.
 review:
   state: agent-merged
   by: agent
@@ -37,6 +31,4 @@ status: draft
 added: '2026-08-14'
 ---
 
-The PQC transition is the fastest lab-to-product story in this field: three standards finalised in August 2024 and in broad deployment within months. Quantum sensing is the second clearest: the physics has been proven for decades and the engineering bottleneck is miniaturisation, which is being solved incrementally.
-
-Quantum computing is the slowest. The gap between a logical qubit demonstration at distance-7 and a machine that runs a commercially useful algorithm on hundreds of error-corrected logical qubits is not measured in years of linear progress — it involves multiple unresolved engineering problems including decoder scaling, modular interconnects, and classical control at scale.
+The fastest lab-to-product transition is in PQC: three standards published in August 2024 are now being integrated into products, with the first FIPS 140-3 validated implementation in the validation queue as of May 2026. On the hardware side, HRL's result is significant because its controller was built in a commercial 130 nm RF CMOS foundry, not a specialised research facility — the manufacturing path to scale already exists in principle. Quantum computing hardware itself remains in early research-commercial deployment, not broad product availability.
