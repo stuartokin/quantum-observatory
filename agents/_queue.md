@@ -35,17 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find the HRL Nature paper on silicon QPU with cryogenic CMOS control
-agent: scout
-added: 2026-08-14
-source: issue #85
-
-    /focus scout: find the DOI and full citation for the HRL Laboratories Nature
-    paper published 29 July 2026 on an 18-qubit silicon QPU with fully integrated
-    cryogenic CMOS control running autonomous error correction. Decide whether
-    enable-cryo-cmos-qubit-control should be updated or a new enabling item created.
-    Do not move an evidence level or readiness upward without a person.
-
 ## Find the USTC Nature paper on ion-ion entanglement over 10 km fibre
 agent: scout
 added: 2026-08-14
