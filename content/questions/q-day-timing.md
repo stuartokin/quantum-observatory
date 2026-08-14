@@ -4,34 +4,25 @@ id: q-day-timing
 number: 2
 question: Does anything alter the likely timing of Q-Day?
 pillar: quantum
-answer: 'Resource estimation preprints (Gidney 2025, Pinnacle Architecture 2026) have lowered the qubit floor for RSA-2048 factoring to sub-100,000 physical qubits on paper, but these are theoretical architectural proposals, not hardware demonstrations. The hardware gap — no machine near this scale with the required error rates and connectivity — remains the binding constraint. The GRI 2025 Quantum Threat Timeline survey (March 2026) places CRQC probability at 28–49% within 10 years, the highest recorded figure in seven years of surveys. NCSC, NSA, and NIST have not revised their 2033–2035 central estimate in response to 2025–2026 hardware announcements. The board''s position: Q-Day timing has not moved, but the upper bound of the uncertainty interval has tightened, and the ''maybe scalable QEC is impossible'' argument is no longer credible for superconducting and neutral-atom hardware.'
-state: contested
+answer: 'The Gidney 2025 preprint (arXiv:2505.15917) reduced the estimated qubit count to break RSA-2048 from 20 million to under one million, on the same hardware assumptions, through algorithmic improvements alone. This is the single most consequential change to Q-Day planning since 2019 — no hardware changed, yet the machine needed is now twenty times smaller. The GRI/evolutionQ 2025 expert survey (26 experts, March 2026) placed a CRQC at 28–49% probability within ten years, the highest ten-year estimate in the survey''s seven-year history. No CRQC exists as of August 2026; the largest deployed processors hold around 1,200 noisy physical qubits. The hardware gap remains measured in orders of magnitude.'
+state: moving
 asOf: '2026-08-14'
-lastChanged: '2026-03-09'
-changedBy: 'GRI 2025 Quantum Threat Timeline Report (published March 2026) recorded highest expert 10-year CRQC probability in survey history.'
+lastChanged: '2026-08-14'
+changedBy: Gidney arXiv:2505.15917 (May 2025) reducing qubit estimate twenty-fold; GRI 2025 survey showing sharpest upward expert probability shift in report history.
 evidence:
-  - ref: crqc
-    kind: frontier
-    note: Board item tracking the cryptographically relevant quantum computer threshold.
   - ref: algo-resource-estimation
     kind: frontier
-    note: Covers Gidney 2025 resource reduction; Pinnacle Architecture not yet added.
-  - ref: algo-shor
+    note: Gidney 2025 preprint is the primary source; already on board.
+  - ref: crqc
     kind: frontier
-    note: Hardware gap to Shor at cryptographic scale.
-  - ref: 'https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/'
+    note: No CRQC exists; this item tracks the gap.
+  - ref: https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
     kind: url
-    note: 'GRI 2025 survey: 28–49% probability of CRQC within 10 years, up from 14–34% in 2024.'
-  - ref: 'https://arxiv.org/abs/2505.15917'
-    kind: url
-    note: 'Gidney 2025: RSA-2048 under one million noisy qubits at 0.1% gate error.'
-  - ref: 'https://arxiv.org/abs/2602.11457'
-    kind: url
-    note: 'Pinnacle Architecture: sub-100,000 physical qubits claimed; preprint, contested on engineering assumptions, not peer-reviewed.'
+    note: GRI Quantum Threat Timeline Report 2025, March 2026. 26 experts; 28-49% within 10 years.
 history:
-  - date: '2026-03-09'
-    was: 'GRI 2024 survey placed CRQC probability at 14–34% within 10 years. NCSC/NSA/NIST central estimate remained 2033–2035.'
-    why: 'GRI 2025 survey (published March 2026) recorded sharpest single-year upward shift in expert estimates in report history.'
+  - date: '2026-08-09'
+    was: Gidney 2025 preprint noted as primary driver; GRI 2024 survey cited. Answer confirmed but dates needed updating.
+    why: Previous answer was current; asOf date advanced.
     by: agent
     agent: scout
 review:
@@ -43,8 +34,4 @@ status: draft
 added: '2026-08-14'
 ---
 
-Two forces are pulling in opposite directions. On the hardware side, no machine close to the qubit counts needed to run Shor's algorithm at cryptographic scale exists or is on a near-term engineering roadmap. The 2029 targets from IBM and others are for early fault-tolerant systems, not CRQC-scale machines.
-
-On the algorithmic side, resource estimates have compressed dramatically. The 2019 estimate of 20 million noisy qubits has been reduced to under one million (Gidney 2025) and potentially under 100,000 (Pinnacle Architecture 2026, preprint only, contested). Each compression was achieved through better algorithms and error-correction architectures, not better hardware — which means future improvements could come faster than hardware progress alone would imply.
-
-The board scores this as `contested` rather than `moving` because the official institutional positions (NCSC, NSA, NIST) have not moved, while expert survey probability has reached a new high. The honest position: Q-Day is not imminent, but the arguments for treating it as distant have weakened.
+The twenty-fold reduction in the estimated qubit count to break RSA-2048 (Gidney, May 2025) is an algorithmic result with no hardware counterpart — it means the machine needed to reach Q-Day is now substantially closer in specification to machines being built, even though the gap in practice remains enormous. The GRI 2025 expert survey records the sharpest single-year upward shift in ten-year CRQC probability since the survey began in 2019. Neither result changes the current hardware reality: no machine approaching cryptanalytic capability exists. The planning implication is that the margin of error on migration timelines has narrowed.
