@@ -8,7 +8,7 @@
     "content/questions/**"
   ],
   "output": "pull_request",
-  "enabled": false,
+  "enabled": true,
   "budget": {
     "searches": 25,
     "proposals": 4
