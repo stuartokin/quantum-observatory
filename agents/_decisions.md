@@ -166,3 +166,14 @@ into the sections above once you have read them — or delete them if wrong.
 enable-microwave-optical listed 'Multiple academic groups (survey)' when the paper has three named authors at BUET/BRAC Bangladesh — a material misrepresentation of provenance.
 
 *Proposed 2026-08-12, after enable-microwave-optical actors field corrected from generic survey description to actual authors' institutions on 2026-08-12. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-14
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**The country field records where the authors are institutionally based, not the geographic scope of the work they survey or describe. A review article written by authors at a Bangladeshi university, surveying work done in the US and Europe, is country: BD.**
+
+Country is provenance of the authors, not the subject matter. Populating it from the scope of a review article makes the board's geographic coverage-gap measurement misleading and misrepresents institutional origin.
+
+*Proposed 2026-08-14, after enable-microwave-optical listed country: US, Europe when all three authors (Aditto, Ifty, Zahin) are at BUET, Dhaka, Bangladesh. Not yet confirmed by a person.*
