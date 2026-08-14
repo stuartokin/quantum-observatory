@@ -11,10 +11,10 @@ readiness: experimental
 horizon: 2
 priority: P1
 actors:
-  - 'Multiple academic groups (survey)'
+  - 'BUET (Bangladesh University of Engineering and Technology)'
+  - 'BRAC University'
 country:
-  - US
-  - Europe
+  - BD
 metrics:
   - name: 'Optomechanical internal efficiency'
     value: '93'
@@ -34,7 +34,7 @@ links:
     relation: enables
 evidence:
   claim: 'A review of microwave-to-optical quantum transduction from 2014 to 2026 reports: optomechanical systems achieve 93% internal phonon-to-photon efficiency with 0.25 quanta added noise at millikelvin; electro-optic devices (LiNbO3 and AlN) have advanced from room-temperature efficiencies below 1% to millikelvin internal efficiencies approaching 99.5%. The review identifies added noise, bandwidth, and system-level integration (not internal conversion efficiency) as the remaining barriers. This is a review article; individual experimental results supporting each metric are cited within it.'
-  verified: '2026-08-12'
+  verified: '2026-08-14'
   level: E3
   sources:
     - url: 'https://arxiv.org/abs/2605.26976'
@@ -43,8 +43,8 @@ evidence:
       publisher: arXiv
       date: '2026-05-26'
       identifier: 'arXiv:2605.26976'
-      accessed: '2026-08-12'
-      note: 'Review article covering 2014–2026 progress across optomechanical, electro-optic and magneto-optic platforms. E3 as a review; individual experimental papers cited within reach E4. Preprint, not peer-reviewed.'
+      accessed: '2026-08-14'
+      note: 'Aditto, Ifty, Zahin; all three authors at BUET Dept. of EEE, Dhaka, Bangladesh (Aditto additionally at BRAC University Dept. of CSE). Review article covering 2014-2026 progress across optomechanical, electro-optic and magneto-optic platforms. E3 as a review; individual experimental papers cited within reach E4. Preprint, not peer-reviewed.'
 qdayImpact: 0
 qdayReasoning: 'Transduction enables networked quantum computing; no direct cryptanalytic relevance at current efficiency and noise levels.'
 confidence: medium
@@ -52,10 +52,12 @@ status: draft
 origin: agent
 added: '2026-08-12'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: Scout
+  agent: steward
   agentMergedOn: '2026-08-12'
+  reviewedOn: '2026-08-14'
+  note: 'Actors and country corrected this pass. Original file listed actors as "Multiple academic groups (survey)" and country as "US, Europe" — both wrong. arXiv:2605.26976 HTML confirms three authors: Tarvir Anjum Aditto (BUET EEE + BRAC University CSE), Jaiyan Sadid Ifty (BUET EEE), Khondokar Zahin (BUET EEE), all in Dhaka, Bangladesh. Actors corrected to BUET and BRAC University. Country corrected to BD. Country records institutional provenance of authors, not geographic scope of surveyed work. Applied settled precedents from 2026-08-12 (actors field) and 2026-08-14 (country field). E3 correct for preprint review article. No evidence level or readiness changes.'
 ---
 
 ## What happened

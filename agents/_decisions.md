@@ -177,3 +177,20 @@ into the sections above once you have read them — or delete them if wrong.
 Country is provenance of the authors, not the subject matter. Populating it from the scope of a review article makes the board's geographic coverage-gap measurement misleading and misrepresents institutional origin.
 
 *Proposed 2026-08-14, after enable-microwave-optical listed country: US, Europe when all three authors (Aditto, Ifty, Zahin) are at BUET, Dhaka, Bangladesh. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-14
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**The actors field must name the actual authors and their institutions, not a description of who a review article covers. A review of 'multiple academic groups' is written by specific people at a specific institution; that institution is what goes in actors.**
+
+A material misrepresentation of provenance: 'Multiple academic groups (survey)' when three named authors are at BUET/BRAC Bangladesh.
+
+*Proposed 2026-08-14, after enable-microwave-optical listed 'Multiple academic groups (survey)' when the paper has three named authors at BUET/BRAC Bangladesh. Not yet confirmed by a person.*
+
+**The country field records where the authors are institutionally based, not the geographic scope of the work they survey or describe. A review article written by authors at a Bangladeshi university, surveying work done in the US and Europe, is country: BD.**
+
+Country is provenance of the authors, not the subject matter. Populating it from scope makes geographic coverage-gap measurement misleading.
+
+*Proposed 2026-08-14, after enable-microwave-optical listed country: US, Europe when all three authors are at BUET/BRAC, Dhaka, Bangladesh. Not yet confirmed by a person.*
