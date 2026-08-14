@@ -795,16 +795,6 @@
 .key__list--actors em { font-style: normal; color: var(--ink-muted); }
 .key__list--actors li[data-named] { color: var(--ink); }
 
-.teaser__why {
-  font-size: 0.7rem;
-  line-height: 1.5;
-  color: var(--ink-muted);
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--hairline);
-}
-.teaser__why strong { color: var(--ink); font-weight: 400; }
-
 /* ---------- Questions overview ---------- */
 
 .questions__views { display: flex; gap: 4px; }

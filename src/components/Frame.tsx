@@ -369,15 +369,17 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
      * still a window: move it, resize it, dock it, switch it to the month view.
      */
     /**
-     * Left-aligned and narrower than the page.
+     * Full width again.
      *
-     * Full width put it under every other window, so opening it from the dock
-     * appeared to do nothing — it was there, behind everything.
+     * It was narrowed to stop it opening behind other windows, but that was
+     * treating the symptom — un-docking now raises and clamps into view, which
+     * fixes it properly. A ticker with half the width truncates every headline
+     * mid-sentence, which is the one thing it must not do.
      */
     headlines: {
       x: pad,
       y: strip,
-      w: Math.min(760, w - pad * 2),
+      w: w - pad * 2,
       h: 34,
       docked: false,
     },

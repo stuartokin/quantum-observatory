@@ -326,6 +326,14 @@ export function Board() {
   }, [headlines14, allHeadlines])
 
   const [headlineInfo, setHeadlineInfo] = useState(false)
+  /**
+   * Why this constellation, behind the title.
+   *
+   * It was a line of prose above the plot, which pushed the constellation out
+   * of the panel — the explanation crowding out the thing it explains. The
+   * title says which one; clicking it says why.
+   */
+  const [teaserWhy, setTeaserWhy] = useState(false)
 
   /**
    * Resizing chooses the view.
@@ -810,19 +818,30 @@ export function Board() {
       </Frame>
 
       <Frame
-        title="What changed"
+        title={changedCon ? `What changed — ${CONSTELLATION_LABEL[changedCon.id]}` : 'What changed'}
         state={frames.teaser}
         onChange={setFrame('teaser')}
         onDock={dock('teaser')}
         accent={colour}
         z={zOf('teaser')}
         onFocus={raise('teaser')}
+        onInfo={changedCon ? () => setTeaserWhy((v) => !v) : undefined}
+        info={
+          teaserWhy && changedCon ? (
+            <div className="headline-info">
+              <p>
+                <strong>{CONSTELLATION_LABEL[changedCon.id]}</strong> is shown because it
+                has {changedCon.reason}.
+              </p>
+              <p className="prov-note">
+                The constellation with the heaviest change over the fortnight, weighted
+                so a readiness move counts for more than a new source. Click any body to
+                open it; click the name to enter the constellation.
+              </p>
+            </div>
+          ) : undefined
+        }
       >
-        {changedCon && (
-          <p className="teaser__why">
-            <strong>{CONSTELLATION_LABEL[changedCon.id]}</strong> — {changedCon.reason}.
-          </p>
-        )}
         {changedCon && (
           <MiniOrbit
             constellation={changedCon.id}
@@ -834,7 +853,14 @@ export function Board() {
         <Teaser
           entries={teaserEntries}
           colour={colour}
-          onSelect={setSelected}
+          onSelect={(id) => {
+            // Open the detail panel, not merely highlight the body. A list of
+            // changes whose entries do not take you to the change is a
+            // notification, not a way in.
+            setSelected(id)
+            setFrames((f) => ({ ...f, detail: { ...intoView(f.detail), docked: false } }))
+            setOrder((o) => [...o.filter((x) => x !== 'detail'), 'detail'])
+          }}
           onJump={(c) => enterOrbit(c)}
         />
       </Frame>

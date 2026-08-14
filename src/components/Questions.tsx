@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { StandingQuestion } from '../content/questionTypes'
 import { daysSinceChange } from '../content/questions'
 import { deriveAnswer, isDerived } from '../renderers/board/deriveQuestions'
@@ -61,6 +61,22 @@ export default function Questions({
    * answered — and that is the view somebody arrives wanting.
    */
   const [view, setView] = useState<'list' | 'grid'>('grid')
+  const listRef = useRef<HTMLOListElement>(null)
+
+  /**
+   * Switching view and scrolling are two steps, and the second only works once
+   * the first has rendered — so the scroll waits a frame rather than firing
+   * against a list that is still hidden.
+   */
+  const openQuestion = (id: string) => {
+    setView('list')
+    setOpenId(id)
+    requestAnimationFrame(() => {
+      listRef.current
+        ?.querySelector(`[data-qid="${id}"]`)
+        ?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    })
+  }
 
   /**
    * An agent's answer wins. Where there is none, the board answers what it can
@@ -135,10 +151,7 @@ export default function Questions({
                 key={q.id}
                 className="questions__cell"
                 data-state={state}
-                onClick={() => {
-                  setView('list')
-                  setOpenId(q.id)
-                }}
+                onClick={() => openQuestion(q.id)}
                 title={derived?.answer ?? q.answer}
               >
                 <span className="questions__cellnum">{q.number}</span>
@@ -156,7 +169,7 @@ export default function Questions({
         </div>
       )}
 
-      <ol className="questions__list" hidden={view !== 'list'}>
+      <ol className="questions__list" hidden={view !== 'list'} ref={listRef}>
         {resolved.map(({ q, derived }) => {
           const answer = derived?.answer ?? q.answer
           const state = derived?.state ?? q.state
@@ -170,7 +183,12 @@ export default function Questions({
           const stale = days !== null && days > 180
 
           return (
-            <li key={q.id} data-state={state} data-open={open || undefined}>
+            <li
+              key={q.id}
+              data-qid={q.id}
+              data-state={state}
+              data-open={open || undefined}
+            >
               <button
                 className="questions__head"
                 onClick={() => setOpenId(open ? null : q.id)}
