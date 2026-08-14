@@ -86,6 +86,15 @@ jobs:
         agent: ${{ fromJson(needs.discover.outputs.agents) }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # The tip of main, not the SHA that triggered the run.
+          #
+          # A dispatched workflow checks out the commit you clicked Run on, so
+          # every pass in a multi-pass run saw the same undrained queue and
+          # took the same instruction. Three passes did one job three times
+          # and produced three near-identical items.
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: 22
