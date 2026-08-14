@@ -36,7 +36,7 @@ import {
   ACTOR_TYPE_LABEL,
   type ActorType,
 } from './glyphs'
-import { layoutTimeline, yearFraction, GUTTER, dateOf } from './timeline'
+import { layoutTimeline, yearFraction, GUTTER, dateOf, datedOf, PRECISION_NOTE } from './timeline'
 import {
   DEFAULT_CAMERA,
   clampCamera,
@@ -121,36 +121,7 @@ export function Board() {
   /** The timeline has its own camera; sharing one made each view jump. */
   const [tlView, setTlView] = useState({ k: 1, tx: 0, ty: 0 })
 
-  /**
-   * The axis range the timeline is drawing.
-   *
-   * These are Dates, not years — the same values yearFraction takes — so the
-   * framing below uses that function rather than its own arithmetic. Doing the
-   * maths twice is how a view and the thing it frames drift apart.
-   */
-  const tlRange = useRef<{ from: Date; to: Date; plot: number } | null>(null)
 
-  /**
-   * Frame the last N years without removing anything.
-   *
-   * TX maps a 0..1 position across the axis; to show a slice we scale by the
-   * inverse of its width and pan its start to the left edge.
-   */
-  const frameYears = (years: number) => {
-    const t = tlRange.current
-    if (!t || !years) {
-      setTlView({ k: 1, tx: 0, ty: 0 })
-      return
-    }
-    const lastYear = t.to.getFullYear()
-    const startYear = Math.max(t.from.getFullYear(), lastYear - years)
-    const f0 = Math.max(0, Math.min(0.92, yearFraction(startYear, t.from, t.to)))
-
-    // TX(x) = AXIS + (x * plot + tx) * k. Solving TX(f0) = AXIS and TX(1) =
-    // AXIS + plot gives k = 1/(1-f0) and tx = -f0 * plot. tx is in pixels, not
-    // fractions, which is why the plot width has to come back with the range.
-    setTlView({ k: 1 / (1 - f0), tx: -f0 * t.plot, ty: 0 })
-  }
   /** The constellation window has its own camera too. */
   const [orbitView, setOrbitView] = useState({ k: 1, tx: 0, ty: 0 })
   /**
@@ -161,7 +132,6 @@ export function Board() {
    * the years that had been removed. Every item is always present; the view
    * simply starts framed on the recent end.
    */
-  const [timelineYears, setTimelineYears] = useState(2)
   /** Strip across the page, or a window with the whole history. */
   const [headlineMode, setHeadlineMode] = useState<'ticker' | 'archive'>('ticker')
 
@@ -258,6 +228,7 @@ export function Board() {
     // Opening a window behind everything else is the same as not opening it.
     setOrder((o) => [...o.filter((x) => x !== k), k])
   }
+
 
   /** Canvases inside frames need telling when their box changed. */
   const [resizeTick, setResizeTick] = useState(0)
@@ -770,28 +741,6 @@ export function Board() {
         minWidth={360}
         minHeight={220}
         flush
-        action={
-          <button
-            className="frame__mode"
-            onClick={() => {
-              const next = timelineYears === 2 ? 0 : 2
-              setTimelineYears(next)
-              frameYears(next)
-            }}
-            aria-pressed={timelineYears === 2}
-            title={
-              timelineYears === 2
-                ? 'Showing the last two years. Click for every year.'
-                : 'Showing every year. Click for the last two.'
-            }
-            style={timelineYears === 2 ? { color: colour, borderColor: colour } : undefined}
-          >
-            {/* Labelled with what is shown, not what the click will do. The
-                other way round reads as a description of the current state and
-                sent a reader looking for a broken year filter. */}
-            {timelineYears === 2 ? 'Last 2 years' : 'All years'}
-          </button>
-        }
       >
         <Sky
           onHover={setHoveredId}
@@ -801,12 +750,6 @@ export function Board() {
           onSelect={setSelected}
           view={tlView}
           setView={setTlView}
-          onRange={(from, to, plot) => {
-            const had = tlRange.current
-            tlRange.current = { from, to, plot }
-            // Frame the opening window once the range is known, not before.
-            if (!had && timelineYears) frameYears(timelineYears)
-          }}
           activeCons={cons}
           mode="tower"
           focusCon={null}
@@ -876,11 +819,16 @@ export function Board() {
         onFocus={raise('teaser')}
       >
         {changedCon && (
+          <p className="teaser__why">
+            <strong>{CONSTELLATION_LABEL[changedCon.id]}</strong> — {changedCon.reason}.
+          </p>
+        )}
+        {changedCon && (
           <MiniOrbit
-            constellation={changedCon}
+            constellation={changedCon.id}
             colour={colour}
             highlight={changedIds}
-            onOpen={() => enterOrbit(changedCon)}
+            onOpen={() => enterOrbit(changedCon.id)}
           />
         )}
         <Teaser
@@ -1178,7 +1126,6 @@ function Sky({
   setCam,
   resizeTick,
   forecast,
-  onRange,
   onHover,
   pool,
   newsOverlay,
@@ -1200,8 +1147,6 @@ function Sky({
   setCam: (c: Camera) => void
   resizeTick: number
   forecast?: Forecast
-  /** Reports the axis range it drew, so a caller can frame a slice of it. */
-  onRange?: (from: Date, to: Date, plot: number) => void
   onHover: (id: string | null) => void
   pool: FrontierItem[]
   newsOverlay: boolean
@@ -1492,7 +1437,6 @@ function Sky({
         const TX = (x: number) => AXIS + (x * (W - AXIS - R) + v.tx) * v.k
         const TY = (y: number) => 40 + (y * (H - 78) + v.ty) * v.k
         tlProject.current = { TX, TY }
-        onRange?.(tl.from, tl.to, W - AXIS - R)
 
         g.font = '11px ui-monospace, monospace'
 
@@ -1659,7 +1603,23 @@ function Sky({
           // The same celestial shapes as the galaxy, so a body is recognisable
           // across both views. A field of identical discs tells you only where
           // things are, never what they are.
+          // An estimated date gets a horizontal whisker: the board is saying
+          // "about here", which is true, rather than placing it precisely and
+          // implying a certainty nobody asserted.
+          if (m.precision !== 'exact' && m.dated && tlProminent) {
+            g.globalAlpha = 0.3
+            g.strokeStyle = tint
+            g.lineWidth = 1
+            g.setLineDash([2, 3])
+            g.beginPath()
+            g.moveTo(px - rr - 8, py)
+            g.lineTo(px + rr + 8, py)
+            g.stroke()
+            g.setLineDash([])
+          }
+
           if (tlProminent) {
+            g.globalAlpha = (dim && !sel ? 0.25 : 0.45 + m.importance * 0.55)
             drawBody(g, item?.actors?.[0] ? glyphFor(item.actors[0]) : 'star', px, py, rr, tint, m.sourced)
           } else {
             g.globalAlpha = (dim && !sel ? 0.2 : 0.35) * 1
@@ -2594,6 +2554,20 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
       <div className="meta">
         <span className="badge" style={{ color: colour, borderColor: colour }}>{item.readiness}</span>
         <span className="badge">{item.constellation}</span>
+        {(() => {
+          const { date, precision } = datedOf(item)
+          if (!date) return null
+          return (
+            <span
+              className="badge"
+              title={PRECISION_NOTE[precision]}
+              data-estimated={precision !== 'exact' ? '' : undefined}
+            >
+              {precision === 'exact' ? '' : '~'}
+              {date.toISOString().slice(0, 10)}
+            </span>
+          )
+        })()}
         {item.evidence.level && (
           <span className="badge" title={
             item.evidence.level === 'unrated'

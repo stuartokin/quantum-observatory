@@ -368,10 +368,16 @@ export function defaultLayout(w: number, h: number): Record<string, FrameState> 
      * belongs — across the top, read at a glance before anything else. It is
      * still a window: move it, resize it, dock it, switch it to the month view.
      */
+    /**
+     * Left-aligned and narrower than the page.
+     *
+     * Full width put it under every other window, so opening it from the dock
+     * appeared to do nothing — it was there, behind everything.
+     */
     headlines: {
       x: pad,
       y: strip,
-      w: w - pad * 2,
+      w: Math.min(760, w - pad * 2),
       h: 34,
       docked: false,
     },

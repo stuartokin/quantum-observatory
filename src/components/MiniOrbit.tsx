@@ -138,13 +138,31 @@ export function MiniOrbit({
   )
 }
 
-/** Which constellation deserves the panel: the one with the heaviest change. */
-export function mostChanged(entries: NewsEntry[]): string | null {
-  const weights = new Map<string, number>()
+/**
+ * Which constellation deserves the panel, and why.
+ *
+ * It showed a constellation with no indication of how it was chosen, which
+ * reads as arbitrary — and a panel a reader cannot account for is one they
+ * stop trusting. The reason is returned alongside the choice.
+ */
+export function mostChanged(
+  entries: NewsEntry[],
+): { id: string; reason: string; count: number } | null {
+  const weights = new Map<string, { w: number; n: number; moved: number }>()
   for (const e of entries) {
     if (!e.constellation) continue
-    weights.set(e.constellation, (weights.get(e.constellation) ?? 0) + e.weight)
+    const cur = weights.get(e.constellation) ?? { w: 0, n: 0, moved: 0 }
+    cur.w += e.weight
+    cur.n += 1
+    if (e.kind === 'moved') cur.moved += 1
+    weights.set(e.constellation, cur)
   }
-  const best = [...weights.entries()].sort((a, b) => b[1] - a[1])[0]
-  return best ? best[0] : null
+  const best = [...weights.entries()].sort((a, b) => b[1].w - a[1].w)[0]
+  if (!best) return null
+  const [id, { n, moved }] = best
+  const reason = moved
+    ? `${moved} readiness change${moved === 1 ? '' : 's'} in the last fortnight` +
+      (n > moved ? `, and ${n - moved} other change${n - moved === 1 ? '' : 's'}` : '')
+    : `${n} change${n === 1 ? '' : 's'} in the last fortnight, none of them a readiness move`
+  return { id, reason, count: n }
 }

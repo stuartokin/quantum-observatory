@@ -360,3 +360,19 @@ If you notice something else worth doing while you are there, put it under
 The exception is an instruction that plainly invites breadth — "sweep January",
 "look at the applications constellation". Then the focus *is* the standing work
 and you do as much of it as the budget allows.
+
+## A source without a date cannot be placed
+
+`evidence.sources[].date` decides where an item sits on the timeline. Omit it
+and the board falls back to when the evidence was last *checked*, which can be a
+year after the work — FN-DSA sat at 2026 while its own claim said the initial
+public draft was submitted in August 2025.
+
+**Give every source a date.** Where the page itself carries none, use the date
+the thing it describes happened, and say in the source note where that came
+from: "IPD submitted August 2025, per the project page timeline". A dated source
+with an explained date beats an undated one every time.
+
+Where you genuinely cannot establish one, leave it out rather than inventing a
+plausible-looking day — the board marks estimated positions and says how they
+were derived, and that is more honest than a precise date nobody asserted.

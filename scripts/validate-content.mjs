@@ -82,6 +82,28 @@ for (const col of COLLECTIONS) {
   }
 
   console.log(`  ${col.label}: ${ids.size} items`)
+
+  /**
+   * How many items the timeline has to guess a position for.
+   *
+   * evidence.sources[].date decides where an item sits. Without one the board
+   * falls back to when the evidence was last checked, which can be a year after
+   * the work — so this is a real gap in the data rather than a cosmetic one, and
+   * it should be visible in every build.
+   */
+  if (col.dir.includes('frontier')) {
+    const undated = parsed.filter(
+      ({ data }) =>
+        (data?.evidence?.sources ?? []).length > 0 &&
+        !(data.evidence.sources ?? []).some((src) => src.date),
+    ).length
+    if (undated) {
+      console.log(
+        `    ${undated} with sources but no source date — the timeline estimates their position`,
+      )
+    }
+  }
+
   total += ids.size
 }
 

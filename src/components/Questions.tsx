@@ -53,6 +53,14 @@ export default function Questions({
   onOpenNews?: (id: string) => void
 }) {
   const [openId, setOpenId] = useState<string | null>(null)
+  /**
+   * Two ways to read twelve answers.
+   *
+   * The list is for reading one properly. The grid is for seeing the shape of
+   * all twelve at once — which is settled, which is moving, which nobody has
+   * answered — and that is the view somebody arrives wanting.
+   */
+  const [view, setView] = useState<'list' | 'grid'>('grid')
 
   /**
    * An agent's answer wins. Where there is none, the board answers what it can
@@ -95,6 +103,14 @@ export default function Questions({
   return (
     <div className="questions">
       <div className="questions__summary">
+        <span className="questions__views">
+          <button onClick={() => setView('grid')} aria-pressed={view === 'grid'}>
+            Overview
+          </button>
+          <button onClick={() => setView('list')} aria-pressed={view === 'list'}>
+            Read
+          </button>
+        </span>
         <span className="label">
           {summary.total} question{summary.total === 1 ? '' : 's'} ·{' '}
           {summary.moving} moving
@@ -107,7 +123,40 @@ export default function Questions({
         </span>
       </div>
 
-      <ol className="questions__list">
+      {view === 'grid' && (
+        <div className="questions__grid">
+          {resolved.map(({ q, derived }) => {
+            const state = derived?.state ?? q.state
+            const d = derived?.lastChanged
+              ? Math.floor((Date.now() - new Date(derived.lastChanged).getTime()) / 864e5)
+              : daysSinceChange(q)
+            return (
+              <button
+                key={q.id}
+                className="questions__cell"
+                data-state={state}
+                onClick={() => {
+                  setView('list')
+                  setOpenId(q.id)
+                }}
+                title={derived?.answer ?? q.answer}
+              >
+                <span className="questions__cellnum">{q.number}</span>
+                <span className="questions__cellq">{q.question}</span>
+                <span className="questions__cellstate">
+                  {STATE_LABEL[state] ?? state}
+                </span>
+                <span className="questions__cellwhen">
+                  {d === null ? 'no date recorded' : `changed ${since(d)}`}
+                </span>
+                {derived && <span className="questions__cellderived">counted</span>}
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      <ol className="questions__list" hidden={view !== 'list'}>
         {resolved.map(({ q, derived }) => {
           const answer = derived?.answer ?? q.answer
           const state = derived?.state ?? q.state

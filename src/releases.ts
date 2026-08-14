@@ -24,6 +24,19 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.46.0',
+    date: '2026-08-13',
+    headline: 'Undated is now a last resort, and the questions have an overview.',
+    ui: [
+      'An item whose source carries no date is no longer dumped in the undated gutter. The board falls back through what it knows — the readiness change, then when the evidence was checked, then when the item arrived — and marks the position as estimated with a dashed whisker and a note saying which rung it used. FN-DSA sat undated while its own claim said the draft was submitted in August 2025.',
+      'The detail panel shows the resolved date with a tilde and a dashed border when it is an estimate. An estimate labelled as one is more useful than a blank; an estimate presented as fact is worse than either.',
+      'Every build now reports how many items have sources but no source date, because that is a real gap in the data rather than a cosmetic one.',
+      'The twelve questions gain an Overview: all twelve as cells, showing state and when each answer last changed, with the derived ones marked as counted. Click through to read one properly.',
+      'What Changed says why it picked that constellation. A panel a reader cannot account for is one they stop trusting.',
+      'The two-year timeline view is gone, and Headlines opens narrower and left-aligned instead of full width beneath everything else.',
+    ],
+  },
+  {
     version: '0.45.0',
     date: '2026-08-12',
     headline: 'The key becomes a window, and the timeline stops moving its own axis.',
@@ -122,15 +135,6 @@ export const RELEASES: Release[] = [
     ui: [
       'Content is parsed at build time by a Vite plugin. front-matter and js-yaml are gone from the bundle; the only runtime dependencies left are React and React DOM.',
       'The performance budget came down from 106 KB to 88, then learned to measure the entry chunk separately from code loaded on demand — it had been counting a code split as growth, which punished exactly the change it asked for.',
-    ],
-  },
-  {
-    version: '0.33.0',
-    date: '2026-08-10',
-    headline: 'A news collection, kept separate from the board.',
-    ui: [
-      'Headlines are a distinct content type that points at the board rather than being part of it. A stream of announcements allowed to move a readiness map is what the map exists to resist.',
-      'Every item carries a validation block saying what was actually checked, and the research behind it where that could be traced.',
     ],
   },
 ]

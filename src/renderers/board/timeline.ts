@@ -12,20 +12,75 @@ import { LEVELS } from './tower'
  * everything else sits in an undated gutter and says so.
  */
 
+/** How a date was arrived at, in words a reader can act on. */
+export const PRECISION_NOTE: Record<DatePrecision, string> = {
+  exact: 'the source states this date',
+  moved: 'estimated from when the readiness last changed',
+  verified: 'estimated from when the evidence was last checked — the work existed by then, so this is a latest-possible date',
+  added: 'estimated from when this reached the board, which is the weakest of the available signals',
+  none: 'no date could be established',
+}
+
 /** Fraction of the plot width reserved for undated items, on the left. */
 export const GUTTER = 0.11
 
-export function dateOf(item: FrontierItem): Date | null {
-  const candidates: string[] = []
-  for (const s of item.evidence?.sources ?? []) if (s.date) candidates.push(s.date)
-  if (item.moved?.on) candidates.push(item.moved.on)
-  if (!candidates.length) return null
+/**
+ * When the evidence landed, and how confident we are of that.
+ *
+ * This used to consider only `sources[].date` and `moved.on`, so an item whose
+ * source carries no date field fell into the undated gutter — even when the
+ * board plainly knew roughly when the work happened. FIPS 206 sat there while
+ * its own claim said the initial public draft was submitted in August 2025.
+ *
+ * The gutter should hold items the board genuinely cannot place, not items
+ * whose date is recorded in a different field. So: fall back through what is
+ * known, and say which rung was used.
+ *
+ *   exact      a source states its own date
+ *   moved      the readiness change is dated
+ *   verified   somebody checked the evidence on a known day: the work existed
+ *              by then, so this is a latest-possible date rather than a guess
+ *   added      the item reached the board, which is weaker still
+ *
+ * Anything below `exact` is an estimate and the board marks it as one. An
+ * estimate labelled as such is more useful than a blank; an estimate presented
+ * as fact is worse than either.
+ */
+export type DatePrecision = 'exact' | 'moved' | 'verified' | 'added' | 'none'
 
-  const parsed = candidates
-    .map((d) => (/^\d{4}$/.test(d) ? new Date(`${d}-06-30`) : new Date(d)))
-    .filter((d) => !isNaN(d.getTime()))
-  if (!parsed.length) return null
-  return new Date(Math.min(...parsed.map((d) => d.getTime())))
+const parse = (d?: string): Date | null => {
+  if (!d) return null
+  // A bare year means "some time that year", so place it mid-year rather than
+  // on 1 January, which would read as a precise date nobody asserted.
+  const t = /^\d{4}$/.test(d) ? new Date(`${d}-06-30`) : new Date(d)
+  return isNaN(t.getTime()) ? null : t
+}
+
+export function datedOf(item: FrontierItem): { date: Date | null; precision: DatePrecision } {
+  const sourceDates = (item.evidence?.sources ?? [])
+    .map((s) => parse(s.date))
+    .filter((d): d is Date => d !== null)
+  if (sourceDates.length) {
+    return {
+      date: new Date(Math.min(...sourceDates.map((d) => d.getTime()))),
+      precision: 'exact',
+    }
+  }
+
+  const moved = parse(item.moved?.on)
+  if (moved) return { date: moved, precision: 'moved' }
+
+  const verified = parse(item.evidence?.verified)
+  if (verified) return { date: verified, precision: 'verified' }
+
+  const added = parse(item.added)
+  if (added) return { date: added, precision: 'added' }
+
+  return { date: null, precision: 'none' }
+}
+
+export function dateOf(item: FrontierItem): Date | null {
+  return datedOf(item).date
 }
 
 export interface Mark {
@@ -34,6 +89,8 @@ export interface Mark {
   y: number
   r: number
   dated: boolean
+  /** How the date was arrived at. Anything but 'exact' is an estimate. */
+  precision: DatePrecision
   sourced: boolean
   weight: number
   /** 0–1. Drives size, brightness and whether a label is kept. */
@@ -55,7 +112,8 @@ export function layoutTimeline(
   items: FrontierItem[],
   opts: { sourced: (i: FrontierItem) => boolean; attention: (i: FrontierItem) => number },
 ): TimelineLayout {
-  const dates = items.map(dateOf)
+  const resolved = items.map(datedOf)
+  const dates = resolved.map((r) => r.date)
   const known = dates.filter((d): d is Date => d !== null)
 
   const now = new Date()
@@ -72,6 +130,7 @@ export function layoutTimeline(
 
   const marks: Mark[] = items.map((item, i) => {
     const d = dates[i]
+    const prec = resolved[i].precision
     const level = Math.max(0, LEVELS.indexOf(item.readiness))
     const weight = item.confidence === 'high' ? 1 : item.confidence === 'medium' ? 0.65 : 0.35
     const src = opts.sourced(item)
@@ -91,6 +150,7 @@ export function layoutTimeline(
       y: (level + 0.5) / LEVELS.length,
       r: 3 + importance * 8,
       dated: d !== null,
+      precision: prec,
       sourced: src,
       weight,
       importance,
