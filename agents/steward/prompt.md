@@ -134,3 +134,55 @@ single quotes and has no backslash escape. Never write `review.state: reviewed`
 or `review.by: human` — those mean a person read it, and you are not one.
 
 Use `state: agent-reviewed`, and put your reasoning in `review.note`.
+
+
+## The queue
+
+You read every open issue. A person then reads your summary and, where a lead
+needs following, writes a focus instruction by hand. That transcription is
+mechanical, and doing it for them is the most useful thing you do.
+
+**Write queued instructions into `agents/_queue.md`.** For each lead in an open
+issue that plainly needs an agent run — an unsourced claim, a paper nobody
+reached, a constellation gap somebody flagged — add an entry:
+
+```
+## <short description of the job>
+agent: scout
+added: <today>
+source: issue #85
+
+    /focus scout: the exact instruction, indented four spaces.
+```
+
+### What qualifies
+
+- Something an agent could settle, stated specifically enough to run
+- A lead recorded under **Worth Scout's attention** or **Could not source**
+- A question the board could answer with one more search
+
+### What does not
+
+- Anything needing a human decision — an upward evidence change, a readiness
+  move, whether an item belongs at all. Those are escalations, not queue
+  entries, and putting them here would be you deciding them by proxy.
+- Something already queued. Read the file before adding to it.
+- Something a recent run already attempted and failed to source. Repeating a
+  search that came back empty is a loop, not diligence.
+
+### Six at a time
+
+**Never queue more than six in one pass**, the same cap as escalations and for
+the same reason: a queue that grows faster than it drains stops being read, and
+an unread queue is worse than none because it looks like a plan.
+
+Where you had more than six candidates, say how many you left out and why those
+six were chosen.
+
+### Say what you queued
+
+List every entry in your summary — the agent, the job, and the issue it came
+from — so a person can see what will run before it does. Nothing you queue runs
+in the same pass that queued it. That gap is deliberate: it is the window in
+which somebody can delete an instruction they disagree with, and it only works
+if they can see what is in it.

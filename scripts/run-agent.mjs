@@ -23,6 +23,7 @@ import {
   schemaForPath,
   collectionsFor,
 } from './agent-io.mjs'
+import { readQueue, writeQueue, takeFor } from './queue.mjs'
 
 /**
  * Focus picked up from the issues themselves.
@@ -520,6 +521,14 @@ async function callModel(attempt = 1) {
 
 const { blocks, stopReason, searches } = await callModel()
 console.log(`\n  ${searches} search(es), ${blocks.length} text block(s)`)
+
+// The entry is spent once the model has answered, even if nothing was written —
+// a run that found nothing has still done the looking, and repeating it weekly
+// would be a loop.
+if (queued || staleQueued.length) {
+  writeQueue(queueRemaining, queueHead)
+  writeFileSync('.agent-run/queue-drained.txt', queued ? queued.title : '')
+}
 
 mkdirSync('.agent-run', { recursive: true })
 writeFileSync('.agent-run/raw.json', JSON.stringify({ stopReason, searches, blocks }, null, 2))

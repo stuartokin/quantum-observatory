@@ -4,7 +4,7 @@
   "model": "claude-sonnet-4-6",
   "trigger": "issues",
   "maxTokens": 32000,
-  "enabled": true,
+  "enabled": false,
   "budget": {
     "issues": 3,
     "proposals": 8,
@@ -14,6 +14,7 @@
   "runner": "steward",
   "write_scope": [
     "content/frontier/_inbox/**",
-    "agents/_decisions.md"
+    "agents/_decisions.md",
+    "agents/_queue.md"
   ]
 }

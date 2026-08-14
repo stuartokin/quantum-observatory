@@ -82,3 +82,35 @@ Q-Day forecast carries an `agent-estimate` stamp no agent can remove.
 
 That asymmetry is the design. Everything else here exists to protect the small
 number of decisions that actually need you.
+
+## The queue
+
+The steward reads the open issues and writes focus instructions into
+`agents/_queue.md`, then says in its issue comment what it queued. **Nothing it
+queues runs in the same pass.**
+
+That gap is the design. An agent that can enlarge its own workload will, and the
+cheapest guard is a committed file somebody glances at — not a rule nobody
+checks. Read the queue, delete what you disagree with, and the rest runs.
+
+### What runs it
+
+Every agent drains its own entries. On the **Monday 06:00 UTC** scheduled pass,
+each takes **one** instruction before doing its normal work.
+
+To clear it sooner: **Actions → Queue → Run workflow**. Choose an agent or
+`all`, and how many instructions each should take. Agents run one at a time —
+two rewriting the queue file at once would lose an edit, and the lost one would
+look as though it had run.
+
+### Why one at a time
+
+Four instructions drained into a single run would be four runs' work reported as
+one summary, and the summary is how anybody judges whether the work was any
+good.
+
+### Ageing
+
+An entry older than **21 days** is dropped rather than run, and the run says so.
+An instruction that has sat unexecuted for three weeks has probably been
+overtaken by something, and running it blind is worse than losing it.
