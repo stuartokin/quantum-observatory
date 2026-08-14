@@ -35,18 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find the USTC Nature paper on ion-ion entanglement over 10 km fibre
-agent: scout
-added: 2026-08-14
-source: issue #85
-
-    /focus scout: find the DOI and full citation for the USTC Nature paper of
-    February 2026 on long-lived remote ion-ion entanglement over 10 km of fibre,
-    from Jian-Wei Pan's group. Assess whether it updates comms-quantum-repeater or
-    warrants a new communications item. entanglement-distribution already covers 420
-    km memory-to-memory; this is a different result and should not be folded into
-    it without saying why.
-
 ## Source Babbush et al. arXiv:2603.28846 for algo-resource-estimation
 agent: scout
 added: 2026-08-14
