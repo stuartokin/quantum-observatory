@@ -4,12 +4,13 @@
   "model": "claude-sonnet-4-6",
   "trigger": "issues",
   "maxTokens": 32000,
-  "enabled": true,
+  "enabled": false,
   "budget": {
     "issues": 3,
     "proposals": 8,
     "decisions": 5,
-    "searches": 20
+    "searches": 20,
+    "queue": 6
   },
   "runner": "steward",
   "write_scope": [

@@ -21,6 +21,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { join } from 'node:path'
 import { execSync } from 'node:child_process'
 import { extractJson, normaliseFile, checkFile, schemaForPath } from './agent-io.mjs'
+import { readQueue, writeQueue } from './queue.mjs'
 
 const DIR = 'agents/steward'
 const cfg = JSON.parse(readFileSync(`${DIR}/agent.json`, 'utf8'))
@@ -109,12 +110,24 @@ Reply with a single JSON object and nothing else:
   "decisions": [
     { "heading": "Evidence levels", "rule": "...", "reasoning": "one line", "after": "what prompted it" }
   ],
+  "queue": [
+    {
+      "title": "short description of the job",
+      "agent": "scout",
+      "source": "issue #85",
+      "focus": "/focus scout: the exact instruction, as one string"
+    }
+  ],
   "issueComments": [ { "number": 21, "body": "what you resolved and what remains" } ],
   "close": [ 21 ],
   "needsHuman": [ { "what": "...", "decision": "what has to be decided" } ]
 }
 
-Limits for this run: ${cfg.budget?.proposals ?? 8} files, ${cfg.budget?.decisions ?? 5} decisions.
+Limits for this run: ${cfg.budget?.proposals ?? 8} files, ${cfg.budget?.decisions ?? 5} decisions, ${cfg.budget?.queue ?? 6} queued instructions.
+
+Queued instructions go in the \`queue\` array above and nowhere else. Writing them
+into your summary looks like queuing them and is not — the file is what the
+agents read, and prose in an issue comment reaches nobody.
 Every file path must sit inside content/frontier/_inbox/.
 Only close an issue where nothing remains for a person.
 `
@@ -233,6 +246,38 @@ for (const f of (out.files ?? []).slice(0, cfg.budget?.proposals ?? 8)) {
  * proposed them. An existing precedent therefore cannot be altered or quietly
  * dropped by an agent — only added to, visibly, in a commit.
  */
+/**
+ * The queue, written as a file rather than described in prose.
+ *
+ * The first version asked the steward to write agents/_queue.md itself. It
+ * dutifully composed six perfectly good entries — into its summary, where no
+ * agent reads them. Structured output written by this script is the difference
+ * between an instruction that runs and one that reads as though it will.
+ */
+const queued = (out.queue ?? []).slice(0, cfg.budget?.queue ?? 6)
+if (queued.length) {
+  const today = new Date().toISOString().slice(0, 10)
+  const { head, entries } = readQueue()
+  const already = new Set(entries.map((e) => e.title.toLowerCase()))
+  const fresh = queued
+    .filter((q) => q.agent && q.focus && !already.has(String(q.title ?? '').toLowerCase()))
+    .map((q) => ({
+      title: q.title ?? q.focus.slice(0, 60),
+      agent: q.agent,
+      added: today,
+      source: q.source ?? '',
+      focus: q.focus,
+    }))
+  if (fresh.length) {
+    writeQueue([...entries, ...fresh], head)
+    console.log(`  queued ${fresh.length} instruction(s):`)
+    for (const f of fresh) console.log(`    ${f.agent}: ${f.title}`)
+  }
+  if (fresh.length < queued.length) {
+    console.log(`  ${queued.length - fresh.length} already queued or incomplete, skipped`)
+  }
+}
+
 const added = (out.decisions ?? []).slice(0, cfg.budget?.decisions ?? 5)
 if (added.length) {
   const today = new Date().toISOString().slice(0, 10)

@@ -142,18 +142,25 @@ You read every open issue. A person then reads your summary and, where a lead
 needs following, writes a focus instruction by hand. That transcription is
 mechanical, and doing it for them is the most useful thing you do.
 
-**Write queued instructions into `agents/_queue.md`.** For each lead in an open
-issue that plainly needs an agent run — an unsourced claim, a paper nobody
-reached, a constellation gap somebody flagged — add an entry:
+**Put queued instructions in the `queue` array of your response.** Not in your
+summary — the file is what the agents read, and prose in an issue comment
+reaches nobody. The runner writes `agents/_queue.md` from that array; you never
+write the file yourself.
 
+```json
+"queue": [
+  {
+    "title": "Find the HRL Nature paper on cryogenic CMOS control",
+    "agent": "scout",
+    "source": "issue #85",
+    "focus": "/focus scout: find the DOI and full citation for ..."
+  }
+]
 ```
-## <short description of the job>
-agent: scout
-added: <today>
-source: issue #85
 
-    /focus scout: the exact instruction, indented four spaces.
-```
+For each lead in an open issue that plainly needs an agent run — an unsourced
+claim, a paper nobody reached, a constellation gap somebody flagged — add one
+entry.
 
 ### What qualifies
 

@@ -35,4 +35,73 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Find IBM/Qedma/Algorithmiq/UChicago July 2026 quantum advantage preprints
+agent: scout
+added: 2026-08-14
+source: issue #85
+
+    /focus scout: find the arXiv identifiers for the three preprints behind the
+    IBM/Qedma/Algorithmiq/UChicago quantum advantage announcements of 30 July 2026,
+    posted around 27-28 July. Confirm whether any have been peer-reviewed. If the
+    preprints are confirmed, assess whether an applications item covering quantum
+    advantage on materials simulation is warranted at E3 — the applications
+    constellation is empty. The three papers carry different evidentiary weights;
+    the IBM/UChicago logical-circuit paper is reported as making the strongest
+    claim. Say which is which.
+
+## Find the HRL Nature paper on silicon QPU with cryogenic CMOS control
+agent: scout
+added: 2026-08-14
+source: issue #85
+
+    /focus scout: find the DOI and full citation for the HRL Laboratories Nature
+    paper published 29 July 2026 on an 18-qubit silicon QPU with fully integrated
+    cryogenic CMOS control running autonomous error correction. Decide whether
+    enable-cryo-cmos-qubit-control should be updated or a new enabling item created.
+    Do not move an evidence level or readiness upward without a person.
+
+## Find the USTC Nature paper on ion-ion entanglement over 10 km fibre
+agent: scout
+added: 2026-08-14
+source: issue #85
+
+    /focus scout: find the DOI and full citation for the USTC Nature paper of
+    February 2026 on long-lived remote ion-ion entanglement over 10 km of fibre,
+    from Jian-Wei Pan's group. Assess whether it updates comms-quantum-repeater or
+    warrants a new communications item. entanglement-distribution already covers 420
+    km memory-to-memory; this is a different result and should not be folded into
+    it without saying why.
+
+## Source Babbush et al. arXiv:2603.28846 for algo-resource-estimation
+agent: scout
+added: 2026-08-14
+source: issue #74
+
+    /focus scout: find and confirm arXiv:2603.28846 — Babbush et al., Google
+    Quantum AI, roughly 1,175 logical qubits for ECC-256 discrete logarithm. Three
+    reviewer runs have flagged it as missing. Confirm authors, institution, the
+    logical qubit count and whether it is peer-reviewed. Do not add a new item:
+    propose it as a corroborating source on algo-resource-estimation or algo-shor.
+
+## Confirm NIST IR 8610 on additional PQC signature candidates
+agent: scout
+added: 2026-08-14
+source: issue #74
+
+    /focus scout: confirm NIST IR 8610 of May 2026, which advanced nine additional
+    digital-signature candidates to a third evaluation round. Confirm the
+    publication date, the nine candidates, and how they relate to the current
+    FIPS 204 and FIPS 205 set. Assess whether a new pqc item is warranted or whether
+    an existing one covers it.
+
+## Find the Q4Bio Nature Biotechnology paper on 12,000-atom simulation
+agent: scout
+added: 2026-08-14
+source: issue #85
+
+    /focus scout: confirm the Q4Bio Nature Biotechnology paper of July 2026 on
+    hybrid quantum-classical simulation of protein complexes over 12,000 atoms.
+    Confirm DOI, authors and institutions, and establish whether this is a quantum
+    advantage claim or a hybrid result that remains classically verifiable. Assess
+    whether it warrants an applications item — and if it does, the item must say
+    plainly which of those two it is.
