@@ -43,8 +43,8 @@
     },
     "answer": {
       "type": "string",
-      "maxLength": 900,
-      "description": "The current answer in plain English. Two or three sentences."
+      "maxLength": 1400,
+      "description": "The current answer in plain English. Three or four sentences. A reader should be able to take the whole answer in at a glance \u2014 anything longer belongs in the evidence it cites, not here."
     },
     "state": {
       "enum": [

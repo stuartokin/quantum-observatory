@@ -354,3 +354,30 @@ If you notice something else worth doing while you are there, put it under
 The exception is an instruction that plainly invites breadth — "sweep January",
 "look at the applications constellation". Then the focus *is* the standing work
 and you do as much of it as the budget allows.
+
+## Every suggestion carries the instruction that acts on it
+
+**Worth Scout's attention** and **Could not source** are read by a person who
+then has to write a focus instruction. Do not make them compose it from your
+prose — write it for them.
+
+Give each entry a `focus` field containing the exact line to paste, beginning
+`/focus <agent>:` and naming what to do. For example:
+
+```
+/focus scout: find the primary paper for the USTC 16-qubit on-chip photonic
+MBQC demonstration reported in August 2026. If a preprint or journal record
+exists, add an item under architectures; if not, say so and leave the board
+unchanged.
+```
+
+Specific enough to run without editing, and honest about the possibility that
+the thing is not there. A suggestion a reader has to translate before they can
+act on it is a suggestion that will sit in the issue for a fortnight.
+
+## Say what happened, not what you attempted
+
+Your summary is written before validation, so a file you proposed may never be
+written. Never say "all twelve files written" — say what you proposed, and let
+the run report what landed. Counting work you did not complete makes the whole
+summary untrustworthy, including the parts that are accurate.

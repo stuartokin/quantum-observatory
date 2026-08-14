@@ -357,11 +357,11 @@ Reply with a single JSON object and nothing else — no prose, no markdown fence
 {
   "summary": "one paragraph, read weekly — make it worth reading",
   "checklist": { "question": "answer", ... },
-  "couldNotSource": [ { "id": "...", "why": "what you searched, what you rejected" } ],
+  "couldNotSource": [ { "id": "...", "why": "what you searched, what you rejected", "focus": "/focus <agent>: the exact instruction that would resolve this" } ],
   "badlyFramed": [ { "id": "...", "why": "why this asks the wrong question" } ],
   "applicationCandidates": [ { "what": "...", "source": "url" } ],
   "escalations": [ { "what": "...", "why": "what is wrong and what decision is needed" } ],
-  "worthScout": [ { "what": "...", "source": "url" } ],
+  "worthScout": [ { "what": "...", "source": "url", "focus": "/focus <agent>: the exact instruction to run next" } ],
   "rejected": [ { "what": "...", "why": "..." } ],
   "files": [ { "path": "content/frontier/_inbox/<id>.md", "content": "<full file>" } ]
 }
@@ -669,6 +669,12 @@ if (rejected.length) {
 }
 
 /** Render any list the agent returned, whatever it chose to call the fields. */
+/** The ready-to-paste instruction attached to a suggestion, if the agent gave one. */
+const focusBlock = (r) =>
+  r && typeof r === 'object' && typeof r.focus === 'string' && r.focus.trim()
+    ? `\n\n  \`\`\`\n  ${r.focus.trim().replace(/\n/g, '\n  ')}\n  \`\`\``
+    : ''
+
 function section(title, rows, render) {
   if (!rows || rows.length === 0) return []
   return ['', `## ${title}`, ...rows.map(render)]
@@ -707,14 +713,26 @@ const pr = [
   // The agent's own reasoning. What it could not evidence, and what it thinks
   // is badly framed, is frequently worth more than what it managed to source —
   // and it used to be discarded entirely.
+  /**
+   * A suggestion arrives with the instruction that acts on it.
+   *
+   * These sections are read by somebody who then has to write a focus line. Made
+   * to compose it from prose, they will not — the suggestion sits in the issue
+   * for a fortnight and the lead goes cold. So the agent supplies the exact
+   * text, and it is rendered as a fenced block ready to paste.
+   */
   ...section('Could not source', out.couldNotSource ?? out.could_not_source, (r) =>
-    typeof r === 'string' ? `- ${r}` : `- **${r.id ?? r.what}** — ${r.why ?? r.reason}`,
+    typeof r === 'string'
+      ? `- ${r}`
+      : `- **${r.id ?? r.what}** — ${r.why ?? r.reason}` + focusBlock(r),
   ),
   ...section('Badly framed', out.badlyFramed ?? out.badly_framed, (r) =>
     typeof r === 'string' ? `- ${r}` : `- **${r.id ?? r.what}** — ${r.why ?? r.reason}`,
   ),
   ...section('Application candidates', out.applicationCandidates ?? out.application_candidates, (r) =>
-    typeof r === 'string' ? `- ${r}` : `- **${r.what ?? r.title}** — ${r.source ?? r.why ?? ''}`,
+    typeof r === 'string'
+      ? `- ${r}`
+      : `- **${r.what ?? r.title}** — ${r.source ?? r.why ?? ''}` + focusBlock(r),
   ),
   ...section(
     'Needs you',
@@ -731,7 +749,9 @@ const pr = [
     ? ['', '## Focus', ...focus.map((f) => `- ${f}`)]
     : []),
   ...section('Worth Scout\'s attention', out.worthScout, (r) =>
-    typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.source ?? r.why ?? ''}`,
+    typeof r === 'string'
+      ? `- ${r}`
+      : `- **${r.what}** — ${r.source ?? r.why ?? ''}` + focusBlock(r),
   ),
   ...section('Considered and rejected', out.rejected, (r) =>
     typeof r === 'string' ? `- ${r}` : `- **${r.what}** — ${r.why}`,
