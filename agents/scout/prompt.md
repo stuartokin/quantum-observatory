@@ -206,7 +206,19 @@ sentences. A file over it is discarded before writing, so the work is wasted
 rather than trimmed. Write to the limit deliberately: the answer is the summary,
 and the detail belongs in the evidence it cites.
 
-**Update them every run.** For each question:
+**Update them on a standing run only.**
+
+On a focus run — one naming a paper, an item or a job — the questions are not
+part of the job. Asked to confirm a single preprint, a run that also rewrites
+four question files spends its whole output budget and returns nothing at all:
+the research is done, the answer is truncated mid-file, and the work is lost.
+
+That has now happened three times on one instruction.
+
+If the focus itself is about the questions, they are the job. Otherwise leave
+them alone and note anything you noticed under **Worth Scout's attention**.
+
+For each question, on a standing run:
 
 - If nothing changed, set `asOf` to today and leave `lastChanged` alone. That is
   the useful case: an answer confirmed current but unchanged for eight months

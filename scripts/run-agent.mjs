@@ -23,7 +23,7 @@ import {
   schemaForPath,
   collectionsFor,
 } from './agent-io.mjs'
-import { readQueue, writeQueue, takeFor } from './queue.mjs'
+import { readQueue, writeQueue, takeFor, returnFailed } from './queue.mjs'
 
 /**
  * Focus picked up from the issues themselves.
@@ -253,12 +253,22 @@ const {
 } = takeFor(agent, queueEntries)
 
 if (staleQueued.length) {
-  console.log(
-    `  ${staleQueued.length} queued instruction(s) dropped as stale: ` +
-      staleQueued.map((e) => e.title).join('; '),
-  )
+  for (const e of staleQueued) {
+    const why = (e.attempts ?? 0) >= 2 ? 'failed twice' : 'older than 21 days'
+    console.log(`  dropped (${why}): ${e.title}`)
+  }
 }
 
+/**
+ * A focus run writes fewer files, whatever the standing budget says.
+ *
+ * Asked to confirm a single preprint, a run that also rewrote four question
+ * files spent its whole output budget and returned nothing — the research done,
+ * the answer truncated mid-file, the work lost. Three times on one instruction.
+ *
+ * A focused job is a small job. The budget should say so before the model has
+ * to infer it.
+ */
 const focus = process.env.AGENT_FOCUS
   ? [process.env.AGENT_FOCUS]
   : queued
@@ -268,6 +278,9 @@ const focus = process.env.AGENT_FOCUS
 if (queued) {
   console.log(`  from the queue: ${queued.title} (${queued.source})`)
 }
+
+/** Two files on a focused job; the standing budget otherwise. */
+const focusCap = focus.length ? 2 : (cfg.budget?.proposals ?? 6)
 if (focus.length) {
   console.log(`  focus: ${focus.length} instruction(s)`)
   for (const f of focus) console.log('    ' + f.slice(0, 100))
@@ -429,7 +442,7 @@ The source register is at agents/_sources.md — work it in tier order before
 searching freely.
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
-Maximum files this run: ${cfg.budget?.proposals ?? 6}${
+Maximum files this run: ${focusCap}${
   cfg.existingIdsOnly
     ? '\n\nYou may ONLY write files whose id already appears in the board list above.\nA file with any other id is rejected. You are not here to add topics.'
     : ''
@@ -581,6 +594,13 @@ mkdirSync('.agent-run', { recursive: true })
 
 writeFileSync('.agent-run/raw.json', JSON.stringify({ stopReason, searches, blocks }, null, 2))
 
+if (stopReason === 'max_tokens' && queued) {
+  const back = returnFailed(queued, queueRemaining, queueHead)
+  console.error(
+    `\nThe entry stays queued: "${queued.title}" (attempt ${back.attempts} of 2).`,
+  )
+}
+
 if (stopReason === 'max_tokens') {
   console.error(
     'The agent hit its output limit before finishing. Nothing was written.\n' +
@@ -626,7 +646,7 @@ const inScope = (p) =>
     return rx.test(p)
   })
 
-const files = (out.files ?? []).slice(0, cfg.budget?.proposals ?? 6)
+const files = (out.files ?? []).slice(0, focusCap)
 const written = []
 const rejected = []
 

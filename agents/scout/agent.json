@@ -8,12 +8,12 @@
     "content/questions/**"
   ],
   "output": "pull_request",
-  "enabled": true,
+  "enabled": false,
   "budget": {
     "searches": 25,
-    "proposals": 6
+    "proposals": 4
   },
-  "maxTokens": 24000,
+  "maxTokens": 32000,
   "fixedCollections": [
     "questions"
   ]

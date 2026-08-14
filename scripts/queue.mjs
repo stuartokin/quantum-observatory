@@ -42,7 +42,7 @@ export function readQueue(path = QUEUE) {
     const meta = {}
     let i = 1
     for (; i < lines.length; i++) {
-      const m = lines[i].match(/^(agent|added|source):\s*(.+)$/)
+      const m = lines[i].match(/^(agent|added|source|attempts):\s*(.+)$/)
       if (!m) break
       meta[m[1]] = m[2].trim()
     }
@@ -60,6 +60,9 @@ export function readQueue(path = QUEUE) {
         agent: meta.agent,
         added: meta.added ?? '',
         source: meta.source ?? '',
+        // Read back, or a failed entry looks fresh on every pass and retries
+        // forever. The write side had this; the read side did not.
+        attempts: Number(meta.attempts ?? 0),
         focus,
       })
     }
@@ -72,7 +75,9 @@ export function writeQueue(entries, head, path = QUEUE) {
     ? entries
         .map(
           (e) =>
-            `\n\n## ${e.title}\nagent: ${e.agent}\nadded: ${e.added}\nsource: ${e.source}\n\n` +
+            `\n\n## ${e.title}\nagent: ${e.agent}\nadded: ${e.added}\nsource: ${e.source}` +
+            (e.attempts ? `\nattempts: ${e.attempts}` : '') +
+            '\n\n' +
             e.focus
               .split('\n')
               .map((l) => `    ${l}`)
@@ -97,10 +102,43 @@ export function ageOf(entry, now = new Date()) {
  * at once would be four runs' worth of work reported as one, and the summary
  * would be useless for judging any of them.
  */
+/** How many times an entry may fail before it stops being retried. */
+export const MAX_ATTEMPTS = 2
+
 export function takeFor(agent, entries, now = new Date()) {
-  const stale = entries.filter((e) => e.agent === agent && ageOf(e, now) > STALE_DAYS)
-  const live = entries.filter((e) => e.agent === agent && ageOf(e, now) <= STALE_DAYS)
+  /**
+   * An entry that has failed twice is not retried a third time.
+   *
+   * One instruction consumed three passes in a row, each doing the research
+   * and then losing it to a truncated answer. A retry is worth having; a loop
+   * that repeats an expensive failure is not, and the third attempt tells
+   * nobody anything the second did not.
+   */
+  const spent = entries.filter(
+    (e) => e.agent === agent && (e.attempts ?? 0) >= MAX_ATTEMPTS,
+  )
+  const stale = [
+    ...entries.filter((e) => e.agent === agent && ageOf(e, now) > STALE_DAYS),
+    ...spent,
+  ]
+  const live = entries.filter(
+    (e) =>
+      e.agent === agent && ageOf(e, now) <= STALE_DAYS && (e.attempts ?? 0) < MAX_ATTEMPTS,
+  )
   const next = live[0] ?? null
   const remaining = entries.filter((e) => e !== next && !stale.includes(e))
-  return { next, stale, remaining }
+  return { next, stale, spent, remaining }
+}
+
+/**
+ * Put a failed entry back with its attempt count raised.
+ *
+ * The work is not lost — the instruction stays queued and will be tried again —
+ * but it cannot loop forever, and the count is visible in the file so a person
+ * can see which jobs are proving difficult.
+ */
+export function returnFailed(entry, entries, head, write = writeQueue) {
+  const bumped = { ...entry, attempts: (entry.attempts ?? 0) + 1 }
+  write([...entries, bumped], head)
+  return bumped
 }
