@@ -35,20 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find IBM/Qedma/Algorithmiq/UChicago July 2026 quantum advantage preprints
-agent: scout
-added: 2026-08-14
-source: issue #85
-
-    /focus scout: find the arXiv identifiers for the three preprints behind the
-    IBM/Qedma/Algorithmiq/UChicago quantum advantage announcements of 30 July 2026,
-    posted around 27-28 July. Confirm whether any have been peer-reviewed. If the
-    preprints are confirmed, assess whether an applications item covering quantum
-    advantage on materials simulation is warranted at E3 — the applications
-    constellation is empty. The three papers carry different evidentiary weights;
-    the IBM/UChicago logical-circuit paper is reported as making the strongest
-    claim. Say which is which.
-
 ## Find the HRL Nature paper on silicon QPU with cryogenic CMOS control
 agent: scout
 added: 2026-08-14

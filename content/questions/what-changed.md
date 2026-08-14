@@ -4,24 +4,15 @@ id: what-changed
 number: 1
 question: What has changed since the last scan?
 pillar: quantum
-answer: 'IBM, Qedma, Algorithmiq, and the University of Chicago announced three quantum advantage demonstrations on 30 July 2026, benchmarked against the Fugaku supercomputer using up to 74 qubits on commercially available cloud hardware — the first claims with rigorous process-verification frameworks. HRL Laboratories published a Nature paper the day before demonstrating a silicon QPU running error correction autonomously with a cryogenic CMOS controller inside the cryostat, addressing the wiring bottleneck directly. US Executive Order 14412 (22 June 2026) imposed binding federal civilian PQC deadlines. No CRQC hardware breakthrough occurred.'
 state: moving
 asOf: '2026-08-14'
 lastChanged: '2026-08-14'
-changedBy: IBM/Qedma/Algorithmiq triple quantum advantage demonstrations on 30 July 2026 and HRL Nature paper on 29 July 2026.
+changedBy: 'Three coordinated preprints (arXiv:2607.25941, 2607.24937, 2607.25998) posted 27-28 July 2026 make the first cluster of quantum advantage claims on physically meaningful many-body simulation problems using near-term hardware and error mitigation.'
+answer: 'Three IBM-led preprints posted 27-28 July 2026 claim quantum advantage on physically meaningful materials simulation problems. The IBM/UChicago paper (arXiv:2607.25941) is the strongest: it couples provable classical hardness with a formal fidelity certificate via error-detecting code syndromes, demonstrated on a 70-qubit, depth-70 doped-Clifford circuit. The Qedma paper (arXiv:2607.24937) resolves 74-qubit Floquet Ising dynamics with cross-platform corroboration on Quantinuum hardware. The Algorithmiq paper (arXiv:2607.25998) presents a dual-verification framework on 56 qubits. None is peer-reviewed. Classical counter-papers are already appearing.'
 evidence:
-  - ref: algo-resource-estimation
+  - ref: app-quantum-materials-advantage
     kind: frontier
-    note: Gidney 2025 preprint reducing RSA-2048 qubit estimate to under one million.
-  - ref: arch-silicon-spin
-    kind: frontier
-    note: HRL Nature paper (29 Jul 2026) extends silicon spin qubit architecture to autonomous cryogenic control.
-  - ref: pqc-fips-203
-    kind: frontier
-    note: FIPS 203/204/205 now in product integration; first FIPS 140-3 CMVP submission May 2026.
-  - ref: https://newsroom.ibm.com/2026-07-30-ibm-and-algorithmiq-demonstrate-quantum-advantage,-establishing-a-framework-for-trusted-quantum-computation-beyond-classical-verification
-    kind: url
-    note: IBM/Algorithmiq quantum advantage announcement, 30 July 2026.
+    note: New applications item covering all three July 2026 preprints
 review:
   state: agent-merged
   by: agent
@@ -30,5 +21,3 @@ review:
 status: draft
 added: '2026-08-14'
 ---
-
-The most significant events since the last scan are two Nature-level hardware results and a binding policy action. On 30 July 2026, IBM and partners (Qedma, Algorithmiq, University of Chicago, RIKEN) published three quantum advantage demonstrations using cloud-accessible Heron-based systems against the Fugaku supercomputer — the first advantage claims with process-level verification frameworks rather than classical reference answers. One day earlier, HRL Laboratories published a Nature paper showing an 18-qubit silicon QPU running error correction autonomously with a cryogenic CMOS controller at 4 K, removing the need for room-temperature wiring. On the policy side, US EO 14412 (22 June 2026) imposed binding PQC deadlines on federal civilian agencies. None of these events constitutes a CRQC — the hardware gap remains enormous — but the advantage and enabling-layer results change the texture of the field.
