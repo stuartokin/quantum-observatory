@@ -433,7 +433,9 @@
   position: absolute;
   top: 100%;
   right: 0;
-  z-index: 5;
+  /* Above the frame's own body, and the frame itself rises above its
+     neighbours while this is open — see Frame.tsx. */
+  z-index: 20;
   width: min(360px, 90vw);
   margin-top: 4px;
   padding: var(--gap-s) var(--gap-m);

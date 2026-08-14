@@ -866,7 +866,15 @@ export function Board() {
         accent={colour}
         z={zOf('teaser')}
         onFocus={raise('teaser')}
-        onInfo={changedCon ? () => setTeaserWhy((v) => !v) : undefined}
+        onInfo={
+          changedCon
+            ? () => {
+                setHeadlineInfo(false)
+                setTeaserWhy((v) => !v)
+                raise('teaser')()
+              }
+            : undefined
+        }
         info={
           teaserWhy && changedCon ? (
             <div className="headline-info">
@@ -938,7 +946,11 @@ export function Board() {
         // A ticker filling the screen would be one line in a great deal of
         // nothing. Maximising asks for more, so it gets the archive.
         onMaximise={() => setHeadlineView('archive')}
-        onInfo={() => setHeadlineInfo((v) => !v)}
+        onInfo={() => {
+          setTeaserWhy(false)
+          setHeadlineInfo((v) => !v)
+          raise('headlines')()
+        }}
         action={
           headlineMode === 'archive' ? (
             <button className="frame__mode" onClick={() => setHeadlineView('ticker')}>

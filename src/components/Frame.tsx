@@ -199,9 +199,19 @@ export function Frame({
       data-maximised={state.maximised || undefined}
       style={
         state.maximised
-          ? { zIndex: z, borderColor: accent }
+          ? { zIndex: info ? 900 : z, borderColor: accent }
           : {
-              zIndex: z,
+              /**
+               * A frame showing its info panel comes to the very top.
+               *
+               * The panel hangs below the title bar, outside the frame's own
+               * box, so a neighbouring window painted straight over it — the
+               * explanation appeared to open behind whatever sat underneath.
+               * Raising the whole frame is simpler than trying to raise a child
+               * out of its parent's stacking context, which is not possible
+               * once a transform or z-index is involved.
+               */
+              zIndex: info ? 900 : z,
               left: state.x,
               top: state.y,
               width: state.w,
