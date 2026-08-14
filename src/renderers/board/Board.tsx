@@ -100,17 +100,6 @@ export function Board() {
   /** Years excluded from view. Filtering time frees space in both views. */
   const [hiddenYears, setHiddenYears] = useState<Set<number>>(new Set())
   /** The key starts closed. It is reference, and the plot is the point. */
-  /**
-   * One key, shared by every plot.
-   *
-   * Asking for it from a second window brings the existing one forward rather
-   * than opening another — there is only one visual grammar, so there is only
-   * one key.
-   */
-  const showKey = () => {
-    setFrames((f) => ({ ...f, key: { ...intoView(f.key), docked: false } }))
-    setOrder((o) => [...o.filter((x) => x !== 'key'), 'key'])
-  }
   /** The item under the pointer, so the frame bar can name who is behind it. */
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   /** Kinds of organisation to show. Empty is meaningless, so null means all. */
@@ -208,6 +197,7 @@ export function Board() {
    * resized. Opening something and not finding it reads as the click having
    * failed.
    */
+
   const intoView = (st: FrameState): FrameState => {
     const W = window.innerWidth
     const H = window.innerHeight
@@ -221,11 +211,60 @@ export function Board() {
     return { ...st, x, y, w, h }
   }
 
+  /**
+   * Open a window in its own slot.
+   *
+   * Every path that reveals a docked frame goes through here, so they cannot
+   * drift apart — the key, the constellation, the detail panel and the dock
+   * all place a window the same way.
+   */
+  const openFrame = (k: string) =>
+    setFrames((f) => {
+      const home = defaultLayout(window.innerWidth, window.innerHeight)[k]
+      return {
+        ...f,
+        [k]: { ...(home ?? intoView(f[k])), docked: false, maximised: false, restore: undefined },
+      }
+    })
+
+  /**
+   * One key, shared by every plot.
+   *
+   * Asking for it from a second window brings the existing one forward rather
+   * than opening another — there is only one visual grammar, so there is only
+   * one key.
+   */
+  const showKey = () => {
+    if (frames.key.docked) openFrame('key')
+    setOrder((o) => [...o.filter((x) => x !== 'key'), 'key'])
+  }
+
+
+  /**
+   * Opening a docked window puts it back in its own slot.
+   *
+   * Restoring the last position sounds respectful and is not: while a window
+   * is docked the layout moves on around it, so the stored box is stale by
+   * definition and can land underneath something that has since been opened.
+   * What Changed kept reappearing behind Journals for exactly this reason.
+   *
+   * The default layout is the one place that knows where each window belongs
+   * relative to the others, so re-opening asks it rather than guessing.
+   */
   const toggle = (k: string) => () => {
-    setFrames((f) => ({
-      ...f,
-      [k]: f[k].docked ? { ...intoView(f[k]), docked: false } : { ...f[k], docked: true },
-    }))
+    setFrames((f) => {
+      if (!f[k].docked) return { ...f, [k]: { ...f[k], docked: true } }
+      const home = defaultLayout(window.innerWidth, window.innerHeight)[k]
+      return {
+        ...f,
+        [k]: {
+          ...(home ?? intoView(f[k])),
+          docked: false,
+          maximised: false,
+          restore: undefined,
+        },
+      }
+    })
     // Opening a window behind everything else is the same as not opening it.
     setOrder((o) => [...o.filter((x) => x !== k), k])
   }
@@ -408,7 +447,7 @@ export function Board() {
   function enterOrbit(con: string) {
     setFocusCon(con)
     setMode('orbit')
-    setFrames((f) => ({ ...f, constellation: { ...intoView(f.constellation), docked: false } }))
+    openFrame('constellation')
     setOrder((o) => [...o.filter((x) => x !== 'constellation'), 'constellation'])
     setCam(DEFAULT_CAMERA)
     setView({ k: 1, tx: 0, ty: 0 })
@@ -860,7 +899,7 @@ export function Board() {
             // changes whose entries do not take you to the change is a
             // notification, not a way in.
             setSelected(id)
-            setFrames((f) => ({ ...f, detail: { ...intoView(f.detail), docked: false } }))
+            openFrame('detail')
             setOrder((o) => [...o.filter((x) => x !== 'detail'), 'detail'])
           }}
           onJump={(c) => enterOrbit(c)}
