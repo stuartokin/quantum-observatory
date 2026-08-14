@@ -479,3 +479,24 @@ Your summary is written before validation, so a file you proposed may never be
 written. Never say "all twelve files written" — say what you proposed, and let
 the run report what landed. Counting work you did not complete makes the whole
 summary untrustworthy, including the parts that are accurate.
+
+## The fields that fail a run
+
+Two passes were discarded today for these, after the searching was already done.
+A file is validated before it is written, so a missing field costs the whole run.
+
+**Required on every frontier item:** confidence, evidence, id, pillar, readiness, review, schema, status, title.
+
+**Length limits, in characters:**
+- `novelty` — 200
+- `plain` — 1600
+- `qdayReasoning` — 1600
+- `summary` — 600
+- `title` — 110
+
+`plain` is the one that catches people. It is the plain-English reading for
+somebody who does not work in the field — two or three sentences, not the whole
+argument. If it runs past the limit you are writing the claim twice.
+
+Check both before you return: a run rejected on a character count has done all
+the thinking and thrown it away.
