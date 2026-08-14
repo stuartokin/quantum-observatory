@@ -576,15 +576,9 @@ async function callModel(attempt = 1) {
 const { blocks, stopReason, searches } = await callModel()
 console.log(`\n  ${searches} search(es), ${blocks.length} text block(s)`)
 
-// The entry is spent once the model has answered, even if nothing was written —
-// a run that found nothing has still done the looking, and repeating it weekly
-// would be a loop.
-if (queued || staleQueued.length) {
-  writeQueue(queueRemaining, queueHead)
-  writeFileSync('.agent-run/queue-drained.txt', queued ? queued.title : '')
-}
 
 mkdirSync('.agent-run', { recursive: true })
+
 writeFileSync('.agent-run/raw.json', JSON.stringify({ stopReason, searches, blocks }, null, 2))
 
 if (stopReason === 'max_tokens') {
@@ -602,7 +596,22 @@ const text = blocks.join('\n').trim()
 
 /* ---------- write ---------- */
 
+/**
+ * The entry is spent once the model has answered usefully.
+ *
+ * Not before: a run truncated at its output limit, or one that returned
+ * nothing parseable, has produced no work and should be tried again. Not
+ * after the files are validated either — a run that searched properly and
+ * found nothing has still done the looking, and repeating it weekly would be
+ * a loop rather than diligence.
+ *
+ * The line is a usable answer, which is what this is.
+ */
 const out = extractJson(blocks)
+if (out && (queued || staleQueued.length)) {
+  writeQueue(queueRemaining, queueHead)
+  if (queued) console.log(`  queue: took "${queued.title}"; ${queueRemaining.length} left`)
+}
 if (!out) {
   console.error('No parseable JSON object found in the response.')
   console.error('Full response saved to .agent-run/raw.json\n')
