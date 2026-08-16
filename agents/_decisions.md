@@ -214,3 +214,26 @@ into the sections above once you have read them — or delete them if wrong.
 NIST IR 8545 (HQC selection) and NIST IR 8610 (additional signatures round 3) were rated differently in different runs because the rule was not explicit. The distinction that matters is published vs draft: a preliminary draft practice guide is E3 at most; a formally published IR with a DOI is E4.
 
 *Proposed 2026-08-16, after pqc-additional-signatures-r3 was written at E4 citing NIST IR 8610 (formally published 14 May 2026); pqc-hqc is also E4 on NIST IR 8545. Confirming this is consistent with existing practice, not an exception.. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-16
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A formally published NIST Internal Report (IR series) with a DOI is E4. The NIST IR series is peer-internally-reviewed and formally numbered, published at nvlpubs.nist.gov. A published NIST IR announcing a selection or status result is a formal government technical publication. Preliminary drafts and advisory factsheets remain E3 at most.**
+
+Consistent with how FIPS standards are treated (E4); distinguishes published IRs from drafts. NIST IR 8545 and IR 8610 were rated inconsistently across runs because no explicit rule existed.
+
+*Proposed 2026-08-16, after pqc-additional-signatures-r3 (IR 8610, E4) and pqc-hqc (IR 8545, E4) were rated differently in earlier runs; steward proposed this rule twice without it being picked up from the proposed section. Not yet confirmed by a person.*
+
+**When a classical counter-paper directly simulates the circuit claimed to demonstrate quantum advantage, note this in the item's claim field and source record as a downward correction to the evidence. Confidence may remain medium if other advantage claims in the same item are not addressed by the counter-paper.**
+
+The board's job is to represent the current state of the evidence. A preprint classical counter-paper is E3 evidence against an E3 quantum advantage claim; both belong in the claim field.
+
+*Proposed 2026-08-16, after app-quantum-materials-advantage: arXiv:2608.13110 classically simulates the IBM/UChicago doped-Clifford circuit within two weeks of the quantum advantage claim. Not yet confirmed by a person.*
+
+**Repeating a stale request in an issue comment — one that the board table already shows as resolved — is an error. Before asking for a publish decision or any other action, check the board table. If the item shows the requested status, say so and close the issue.**
+
+Six consecutive steward passes repeated three publish requests after all three items were published. Each pass cost attention and reduced trust in escalations.
+
+*Proposed 2026-08-16, after Issue #74: enable-cryo-cmos-qubit-control, enable-transmon-millisecond-coherence, and qec-ftqc-neutral-atom were all published; the board table showed this; the requests were nonetheless repeated five more times. Not yet confirmed by a person.*

@@ -76,3 +76,24 @@ added: 2026-08-16
 source: issue #93
 
     /focus verifier: check app-quantum-materials-advantage against the classical counter-paper arXiv:2608.13110, which the item notes is already addressing the doped-Clifford claim in arXiv:2607.25941. Confirm whether arXiv:2608.13110 is accessible and whether its findings materially weaken the advantage claim in the item. If the classical counter-paper succeeds on the doped-Clifford circuit regime, the evidence level or confidence field may need downward correction. Do not raise any level or readiness — only apply downward corrections if warranted.
+
+## Find whether Algorithmiq QB-DMRG photodynamic therapy paper has arXiv or journal record
+agent: scout
+added: 2026-08-16
+source: issue #93
+
+    /focus scout: find whether the Algorithmiq Q4Bio photodynamic therapy paper ('Photodynamic Therapy as a Driver for Useful Quantum Advantage in Chemistry', QB-DMRG method, up to 100 qubits on IBM hardware) has an arXiv preprint or peer-reviewed journal version beyond the PDF at algorithmiq.fi/publications/Q4Bio_Perspective_Paper.pdf. If a citable record exists, assess whether it warrants a separate applications item from app-hybrid-protein-simulation — the method (QB-DMRG) and application domain (cancer drug photophysics vs protein-ligand binding) are distinct. Confirm authors and institution.
+
+## Attach IBM APS 2026 large-scale cryo-CMOS result to enable-control-electronics
+agent: sourcer
+added: 2026-08-16
+source: issue #74
+
+    /focus sourcer: check the IBM APS Global Physics Summit 2026 result (Underwood et al., 'A Cryo-CMOS Control System for Large-Scale Superconducting Qubit Quantum Computing Part 1') against enable-control-electronics. The existing item covers a 2024 single-qubit-pair PRX Quantum result. If the APS 2026 result represents a materially different scale (16 independently programmable flux channels per ASIC, system-level demonstration), assess whether it warrants a source addition or a claim update on enable-control-electronics. Source URL: https://research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-1. Confirm publication type (conference abstract, preprint, or peer-reviewed paper) and evidence level before attaching.
+
+## Check arXiv:2505.08424 against enable-fabrication
+agent: sourcer
+added: 2026-08-16
+source: issue #74
+
+    /focus sourcer: check arXiv:2505.08424 (200 mm wafer CMOS-compatible superconducting qubit fabrication, >200 µs T1, 99.7% Josephson junction yield, May 2025) against enable-fabrication. The existing item covers the imec 300 mm result (Nature 634, 74-79, 2024). Confirm authors, institution, and whether this result has been peer-reviewed. If peer-reviewed and the coherence figures (>200 µs) materially exceed the imec result (~100 µs), assess whether the claim field needs updating or a new corroborating source should be added. Do not raise the evidence level above what the publication venue supports.
