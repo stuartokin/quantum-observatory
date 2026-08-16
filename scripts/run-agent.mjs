@@ -183,6 +183,64 @@ function fullItems() {
   return out.join('\n\n')
 }
 
+/**
+ * WHICH ITEMS ARE NEARLY FULL.
+ *
+ * Every capped field is validated before a file is written, and an agent must
+ * return the whole file — so one overflow discards everything, including the
+ * parts that were right. Three runs on this board have been lost that way, on
+ * three different fields, each time after the research was already done.
+ *
+ * The limits are knowable before the run. Telling an agent which items have no
+ * room, and in which field, turns a discovered failure into a constraint it can
+ * write to.
+ */
+function tightFields() {
+  const LIMITS = {
+    title: 110,
+    summary: 600,
+    plain: 1600,
+    qdayReasoning: 1600,
+    novelty: 200,
+    'evidence.claim': 1600,
+    'review.note': 800,
+    'sources[].note': 600,
+  }
+  const HEADROOM = 150
+
+  const rows = []
+  for (const f of readdirSync('content/frontier').filter((x) => x.endsWith('.md'))) {
+    const raw = readFileSync(join('content/frontier', f), 'utf8')
+    const id = f.replace(/\.md$/, '')
+    const tight = []
+
+    const scalar = (key, limit) => {
+      const m = raw.match(new RegExp(`^${key}: (?:'((?:[^']|'')*)'|(.+))$`, 'm'))
+      if (!m) return
+      const len = (m[1] ?? m[2] ?? '').length
+      if (limit - len < HEADROOM) tight.push(`${key} ${len}/${limit}`)
+    }
+    for (const k of ['title', 'summary', 'plain', 'qdayReasoning', 'novelty']) {
+      scalar(k, LIMITS[k])
+    }
+
+    const claim = raw.match(/^  claim: '((?:[^']|'')*)'/m)
+    if (claim && 1600 - claim[1].length < HEADROOM) {
+      tight.push(`evidence.claim ${claim[1].length}/1600`)
+    }
+    const note = raw.match(/^  note: '((?:[^']|'')*)'/m)
+    if (note && 800 - note[1].length < HEADROOM) {
+      tight.push(`review.note ${note[1].length}/800`)
+    }
+    for (const [i, n] of [...raw.matchAll(/^      note: '((?:[^']|'')*)'/gm)].entries()) {
+      if (600 - n[1].length < HEADROOM) tight.push(`sources[${i}].note ${n[1].length}/600`)
+    }
+
+    if (tight.length) rows.push(`${id} — ${tight.join(', ')}`)
+  }
+  return rows
+}
+
 /** The existing board, compact. An agent that cannot see it will duplicate it. */
 function existingItems() {
   const out = []
@@ -327,6 +385,22 @@ claim against its own sources rather than guessing from a summary.
 
 ${fullItems()}
 
+${
+  tightFields().length
+    ? `# Items with no room left
+
+These are at or near a character limit. Any addition tips them over, and a file
+that fails validation is discarded whole — the research done, the answer lost.
+
+${tightFields().map((r) => `- ${r}`).join('\n')}
+
+**On these, replace rather than append.** review.note is a log and old passes
+that changed nothing can go. A claim already at its limit says everything it
+needs to; put a new finding in a source note instead. If what you must say does
+not fit, say less in the front matter and more in the body.
+`
+    : ''
+}
 # Index
 `
     : writesNews

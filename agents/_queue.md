@@ -35,16 +35,21 @@ and will be tried again.
 
 ## What is queued
 
-## Search arXiv for IBM cryo-CMOS Heron R2 preprint from Underwood or Noori APS 2026
-agent: sourcer
-added: 2026-08-16
-source: issue #93
-
-    /focus sourcer: search arXiv quant-ph listings for March–August 2026 for a preprint by Underwood, Noori, or any IBM Research co-author covering cryo-CMOS flux-bias control of the 156-qubit Heron R2 QPU — reported at APS Global Physics Summit 2026. If found, confirm authors, institution, and key metrics (number of ASICs, gate fidelity result), then attach as a corroborating source to enable-control-electronics and assess whether the 156-qubit scale justifies a new enabling item separate from the two-qubit-pair result already on that item. If no preprint exists by the time you run, say so and note the date checked.
-
 ## Verify the primary source on comms-ion-repeater-threshold
 agent: verifier
 added: 2026-08-16
 source: issue #97
 
     /focus verifier: comms-ion-repeater-threshold may cite the wrong paper. The USTC Pan group has at least two relevant 2026 results — the device-independent QKD paper in Science 391, 592-597, and a memory-assisted nonlocal interferometer paper in Phys. Rev. Lett. 136, 240801. Check which the item cites, confirm the citation is complete and correct, and report whether the item's description matches what that source actually demonstrates. Correct downward if it does not; raise nothing.
+
+## Attach the IBM Heron R2 cryo-CMOS preprint to enable-control-electronics
+agent: sourcer
+added: 2026-08-16
+source: issue #93
+
+    /focus sourcer: the previous run found the preprint and was discarded
+    because enable-control-electronics has a review.note at its 800-character
+    limit. Do this in one pass: first replace review.note with a short current
+    summary, dropping any earlier "confirmed unchanged" lines, then add the
+    preprint as a source. Add nothing to evidence.claim. If the source note
+    would exceed 600 characters, shorten it rather than the claim.

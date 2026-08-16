@@ -522,3 +522,33 @@ argument. If it runs past the limit you are writing the claim twice.
 
 Check both before you return: a run rejected on a character count has done all
 the thinking and thrown it away.
+
+## review.note is a log, and logs need pruning
+
+It caps at 800 characters and it is the field most likely to overflow, because
+every pass appends to it. A file discarded on that limit loses the whole run —
+the searching, the reading, the judgement, all of it — and the queue entry is
+spent either way.
+
+**Replace the note; do not extend it.** Keep what still bears on the item's
+current state: an unsettled question, a correction that explains why a field
+reads as it does. Drop what is only a record of a pass that changed nothing.
+"Confirmed unchanged" from three weeks ago is not worth the characters it costs.
+
+If what you need to say will not fit in 800, the item's history belongs in the
+body rather than the front matter.
+
+## Check the caps before you return a file
+
+Your context lists any item that is near a limit, and in which field. On those:
+
+- **evidence.claim at 1600** — a claim already at its limit says what it needs
+  to. Put a new finding in a source note, which is where the detail belongs.
+- **sources[].note at 600** — one source, one note. Do not fold a second
+  paper's detail into an existing note.
+- **review.note at 800** — prune, as above.
+- **plain at 1600** — if it runs past, you are writing the claim twice.
+
+Three runs on this board have been discarded on these limits, on three
+different fields, each time after the work was already done. Counting is
+cheaper than repeating.
