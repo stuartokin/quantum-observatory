@@ -151,63 +151,56 @@ months is not an improvement.
 *Decided 9 Aug 2026, on arch-topological, which conflated Majorana zero modes,
 fractional quantum Hall anyons and Floquet codes.*
 
-## Proposed by the steward, 2026-08-11
+## Provenance fields
 
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
+**The actors field names the authors and their institutions**, not a
+description of who a paper covers. A review of "multiple academic groups" is
+written by specific people somewhere specific; that is what goes in the field.
+Listing the subject matter instead misrepresents where the work came from.
 
-**A peer-reviewed theoretical or architectural paper is E1. Peer review alone does not lift theoretical work above E1; E4 requires a peer-reviewed experimental result.**
+**The country field records where the authors are based**, not the geographic
+scope of what they describe. A review written at a Bangladeshi university,
+surveying work done in the US and Europe, is `country: BD`. Populating it from
+scope makes the board's coverage-gap measurement meaningless — it would report
+strength exactly where the board is weakest.
+*Both decided 16 Aug 2026, after enable-microwave-optical listed "Multiple
+academic groups (survey)" and "US, Europe" for a paper by three authors at BUET
+and BRAC in Dhaka. Each rule was proposed twice by the steward, on 12 and 14
+August, because a proposed rule is not where an agent looks for a settled one.*
 
-E4 is the line for experiments. A theoretical blueprint — however authoritative and however thoroughly peer-reviewed — describes what could or should be done, not what was measured. Rating it E4 inflates confidence that an experiment was performed.
+---
 
-*Proposed 2026-08-11, after qec-surface-code was set to E4 on Fowler et al. 2012 (Phys. Rev. A 86, 032324), a 54-page theoretical architecture paper, not an experimental result. Not yet confirmed by a person.*
+## Sources
 
-## Proposed by the steward, 2026-08-12
+**A peer-reviewed theoretical or architectural paper is E1.** Peer review does
+not lift theoretical work; E4 requires an experiment. A blueprint describes what
+could be done, not what was measured, and rating it E4 says an experiment
+happened when none did.
+*Decided 16 Aug 2026, after qec-surface-code was set to E4 on Fowler et al. 2012
+(Phys. Rev. A 86, 032324), a theoretical architecture paper. The experimental
+surface-code work is correctly at E4 and E5 on other items, so E1 here does not
+make the architecture read as untested.*
 
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
+**When a cited preprint has since been published, correct the citation** — url,
+role, publisher, date, identifier, doi — to the published version. That is a
+metadata correction and needs no permission.
 
-**When a source cited as a preprint has a known peer-reviewed publication, correct the source URL, role, publisher, date, identifier, and doi to the published version. This is a mechanical metadata correction, separate from the evidence level decision. If correcting the source implies an upward level change, escalate the level question to a person rather than changing the level field.**
+**But correcting the citation is not the same as raising the level.** If the
+published version would justify a higher evidence level, escalate that question
+separately. Citing a preprint when a journal record exists gives a false picture
+of the evidence; quietly promoting the level while fixing the URL gives a
+different false picture.
+*Decided 16 Aug 2026, after app-quantum-chemistry-catalyst cited
+arXiv:2204.11890 as a preprint when Phys. Rev. A 106, 032428 (2022) exists.*
 
-Citing a preprint URL when a peer-reviewed paper exists gives a false picture of the evidence and may prevent the board from correctly assessing whether E4 applies.
+---
 
-*Proposed 2026-08-12, after app-quantum-chemistry-catalyst cited arXiv:2204.11890 as role:preprint when Phys. Rev. A 106, 032428 (2022) exists as the peer-reviewed publication. Not yet confirmed by a person.*
+## Proposed, awaiting a person
 
-## Proposed by the steward, 2026-08-12
+The steward adds rules here when it applies existing precedent to a new case.
+**Read them, then move them up into the sections above or delete them.** A rule
+left here is one the steward may propose again, because a proposal is not where
+an agent looks for a settled answer — that has already happened twice.
 
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
+_Nothing proposed._
 
-**The actors field must name the actual authors and their institutions, not a description of who a review article covers. A review of 'multiple academic groups' is written by specific people at a specific institution; that institution is what goes in actors.**
-
-enable-microwave-optical listed 'Multiple academic groups (survey)' when the paper has three named authors at BUET/BRAC Bangladesh — a material misrepresentation of provenance.
-
-*Proposed 2026-08-12, after enable-microwave-optical actors field corrected from generic survey description to actual authors' institutions on 2026-08-12. Not yet confirmed by a person.*
-
-## Proposed by the steward, 2026-08-14
-
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
-
-**The country field records where the authors are institutionally based, not the geographic scope of the work they survey or describe. A review article written by authors at a Bangladeshi university, surveying work done in the US and Europe, is country: BD.**
-
-Country is provenance of the authors, not the subject matter. Populating it from the scope of a review article makes the board's geographic coverage-gap measurement misleading and misrepresents institutional origin.
-
-*Proposed 2026-08-14, after enable-microwave-optical listed country: US, Europe when all three authors (Aditto, Ifty, Zahin) are at BUET, Dhaka, Bangladesh. Not yet confirmed by a person.*
-
-## Proposed by the steward, 2026-08-14
-
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
-
-**The actors field must name the actual authors and their institutions, not a description of who a review article covers. A review of 'multiple academic groups' is written by specific people at a specific institution; that institution is what goes in actors.**
-
-A material misrepresentation of provenance: 'Multiple academic groups (survey)' when three named authors are at BUET/BRAC Bangladesh.
-
-*Proposed 2026-08-14, after enable-microwave-optical listed 'Multiple academic groups (survey)' when the paper has three named authors at BUET/BRAC Bangladesh. Not yet confirmed by a person.*
-
-**The country field records where the authors are institutionally based, not the geographic scope of the work they survey or describe. A review article written by authors at a Bangladeshi university, surveying work done in the US and Europe, is country: BD.**
-
-Country is provenance of the authors, not the subject matter. Populating it from scope makes geographic coverage-gap measurement misleading.
-
-*Proposed 2026-08-14, after enable-microwave-optical listed country: US, Europe when all three authors are at BUET/BRAC, Dhaka, Bangladesh. Not yet confirmed by a person.*
