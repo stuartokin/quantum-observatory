@@ -35,20 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find the publication record for the IBM cryo-CMOS system, Underwood et al. APS 2026
-agent: scout
-added: 2026-08-16
-source: issue #74
-
-    /focus scout: find the publication record — proceedings, arXiv or journal — for
-    Underwood et al., 'A Cryo-CMOS Control System for Large-Scale Superconducting
-    Qubit Quantum Computing Part 1', APS Global Physics Summit 2026. Reported as a
-    system-level demonstration with 16 independently programmable flux channels per
-    ASIC. Confirm authors, institution and publication type. enable-control-
-    electronics covers a 2024 single-qubit-pair PRX Quantum result, so say whether
-    this is a source addition to that item or a distinct result. Do not attach it —
-    report what you find and let a sourcer run do the attaching.
-
 ## Check arXiv:2505.08424 against enable-fabrication
 agent: sourcer
 added: 2026-08-16
