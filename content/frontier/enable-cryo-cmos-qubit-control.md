@@ -51,7 +51,7 @@ evidence:
       accessed: '2026-08-11'
       note: 'Preprint version; journal record at doi above.'
 confidence: high
-status: draft
+status: published
 priority: P1
 qdayImpact: 0
 qdayReasoning: 'This result removes a wiring-density bottleneck in silicon spin-qubit systems. It does not change the timeline to break RSA-2048 or elliptic-curve cryptography: the limiting factors for cryptanalytic relevance are logical qubit count, error correction overhead, and algorithm compilation, none of which this paper addresses directly. Scaling spin qubits to millions of physical qubits remains a necessary but very long path to cryptographic relevance.'
