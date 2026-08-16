@@ -43,7 +43,7 @@ links:
 evidence:
   claim: 'Liu et al. report trapped calcium-40 ion memory–memory entanglement over 10 km of spooled telecom fibre with a coherence lifetime of 550 ± 36 ms against an average entanglement generation time of approximately 450 ms. The paper states this crosses the threshold where establishment time is shorter than decoherence time, which the authors describe as a critical building block for scalable quantum repeaters. Previous remote memory–memory entanglement experiments suffered decoherence faster than entanglement could be established and purified over long distances.'
   level: E4
-  verified: '2026-08-14'
+  verified: '2026-08-16'
   sources:
     - url: https://www.nature.com/articles/s41586-026-10177-4
       role: primary
@@ -52,17 +52,19 @@ evidence:
       date: '2026-02-02'
       identifier: 'Nature 652, 51–57 (2026)'
       doi: 10.1038/s41586-026-10177-4
-      accessed: '2026-08-14'
-      note: 'Peer-reviewed experimental result. Authors at USTC Shanghai Research Center for Quantum Science and CAS Center. Lead authors Liu W.-Z., Zhou Y.-B., Chen J.-P.; senior authors Qiang Zhang and Jian-Wei Pan.'
+      accessed: '2026-08-16'
+      note: 'Peer-reviewed experimental result. Lead authors Liu W.-Z., Zhou Y.-B., Chen J.-P.; senior authors Qiang Zhang and Jian-Wei Pan; USTC / Shanghai Research Center for Quantum Science / CAS. Confirmed distinct from PRL 136, 240801 (Wang, Luo et al., same Pan group, June 2026) — that paper demonstrates a memory-assisted nonlocal optical interferometer extending baselines to 20 km, not ion-ion repeater entanglement.'
 confidence: high
 status: draft
 origin: agent
 added: '2026-08-14'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: verifier
   agentMergedOn: '2026-08-14'
+  reviewedOn: '2026-08-16'
+  note: 'Focus instruction 2026-08-16. Checked whether item cites wrong paper. It does not. Nature 652, 51-57 confirmed as the ion-ion memory entanglement over 10 km result (Liu W.-Z. et al., Pan group). PRL 136, 240801 (Wang, Luo et al., same group, June 2026) is a different experiment: a nonlocal optical interferometer using delocalized single-photon entanglement to extend baselines to 20 km. Author lists, experimental descriptions, and DOIs are distinct. Item description matches the cited Nature source on all checked points: 550 ± 36 ms coherence, ~450 ms generation, 10 km spooled fibre, Ca-40 ions. No downward correction needed.'
 ---
 
 ## What happened

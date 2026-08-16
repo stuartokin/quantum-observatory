@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Verify the primary source on comms-ion-repeater-threshold
-agent: verifier
-added: 2026-08-16
-source: issue #97
-
-    /focus verifier: comms-ion-repeater-threshold may cite the wrong paper. The USTC Pan group has at least two relevant 2026 results — the device-independent QKD paper in Science 391, 592-597, and a memory-assisted nonlocal interferometer paper in Phys. Rev. Lett. 136, 240801. Check which the item cites, confirm the citation is complete and correct, and report whether the item's description matches what that source actually demonstrates. Correct downward if it does not; raise nothing.
+_Nothing queued._
