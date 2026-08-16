@@ -47,7 +47,7 @@ evidence:
       accessed: '2026-08-11'
       note: 'Peer-reviewed. Epub 2025-11-10. Publisher correction (figure label only) in Nature 650, E3 (doi:10.1038/s41586-026-10108-3). PMC open-access (PMID 41214350). Confirmed via nature.com abstract and NIST publications page (tsapps.nist.gov). 448 atoms, 2.14(13)x below-threshold confirmed from nature.com.'
 confidence: high
-status: draft
+status: published
 priority: P1
 qdayImpact: 0
 qdayReasoning: 'This result advances the state of FTQC architecture on neutral atoms but does not change the resources, engineering difficulty, or timeline needed to break RSA-2048 or deployed elliptic-curve cryptography. The experiment demonstrates that architectural components of a universal fault-tolerant computer can be assembled on a single neutral-atom device at 448 physical qubits. It does not demonstrate an operation that directly threatens cryptographic keys. The machine would need to scale by several orders of magnitude and sustain demonstrated error rates across far larger circuits before any cryptanalytic relevance arises. The 2.14x below-threshold factor is a characterisation result, not a computation. Q-Day impact is 0.'
