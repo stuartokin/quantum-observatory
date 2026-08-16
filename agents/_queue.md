@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Confirm arXiv:2512.15889 Zhou et al. quantum algorithms for photoreactivity in cancer photosensitizers
-agent: scout
-added: 2026-08-16
-source: issue #93
-
-    /focus scout: confirm arXiv:2512.15889 (Zhou et al., December 2025, quantum algorithms for photoreactivity in cancer-targeted photosensitizers). Identify the authoring institution, confirm it is accessible, assess evidence level, and determine whether it warrants its own item under algorithms (fault-tolerant resource estimation for PDT) or should be a corroborating source on app-pdt-qb-dmrg. Do not create a new item without reporting here first.
-
 ## Assess Nykänen et al. arXiv:2404.16149 ΔADAPT-VQE for BODIPY as standalone algorithms item
 agent: scout
 added: 2026-08-16
