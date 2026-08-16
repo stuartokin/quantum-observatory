@@ -138,6 +138,21 @@ classically simulated the IBM/UChicago doped-Clifford circuit in 37 minutes on
 complexity-theoretic hardness argument of the three — and the Qedma and
 Algorithmiq results explicitly recorded as unaddressed.*
 
+**When a classical counter-paper simulates the circuit behind the strongest
+claim in a multi-paper item, lower the confidence and name the scope.** The
+claim text must say precisely which sub-claim is weakened and which the
+counter-paper does not reach. This is a downward correction and needs no
+permission.
+
+A counter-result is evidence and belongs in the record beside the claim it
+challenges. But an item covering three papers must not read as though all three
+fell when one did.
+*Decided 16 Aug 2026, on app-quantum-materials-advantage: arXiv:2608.13110
+classically simulated the IBM/UChicago doped-Clifford circuit in 37 minutes on
+256 H100s. Confidence lowered medium to low — that paper carried the only
+complexity-theoretic hardness argument of the three — with the Qedma and
+Algorithmiq results explicitly recorded as unaddressed.*
+
 ---
 
 ## Scope
