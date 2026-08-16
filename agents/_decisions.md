@@ -63,6 +63,23 @@ Google on superconducting hardware and by Harvard/MIT on neutral atoms.*
 **A preprint is E3**, including a preprint from a large laboratory, and
 including one cited widely by others. Peer review is the line.
 
+**A paper that calls itself a whitepaper is still E3 if it behaves like a
+preprint.** The venue and the substance decide the level, not the label the
+authors chose. On arXiv with a DOI, full derivations, co-authors outside the
+sponsoring company, independently cited — that is a preprint whatever the
+abstract calls it. E2 is for a document that exists to make a case for its
+publisher: a vendor blog, a roadmap, a marketing paper.
+
+**Withheld artefacts limit verification, not the venue.** A paper that publishes
+its result but not its circuits, under responsible disclosure, is harder to
+check and should say so in the source note. It does not become a lesser kind of
+publication. Where an independent group reproduces the figures with full
+disclosure, cite that alongside.
+*Decided 16 Aug 2026, on Babbush et al. arXiv:2603.28846 — self-described
+whitepaper, Google Quantum AI with Stanford and Berkeley co-authors, circuits
+withheld and validated by zero-knowledge proof, corroborated with full circuits
+by Schrottenloher arXiv:2606.02235.*
+
 ---
 
 ## Q-Day
