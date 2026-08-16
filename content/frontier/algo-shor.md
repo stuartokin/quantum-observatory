@@ -10,7 +10,7 @@ constellation: algorithms
 cluster: cryptanalysis
 priority: P1
 qdayImpact: 2
-qdayReasoning: 'Two independent groups — Chevignard/Fouque/Schrottenloher (Inria/Univ Rennes, EUROCRYPT 2026) and Babbush et al. (Google Quantum AI, March 2026) — halved the logical qubit count for 256-bit ECC discrete logarithm from the previous best estimate (2,124 qubits, Haner et al. 2020) to approximately 1,175-1,193 qubits. A July 2026 preprint (Luo et al., arXiv:2607.13816) reduces this further to 835 logical qubits using a space-efficient modular inversion circuit. Combined with Gidney 2025 reducing RSA-2048 physical qubits to under one million, the algorithmic cost of a CRQC has fallen substantially in 2025-2026 without any hardware advance. This is scored +2: the hardware gap remains enormous — current best machines hold tens of logical qubits against a requirement of hundreds to thousands — but the algorithmic gap has narrowed faster than most risk models assumed, which is a material signal to migration planners.'
+qdayReasoning: 'Two independent groups — Chevignard/Fouque/Schrottenloher (Inria/Univ Rennes, EUROCRYPT 2026) and Babbush et al. (Google Quantum AI / Stanford / Ethereum Foundation, arXiv:2603.28846, March 2026) — estimated ECC-256 discrete logarithm at under 1,200 logical qubits from different algorithmic angles; a July 2026 preprint (Luo et al., arXiv:2607.13816) reduces this further to 835 logical qubits using a space-efficient modular inversion circuit. Babbush et al. additionally map this to under 500,000 physical qubits in minutes on a surface-code superconducting architecture at 10^-3 error rate. Combined with Gidney 2025 reducing RSA-2048 physical qubits to under one million, the algorithmic cost of a CRQC has fallen substantially in 2025-2026 without any hardware advance. This is scored +2: the hardware gap remains enormous — current best machines hold tens of logical qubits against a requirement of hundreds to thousands — but the algorithmic gap has narrowed faster than most risk models assumed, which is a material signal to migration planners.'
 actors:
   - 'Univ Rennes / Inria'
   - 'Google Quantum AI'
@@ -22,20 +22,24 @@ country:
   - CH
   - DE
 horizon: 3
-novelty: 'Logical qubit count for ECC-256 reduced to 835 qubits (arXiv:2607.13816, July 2026); hardware gap characterised experimentally on cloud processors (arXiv:2512.15330, Dec 2025)'
+novelty: 'Logical qubit count for ECC-256 now under 1,200 from two independent groups; hardware gap characterised experimentally on cloud processors (arXiv:2512.15330, Dec 2025)'
 metrics:
   - name: 'Largest integer factored by Shor on real quantum hardware'
     value: '21'
     unit: ''
     note: 'Factored using 10 qubits in 2012; N=35 claimed with compile-time simplifications requiring prior knowledge. Willsch et al. 2025 and Bagourd et al. 2025 confirm this ceiling.'
-  - name: 'Logical qubits for ECC P-256 ECDLP (best current estimate)'
+  - name: 'Logical qubits for ECC P-256 / secp256k1 ECDLP (best current estimate)'
     value: '835'
     unit: 'logical qubits'
-    note: 'Luo et al. arXiv:2607.13816, July 2026. Down from 1,193 (Chevignard, EUROCRYPT 2026). Preprint only; not peer-reviewed. Supersedes same group''s April preprint arXiv:2604.02311. Note: uses ~20x more Toffoli gates than Chevignard/Babbush alternatives; width-optimised at cost of depth.'
-  - name: 'Logical qubits for ECC P-256 ECDLP (peer-reviewed estimate)'
+    note: 'Luo et al. arXiv:2607.13816, July 2026. Down from 1,193 (Chevignard, EUROCRYPT 2026). Preprint only; not peer-reviewed. Uses ~20x more Toffoli gates than Chevignard/Babbush alternatives; width-optimised at cost of depth.'
+  - name: 'Logical qubits for ECC-256 ECDLP (peer-reviewed estimate)'
     value: '1193'
     unit: 'logical qubits'
     note: 'Chevignard et al. EUROCRYPT 2026 (IACR eprint 2026/280). Down from 2,124 (Haner et al. 2020). Gate count is O(n^4).'
+  - name: 'Logical qubits for secp256k1 ECDLP (Babbush et al. estimate)'
+    value: '<1200'
+    unit: 'logical qubits'
+    note: 'Babbush et al. arXiv:2603.28846 (Google Quantum AI / Stanford / Ethereum Foundation, March 2026). Preprint; circuits withheld under responsible disclosure; validated by ZK proof. Maps to <500,000 physical qubits in minutes on surface code at 10^-3 error rate.'
   - name: 'Physical qubits for RSA-2048 (surface code, leading estimate)'
     value: '<1000000'
     unit: 'physical qubits'
@@ -48,8 +52,8 @@ links:
   - to: qec-surface-code
     relation: depends-on
 evidence:
-  claim: 'The largest number factored by Shor''s algorithm on real digital quantum hardware is 21, achieved with 10 qubits in 2012; numbers above 35 on digital QC rely on compile-time simplifications requiring prior knowledge of the answer, which Willsch et al. (NIC Symposium 2025, arXiv:2410.14397, Forschungszentrum Jülich) formally prove cause algorithm failure under noise. Bagourd et al. (ETH Zurich / armasuisse, arXiv:2512.15330, December 2025) experimentally ran Shor order-finding circuits on cloud superconducting processors and found that noise overwhelms algorithmic structure before cryptographically relevant integers are reached, confirming a substantial gap between current hardware and deployed key sizes. On the algorithmic side, Chevignard, Fouque and Schrottenloher (EUROCRYPT 2026, IACR eprint 2026/280) estimate ECC-256 requires 1,193 logical qubits; Luo et al. (arXiv:2607.13816, July 2026) subsequently claim 835 logical qubits using a space-efficient modular inversion circuit. Neither result is a demonstration; both are resource estimates for future fault-tolerant machines. No machine capable of running these circuits exists.'
-  verified: '2026-08-11'
+  claim: 'The largest number factored by Shor''s algorithm on real digital quantum hardware is 21, achieved with 10 qubits in 2012; numbers above 35 on digital QC rely on compile-time simplifications requiring prior knowledge of the answer, which Willsch et al. (NIC Symposium 2025, arXiv:2410.14397, Forschungszentrum Jülich) formally prove cause algorithm failure under noise. Bagourd et al. (ETH Zurich / armasuisse, arXiv:2512.15330, December 2025) experimentally ran Shor order-finding circuits on cloud superconducting processors and found that noise overwhelms algorithmic structure before cryptographically relevant integers are reached, confirming a substantial gap between current hardware and deployed key sizes. On the algorithmic side, Chevignard, Fouque and Schrottenloher (EUROCRYPT 2026, IACR eprint 2026/280) estimate ECC-256 requires 1,193 logical qubits; Babbush et al. (Google Quantum AI / Stanford / Ethereum Foundation, arXiv:2603.28846, March 2026) independently estimate secp256k1 ECDLP-256 at under 1,200 logical qubits and under 500,000 physical qubits in minutes on a surface-code architecture at 10^-3 error rate, with circuits withheld and validated by ZK proof; Luo et al. (arXiv:2607.13816, July 2026) subsequently claim 835 logical qubits via a space-efficient circuit. None of these are demonstrations; all are resource estimates for future fault-tolerant machines. No machine capable of running these circuits exists.'
+  verified: '2026-08-16'
   level: E3
   sources:
     - url: 'https://arxiv.org/abs/2512.15330'
@@ -86,7 +90,16 @@ evidence:
       identifier: 'arXiv:2607.13816'
       doi: '10.48550/arXiv.2607.13816'
       accessed: '2026-08-11'
-      note: 'Luo, Yang, Luo, Wang, Su, Sun, Li, Li; Peking University / Tsinghua / CAS. Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 via space-efficient modular inversion. Uses ~20x more Toffoli gates than Chevignard/Babbush alternatives. Supersedes same group arXiv:2604.02311. Abstract cites Chevignard P-256 as 1,098 — confirmed error via arXiv abstract; 1,098 is the P-224 figure per ePrint 2026/280 correction note.'
+      note: 'Luo, Yang, Luo, Wang, Su, Sun, Li, Li; Peking University / Tsinghua / CAS. Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 via space-efficient modular inversion. Uses ~20x more Toffoli gates than Chevignard/Babbush alternatives. Supersedes same group arXiv:2604.02311. Abstract cites Chevignard P-256 as 1,098 — confirmed error; 1,098 is the P-224 figure per ePrint 2026/280 correction note.'
+    - url: 'https://arxiv.org/abs/2603.28846'
+      role: corroborating
+      title: 'Securing Elliptic Curve Cryptocurrencies against Quantum Vulnerabilities: Resource Estimates and Mitigations'
+      publisher: arXiv
+      date: '2026-03-30'
+      identifier: 'arXiv:2603.28846'
+      doi: '10.48550/arXiv.2603.28846'
+      accessed: '2026-08-16'
+      note: 'Babbush, Zalcman, Gidney et al. (Google Quantum AI / Stanford / Ethereum Foundation / UC Berkeley). Whitepaper; paper self-describes as a whitepaper. Preprint, not peer-reviewed. Circuits withheld under responsible disclosure; ZK proof used (SP1 zkVM + Groth16). Trail of Bits forged a proof via memory-safety bugs in Google Rust prover (17 Apr 2026); Google patched, scientific claims described as unaffected. Schrottenloher arXiv:2606.02235 (Inria, June 2026) corroborates ballpark with full circuits. E3 recorded; E2 question flagged for human decision.'
 confidence: high
 status: published
 origin: agent
@@ -94,16 +107,16 @@ added: '2026-08-09'
 review:
   state: agent-reviewed
   by: agent
-  agent: reviewer
-  agentMergedOn: '2026-08-09'
+  agent: sourcer
+  agentMergedOn: '2026-08-16'
   reviewedOn: '2026-08-11'
-  note: 'Luo et al. arXiv:2607.13816 confirmed this run via arXiv abstract: 835 qubits for secp256k1, ~20x Toffoli gates, supersedes 2604.02311. Abstract cites Chevignard P-256 as 1098 (confirmed wrong; 1098 is P-224). E3 correct — primary source is arXiv preprint. Gidney 2505.15917 confirmed preprint-only. No level or readiness changes.'
+  note: 'Added arXiv:2603.28846 (Babbush et al.) as corroborating source per focus instruction 2026-08-16. Adds secp256k1 ECDLP-256 estimate of <1,200 logical qubits / <500,000 physical qubits in minutes at 10^-3 error rate. ZK proof caveat and Trail of Bits forgery (patched) noted. Schrottenloher arXiv:2606.02235 corroborates. Whitepaper E2 vs E3 question escalated. Added fourth metric for Babbush et al. physical-qubit figure. Evidence level and readiness unchanged.'
 ---
 
 Shor's algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.
 
 **What hardware can do today.** The largest number factored by Shor's algorithm on a real quantum processor is 21 — a result from 2012 achieved with 10 qubits, and one that has not been exceeded on actual hardware. Claims of larger factorisations on quantum hardware (N = 35, N = 143, N = 56,153) either rely on compile-time simplifications that require prior knowledge of the answer — making them equivalent to verifying rather than finding factors — or use methods that are not Shor's algorithm. Willsch et al. (Forschungszentrum Jülich, NIC Symposium 2025) prove formally that gate noise causes Shor's algorithm to fail and confirm N ≤ 35 as the practical ceiling on digital quantum hardware. Bagourd et al. (ETH Zurich / armasuisse, arXiv:2512.15330, December 2025) ran Shor order-finding circuits on cloud superconducting processors and experimentally confirmed that noise overwhelms the algorithmic structure far below cryptographically relevant key sizes.
 
-**What the resource estimates say.** Breaking RSA-2048 requires fewer than one million noisy physical qubits (Gidney 2025, arXiv:2505.15917) running a surface-code fault-tolerant circuit for under one week. Breaking ECC-256 requires 1,193 logical qubits (Chevignard et al., EUROCRYPT 2026) — now reduced to 835 by Luo et al. (arXiv:2607.13816, July 2026, Peking University / CAS) using a space-efficient modular inversion circuit. These are resource estimates for machines that do not exist, not demonstrations. Note: Luo et al. cite Chevignard's P-256 figure as 1,098, but 1,098 is the P-224 result; the Chevignard ePrint itself corrects this in a June 2026 revision. The correct P-256 Chevignard figure is 1,193. Also note: the Luo 835-qubit circuit uses roughly 20 times more Toffoli gates than the Chevignard and Babbush alternatives, trading qubit width for computational depth; no full depth/runtime analysis has been published.
+**What the resource estimates say.** Breaking RSA-2048 requires fewer than one million noisy physical qubits (Gidney 2025, arXiv:2505.15917) running a surface-code fault-tolerant circuit for under one week. Breaking ECC-256 requires 1,193 logical qubits (Chevignard et al., EUROCRYPT 2026) — now reduced to 835 by Luo et al. (arXiv:2607.13816, July 2026, Peking University / CAS) using a space-efficient modular inversion circuit. Separately, Babbush et al. (Google Quantum AI / Stanford / Ethereum Foundation, arXiv:2603.28846, March 2026) estimate secp256k1 ECDLP-256 at under 1,200 logical qubits and under 500,000 physical qubits on a planar superconducting surface-code architecture at 10⁻³ error rate, executing in minutes — with circuits withheld under responsible disclosure and results validated by zero-knowledge proof. Trail of Bits found and exploited memory-safety vulnerabilities in Google's Rust prover to forge a proof; Google patched the code and describes their scientific claims as unaffected. An independent preprint (Schrottenloher, Inria, arXiv:2606.02235, June 2026) provides similar circuit results with full disclosure, corroborating the ballpark. These are resource estimates for machines that do not exist, not demonstrations.
 
 **The gap.** Current state-of-the-art: ~48 error-corrected logical qubits (Quantinuum Helios, 98 physical qubits, iceberg codes). Required for ECC-256: ~835 logical qubits minimum. Required for RSA-2048: thousands of logical qubits backed by hundreds of thousands to millions of physical qubits. The gap is not one of kind but of scale, and it remains large. See algo-resource-estimation for the full trajectory of qubit estimates from 2019 to 2026.
