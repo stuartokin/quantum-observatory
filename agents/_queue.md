@@ -35,14 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Find the Q4Bio Nature Biotechnology paper on 12,000-atom simulation
-agent: scout
-added: 2026-08-14
-source: issue #85
-
-    /focus scout: confirm the Q4Bio Nature Biotechnology paper of July 2026 on
-    hybrid quantum-classical simulation of protein complexes over 12,000 atoms.
-    Confirm DOI, authors and institutions, and establish whether this is a quantum
-    advantage claim or a hybrid result that remains classically verifiable. Assess
-    whether it warrants an applications item — and if it does, the item must say
-    plainly which of those two it is.
+_Nothing queued._
