@@ -306,7 +306,18 @@ const queued = (out.queue ?? []).slice(0, cfg.budget?.queue ?? 6)
 if (queued.length) {
   const today = new Date().toISOString().slice(0, 10)
   const { head, entries } = readQueue()
-  const already = new Set(entries.map((e) => e.title.toLowerCase()))
+  /** Keyed on what an entry is about, not what it is called. */
+  const subjectOf = (e) => {
+    const all = `${e.title ?? ''} ${e.focus ?? ''}`.toLowerCase()
+    const ids = all.match(/arxiv:?\s?\d{4}\.\d{4,5}|10\.\d{4,}\/\S+/g) ?? []
+    if (ids.length) return ids.map((x) => x.replace(/\s/g, '')).sort().join('|')
+    const STOP = new Set(['find','check','confirm','attach','the','for','and','a','an',
+      'of','to','on','against','whether','record','paper','journal','arxiv','or'])
+    return [...new Set(
+      all.replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 3 && !STOP.has(w)),
+    )].sort().slice(0, 8).join('|')
+  }
+  const already = new Set(entries.map(subjectOf))
   const fresh = queued
     .filter((q) => {
       if (!q.agent || !q.focus) return false
@@ -314,7 +325,27 @@ if (queued.length) {
         console.log(`  skipped: "${q.title}" names agent "${q.agent}", which does not exist`)
         return false
       }
-      return !already.has(String(q.title ?? '').toLowerCase())
+      // Two entries naming the same paper are one job, whatever they are
+      // titled. "Find arXiv record for X" and "Find whether X has an arXiv
+      // record" passed a verbatim title check and put the same work in the
+      // queue twice — three times over in one pass.
+      const subject = (t) => {
+        const all = `${t.title ?? ''} ${t.focus ?? ''}`.toLowerCase()
+        const ids = all.match(/arxiv:?\s?\d{4}\.\d{4,5}|10\.\d{4,}\/\S+/g) ?? []
+        if (ids.length) return ids.map((x) => x.replace(/\s/g, '')).sort().join('|')
+        const STOP = new Set(['find','check','confirm','attach','the','for','and','a','an',
+          'of','to','on','against','whether','record','paper','journal','arxiv','or'])
+        return [...new Set(
+          all.replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 3 && !STOP.has(w)),
+        )].sort().slice(0, 8).join('|')
+      }
+      const mine = subject(q)
+      if ([...already].some((t) => t === mine)) {
+        console.log(`  skipped: "${q.title}" — same job as one already queued`)
+        return false
+      }
+      already.add(mine)
+      return true
     })
     .map((q) => ({
       title: q.title ?? q.focus.slice(0, 60),

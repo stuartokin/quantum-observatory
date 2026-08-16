@@ -35,65 +35,70 @@ and will be tried again.
 
 ## What is queued
 
-## Confirm Lu et al. Science 391 — possible device-independent QKD from Pan group at USTC
+## Confirm Lu et al. Science 391 — possible device-independent QKD from the Pan group
 agent: scout
 added: 2026-08-16
 source: issue #85
 
-    /focus scout: confirm Lu et al., Science 391, 592–597 (2026) from the Pan group at USTC. The Nature News & Views commentary d41586-026-00804-5 cites this paper. Assess whether it is a device-independent QKD result over 100 km or similar. If confirmed, determine whether it updates comms-mdi-qkd or warrants a new communications item. Do not create a new item without confirming the journal record.
+    /focus scout: confirm Lu et al., Science 391, 592-597 (2026) from the Pan group
+    at USTC, cited in the Nature News & Views commentary d41586-026-00804-5. Assess
+    whether it is a device-independent QKD result over 100 km or similar. If
+    confirmed, decide whether it updates comms-mdi-qkd or warrants a new
+    communications item. Do not create an item without confirming the journal
+    record.
 
-## Find arXiv or journal record for Algorithmiq QB-DMRG photodynamic therapy paper
+## Find a citable record for the Algorithmiq QB-DMRG photodynamic therapy paper
 agent: scout
 added: 2026-08-16
 source: issue #93
 
-    /focus scout: search for an arXiv preprint or peer-reviewed journal version of the Algorithmiq photodynamic therapy paper on the QB-DMRG method, referenced in the Q4Bio program. A PDF exists at algorithmiq.fi/publications/Q4Bio_Perspective_Paper.pdf. Confirm whether an arXiv or journal record exists. If so, assess whether it warrants a separate applications item from app-hybrid-protein-simulation — the method (QB-DMRG) and domain (cancer drug photophysics vs protein-ligand binding) are distinct. Do not create a new item without a citable source.
+    /focus scout: find whether the Algorithmiq Q4Bio paper 'Photodynamic Therapy as
+    a Driver for Useful Quantum Advantage in Chemistry' (QB-DMRG, up to 100 qubits
+    on IBM hardware) has an arXiv preprint or journal version beyond the PDF at
+    algorithmiq.fi. If a citable record exists, assess whether it warrants an
+    applications item separate from app-hybrid-protein-simulation — the method and
+    the domain are both distinct. If only the PDF exists, record that plainly and
+    add nothing.
 
-## Confirm arXiv:2505.08424 — 200 mm wafer CMOS-compatible superconducting qubits with >200 µs T1
-agent: sourcer
-added: 2026-08-16
-source: issue #74
-
-    /focus sourcer: confirm arXiv:2505.08424 (May 2025) on 200 mm wafer CMOS-compatible superconducting qubit fabrication with >200 µs T1 and 99.7% Josephson junction yield. Verify authors, institution, key metrics, and whether a peer-reviewed journal version exists. If confirmed, assess whether it updates enable-fabrication (which covers imec 300 mm at 98.25% yield and >100 µs coherence) or warrants a separate note in the review field. Do not create a new item — attach findings as a source or update the existing enable-fabrication item.
-
-## Confirm IBM large-scale cryo-CMOS system — Underwood et al. APS Global Physics Summit 2026
+## Find the publication record for the IBM cryo-CMOS system, Underwood et al. APS 2026
 agent: scout
 added: 2026-08-16
 source: issue #74
 
-    /focus scout: confirm the IBM large-scale cryo-CMOS architecture paper by Underwood et al. presented at APS Global Physics Summit 2026, described as a system-level cryo-CMOS demonstration with 16 independently programmable flux channels per ASIC for superconducting qubit control. Find the publication record — conference proceedings, arXiv, or journal. Confirm authors, institution, key metrics, and whether this is a new item or an update to enable-control-electronics. The existing enable-control-electronics item covers the 2024 single-qubit-pair PRX Quantum result; this appears to be a significantly more advanced system.
-
-## Publish decision needed: three confirmed draft items — enable-cryo-cmos-qubit-control, enable-transmon-millisecond-coherence, qec-ftqc-neutral-atom
-agent: sourcer
-added: 2026-08-16
-source: issue #74
-
-    /focus sourcer: verify current state of enable-cryo-cmos-qubit-control, enable-transmon-millisecond-coherence, and qec-ftqc-neutral-atom. All three carry status: draft and have been agent-reviewed with sources confirmed across multiple passes. Check whether any field corrections are needed before a human publish decision. Report findings without changing status to published — that action requires a human.
-
-## Verify app-quantum-materials-advantage against classical counter-paper arXiv:2608.13110
-agent: verifier
-added: 2026-08-16
-source: issue #93
-
-    /focus verifier: check app-quantum-materials-advantage against the classical counter-paper arXiv:2608.13110, which the item notes is already addressing the doped-Clifford claim in arXiv:2607.25941. Confirm whether arXiv:2608.13110 is accessible and whether its findings materially weaken the advantage claim in the item. If the classical counter-paper succeeds on the doped-Clifford circuit regime, the evidence level or confidence field may need downward correction. Do not raise any level or readiness — only apply downward corrections if warranted.
-
-## Find whether Algorithmiq QB-DMRG photodynamic therapy paper has arXiv or journal record
-agent: scout
-added: 2026-08-16
-source: issue #93
-
-    /focus scout: find whether the Algorithmiq Q4Bio photodynamic therapy paper ('Photodynamic Therapy as a Driver for Useful Quantum Advantage in Chemistry', QB-DMRG method, up to 100 qubits on IBM hardware) has an arXiv preprint or peer-reviewed journal version beyond the PDF at algorithmiq.fi/publications/Q4Bio_Perspective_Paper.pdf. If a citable record exists, assess whether it warrants a separate applications item from app-hybrid-protein-simulation — the method (QB-DMRG) and application domain (cancer drug photophysics vs protein-ligand binding) are distinct. Confirm authors and institution.
-
-## Attach IBM APS 2026 large-scale cryo-CMOS result to enable-control-electronics
-agent: sourcer
-added: 2026-08-16
-source: issue #74
-
-    /focus sourcer: check the IBM APS Global Physics Summit 2026 result (Underwood et al., 'A Cryo-CMOS Control System for Large-Scale Superconducting Qubit Quantum Computing Part 1') against enable-control-electronics. The existing item covers a 2024 single-qubit-pair PRX Quantum result. If the APS 2026 result represents a materially different scale (16 independently programmable flux channels per ASIC, system-level demonstration), assess whether it warrants a source addition or a claim update on enable-control-electronics. Source URL: https://research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-1. Confirm publication type (conference abstract, preprint, or peer-reviewed paper) and evidence level before attaching.
+    /focus scout: find the publication record — proceedings, arXiv or journal — for
+    Underwood et al., 'A Cryo-CMOS Control System for Large-Scale Superconducting
+    Qubit Quantum Computing Part 1', APS Global Physics Summit 2026. Reported as a
+    system-level demonstration with 16 independently programmable flux channels per
+    ASIC. Confirm authors, institution and publication type. enable-control-
+    electronics covers a 2024 single-qubit-pair PRX Quantum result, so say whether
+    this is a source addition to that item or a distinct result. Do not attach it —
+    report what you find and let a sourcer run do the attaching.
 
 ## Check arXiv:2505.08424 against enable-fabrication
 agent: sourcer
 added: 2026-08-16
 source: issue #74
 
-    /focus sourcer: check arXiv:2505.08424 (200 mm wafer CMOS-compatible superconducting qubit fabrication, >200 µs T1, 99.7% Josephson junction yield, May 2025) against enable-fabrication. The existing item covers the imec 300 mm result (Nature 634, 74-79, 2024). Confirm authors, institution, and whether this result has been peer-reviewed. If peer-reviewed and the coherence figures (>200 µs) materially exceed the imec result (~100 µs), assess whether the claim field needs updating or a new corroborating source should be added. Do not raise the evidence level above what the publication venue supports.
+    /focus sourcer: confirm arXiv:2505.08424 (May 2025) on 200 mm wafer CMOS-
+    compatible superconducting qubit fabrication, >200 microsecond T1 and 99.7%
+    Josephson junction yield. Verify authors, institution, metrics, and whether a
+    peer-reviewed version exists. enable-fabrication currently covers the imec 300
+    mm result at 98.25% yield and ~100 microsecond coherence, so this roughly
+    doubles the coherence figure on a smaller wafer. Attach as a source or update
+    the claim; do not raise the evidence level above what the venue supports, and
+    do not create a new item.
+
+## Re-check app-quantum-materials-advantage after the classical counter-paper
+agent: verifier
+added: 2026-08-16
+source: issue #93
+
+    /focus verifier: the steward has already applied a downward correction to
+    app-quantum-materials-advantage for arXiv:2608.13110 (Manabe, Gu, Pan;
+    SUTD/NVIDIA, 13 Aug 2026), which classically simulates the IBM/UChicago
+    doped-Clifford circuit with a tensor 256 times smaller than IBM estimated.
+    Check that correction is sound and complete: does the counter-paper reach the
+    Qedma 74-qubit Floquet result or the Algorithmiq 56-qubit result, or only the
+    doped-Clifford one? The item should say precisely which of the three claims is
+    weakened and which stand. Apply further downward correction if warranted; raise
+    nothing.
