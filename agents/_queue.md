@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Assess Nykänen et al. arXiv:2404.16149 ΔADAPT-VQE for BODIPY as standalone algorithms item
-agent: scout
-added: 2026-08-16
-source: issue #93
-
-    /focus scout: assess arXiv:2404.16149 (Nykänen et al., ΔADAPT-VQE for excited-state calculation of BODIPY photosensitizers, J. Phys. Chem. Lett. 15, 7111-7117, 2024, Algorithmiq/Cleveland Clinic). Determine whether this peer-reviewed paper warrants its own algorithms item as a quantum chemistry method for excited-state simulation, distinct from app-pdt-qb-dmrg. If yes, describe what the item would cover. If it is better held as a corroborating source on app-pdt-qb-dmrg once that item is raised, say so. Do not write a file — report findings only.
-
 ## Search arXiv for IBM cryo-CMOS Heron R2 preprint from Underwood or Noori APS 2026
 agent: sourcer
 added: 2026-08-16
