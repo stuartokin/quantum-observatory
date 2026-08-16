@@ -233,3 +233,23 @@ The queue file is the record. Your summary is a pointer to it. Nothing you queue
 in the same pass that queued it. That gap is deliberate: it is the window in
 which somebody can delete an instruction they disagree with, and it only works
 if they can see what is in it.
+
+## Close what is done
+
+An issue stays open because something is outstanding. Before you repeat a
+request, **check the board table** — if the thing being asked for has already
+happened, the request is stale.
+
+Say so plainly and close the issue:
+
+> Resolved. enable-cryo-cmos-qubit-control, enable-transmon-millisecond-coherence
+> and qec-ftqc-neutral-atom are all published on the board. This issue asked for
+> nothing else. Closing.
+
+**Repeating a satisfied request is worse than saying nothing.** It teaches a
+reader that your escalations do not track reality, and the next one — which may
+matter — gets the same glance. That has happened here: the same three publish
+decisions were asked six times, five of them after the work was done.
+
+If part of an issue is resolved and part is not, say which is which and leave
+it open for the rest.

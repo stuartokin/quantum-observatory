@@ -67,10 +67,31 @@ const issueText = issues
   })
   .join('\n\n---\n\n')
 
-const board = readdirSync('content/frontier')
-  .filter((f) => f.endsWith('.md'))
+const boardFiles = readdirSync('content/frontier').filter((f) => f.endsWith('.md'))
+
+const board = boardFiles
   .map((f) => `--- ${f} ---\n${readFileSync(join('content/frontier', f), 'utf8')}`)
   .join('\n\n')
+
+/**
+ * The current state of every item, on one line each.
+ *
+ * The full files are already in context, but state buried in a hundred YAML
+ * blocks is easy to skim past — and an issue comment describing an item is
+ * vivid, recent-sounding prose. Six consecutive runs reported three items as
+ * still draft after they had been published, because the thread said so and
+ * nothing contradicted it loudly enough.
+ *
+ * This table is the contradiction.
+ */
+const stateTable = boardFiles
+  .map((f) => {
+    const raw = readFileSync(join('content/frontier', f), 'utf8')
+    const get = (k) => (raw.match(new RegExp(`^${k}:\\s*(\\S+)`, 'm')) || [])[1] ?? '?'
+    const state = (raw.match(/^\s{2}state:\s*(\S+)/m) || [])[1] ?? '?'
+    return `${f.replace(/\.md$/, '').padEnd(38)} ${get('status').padEnd(10)} ${get('readiness').padEnd(13)} ${state}`
+  })
+  .join('\n')
 
 const decisions = existsSync('agents/_decisions.md')
   ? readFileSync('agents/_decisions.md', 'utf8')
@@ -86,7 +107,24 @@ ${decisions}
 
 ${issueText}
 
-# The board in full
+# The board as it stands right now
+
+**This is the truth about the board. An issue comment is not.**
+
+A thread describes what was true when it was written. Where a comment says an
+item needs publishing and this table says it is published, the table wins: the
+comment is stale, and your job is to say so and close it. Six consecutive runs
+repeated the same three publish requests after a person had already actioned
+them, because each run read the previous comment rather than the file.
+
+Check here before repeating anything an issue asks for.
+
+\`\`\`
+id                                     status     readiness     review
+${stateTable}
+\`\`\`
+
+## The board in full
 
 ${board}
 
