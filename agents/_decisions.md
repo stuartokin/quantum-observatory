@@ -204,3 +204,13 @@ an agent looks for a settled answer — that has already happened twice.
 
 _Nothing proposed._
 
+## Proposed by the steward, 2026-08-16
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A formally published NIST Internal Report (IR series) is E4. The same logic that makes a FIPS standard E4 applies: NIST IRs are peer-internally-reviewed, formally numbered, and published at nvlpubs.nist.gov with a DOI. A NIST IR announcing a selection or status result is a formal government technical publication, not a draft or advisory factsheet.**
+
+NIST IR 8545 (HQC selection) and NIST IR 8610 (additional signatures round 3) were rated differently in different runs because the rule was not explicit. The distinction that matters is published vs draft: a preliminary draft practice guide is E3 at most; a formally published IR with a DOI is E4.
+
+*Proposed 2026-08-16, after pqc-additional-signatures-r3 was written at E4 citing NIST IR 8610 (formally published 14 May 2026); pqc-hqc is also E4 on NIST IR 8545. Confirming this is consistent with existing practice, not an exception.. Not yet confirmed by a person.*
