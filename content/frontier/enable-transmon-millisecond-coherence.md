@@ -54,7 +54,7 @@ evidence:
       accessed: '2026-08-11'
       note: 'Preprint version; journal record at doi above.'
 confidence: high
-status: draft
+status: published
 priority: P2
 qdayImpact: 0
 qdayReasoning: 'Improved transmon coherence reduces quantum error correction overhead and enables longer circuits, but does not by itself change the resources needed to break RSA-2048 or elliptic-curve cryptography. The relevant constraint for cryptanalytic capability is logical qubit count and error rate under fault-tolerant operation at scale, not single-qubit coherence on an isolated device. Improved coherence is a necessary input to future progress but does not move the Q-Day estimate on its own.'
