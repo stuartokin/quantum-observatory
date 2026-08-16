@@ -254,13 +254,30 @@ for (const f of (out.files ?? []).slice(0, cfg.budget?.proposals ?? 8)) {
  * agent reads them. Structured output written by this script is the difference
  * between an instruction that runs and one that reads as though it will.
  */
+/**
+ * Only these agents exist, and they do different jobs.
+ *
+ * A job sent to the wrong one is not merely inefficient — scout cannot see the
+ * contents of an existing item, so asked to attach a source it will confirm the
+ * source, decline to invent a file it cannot read, and escalate. Correct, and
+ * six runs were spent on one instruction that way.
+ */
+const AGENTS = ['scout', 'sourcer', 'verifier', 'reviewer', 'newsroom']
+
 const queued = (out.queue ?? []).slice(0, cfg.budget?.queue ?? 6)
 if (queued.length) {
   const today = new Date().toISOString().slice(0, 10)
   const { head, entries } = readQueue()
   const already = new Set(entries.map((e) => e.title.toLowerCase()))
   const fresh = queued
-    .filter((q) => q.agent && q.focus && !already.has(String(q.title ?? '').toLowerCase()))
+    .filter((q) => {
+      if (!q.agent || !q.focus) return false
+      if (!AGENTS.includes(q.agent)) {
+        console.log(`  skipped: "${q.title}" names agent "${q.agent}", which does not exist`)
+        return false
+      }
+      return !already.has(String(q.title ?? '').toLowerCase())
+    })
     .map((q) => ({
       title: q.title ?? q.focus.slice(0, 60),
       agent: q.agent,

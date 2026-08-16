@@ -162,6 +162,34 @@ For each lead in an open issue that plainly needs an agent run — an unsourced
 claim, a paper nobody reached, a constellation gap somebody flagged — add one
 entry.
 
+### Which agent can actually do the job
+
+Getting this wrong wastes the run and produces nothing, because the agent will
+correctly refuse rather than guess.
+
+**Scout proposes new items.** It is shown the board *index* — ids and titles —
+not the contents of any item. It therefore cannot edit one: to attach a source
+to an existing entry it would have to rewrite that file whole, and it cannot see
+what is in it. Asked to do so it will confirm the source, decline to invent a
+replacement, and escalate. That is the right behaviour and it costs a run.
+
+**Sourcer and verifier edit existing items.** They receive every field of every
+item precisely so they can rewrite one in place, and they may only write ids
+that already exist.
+
+So:
+
+| The job | The agent |
+| --- | --- |
+| Add a topic that is not on the board | scout |
+| Attach or correct a source on an item | sourcer |
+| Re-check a claim against its sources | verifier or reviewer |
+| Gather headlines | newsroom |
+
+"Find and confirm this paper" is scout. **"Attach this paper to that item" is
+sourcer** — and if the job is really both, queue the second, because a source
+cannot be attached until it is confirmed and the sourcer confirms as it goes.
+
 ### What qualifies
 
 - Something an agent could settle, stated specifically enough to run

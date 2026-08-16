@@ -35,16 +35,34 @@ and will be tried again.
 
 ## What is queued
 
-## Source Babbush et al. arXiv:2603.28846 for algo-resource-estimation
-agent: scout
-added: 2026-08-14
-source: issue #74
+## Attach Babbush et al. arXiv:2603.28846 to algo-resource-estimation
+agent: sourcer
+added: 2026-08-16
+source: issue #93
 
-    /focus scout: find and confirm arXiv:2603.28846 — Babbush et al., Google
-    Quantum AI, roughly 1,175 logical qubits for ECC-256 discrete logarithm. Three
-    reviewer runs have flagged it as missing. Confirm authors, institution, the
-    logical qubit count and whether it is peer-reviewed. Do not add a new item:
-    propose it as a corroborating source on algo-resource-estimation or algo-shor.
+    /focus sourcer: attach arXiv:2603.28846 as a corroborating source on
+    algo-resource-estimation, and assess whether algo-shor warrants the same.
+    Babbush, Zalcman, Gidney, Broughton, Khattar, Neven, Bergamaschi, Drake and
+    Boneh — Google Quantum AI, Stanford, UC Berkeley, Ethereum Foundation.
+    Submitted 30 March 2026, revised 15 April. Role: preprint, E3. Title:
+    'Securing Elliptic Curve Cryptocurrencies against Quantum Vulnerabilities:
+    Resource Estimates and Mitigations'. DOI 10.48550/arXiv.2603.28846; also
+    IACR ePrint 2026/625, which is a cross-listing of the same document and
+    should not be cited separately.
+
+    The result: ECDLP-256 on secp256k1 in under 1,200 logical qubits with under
+    90 million Toffoli gates, or under 1,450 with under 70 million; mapping to
+    under 500,000 physical qubits on a planar superconducting surface code at a
+    1e-3 error rate, executing in minutes. That is roughly an eighteen-fold
+    reduction from the Litinski 2023 figure of about 9 million.
+
+    Two things must appear in the source note. The circuits were withheld under
+    responsible disclosure and validated by zero-knowledge proof, so the claim
+    cannot be independently checked from the paper alone. And the paper
+    self-describes as a whitepaper — scout escalated whether that makes it E2
+    rather than E3. Record E3 and flag the question rather than settling it.
+
+    Do not create a new item.
 
 ## Confirm NIST IR 8610 on additional PQC signature candidates
 agent: scout
