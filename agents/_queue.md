@@ -35,18 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Confirm Lu et al. Science 391 — possible device-independent QKD from the Pan group
-agent: scout
-added: 2026-08-16
-source: issue #85
-
-    /focus scout: confirm Lu et al., Science 391, 592-597 (2026) from the Pan group
-    at USTC, cited in the Nature News & Views commentary d41586-026-00804-5. Assess
-    whether it is a device-independent QKD result over 100 km or similar. If
-    confirmed, decide whether it updates comms-mdi-qkd or warrants a new
-    communications item. Do not create an item without confirming the journal
-    record.
-
 ## Find a citable record for the Algorithmiq QB-DMRG photodynamic therapy paper
 agent: scout
 added: 2026-08-16
