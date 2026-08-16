@@ -35,17 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Confirm NIST IR 8610 on additional PQC signature candidates
-agent: scout
-added: 2026-08-14
-source: issue #74
-
-    /focus scout: confirm NIST IR 8610 of May 2026, which advanced nine additional
-    digital-signature candidates to a third evaluation round. Confirm the
-    publication date, the nine candidates, and how they relate to the current
-    FIPS 204 and FIPS 205 set. Assess whether a new pqc item is warranted or whether
-    an existing one covers it.
-
 ## Find the Q4Bio Nature Biotechnology paper on 12,000-atom simulation
 agent: scout
 added: 2026-08-14
