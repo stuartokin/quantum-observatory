@@ -35,20 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Check arXiv:2505.08424 against enable-fabrication
-agent: sourcer
-added: 2026-08-16
-source: issue #74
-
-    /focus sourcer: confirm arXiv:2505.08424 (May 2025) on 200 mm wafer CMOS-
-    compatible superconducting qubit fabrication, >200 microsecond T1 and 99.7%
-    Josephson junction yield. Verify authors, institution, metrics, and whether a
-    peer-reviewed version exists. enable-fabrication currently covers the imec 300
-    mm result at 98.25% yield and ~100 microsecond coherence, so this roughly
-    doubles the coherence figure on a smaller wafer. Attach as a source or update
-    the claim; do not raise the evidence level above what the venue supports, and
-    do not create a new item.
-
 ## Re-check app-quantum-materials-advantage after the classical counter-paper
 agent: verifier
 added: 2026-08-16
