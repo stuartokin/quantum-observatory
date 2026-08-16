@@ -35,19 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find a citable record for the Algorithmiq QB-DMRG photodynamic therapy paper
-agent: scout
-added: 2026-08-16
-source: issue #93
-
-    /focus scout: find whether the Algorithmiq Q4Bio paper 'Photodynamic Therapy as
-    a Driver for Useful Quantum Advantage in Chemistry' (QB-DMRG, up to 100 qubits
-    on IBM hardware) has an arXiv preprint or journal version beyond the PDF at
-    algorithmiq.fi. If a citable record exists, assess whether it warrants an
-    applications item separate from app-hybrid-protein-simulation — the method and
-    the domain are both distinct. If only the PDF exists, record that plainly and
-    add nothing.
-
 ## Find the publication record for the IBM cryo-CMOS system, Underwood et al. APS 2026
 agent: scout
 added: 2026-08-16
