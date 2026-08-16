@@ -35,17 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Re-check app-quantum-materials-advantage after the classical counter-paper
-agent: verifier
-added: 2026-08-16
-source: issue #93
-
-    /focus verifier: the steward has already applied a downward correction to
-    app-quantum-materials-advantage for arXiv:2608.13110 (Manabe, Gu, Pan;
-    SUTD/NVIDIA, 13 Aug 2026), which classically simulates the IBM/UChicago
-    doped-Clifford circuit with a tensor 256 times smaller than IBM estimated.
-    Check that correction is sound and complete: does the counter-paper reach the
-    Qedma 74-qubit Floquet result or the Algorithmiq 56-qubit result, or only the
-    doped-Clifford one? The item should say precisely which of the three claims is
-    weakened and which stand. Apply further downward correction if warranted; raise
-    nothing.
+_Nothing queued._
