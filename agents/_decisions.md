@@ -123,6 +123,21 @@ Professional risk, never an agent's to judge.
 **Three escalations per run, maximum.** If more qualify, rank them, send three,
 and report how many were suppressed and of what kind.
 
+**When a classical counter-paper directly simulates the circuit behind the
+strongest claim in a multi-paper item, lower the confidence and name the scope.**
+The claim text must say precisely which sub-claim is weakened and which the
+counter-paper does not reach. This is a downward correction and needs no
+permission.
+
+A counter-result is evidence, and belongs in the record beside the claim it
+challenges. But an item covering three papers must not read as though all three
+fell when one did.
+*Decided 16 Aug 2026, on app-quantum-materials-advantage: arXiv:2608.13110
+classically simulated the IBM/UChicago doped-Clifford circuit in 37 minutes on
+256 H100s. Confidence lowered medium to low — that paper carried the only
+complexity-theoretic hardness argument of the three — and the Qedma and
+Algorithmiq results explicitly recorded as unaddressed.*
+
 ---
 
 ## Scope
@@ -196,55 +211,3 @@ arXiv:2204.11890 as a preprint when Phys. Rev. A 106, 032428 (2022) exists.*
 ---
 
 ## Proposed, awaiting a person
-
-The steward adds rules here when it applies existing precedent to a new case.
-**Read them, then move them up into the sections above or delete them.** A rule
-left here is one the steward may propose again, because a proposal is not where
-an agent looks for a settled answer — that has already happened twice.
-
-_Nothing proposed._
-
-## Proposed by the steward, 2026-08-16
-
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
-
-**A formally published NIST Internal Report (IR series) is E4. The same logic that makes a FIPS standard E4 applies: NIST IRs are peer-internally-reviewed, formally numbered, and published at nvlpubs.nist.gov with a DOI. A NIST IR announcing a selection or status result is a formal government technical publication, not a draft or advisory factsheet.**
-
-NIST IR 8545 (HQC selection) and NIST IR 8610 (additional signatures round 3) were rated differently in different runs because the rule was not explicit. The distinction that matters is published vs draft: a preliminary draft practice guide is E3 at most; a formally published IR with a DOI is E4.
-
-*Proposed 2026-08-16, after pqc-additional-signatures-r3 was written at E4 citing NIST IR 8610 (formally published 14 May 2026); pqc-hqc is also E4 on NIST IR 8545. Confirming this is consistent with existing practice, not an exception.. Not yet confirmed by a person.*
-
-## Proposed by the steward, 2026-08-16
-
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
-
-**A formally published NIST Internal Report (IR series) with a DOI is E4. The NIST IR series is peer-internally-reviewed and formally numbered, published at nvlpubs.nist.gov. A published NIST IR announcing a selection or status result is a formal government technical publication. Preliminary drafts and advisory factsheets remain E3 at most.**
-
-Consistent with how FIPS standards are treated (E4); distinguishes published IRs from drafts. NIST IR 8545 and IR 8610 were rated inconsistently across runs because no explicit rule existed.
-
-*Proposed 2026-08-16, after pqc-additional-signatures-r3 (IR 8610, E4) and pqc-hqc (IR 8545, E4) were rated differently in earlier runs; steward proposed this rule twice without it being picked up from the proposed section. Not yet confirmed by a person.*
-
-**When a classical counter-paper directly simulates the circuit claimed to demonstrate quantum advantage, note this in the item's claim field and source record as a downward correction to the evidence. Confidence may remain medium if other advantage claims in the same item are not addressed by the counter-paper.**
-
-The board's job is to represent the current state of the evidence. A preprint classical counter-paper is E3 evidence against an E3 quantum advantage claim; both belong in the claim field.
-
-*Proposed 2026-08-16, after app-quantum-materials-advantage: arXiv:2608.13110 classically simulates the IBM/UChicago doped-Clifford circuit within two weeks of the quantum advantage claim. Not yet confirmed by a person.*
-
-**Repeating a stale request in an issue comment — one that the board table already shows as resolved — is an error. Before asking for a publish decision or any other action, check the board table. If the item shows the requested status, say so and close the issue.**
-
-Six consecutive steward passes repeated three publish requests after all three items were published. Each pass cost attention and reduced trust in escalations.
-
-*Proposed 2026-08-16, after Issue #74: enable-cryo-cmos-qubit-control, enable-transmon-millisecond-coherence, and qec-ftqc-neutral-atom were all published; the board table showed this; the requests were nonetheless repeated five more times. Not yet confirmed by a person.*
-
-## Proposed by the steward, 2026-08-16
-
-Added by an agent applying existing precedent to a new case. Move these up
-into the sections above once you have read them — or delete them if wrong.
-
-**When a classical counter-paper directly simulates the primary circuit underlying the strongest advantage claim in a multi-paper item, confidence must be lowered and the claim text must name precisely which sub-claim is weakened and which are not addressed. This is a downward correction and needs no permission.**
-
-The board's job is to represent current evidence. A counter-paper is evidence against a claim; both belong in the record with precise scope.
-
-*Proposed 2026-08-16, after app-quantum-materials-advantage: arXiv:2608.13110 classically simulated the IBM/UChicago doped-Clifford circuit; verifier correctly lowered confidence medium→low and scoped the correction to that sub-claim only.. Not yet confirmed by a person.*
