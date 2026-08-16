@@ -4,7 +4,7 @@
   "model": "claude-sonnet-4-6",
   "trigger": "issues",
   "maxTokens": 32000,
-  "enabled": false,
+  "enabled": true,
   "budget": {
     "issues": 3,
     "proposals": 8,
