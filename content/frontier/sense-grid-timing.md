@@ -1,7 +1,7 @@
 ---
 schema: frontier/v1
 id: sense-grid-timing
-title: Timing assurance for grid protection
+title: Limits of quantum timing for grid protection
 summary: 'Power-grid phasor measurement units depend on GPS timing. Quantum time-synchronisation protocols have been proposed and demonstrated in the lab but a 2026 critical assessment concludes they will not replace classical methods near-term.'
 plain: 'The electricity grid uses GPS-synchronised clocks to keep its sensors — called phasor measurement units — in step across thousands of kilometres. If GPS is jammed or spoofed, protection systems can trip incorrectly or miss faults. Quantum timing, which uses entangled photons or quantum-key-distribution correlations to synchronise clocks, has been proposed as a more secure alternative. Laboratory demonstrations exist, but a 2026 critical assessment found that time transfer — getting the precision of a quantum clock from one place to another — remains two to three orders of magnitude short of what is needed, and that deploying quantum timing across 1,800+ PMU sites in North America alone is impractical with current technology. The realistic near-term path is GPS backup via fibre-based timing, not quantum networks.'
 pillar: quantum
