@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Check arXiv for Algorithmiq QB-DMRG photodynamic therapy pipeline preprint
-agent: scout
-added: 2026-08-16
-source: issue #93
-
-    /focus scout: search arXiv quant-ph and physics.chem-ph from 2025-2026 for any preprint by Algorithmiq authors covering the QB-DMRG (quantum-boosted DMRG) pipeline for photosensitizer simulation in photodynamic therapy — the 100-qubit IBM hardware result announced April 2026 as part of Q4Bio. Search terms: QB-DMRG, Algorithmiq, BODIPY, photodynamic. If a preprint exists, report the arXiv ID, authors, and date so app-pdt-qb-dmrg can be raised from E2 to E3 (that raise requires human sign-off). If none exists, confirm the date checked and close.
-
 ## Confirm arXiv:2512.15889 Zhou et al. quantum algorithms for photoreactivity in cancer photosensitizers
 agent: scout
 added: 2026-08-16
