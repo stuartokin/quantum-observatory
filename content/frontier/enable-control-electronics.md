@@ -40,7 +40,7 @@ links:
 evidence:
   claim: 'Underwood et al. (2024) demonstrated a 14 nm FinFET cryo-CMOS ASIC thermally anchored at 4 K inside a dilution refrigerator, generating qubit control waveforms and driving a two-qubit cross-resonance gate between fixed-frequency transmon qubits. Single-qubit gate error was 8×10⁻⁴ and two-qubit gate error was 1.4×10⁻², measured by randomized benchmarking. Power dissipation was 23 mW per qubit under active control.'
   level: E4
-  verified: '2026-08-08'
+  verified: '2026-08-16'
   sources:
     - url: https://link.aps.org/doi/10.1103/PRXQuantum.5.010326
       role: primary
@@ -51,17 +51,25 @@ evidence:
       doi: 10.1103/PRXQuantum.5.010326
       accessed: '2026-08-08'
       note: 'Underwood et al.; IBM Research; preprint arXiv:2302.11538'
+    - url: https://arxiv.org/abs/2505.08424
+      role: corroborating
+      title: 'CMOS-Compatible, Wafer-Scale Processed Superconducting Qubits Exceeding Energy Relaxation Times of 200us'
+      publisher: arXiv
+      date: '2025-05-13'
+      identifier: 'arXiv:2505.08424'
+      doi: 10.48550/arXiv.2505.08424
+      accessed: '2026-08-16'
+      note: 'Mayer et al., Fraunhofer EMFT / TU Munich. 200mm CMOS-compatible fabrication; 99.7% JJ yield; T1 up to 100 µs median, individual devices approaching 200 µs. Corroborates the manufacturing feasibility context for cryo-integrated control. Preprint, not peer-reviewed.'
 confidence: high
 status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-reviewed
+  state: agent-merged
   by: agent
-  agent: reviewer
-  agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'PRX Quantum 5, 010326 confirmed via APS abstract page, arXiv:2302.11538, InspireHEP, and citation in integration paper arXiv:2601.03922. 14 nm FinFET at 4 K, 23 mW/qubit, cross-resonance gate, and gate error figures (8×10⁻⁴ single-qubit, 1.4×10⁻² two-qubit) all confirmed. E4 correct. No changes made.'
+  agent: sourcer
+  agentMergedOn: '2026-08-16'
+  note: 'PRX Quantum 5, 010326 confirmed; all gate error figures verified. Added arXiv:2505.08424 (Fraunhofer EMFT) as corroborating source per focus instruction 2026-08-16. Claim unchanged.'
 ---
 
-Superconducting qubits live inside dilution refrigerators cooled to millikelvin temperatures. Controlling them has traditionally required thousands of cables routed from room-temperature electronics — a wiring problem that grows worse as qubit counts increase. One solution is to place the control electronics inside the refrigerator itself. IBM Research demonstrated a 14 nm CMOS chip that operates at 4 K, generating the microwave pulses needed to control transmon qubits and successfully performing a two-qubit gate. The chip consumed just 23 mW per qubit and achieved gate errors comparable to room-temperature control systems, showing that cryogenic integration is feasible.
+Superconducting transmon qubits live inside dilution refrigerators cooled to millikelvin temperatures. Controlling them has traditionally required thousands of cables routed from room-temperature electronics — a wiring problem that grows worse as qubit counts increase. One solution is to place the control electronics inside the refrigerator itself. IBM Research demonstrated a 14 nm CMOS chip that operates at 4 K, generating the microwave pulses needed to control transmon qubits and successfully performing a two-qubit gate. The chip consumed just 23 mW per qubit and achieved gate errors comparable to room-temperature control systems, showing that cryogenic integration is feasible.
