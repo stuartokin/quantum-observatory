@@ -237,3 +237,14 @@ The board's job is to represent the current state of the evidence. A preprint cl
 Six consecutive steward passes repeated three publish requests after all three items were published. Each pass cost attention and reduced trust in escalations.
 
 *Proposed 2026-08-16, after Issue #74: enable-cryo-cmos-qubit-control, enable-transmon-millisecond-coherence, and qec-ftqc-neutral-atom were all published; the board table showed this; the requests were nonetheless repeated five more times. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-16
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**When a classical counter-paper directly simulates the primary circuit underlying the strongest advantage claim in a multi-paper item, confidence must be lowered and the claim text must name precisely which sub-claim is weakened and which are not addressed. This is a downward correction and needs no permission.**
+
+The board's job is to represent current evidence. A counter-paper is evidence against a claim; both belong in the record with precise scope.
+
+*Proposed 2026-08-16, after app-quantum-materials-advantage: arXiv:2608.13110 classically simulated the IBM/UChicago doped-Clifford circuit; verifier correctly lowered confidence medium→low and scoped the correction to that sub-claim only.. Not yet confirmed by a person.*
