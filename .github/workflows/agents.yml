@@ -165,12 +165,33 @@ jobs:
         if: success()
         run: |
           COUNT=$(cat .agent-run/count.txt 2>/dev/null || echo 0)
-          if [ "$COUNT" -eq 0 ]; then
-            echo "Nothing proposed. Nothing to merge."
-            exit 0
-          fi
+
           git config user.name "horizonq-agent"
           git config user.email "agent@users.noreply.github.com"
+
+          # A drained queue is a change even when no item was written.
+          #
+          # This exited on COUNT=0 before committing anything, so a run that
+          # took a queued instruction and produced no file left the queue
+          # untouched in the repo — and the next pass took the same entry. One
+          # instruction consumed six runs that way.
+          if [ "$COUNT" -eq 0 ]; then
+            if git diff --quiet -- agents/_queue.md; then
+              echo "Nothing proposed, queue unchanged. Nothing to commit."
+              exit 0
+            fi
+            echo "Nothing proposed, but the queue was drained. Committing that."
+            git add agents/_queue.md
+            git commit -m "${{ matrix.agent }}: queue drained, no items proposed"
+            git fetch origin main
+            git rebase origin/main || {
+              echo "::warning::Rebase hit a conflict. The queue change is not pushed."
+              exit 1
+            }
+            git push origin main
+            exit 0
+          fi
+
           # Proposals move from the inbox onto the board.
           for f in content/frontier/_inbox/*.md; do
             [ "$(basename $f)" = "README.md" ] && continue
@@ -245,7 +266,6 @@ jobs:
       - name: Log the run
         if: success()
         run: |
-          COUNT=$(cat .agent-run/count.txt 2>/dev/null || echo 0)
           TITLE="Review queue - week of $(date +%Y-%m-%d)"
 
           if [ -n "$MERGED_PR" ]; then
