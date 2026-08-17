@@ -522,6 +522,21 @@ Maximum files this run: ${focusCap}${
     : ''
 }
 
+You have ${cfg.budget?.searches ?? 25} searches. **Reaching the JSON matters more
+than one more search.** A conclusion you did not write down is worth nothing —
+a run that spent its whole budget establishing that a paper cannot be sourced,
+and then ran out before saying so, produced no record of that finding at all.
+It has happened on this board.
+
+So: when you have searched enough to answer, stop searching and answer. If you
+cannot answer, say that in the JSON — an entry under \`couldNotSource\`
+naming what you looked for, where you looked and what you found instead is a
+complete and useful result. It is not a failure and it does not need files.
+
+**Never end a message mid-investigation.** If you find yourself writing "let me
+make one final search", you are already past the point where you should have
+returned what you have.
+
 Do your research first. Then reply with the JSON object and nothing after it.
 Do not narrate your reasoning in the final message — your output budget is
 finite and prose spends it. If you are running short, return fewer files
@@ -707,8 +722,61 @@ if (out && (queued || staleQueued.length)) {
   if (queued) console.log(`  queue: took "${queued.title}"; ${queueRemaining.length} left`)
 }
 if (!out) {
+  /**
+   * A run that reached a conclusion and not the JSON still found something.
+   *
+   * The reasoning is in the response — which paper was ruled out, which near
+   * miss was found, what could not be established. Exiting with only a stack
+   * trace throws that away and the queue entry is spent either way, so the
+   * work is simply lost.
+   *
+   * Write it where the workflow will put it in the issue. It is not a summary
+   * the agent chose to give, and it is labelled as such, but a reader deciding
+   * whether to requeue the job needs it.
+   */
+  mkdirSync('.agent-run', { recursive: true })
+
+  /*
+   * The closing paragraphs, plus anything naming an identifier.
+   *
+   * Four paragraphs catches the conclusion but drops the near misses, and those
+   * are the actionable part: a run that could not source its target but found a
+   * related preprint has given a reader the next lead. Pull those lines out
+   * separately rather than hoping they fall inside the window.
+   */
+  const paras = text.trim().split(/\n\n+/)
+  const tail = paras.slice(-4).join('\n\n').slice(-2000)
+  const ids = [
+    ...new Set(
+      (text.match(/(?:arxiv:\s?\d{4}\.\d{4,5}|10\.\d{4,}\/[^\s"')]+|s4\d{4}-\d{3}-\d{5}-\d)/gi) ?? [])
+        .map((x) => x.replace(/\s/g, '')),
+    ),
+  ].slice(0, 12)
+  writeFileSync(
+    '.agent-run/pr-body.md',
+    `**${agent} did not return a usable answer.**\n\n` +
+      `It ran ${searches} search(es) and stopped before producing the JSON object ` +
+      `the runner needs, so nothing was written and no summary was composed. ` +
+      `Below is the end of what it was saying, salvaged from the raw response — ` +
+      `not a report the agent chose to give, but the reasoning is usually the ` +
+      `useful part.\n\n` +
+      (queued
+        ? `The queued instruction was **${queued.title}**. It has been spent. ` +
+          `Requeue it only if the text below suggests the job is answerable as ` +
+          `written.\n\n`
+        : '') +
+      (ids.length
+        ? `**Identifiers it mentioned**, which may be worth following up:\n` +
+          ids.map((i) => `- \`${i}\``).join('\n') +
+          '\n\n'
+        : '') +
+      `---\n\n${tail}\n`,
+  )
+  writeFileSync('.agent-run/count.txt', '0')
+
   console.error('No parseable JSON object found in the response.')
-  console.error('Full response saved to .agent-run/raw.json\n')
+  console.error('The tail of the reasoning has been written to .agent-run/pr-body.md')
+  console.error('so it reaches the issue rather than only this log.\n')
   console.error('Last 3000 characters:\n')
   console.error(text.slice(-3000))
   process.exit(1)
