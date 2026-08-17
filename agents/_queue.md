@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Infleqtion–Argonne DOE Genesis Mission nuclear quantum circuit optimisation — assess for board entry
-agent: scout
-added: 2026-08-17
-source: issue #117
-
-    /focus scout: check whether the Infleqtion–Argonne National Laboratory DOE Genesis Mission collaboration on AI-optimisation of quantum circuit design for realistic nuclear problems (announced July 2026, distinct from the NQAC fuel-assembly item) has produced any arXiv preprint or technical report. Primary source is https://infleqtion.com/infleqtion-to-deploy-fault-tolerant-neutral-atom-quantum-computer-in-illinois/ If technical output exists, assess whether it warrants a new applications or enabling item distinct from app-nqac-nuclear-reactor-optimization. If no technical output, propose at E2 on the announcement if the scope is sufficiently distinct.
-
 ## Update app-nqac-nuclear-reactor-optimization with QCR July 2026 source
 agent: sourcer
 added: 2026-08-17
