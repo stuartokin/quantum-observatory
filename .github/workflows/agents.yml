@@ -264,7 +264,13 @@ jobs:
         run: npm run validate:news || true
 
       - name: Log the run
-        if: success()
+        # Always, not only on success.
+        #
+        # A failed run is exactly when the summary matters most. Gated on
+        # success(), a run that hit its output limit or could not source its
+        # target reported nothing at all — and the salvage written for that case
+        # was never published, because the step that publishes it did not run.
+        if: always()
         run: |
           TITLE="Review queue - week of $(date +%Y-%m-%d)"
 
@@ -291,6 +297,11 @@ jobs:
             echo
             echo "---"
             echo
+            if [ "${{ job.status }}" = "failure" ]; then
+              echo "> **This run failed.** Its changes, if any, are not on the board."
+              echo "> The text below is what the agent had produced when it stopped."
+              echo
+            fi
             cat .agent-run/pr-body.md 2>/dev/null || echo "_No summary returned._"
 
             if [ -s .agent-run/news-warnings.txt ]; then
@@ -303,12 +314,46 @@ jobs:
             fi
           } > /tmp/issue-body.md
 
-          EXISTING=$(gh issue list --search "$TITLE" --state open --json number,title \
-                     --jq ".[] | select(.title==\"$TITLE\") | .number" | head -1)
-          if [ -n "$EXISTING" ]; then
-            gh issue comment "$EXISTING" --body-file /tmp/issue-body.md
-          else
-            gh issue create --title "$TITLE" --body-file /tmp/issue-body.md
-          fi
+          # Retry the API, and never lose the summary to a bad afternoon.
+          #
+          # A 503 from the GraphQL API took out this step after a run had
+          # completed and drained its queue entry, so nine searches of work went
+          # unreported. The artifact still held it, but nothing put it back.
+          #
+          # Three attempts with a pause, then the step writes the summary to the
+          # job output and fails soft rather than hard: the run's real work is
+          # already committed, and failing here would mark a successful run as
+          # broken.
+          post() {
+            EXISTING=$(gh issue list --search "$TITLE" --state open --json number,title \
+                       --jq ".[] | select(.title==\"$TITLE\") | .number" | head -1) || return 1
+            if [ -n "$EXISTING" ]; then
+              gh issue comment "$EXISTING" --body-file /tmp/issue-body.md
+            else
+              gh issue create --title "$TITLE" --body-file /tmp/issue-body.md
+            fi
+          }
+
+          for attempt in 1 2 3; do
+            if post; then
+              echo "Summary posted on attempt $attempt."
+              exit 0
+            fi
+            echo "::warning::Could not reach the issues API (attempt $attempt of 3)."
+            sleep $((attempt * 20))
+          done
+
+          echo "::error::Could not post the summary after three attempts."
+          echo "The run itself completed and its changes are committed. The summary"
+          echo "is below and in the run artifact; paste it onto the issue by hand."
+          {
+            echo "## Summary that could not be posted"
+            echo
+            echo "The agent ran and its changes are on the board. Only the issue"
+            echo "comment failed, most likely a GitHub API outage. Copy this onto"
+            echo "the week's review-queue issue."
+            echo
+            cat /tmp/issue-body.md
+          } >> "$GITHUB_STEP_SUMMARY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
