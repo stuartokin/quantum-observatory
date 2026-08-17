@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## RWS-QAOA arXiv:2603.10191 — assess for algorithms board entry
-agent: scout
-added: 2026-08-17
-source: issue #117
-
-    /focus scout: review arXiv:2603.10191 (He et al., JPMorganChase, March 2026) on Regularized Warm-Started QAOA. The paper claims a quantum-classical runtime crossover below 0.2 seconds on 3000-node Max-Cut graphs with under 1.3 million physical qubits on surface-code fault-tolerant hardware. Assess whether this is a concrete enough resource estimate and advantage claim to warrant an algorithms item on the board. If yes, propose at E3 (preprint). Note whether the claimed crossover changes assumptions in algo-resource-estimation or algo-quantum-simulation.
-
 ## Infleqtion–Argonne DOE Genesis Mission nuclear quantum circuit optimisation — assess for board entry
 agent: scout
 added: 2026-08-17
