@@ -35,8 +35,8 @@ links:
   - to: algo-resource-estimation
     relation: evidence-for
 evidence:
-  claim: 'Zhai et al. (arXiv:2601.04621, Jan 2026) solved the standard 76-orbital FeMo-cofactor model to chemical accuracy using classical coupled-cluster and tensor-network methods, requiring approximately 2.77 million CPU core-hours. The paper states that this completes a long-discussed computational task and considers implications for the quantum advantage argument. This is a preprint; it has generated at least 12 citations as of mid-2026 including direct responses examining which chemistry problems remain beyond classical reach.'
-  verified: '2026-08-12'
+  claim: 'Zhai et al. (arXiv:2601.04621, Jan 2026) solved the standard 76-orbital FeMo-cofactor model to chemical accuracy using classical coupled-cluster and tensor-network methods, requiring approximately 2.77 million CPU core-hours. The paper states that this completes a long-discussed computational task and considers implications for the quantum advantage argument. This remains a preprint as of 2026-08-17; no peer-reviewed journal publication of arXiv:2601.04621 has been found. The paper has generated at least 12 citations as of mid-2026 including direct responses examining which chemistry problems remain beyond classical reach.'
+  verified: '2026-08-17'
   level: E3
   sources:
     - url: 'https://arxiv.org/abs/2601.04621'
@@ -45,8 +45,8 @@ evidence:
       publisher: arXiv
       date: '2026-01-08'
       identifier: 'arXiv:2601.04621'
-      accessed: '2026-08-12'
-      note: 'Zhai, Li, Zhang, Li, Lee, Chan. Caltech / Flatiron Institute / Beijing Normal U / Seoul National U. Preprint; peer review pending. 12 citations by mid-2026, directly cited by subsequent classical and quantum algorithm papers.'
+      accessed: '2026-08-17'
+      note: 'Zhai, Li, Zhang, Li, Lee, Chan. Caltech / Flatiron Institute / Beijing Normal U / Seoul National U. Preprint-only confirmed Aug 2026: INSPIRE and ResearchGate both list as arXiv preprint with no journal DOI. 12 citations by mid-2026, directly cited by subsequent classical and quantum algorithm papers.'
 qdayImpact: 0
 qdayReasoning: 'This result concerns quantum chemistry simulation, not cryptanalysis. It removes an advantage claim in chemistry but has no effect on the resources needed to break RSA or elliptic-curve cryptography.'
 confidence: high
@@ -58,8 +58,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-12'
-  reviewedOn: '2026-08-12'
-  note: 'First reviewer pass. arXiv:2601.04621 confirmed as preprint by Zhai, Li, Zhang et al. at Caltech/Flatiron Institute. Confirmed this is distinct from algo-classical-fe4s4-advantage (Legeza et al. arXiv:2603.28648) — different groups, different molecular systems, different papers. E3 correct for preprint. No peer-reviewed publication of arXiv:2601.04621 found at time of review. No changes.'
+  reviewedOn: '2026-08-17'
+  note: 'arXiv:2601.04621 confirmed as preprint-only as of Aug 2026 via INSPIRE (12 citations, no journal record) and ResearchGate (explicitly listed as preprint). E3 correct. No changes to evidence level or readiness.'
 ---
 
 ## What happened
