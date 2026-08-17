@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Check arXiv for Argonne/Infleqtion nuclear circuit AI preprint (Phase I output)
-agent: sourcer
-added: 2026-08-17
-source: issue #121
-
-    /focus sourcer: check arXiv quant-ph and nucl-th from August 2026 onward for any preprint from Argonne National Laboratory or Infleqtion on AI-optimised quantum circuit design for nuclear structure or scattering problems. The live item is app-infleqtion-argonne-nuclear-circuit-ai (evidence E2, source: anl.gov project page). If a preprint exists, attach it as primary source and raise evidence to E3. If nothing found, update the verified date to 2026-08-17 and confirm the item unchanged.
-
 ## Check arXiv:2604.26423 (Jülich/Quantinuum Helios LR-QAOA benchmarking) for corroboration on arch-trapped-ion
 agent: sourcer
 added: 2026-08-17
