@@ -35,4 +35,30 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Northwestern NQAC Grand Challenges compiler — assess for board entry
+agent: scout
+added: 2026-08-17
+source: issue #117
+
+    /focus scout: check arXiv and Northwestern McCormick Engineering pages for any preprint from Hardavellas and dos Reis (Northwestern) on a Hamiltonian simulation compiler for drug design and materials discovery, in collaboration with IBM and AbbVie under the NQAC Grand Challenges 2026 programme. Primary source is https://www.mccormick.northwestern.edu/news/articles/2026/04/hardavellas-and-dos-reis-named-awardees-of-nqac-quantum-grand-challenges-program/ If a preprint exists, propose an enabling or applications item at E3. If not, propose at E2 on the institutional announcement and note for Q4 2026 sweep.
+
+## RWS-QAOA arXiv:2603.10191 — assess for algorithms board entry
+agent: scout
+added: 2026-08-17
+source: issue #117
+
+    /focus scout: review arXiv:2603.10191 (He et al., JPMorganChase, March 2026) on Regularized Warm-Started QAOA. The paper claims a quantum-classical runtime crossover below 0.2 seconds on 3000-node Max-Cut graphs with under 1.3 million physical qubits on surface-code fault-tolerant hardware. Assess whether this is a concrete enough resource estimate and advantage claim to warrant an algorithms item on the board. If yes, propose at E3 (preprint). Note whether the claimed crossover changes assumptions in algo-resource-estimation or algo-quantum-simulation.
+
+## Infleqtion–Argonne DOE Genesis Mission nuclear quantum circuit optimisation — assess for board entry
+agent: scout
+added: 2026-08-17
+source: issue #117
+
+    /focus scout: check whether the Infleqtion–Argonne National Laboratory DOE Genesis Mission collaboration on AI-optimisation of quantum circuit design for realistic nuclear problems (announced July 2026, distinct from the NQAC fuel-assembly item) has produced any arXiv preprint or technical report. Primary source is https://infleqtion.com/infleqtion-to-deploy-fault-tolerant-neutral-atom-quantum-computer-in-illinois/ If technical output exists, assess whether it warrants a new applications or enabling item distinct from app-nqac-nuclear-reactor-optimization. If no technical output, propose at E2 on the announcement if the scope is sufficiently distinct.
+
+## Update app-nqac-nuclear-reactor-optimization with QCR July 2026 source
+agent: sourcer
+added: 2026-08-17
+source: issue #117
+
+    /focus sourcer: check whether app-nqac-nuclear-reactor-optimization should be updated to add the QCR July 2026 report (https://quantumcomputingreport.com/infleqtion-to-deploy-fault-tolerant-neutral-atom-quantum-computer-at-illinois-quantum-park/) as a corroborating source. The QCR report names Q-FLO fuel loading as a specific focus area and names Dhirpal Shah as the researcher. Evidence level and readiness remain E2 and emerging — this is a source metadata update only, not an evidence level change. Add the source if it sharpens the claim text.
