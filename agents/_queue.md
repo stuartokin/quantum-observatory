@@ -55,13 +55,6 @@ source: issue #93 (closed)
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
 
-## Check for Microsoft Majorana 2 preprint on arXiv (Aug 2026)
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: check whether a preprint for Microsoft Majorana 2 exists on arXiv or elsewhere as of August 2026. If it does, note its claims in the arch-topological source list as a corroborating vendor preprint (E2 ceiling) and record the revised 2029 roadmap date in the metrics. Do not raise the evidence level or readiness. If no preprint exists, note the Build 2026 announcement and leave evidence unchanged.
-
 ## Find Eaton AFRL $7M quantum-classical power-grid contract primary source
 agent: scout
 added: 2026-08-17

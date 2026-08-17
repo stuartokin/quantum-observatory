@@ -2,76 +2,87 @@
 schema: frontier/v1
 id: arch-topological
 title: Majorana-based topological qubits
-summary: 'Microsoft''s InAs-Al hybrid approach to hardware-protected qubits. Contested: Nature''s own peer-review notes state the results do not evidence Majorana zero modes. Independent Matters Arising critique published in Nature June 2026.'
-plain: 'An approach where the qubit is stored in a property that local disturbances cannot easily change — like a knot that survives being jostled. If it worked it would need far less error correction. Microsoft has pursued it for two decades. The central physics claim remains disputed: the journal that published the 2025 result attached a note saying it does not demonstrate the effect it was looking for, and a peer-reviewed Matters Arising article published in Nature in June 2026 argues the topological gap protocol used is not a reliable diagnostic. In June 2026 Microsoft announced Majorana 2 at Build 2026 with a preprint claiming ~1000x coherence improvement, though Legg and independent researchers maintain the underlying physics dispute is unresolved.'
+summary: 'Microsoft''s Majorana programme: InAs–Pb tetron devices show 20 s Z-parity lifetime (Majorana 2, June 2026 preprint). Roadmap revised to 2029. No peer review; only Z measurements shown; no independent replication. External expert skepticism remains high.'
+plain: 'Microsoft is trying to build qubits using exotic quantum states called Majorana zero modes, which in theory would be inherently protected against errors. Their latest chip (Majorana 2) uses a lead-based superconductor and reports that a parity state — one component of a qubit — lasts over 20 seconds, roughly 1000 times longer than the previous aluminium-based design. However, demonstrating a complete qubit requires two kinds of measurement (X and Z); the June 2026 preprint shows only Z measurements. Independent physicists remain sceptical that Majorana zero modes have been confirmed at all. No peer review has been completed and no independent group has replicated the result.'
 pillar: quantum
-constellation: architectures
 readiness: emerging
+constellation: architectures
+cluster: topological
 actors:
-  - Microsoft Azure Quantum
+  - Microsoft Quantum
 country:
   - US
 metrics:
-  - name: Parity measurement SNR
-    value: '1'
-    unit: 'in 3.6 µs'
-    note: 'Microsoft Azure Quantum Nature 638 (2025); quantum-capacitance measurement of fermion parity in InAs-Al device'
+  - name: Z-parity lifetime (InAs-Pb tetron, Majorana 2)
+    value: '>20'
+    unit: seconds
+    note: 'Reported in arXiv:2606.03884; improvement of >3 orders of magnitude over Al-based predecessor (~1–12 ms). Only Z-type measurement; X measurement absent.'
+  - name: Roadmap target (fault-tolerant quantum computing)
+    value: '2029'
+    unit: year
+    note: 'Revised from 2033 at Build 2026. Vendor roadmap only, E2, no Q-Day impact per decisions file.'
 links:
   - to: qec-surface-code
+    relation: depends-on
+  - to: arch-superconducting
     relation: competes-with
-priority: P3
-horizon: 3
-qdayImpact: -1
-qdayReasoning: 'Two decades of promise without a settled result is weak evidence for the fast paths.'
-confidence: low
-status: draft
-novelty: new architecture
+  - to: qec-magic-state-distillation
+    relation: depends-on
 evidence:
-  claim: 'Microsoft Azure Quantum (Nature 638, 651-655, February 2025; arXiv:2401.09549) reports interferometric single-shot parity measurement of fermion parity in InAs-Al heterostructures — described as a step toward topological qubits using Majorana zero modes. The paper achieves quantum-capacitance bimodality with SNR of 1 in 3.6 µs. However, Nature''s accompanying peer-review notes state that the results do not constitute evidence for the presence of Majorana zero modes. An independent critique (Legg, arXiv:2503.08944, March 2025; published Nature Matters Arising, Nature 654 E22-E26, June 24 2026) demonstrates that the topological gap protocol used can report the same device region as both gapped and gapless depending on analysis parameters — challenging the reliability of the diagnostic. Microsoft disputes the critique; Nayak et al. were granted a right of reply in the same Nature issue. The claim of topological qubits rests on a contested measurement protocol; the underlying physics is unresolved.'
+  claim: 'arXiv:2606.03884 (Aghaee et al., Microsoft Quantum, June 2026) reports Z-parity lifetime exceeding 20 s in an InAs–Pb tetron device, replacing the aluminium superconductor of Majorana 1 with lead to raise the excitation gap. The paper uses interferometric single-shot parity measurements and claims to experimentally validate that increasing the excitation gap improves device performance. Only Z-type parity measurements are presented; X measurements are absent. The preprint is unreviewed and all authors are Microsoft employees. External physicists (Legg, Frolov) state that without X measurements the data do not demonstrate a topological qubit. Microsoft revised its fault-tolerant roadmap from 2033 to 2029 citing this result; this is a vendor roadmap statement (E2).'
   verified: '2026-08-17'
   level: E2
   sources:
-    - url: 'https://www.nature.com/articles/s41586-024-08445-2'
-      role: primary
-      title: 'Interferometric single-shot parity measurement in InAs-Al hybrid devices'
-      publisher: Nature
-      date: '2025-02-19'
-      identifier: 'Nature 638, 651-655 (2025)'
-      doi: 10.1038/s41586-024-08445-2
-      accessed: '2026-08-17'
-      note: 'Microsoft Azure Quantum. Nature peer-review notes state results do not prove MZMs. E2 ceiling: vendor-led, contested by peer-reviewed Matters Arising critique.'
-    - url: 'https://arxiv.org/abs/2401.09549'
-      role: preprint
-      title: 'Interferometric Single-Shot Parity Measurement in an InAs-Al Hybrid Device'
+    - url: https://arxiv.org/abs/2606.03884
+      role: vendor
+      title: '20 Second Parity Lifetime in an InAs-Pb Tetron Device'
       publisher: arXiv
-      date: '2024-01-17'
-      identifier: 'arXiv:2401.09549'
+      date: '2026-06-03'
+      identifier: 'arXiv:2606.03884'
+      doi: 10.48550/arXiv.2606.03884
       accessed: '2026-08-17'
-      note: 'Preprint version of the Nature paper; freely accessible.'
-    - url: 'https://arxiv.org/abs/2503.08944'
+      note: 'Vendor preprint (all authors Microsoft Quantum); E2 ceiling per decisions file. Reports >20 s Z-parity lifetime; no X measurements; not peer-reviewed. Significant external skepticism from Frolov, Legg and others.'
+    - url: https://www.nature.com/articles/d41586-026-01788-y
       role: corroborating
-      title: 'Comment on "Interferometric single-shot parity measurement in InAs-Al hybrid devices", Microsoft Quantum, Nature 638, 651-655 (2025)'
-      publisher: 'Nature (Matters Arising) / arXiv'
-      date: '2026-06-24'
-      identifier: 'arXiv:2503.08944; Nature 654, E22-E26 (2026)'
-      doi: 10.1038/s41586-026-10567-8
+      title: 'Microsoft upgrades controversial quantum chip — researchers are still sceptical'
+      publisher: Nature
+      date: '2026-06-03'
+      identifier: 'Nature 654, 308-309 (2026)'
+      doi: 10.1038/d41586-026-01788-y
       accessed: '2026-08-17'
-      note: 'Henry F. Legg, Univ. St Andrews / Univ. Basel. Peer-reviewed Matters Arising published Nature June 24 2026. Shows TGP can report same device region as gapped or gapless depending on parameters. Microsoft Nayak et al. rebuttal in same issue. Frolov (Univ. Pittsburgh) stated in press the paper has no scientific value as evidence for Majorana modes. DOI and Nature 654 volume/pages confirmed from secondary sources.'
+      note: 'Nature news piece (not a research article) documenting expert skepticism and citing the arXiv preprint. Not primary evidence; corroborating only for the controversy framing.'
+priority: P2
+qdayImpact: 0
+qdayReasoning: 'Majorana 2 demonstrates an improved parity lifetime in a single-wire Z measurement on a vendor preprint. It does not demonstrate a functioning topological qubit, logical operations, or error suppression at any scale. The revised 2029 roadmap is a commercial statement and per the decisions file vendor roadmaps never move a Q-Day score. No hardware has been built or demonstrated that changes the resources needed to break RSA-2048 or elliptic-curve cryptography.'
+confidence: low
+novelty: 'Incremental coherence improvement; roadmap revision; qubit claim contested'
+status: draft
 origin: agent
-added: '2026-08-09'
+horizon: 2
 review:
-  state: agent-reviewed
+  state: agent-merged
   by: agent
-  agent: reviewer
-  agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-17'
-  note: 'Source note for Legg Matters Arising updated: Nature 654, E22-E26 (DOI 10.1038/s41586-026-10567-8) confirmed from Spanish-language secondary source and quantumzeitgeist. Majorana 2 (Build 2026 preprint, claimed 1000x coherence, revised 2029 FT target) exists but is preprint-only and Legg disputes physics continuity with Majorana 1. E2/confidence-low/readiness-emerging all correct and unchanged. Majorana 2 flagged for Scout.'
+  agent: scout
+  agentMergedOn: '2026-08-17'
+  note: 'Focus run: added arXiv:2606.03884 as vendor preprint corroboration per focus instruction. Evidence level held at E2, readiness held at emerging per instruction. 2029 roadmap date recorded in metrics. Nature news piece added as corroborating source for the skepticism framing.'
 ---
 
-Topological quantum computing aims to store information in global, topologically protected properties of a physical system — properties that local noise cannot easily disturb. The promise is hardware-level error resistance, reducing the need for expensive error-correcting codes.
+## What happened
 
-Microsoft published a Nature paper in February 2025 reporting interferometric parity measurement in indium arsenide-aluminium semiconductor-superconductor heterostructures, positioned as evidence toward topological qubits based on Majorana zero modes. The device achieves single-shot quantum-capacitance measurement with a signal-to-noise ratio of 1 in 3.6 microseconds.
+Microsoft unveiled the Majorana 2 chip at Build 2026 (May–June 2026) alongside a preprint (arXiv:2606.03884) reporting Z-parity lifetimes exceeding 20 seconds in an InAs–Pb tetron device. Replacing the aluminium superconductor of the Majorana 1 chip with lead raises the excitation gap, which in theory suppresses quasiparticle poisoning — the dominant error mechanism — by more than three orders of magnitude over the Al-based predecessor (where lifetimes were 1–12 ms).
 
-**Critical context:** Nature's own peer-review notes, published alongside the paper, state that the results do not constitute evidence for the presence of Majorana zero modes. An independent critique by Henry Legg (University of St Andrews), published as a peer-reviewed Matters Arising article in Nature 654, E22-E26 on 24 June 2026 (DOI: 10.1038/s41586-026-10567-8), demonstrates that the topological gap protocol used to qualify devices can report the same device region as both gapped and gapless depending on analysis parameters — challenging the reliability of the diagnostic. Microsoft's team (Nayak et al.) was granted a right of reply in the same Nature issue. Independent physicist Sergey Frolov (University of Pittsburgh) stated to Scientific American that the Matters Arising makes it "painfully apparent" the underlying Nature paper has no scientific value as evidence for Majorana modes.
+## Why it matters
 
-In June 2026, Microsoft announced Majorana 2 at Build 2026, claiming ~1000x coherence improvement, though this exists only as a preprint. Legg has publicly stated the physics dispute is unresolved and applies to the new device as well. The board's confidence setting of low and readiness of emerging are both correct.
+Parity lifetime is a necessary (but not sufficient) condition for a functioning topological qubit. A 20 s lifetime would in principle allow many gate operations before decoherence. Microsoft has revised its fault-tolerant quantum computing roadmap from 2033 to 2029 on the basis of this result.
+
+## What was the previous state of the art
+
+The Majorana 1 chip (InAs–Al, February 2025, Nature 638, 651–655) reported parity lifetimes of order milliseconds and demonstrated interferometric single-shot parity measurement (Z only). Independent physicists were sceptical of the underlying Majorana zero mode interpretation at that stage.
+
+## Limitations
+
+The June 2026 preprint presents **only Z-type parity measurements**. A functioning qubit requires both X and Z measurements. Without X measurements, the paper demonstrates a long-lived parity state in a superconducting nanowire but does not demonstrate a qubit. The paper acknowledges this: it states that investigating X measurements "will be an important direction for future work." All authors are Microsoft employees; the preprint has not been peer-reviewed; and no independent group has replicated the result. External physicists (Legg, Frolov) have stated publicly that the data do not prove the existence of a topological qubit or Majorana zero modes.
+
+## What would change the assessment
+
+Publication of X measurements showing non-trivial joint parity; independent replication by a non-Microsoft group; peer review; or a demonstration of two-qubit operations would each individually move the readiness assessment. A retraction or further expert consensus against the Majorana interpretation would lower it further.
