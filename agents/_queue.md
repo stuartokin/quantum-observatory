@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Assess arXiv:2607.24937 (prethermal Floquet dynamics, Quantinuum H2/Helios, July 2026) for new item or update
-agent: scout
-added: 2026-08-17
-source: issue #121
-
-    /focus scout: review arXiv:2607.24937 (Resolving Structure in Prethermal Floquet Dynamics with Precision Quantum Computation, July 2026, IBM/Qedma/RIKEN). Note: this paper is already listed as a corroborating source in app-quantum-materials-advantage (arXiv:2607.24937, role corroborating). Determine whether it warrants a standalone item distinct from app-quantum-materials-advantage — specifically whether the cross-platform QESEM result on Quantinuum H2 and Helios represents a sufficiently distinct contribution (platform validation of error mitigation rather than a materials-advantage claim). If yes, propose a new item at E3. If no, confirm it is correctly placed as corroboration and do not duplicate.
+_Nothing queued._
