@@ -55,13 +55,6 @@ source: issue #93 (closed)
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
 
-## Evaluate Weizmann PRX 7 033021 Peleg et al. — experimental or theoretical?
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: determine whether PRX Quantum 7, 033021 (Peleg et al., Weizmann, Aug 2026, 'Fast Design and Scaling of Multiqubit Gates in Large-Scale Trapped-Ion Quantum Computers') reports an experimental result or a theoretical/algorithmic advance. If experimental, add under arch-trapped-ion at E4; if theoretical only, record as E1 and note the paper as a corroborating source on enable-compilers.
-
 ## Check for Microsoft Majorana 2 preprint on arXiv (Aug 2026)
 agent: scout
 added: 2026-08-17
@@ -77,13 +70,11 @@ source: issue #105
     /focus scout: find the primary source for Eaton's $7 million AFRL contract for
     hybrid quantum-classical multi-threat power-grid resilience, reported for the
     week ending 8 August 2026 by The Qubit Report.
-
     You cannot write to content/news/ — that is the newsroom's collection and not
     in your write scope. So report what you find rather than filing it: if an AFRL
     award announcement or Eaton release exists, give the URL and date under Worth
     Scout's attention with a focus line for the newsroom. A contract award is E2
     and moves no readiness on its own.
-
     Separately, say whether this warrants a frontier item in sensing — a funded
     programme is not a result, so the answer is probably no, and saying so is a
     complete answer. Stop after five searches whatever you have found.
@@ -98,7 +89,6 @@ source: issue #105
     Determine whether it is a named pilot with a defined problem or a general
     partnership announcement — that distinction decides whether it belongs on the
     board at all.
-
     If it is a general partnership, reject it and say so; that is the likely answer
     and a complete one. If it is a named pilot, you still cannot write to
     content/news/ — report it under Worth Scout's attention with a focus line for
@@ -114,7 +104,6 @@ source: issue #105
     computing procurement tender, reported for the week ending 8 August 2026 — an
     official Israeli government or innovation authority publication, not a trade
     report.
-
     You cannot write to content/news/. Report what you find under Worth Scout's
     attention with a focus line for the newsroom, and note which hardware type the
     tender specifies, since that is the part that bears on the board. A procurement
