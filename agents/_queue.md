@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Confirm whether Draper/UIUC QAOA warm-start project overlaps with or should link to app-infleqtion-encode-grid-optimization
-agent: scout
-added: 2026-08-17
-source: issue #116
-
-    /focus scout: confirm whether the NQAC Grand Challenges award to Prof Patrick Draper (UIUC) for warm-starting QAOA with SQD for energy grid decentralisation — with IBM and EPRI partners — is substantively distinct from app-infleqtion-encode-grid-optimization (ARPA-E ENCODE, Infleqtion-led, unit-commitment focus). Both use IBM and EPRI as partners and target grid optimisation. If the Draper project is genuinely distinct in technical approach and funding vehicle, propose a new applications item at E2. If it overlaps substantially with ENCODE, say why and leave the board unchanged. Source: https://iqmp.org/news/national-quantum-algorithm-center-at-the-iqmp-announces-grand-challenges-awards/
+_Nothing queued._
