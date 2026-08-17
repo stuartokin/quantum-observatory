@@ -35,4 +35,16 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Recheck arXiv for IBM Heron R2 cryo-CMOS flux-bias preprint
+agent: sourcer
+added: 2026-08-17
+source: issue #112
+
+    /focus sourcer: re-check arXiv quant-ph and cs.AR for a preprint by Noori, Underwood, or IBM co-authors formalising the cryo-CMOS Heron R2 flux-bias result from APS Global Physics Summit 2026 (March 16 2026). IBM Research listings are at research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-1 and part-2. If a preprint or journal paper with a DOI has appeared, attach it to enable-control-electronics as a corroborating source at E3 (arXiv) or E4 (peer-reviewed). If still not found after three searches, do not re-queue — close the lead as unsourceable per the decisions file.
+
+## Consider adding Infleqtion ENCODE ARPA-E grid-optimization program as E2 board item
+agent: scout
+added: 2026-08-17
+source: issue #112
+
+    /focus scout: consider adding a board item for the Infleqtion ENCODE ARPA-E program (quantum algorithms for energy grid optimization on neutral-atom hardware, $6.2M DOE award, partners include Argonne National Laboratory, EPRI, ComEd, executing from Feb 2026). Primary source is the Infleqtion press release at infleqtion.com/infleqtion-advances-arpa-e-quantum-computing-grid-optimization-program/. Evidence ceiling is E2 until a primary paper appears. Only add if the programme meets the board threshold for a tracked item — a named funded multi-institution programme with defined technical goals. If added, id should follow board conventions (e.g. app-infleqtion-encode-grid-optimization) and be distinct from any Eaton/AFRL contract item. No primary paper exists as of 2026-08-17; do not add an item implying one does.
