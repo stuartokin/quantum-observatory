@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Find primary source for D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find the primary source for the D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection collaboration reported in August 2026 (source: thequbitreport.com week ending 8 August 2026). Determine whether this is a named pilot with a defined problem and measurable outcome, or a general partnership announcement. If a named pilot with a primary source (D-Wave or Verafin press release, or a technical paper), add a news item under applications. If only a general partnership announcement or if only a secondary source exists, reject and say so.
+_Nothing queued._
