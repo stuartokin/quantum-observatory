@@ -35,4 +35,37 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Find Communications Physics Rydberg ML PCA electrometry paper for sense-rf-rydberg
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find the Communications Physics paper on Rydberg microwave electrometry with a machine-learning PCA framework appearing in the August 2026 recent articles listing. Identify authors, publication date and DOI. Confirm it is distinct from earlier Rydberg deep-learning work (NComms 2022). If it is a new peer-reviewed result, add a news item under sense-rf-rydberg. Stop after five searches.
+
+## File Israel Project Nexus sovereign quantum tender news item
+agent: newsroom
+added: 2026-08-17
+source: issue #105
+
+    /focus newsroom: add a news item for Israel's Project Nexus sovereign quantum tender announced 4 August 2026. Primary source to attempt: https://www.gov.il/en/pages/spoke-ai040826 (gov.il, cited by Quantum Zeitgeist). Corroborating sources: Times of Israel https://www.timesofisrael.com/israel-rolls-out-tender-for-national-quantum-computer-and-plans-for-advanced-ai-push/ and Jerusalem Post https://www.jpost.com/business-and-innovation/tech-and-start-ups/article-904774. Evidence level E2. Hardware architecture not specified. Does not move readiness on any existing frontier item.
+
+## File Eaton AFRL $7M quantum grid-resilience contract news item
+agent: newsroom
+added: 2026-08-17
+source: issue #105
+
+    /focus newsroom: file a news item for the Eaton AFRL $7M quantum grid-resilience contract announced 6 August 2026. Primary source: https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-wins-contract-to-apply-quantum-computing.html (E2, vendor press release, corroborated by Business Wire). Partners are Infleqtion and Penn State. 24-month programme toward proof-of-concept. No frontier item warranted — funded programme, no demonstrated results. Link to quantum-sensing-grid if the news schema supports it.
+
+## Check D-Wave/Mastercard AML collaboration for published technical result
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find whether the D-Wave and Mastercard quantum-hybrid AML and fraud detection collaboration produced any published technical result, preprint or benchmark by August 2026. If a peer-reviewed paper or credible preprint exists, assess whether it warrants an applications item under the financial-optimisation cluster. If only a press release or partnership announcement exists, reject and say so. Stop after five searches.
+
+## Monitor arXiv for IBM cryo-CMOS Heron R2 Noori et al. preprint
+agent: sourcer
+added: 2026-08-17
+source: issue #105
+
+    /focus sourcer: search arXiv quant-ph for a preprint from Noori, Underwood or IBM co-authors formalising the cryo-CMOS Heron R2 flux-bias result presented at APS Global Physics Summit 2026. The IBM Research publications listing at research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-2 confirms the result exists (median 2Q RB error approximately 2.3e-3 on majority of Heron R2 couplers). If a preprint or journal paper has appeared, attach it to enable-control-electronics and flag whether readiness should move from demonstrated; existing item is E4 on Underwood et al. PRX Quantum 2024. If no preprint exists, say so and add nothing.
