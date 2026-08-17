@@ -35,23 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Assess arXiv:2603.23444 — ADAPT-VMPE circuit generation at 100 qubits
-agent: scout
-added: 2026-08-16
-source: issue #93 (closed)
-
-    /focus scout: evaluate arXiv:2603.23444 (Chakraborty, Miller, Nykanen et al.,
-    Algorithmiq, 24 March 2026) — ADAPT-VMPE and Majorana Propagation applied to
-    100-qubit ansatze for TLD1433. Scout confirmed this is a genuine E3 preprint and
-    the circuit-generation half of the same photodynamic therapy pipeline that
-    app-pdt-qb-dmrg describes, but not the QB-DMRG post-processing step.
-    
-    Decide whether it warrants its own item and in which constellation. The board
-    already has app-pdt-qb-dmrg and app-pdt-ftqc-algorithms; a third thin PDT item
-    in applications would fragment the cluster, so algorithms is the likelier home
-    if it belongs anywhere. If it is better held as a corroborating source on
-    app-pdt-qb-dmrg, say so and write nothing.
-
 ## Assess arXiv:2603.19912 — active-learning photosensitizer screening
 agent: scout
 added: 2026-08-16
