@@ -54,19 +54,3 @@ source: issue #93 (closed)
     from experimental to demonstrated — do not move it yourself. If no preprint
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
-
-## Find Israel Project Nexus quantum computing procurement primary source
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find the primary source for Israel's Project Nexus quantum
-    computing procurement tender, reported for the week ending 8 August 2026 — an
-    official Israeli government or innovation authority publication, not a trade
-    report.
-    You cannot write to content/news/. Report what you find under Worth Scout's
-    attention with a focus line for the newsroom, and note which hardware type the
-    tender specifies, since that is the part that bears on the board. A procurement
-    tender is E2 and evidences intent, not capability: it does not move
-    arch-superconducting or arch-trapped-ion. Stop after five searches; if no
-    official source is reachable, say so and add nothing.
