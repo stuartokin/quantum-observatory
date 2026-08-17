@@ -265,3 +265,14 @@ into the sections above once you have read them — or delete them if wrong.
 Repeating a search that came back empty twice is a loop. The rydberg-ml-pca-comms-physics-2026 lead was searched by newsroom (issue #105, first run) and a second time without resolution. Queuing it again wastes a run.
 
 *Proposed 2026-08-17, after rydberg-ml-pca-comms-physics-2026 in issue #105 could not be sourced across two newsroom passes with multiple searches each. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-17
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**When an aggregator (QCR, Quantum Insider, Quantum Zeitgeist, postquantum.com) highlights a detail that is also present in a primary or vendor source already cited in the file, add the detail to the claim from the existing source. Do not add the aggregator as a source and do not leave the detail absent.**
+
+The aggregator cannot be cited, but its discovery value — pointing to a detail in an existing citable source — should not be lost. The sourcer demonstrated the correct pattern on app-nqac-nuclear-reactor-optimization.
+
+*Proposed 2026-08-17, after sourcer run on app-nqac-nuclear-reactor-optimization: QCR named Q-FLO but could not be cited; the name was present in the IQMP blog already in the file and was added to the claim from that source.. Not yet confirmed by a person.*
