@@ -254,3 +254,14 @@ An abstract describes what a paper will claim; it has not been checked, reviewed
 A YAML discard does not invalidate the underlying finding. The correction is settled; failing to apply it because the vehicle failed is an error of omission.
 
 *Proposed 2026-08-17, after pqc-additional-signatures-r3 family count correction was identified in PR #106 but the file was discarded; the correction was not applied to the scout-written live file. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-17
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A lead that two separate agent runs searched for and could not resolve to a specific DOI or publication record is closed, not re-queued. Record it as unsourceable with what was searched. Do not queue it again unless a new identifier, a citation elsewhere, or a journal record appears.**
+
+Repeating a search that came back empty twice is a loop. The rydberg-ml-pca-comms-physics-2026 lead was searched by newsroom (issue #105, first run) and a second time without resolution. Queuing it again wastes a run.
+
+*Proposed 2026-08-17, after rydberg-ml-pca-comms-physics-2026 in issue #105 could not be sourced across two newsroom passes with multiple searches each. Not yet confirmed by a person.*

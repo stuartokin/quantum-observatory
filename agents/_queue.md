@@ -35,4 +35,23 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Find Infleqtion papers on power grid optimisation or contingency analysis
+agent: sourcer
+added: 2026-08-17
+source: issue #105
+
+    /focus sourcer: search arXiv and journals for Infleqtion-authored or Infleqtion-affiliated papers on power grid optimisation, contingency analysis, N-k failure evaluation, or critical infrastructure quantum algorithms. If a relevant preprint or peer-reviewed paper exists, attach it to content/frontier/_inbox/news-2026-08-06-eaton-afrl-quantum-grid-resilience-contract.md (id: eaton-afrl-quantum-grid-resilience) under establishedBy with relation builds-on. If nothing relevant is found after three searches, say so and do not attach anything.
+
+## Re-check arXiv for IBM cryo-CMOS Heron R2 preprint (Noori/Underwood APS 2026)
+agent: sourcer
+added: 2026-08-17
+source: issue #105
+
+    /focus sourcer: re-check arXiv quant-ph and cs.AR for a preprint by Noori, Underwood, or IBM co-authors formalising the cryo-CMOS Heron R2 flux-bias result from APS Global Physics Summit 2026 (March 16 2026). IBM Research listings are at research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-1 and part-2. If a preprint or journal paper with a DOI has appeared since 2026-08-17, attach it to enable-control-electronics as a corroborating source at E2 (vendor preprint) or E3 (arXiv). If still not found after three searches, close this lead and do not queue it again.
+
+## Find primary source for D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find the primary source for the D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection collaboration reported in August 2026 (source: thequbitreport.com week ending 8 August 2026). Determine whether this is a named pilot with a defined problem and measurable outcome, or a general partnership announcement. If a named pilot with a primary source (D-Wave or Verafin press release, or a technical paper), add a news item under applications. If only a general partnership announcement or if only a secondary source exists, reject and say so.
