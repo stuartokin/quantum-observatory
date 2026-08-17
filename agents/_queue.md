@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Consider adding Infleqtion ENCODE ARPA-E grid-optimization program as E2 board item
-agent: scout
-added: 2026-08-17
-source: issue #112
-
-    /focus scout: consider adding a board item for the Infleqtion ENCODE ARPA-E program (quantum algorithms for energy grid optimization on neutral-atom hardware, $6.2M DOE award, partners include Argonne National Laboratory, EPRI, ComEd, executing from Feb 2026). Primary source is the Infleqtion press release at infleqtion.com/infleqtion-advances-arpa-e-quantum-computing-grid-optimization-program/. Evidence ceiling is E2 until a primary paper appears. Only add if the programme meets the board threshold for a tracked item — a named funded multi-institution programme with defined technical goals. If added, id should follow board conventions (e.g. app-infleqtion-encode-grid-optimization) and be distinct from any Eaton/AFRL contract item. No primary paper exists as of 2026-08-17; do not add an item implying one does.
+_Nothing queued._
