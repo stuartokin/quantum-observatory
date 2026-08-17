@@ -55,3 +55,10 @@ added: 2026-08-17
 source: issue #105
 
     /focus sourcer: search arXiv quant-ph for a preprint from Noori, Underwood or IBM co-authors formalising the cryo-CMOS Heron R2 flux-bias result presented at APS Global Physics Summit 2026. The IBM Research publications listing at research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-2 confirms the result exists (median 2Q RB error approximately 2.3e-3 on majority of Heron R2 couplers). If a preprint or journal paper has appeared, attach it to enable-control-electronics and flag whether readiness should move from demonstrated; existing item is E4 on Underwood et al. PRX Quantum 2024. If no preprint exists, say so and add nothing.
+
+## Assess OQC/Mastercard hybrid quantum fraud detection preprint for applications board item
+agent: sourcer
+added: 2026-08-17
+source: issue #105
+
+    /focus sourcer: assess arXiv:2603.06473 (OQC + Mastercard, 'A Hybrid Quantum-Classical Approach for Credit Card Fraud Detection', lead author Rodrigo Chaves, OQC Senior Solutions Architect, March 2026, updated May 2026) for an applications board item under the financial-optimisation cluster. Confirm whether a peer-reviewed journal version exists. Confirm whether the dataset used is the public UCI/Kaggle European credit card fraud dataset or Mastercard production data. The reported performance delta is average precision 0.793 vs XGBoost 0.770 on the benchmark dataset. If only a public benchmark and preprint, the item does not meet the board threshold — say so clearly and do not propose a file. If a journal version or production-data result exists, propose an applications item.
