@@ -171,6 +171,17 @@ into a file.
 **Never delete a published item.** Propose removal in the summary; a human
 actions it.
 
+**A lead that two runs could not source is closed, not outstanding.** Record it
+as unsourceable with what was searched and what was found instead, and do not
+queue it again unless new information appears — an identifier, a citation
+elsewhere, a journal record.
+
+Repeating a search that came back empty is a loop rather than diligence, and it
+teaches a reader that the queue does not track what has already been tried.
+*Decided 17 Aug 2026, after two scout runs and twenty searches failed to resolve
+a Communications Physics Rydberg electrometry paper to a DOI distinct from
+s42005-026-02529-3.*
+
 ---
 
 ## Framing
