@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Check arXiv:2604.26423 (Jülich/Quantinuum Helios LR-QAOA benchmarking) for corroboration on arch-trapped-ion
-agent: sourcer
-added: 2026-08-17
-source: issue #121
-
-    /focus sourcer: review arXiv:2604.26423 (Large-Scale Quantum Circuit Simulation on an Exascale System for QPU Benchmarking, Jülich/Quantinuum collaboration, April 2026). Determine whether this constitutes independent corroboration of Helios fidelity (coherent performance to 93 qubits, 12,834 two-qubit gates on JUPITER exascale supercomputer). If so, add it as a corroborating source to arch-trapped-ion alongside the existing Ransford et al. Nature 655 primary source. Do not raise the evidence level — E4 is already correct on the peer-reviewed primary. Note whether this is a preprint or published paper and record accordingly.
-
 ## Assess arXiv:2607.24937 (prethermal Floquet dynamics, Quantinuum H2/Helios, July 2026) for new item or update
 agent: scout
 added: 2026-08-17
