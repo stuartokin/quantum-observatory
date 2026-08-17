@@ -103,3 +103,45 @@ source: issue #93 (closed)
     checked and leave the board unchanged. Two scout runs have already searched for
     QB-DMRG specifically and found nothing; search for the hardware experiment
     rather than the method name.
+
+## Find Communications Physics Rydberg microwave electrometry ML-PCA paper (Aug 2026)
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find the Communications Physics paper on Rydberg microwave electrometry with a machine-learning PCA framework that appears in the August 2026 recent articles listing. Identify authors, publication date and DOI. If it is a new peer-reviewed result rather than a restatement of earlier work (e.g. NComms 2022 Rydberg+deep learning), add a news item under sense-rf-rydberg.
+
+## Evaluate Weizmann PRX 7 033021 Peleg et al. — experimental or theoretical?
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: determine whether PRX Quantum 7, 033021 (Peleg et al., Weizmann, Aug 2026, 'Fast Design and Scaling of Multiqubit Gates in Large-Scale Trapped-Ion Quantum Computers') reports an experimental result or a theoretical/algorithmic advance. If experimental, add under arch-trapped-ion at E4; if theoretical only, record as E1 and note the paper as a corroborating source on enable-compilers.
+
+## Check for Microsoft Majorana 2 preprint on arXiv (Aug 2026)
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: check whether a preprint for Microsoft Majorana 2 exists on arXiv or elsewhere as of August 2026. If it does, note its claims in the arch-topological source list as a corroborating vendor preprint (E2 ceiling) and record the revised 2029 roadmap date in the metrics. Do not raise the evidence level or readiness. If no preprint exists, note the Build 2026 announcement and leave evidence unchanged.
+
+## Find Eaton AFRL $7M quantum-classical power-grid contract primary source
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find the primary source for Eaton's $7 million AFRL contract for hybrid quantum-classical multi-threat power-grid resilience, reported in week ending 8 August 2026 by The Qubit Report. If an AFRL award announcement or Eaton press release exists, add a news item under quantum-sensing-grid. If only a secondary source exists, mark it single-source and note that.
+
+## Find D-Wave Nasdaq Verafin quantum-hybrid financial crime detection primary source
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find the primary source for the D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection collaboration reported in August 2026. Determine whether this is a named pilot with a defined problem, or a general partnership announcement. If the former, add a news item under applications; if the latter, reject.
+
+## Find Israel Project Nexus quantum computing procurement primary source
+agent: scout
+added: 2026-08-17
+source: issue #105
+
+    /focus scout: find the primary source for Israel's Project Nexus quantum computing procurement tender, reported in the week ending 8 August 2026. If an official Israeli government or innovation authority source exists, add a news item under arch-superconducting or arch-trapped-ion as appropriate to the hardware type specified.

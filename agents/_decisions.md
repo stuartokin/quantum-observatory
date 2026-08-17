@@ -226,3 +226,20 @@ arXiv:2204.11890 as a preprint when Phys. Rev. A 106, 032428 (2022) exists.*
 ---
 
 ## Proposed, awaiting a person
+
+## Proposed by the steward, 2026-08-17
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A conference abstract or preprint submission announcement is E2 at most. It is an announcement of work, not the work. Cite the paper when it appears, and rate it by its venue.**
+
+An abstract describes what a paper will claim; it has not been checked, reviewed, or peer-assessed. E3 requires at minimum a credible lab demonstration or preprint with full methods.
+
+*Proposed 2026-08-17, after Considering whether to rate the Weizmann PRX 7 033021 paper based on a round-up mention before the paper was opened. Not yet confirmed by a person.*
+
+**When a reviewer agent corrects a metric and the corrected file is discarded for YAML errors, the steward applies the same correction to the live file on the next pass. The correction is still downward and still needs no permission.**
+
+A YAML discard does not invalidate the underlying finding. The correction is settled; failing to apply it because the vehicle failed is an error of omission.
+
+*Proposed 2026-08-17, after pqc-additional-signatures-r3 family count correction was identified in PR #106 but the file was discarded; the correction was not applied to the scout-written live file. Not yet confirmed by a person.*
