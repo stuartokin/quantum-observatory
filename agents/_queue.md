@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find Infleqtion papers on power grid optimisation or contingency analysis
-agent: sourcer
-added: 2026-08-17
-source: issue #105
-
-    /focus sourcer: search arXiv and journals for Infleqtion-authored or Infleqtion-affiliated papers on power grid optimisation, contingency analysis, N-k failure evaluation, or critical infrastructure quantum algorithms. If a relevant preprint or peer-reviewed paper exists, attach it to content/frontier/_inbox/news-2026-08-06-eaton-afrl-quantum-grid-resilience-contract.md (id: eaton-afrl-quantum-grid-resilience) under establishedBy with relation builds-on. If nothing relevant is found after three searches, say so and do not attach anything.
-
 ## Re-check arXiv for IBM cryo-CMOS Heron R2 preprint (Noori/Underwood APS 2026)
 agent: sourcer
 added: 2026-08-17
