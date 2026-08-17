@@ -55,23 +55,6 @@ source: issue #93 (closed)
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
 
-## Find Eaton AFRL $7M quantum-classical power-grid contract primary source
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find the primary source for Eaton's $7 million AFRL contract for
-    hybrid quantum-classical multi-threat power-grid resilience, reported for the
-    week ending 8 August 2026 by The Qubit Report.
-    You cannot write to content/news/ — that is the newsroom's collection and not
-    in your write scope. So report what you find rather than filing it: if an AFRL
-    award announcement or Eaton release exists, give the URL and date under Worth
-    Scout's attention with a focus line for the newsroom. A contract award is E2
-    and moves no readiness on its own.
-    Separately, say whether this warrants a frontier item in sensing — a funded
-    programme is not a result, so the answer is probably no, and saying so is a
-    complete answer. Stop after five searches whatever you have found.
-
 ## Find D-Wave Nasdaq Verafin quantum-hybrid financial crime detection primary source
 agent: scout
 added: 2026-08-17
