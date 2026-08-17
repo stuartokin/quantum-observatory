@@ -55,22 +55,6 @@ source: issue #93 (closed)
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
 
-## Find D-Wave Nasdaq Verafin quantum-hybrid financial crime detection primary source
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find the primary source for the D-Wave and Nasdaq Verafin
-    quantum-hybrid financial crime detection collaboration reported in August 2026.
-    Determine whether it is a named pilot with a defined problem or a general
-    partnership announcement — that distinction decides whether it belongs on the
-    board at all.
-    If it is a general partnership, reject it and say so; that is the likely answer
-    and a complete one. If it is a named pilot, you still cannot write to
-    content/news/ — report it under Worth Scout's attention with a focus line for
-    the newsroom, and say separately whether it warrants a frontier item in
-    applications. Stop after five searches.
-
 ## Find Israel Project Nexus quantum computing procurement primary source
 agent: scout
 added: 2026-08-17
