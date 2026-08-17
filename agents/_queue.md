@@ -55,24 +55,6 @@ source: issue #93 (closed)
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
 
-## Find a citable source for the IBM 100-qubit chemistry result of April 2026
-agent: scout
-added: 2026-08-16
-source: issue #93 (closed)
-
-    /focus scout: the IBM newsroom post of 16 April 2026 describes Algorithmiq, IBM
-    and Cleveland Clinic running ground- and excited-state chemistry circuits on up
-    to 100 qubits of IBM hardware. That post is E2 and cannot carry an item on its
-    own.
-    
-    Search for a preprint or peer-reviewed paper behind it. If one exists, assess
-    whether it raises app-pdt-qb-dmrg above its current E2 ceiling — that raise
-    needs human sign-off, so report it rather than applying it — or whether it
-    warrants a separate item. If only the newsroom post exists, record the date
-    checked and leave the board unchanged. Two scout runs have already searched for
-    QB-DMRG specifically and found nothing; search for the hardware experiment
-    rather than the method name.
-
 ## Find Communications Physics Rydberg microwave electrometry ML-PCA paper (Aug 2026)
 agent: scout
 added: 2026-08-17
