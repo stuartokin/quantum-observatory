@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Update app-nqac-nuclear-reactor-optimization with QCR July 2026 source
-agent: sourcer
-added: 2026-08-17
-source: issue #117
-
-    /focus sourcer: check whether app-nqac-nuclear-reactor-optimization should be updated to add the QCR July 2026 report (https://quantumcomputingreport.com/infleqtion-to-deploy-fault-tolerant-neutral-atom-quantum-computer-at-illinois-quantum-park/) as a corroborating source. The QCR report names Q-FLO fuel loading as a specific focus area and names Dhirpal Shah as the researcher. Evidence level and readiness remain E2 and emerging — this is a source metadata update only, not an evidence level change. Add the source if it sharpens the claim text.
+_Nothing queued._

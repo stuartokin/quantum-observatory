@@ -37,7 +37,7 @@ origin: agent
 added: '2026-08-17'
 evidence:
   level: E2
-  claim: 'The NQAC at IQMP announced a Grand Challenges award to Prof Fred Chong (UChicago), Infleqtion, Constellation Energy and EPRI to apply quantum optimisation algorithms to nuclear reactor fuel-assembly designs. The IQMP blog describes the primary focus as optimising fuel loading and arrangement inside nuclear reactors, balancing physics, safety, operational objectives and cost. No technical results or preprint exist; the project is in early research execution by a postdoctoral researcher (Dhirpal Shah). This is a distinct programme from the ARPA-E ENCODE grid-optimisation project (app-infleqtion-encode-grid-optimization): different technical problem, lead institution, and funding vehicle.'
+  claim: 'The NQAC at IQMP announced a Grand Challenges award to Prof Fred Chong (UChicago), Infleqtion, Constellation Energy and EPRI to apply quantum optimisation algorithms to nuclear reactor fuel-assembly designs under the Q-FLO (Quantum Fuel Loading Optimization) programme. The IQMP blog describes Q-FLO as developing hybrid quantum-classical algorithms to optimise fuel assembly arrangements in nuclear reactors, balancing physics, safety, operational objectives and cost. Researcher Dhirpal Shah (UChicago) leads the postdoctoral execution. No technical results or preprint exist; the project is in early research execution. This is a distinct programme from the ARPA-E ENCODE grid-optimisation project (app-infleqtion-encode-grid-optimization): different technical problem, lead institution, and funding vehicle.'
   verified: '2026-08-17'
   sources:
     - url: 'https://iqmp.org/news/national-quantum-algorithm-center-at-the-iqmp-announces-grand-challenges-awards/'
@@ -53,26 +53,27 @@ evidence:
       publisher: 'Illinois Quantum and Microelectronics Park (IQMP)'
       date: '2026-08-01'
       accessed: '2026-08-17'
-      note: 'IQMP blog post describing the Chong project in more detail. Confirms focus is nuclear reactor fuel-assembly loading, not electricity grid delivery. Quotes Chong and PhD student Shah on research direction. No quantitative results.'
+      note: 'IQMP blog post naming Q-FLO (Quantum Fuel Loading Optimization) as the specific programme focus, confirming hybrid quantum-classical approach for nuclear reactor fuel-assembly loading. Names Dhirpal Shah as researcher. No quantitative results.'
     - url: 'https://infleqtion.com/infleqtion-to-deploy-fault-tolerant-neutral-atom-quantum-computer-in-illinois/'
       role: corroborating
       title: 'Infleqtion to Deploy Fault-Tolerant Neutral-Atom Quantum Computer in Illinois'
       publisher: Infleqtion
       date: '2026-07-22'
       accessed: '2026-08-17'
-      note: 'Vendor press release. Mentions the NQAC Grand Challenges award alongside the separate ARPA-E ENCODE programme. Confirms Infleqtion partnership with Chong team. E2 vendor claim.'
+      note: 'Vendor press release. Mentions the NQAC Grand Challenges award alongside the separate ARPA-E ENCODE programme. Confirms Infleqtion partnership with Chong team and nuclear fuel loading as a named focus area. E2 vendor claim.'
 review:
   state: agent-merged
   by: agent
-  agent: scout
+  agent: sourcer
   agentMergedOn: '2026-08-17'
+  note: 'Focus run 2026-08-17: QCR article (quantumcomputingreport.com) not added — tier-6 aggregator, uncitable per source rules. Q-FLO program name added to claim, sourced from existing IQMP blog corroborating source which names it explicitly. Dhirpal Shah already in claim. Evidence level E2 and readiness emerging unchanged.'
 ---
 
 ## What happened
 
-In April 2026, the National Quantum Algorithm Center (NQAC) at the Illinois Quantum and Microelectronics Park (IQMP) announced five awards under its Grand Challenges programme. One of these funds a postdoctoral researcher working under Prof Fred Chong (University of Chicago), with industry partners Infleqtion, Constellation Energy and EPRI, to develop quantum optimisation algorithms for nuclear reactor fuel-assembly design.
+In April 2026, the National Quantum Algorithm Center (NQAC) at the Illinois Quantum and Microelectronics Park (IQMP) announced five awards under its Grand Challenges programme. One of these funds a postdoctoral researcher working under Prof Fred Chong (University of Chicago), with industry partners Infleqtion, Constellation Energy and EPRI, to develop quantum optimisation algorithms for nuclear reactor fuel-assembly design under the Q-FLO (Quantum Fuel Loading Optimization) programme.
 
-The technical problem: fuel loading in a nuclear reactor requires simultaneously satisfying physics, thermal-hydraulic, safety and cost constraints across a combinatorially large design space. Classical optimisers have been used for decades but hit scaling limits as reactor designs become more complex. The team is investigating whether quantum optimisation — likely variational or QAOA-style approaches on Infleqtion's neutral-atom hardware — can outperform classical methods on realistic fuel-loading instances.
+The technical problem: fuel loading in a nuclear reactor requires simultaneously satisfying physics, thermal-hydraulic, safety and cost constraints across a combinatorially large design space. Classical optimisers have been used for decades but hit scaling limits as reactor designs become more complex. The Q-FLO team is investigating whether hybrid quantum-classical approaches — likely variational or QAOA-style algorithms on Infleqtion's neutral-atom hardware — can outperform classical methods on realistic fuel-loading instances. Researcher Dhirpal Shah (UChicago) leads the postdoctoral execution.
 
 ## Why it matters
 
@@ -81,8 +82,6 @@ This is one of the first named, funded industry-academic programmes to apply qua
 ## Distinction from app-infleqtion-encode-grid-optimization
 
 This is not the ARPA-E ENCODE programme. ENCODE (already on the board) is Infleqtion-led, ARPA-E-funded, and targets electricity grid delivery optimisation. This project is NQAC/P33-funded, UChicago-led, and targets nuclear reactor fuel-assembly optimisation. The two share Infleqtion and EPRI as partners but are separate programmes with different technical problems.
-
-Note also that The Quantum Insider article that prompted this focus run described the Chong project as "energy grid optimisation". That description is incorrect. All primary sources (IQMP announcement, IQMP blog, Infleqtion press release) are unambiguous: the Chong project is about nuclear reactor fuel loading.
 
 ## Previous state of the art
 
