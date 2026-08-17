@@ -74,18 +74,50 @@ agent: scout
 added: 2026-08-17
 source: issue #105
 
-    /focus scout: find the primary source for Eaton's $7 million AFRL contract for hybrid quantum-classical multi-threat power-grid resilience, reported in week ending 8 August 2026 by The Qubit Report. If an AFRL award announcement or Eaton press release exists, add a news item under quantum-sensing-grid. If only a secondary source exists, mark it single-source and note that.
+    /focus scout: find the primary source for Eaton's $7 million AFRL contract for
+    hybrid quantum-classical multi-threat power-grid resilience, reported for the
+    week ending 8 August 2026 by The Qubit Report.
+
+    You cannot write to content/news/ — that is the newsroom's collection and not
+    in your write scope. So report what you find rather than filing it: if an AFRL
+    award announcement or Eaton release exists, give the URL and date under Worth
+    Scout's attention with a focus line for the newsroom. A contract award is E2
+    and moves no readiness on its own.
+
+    Separately, say whether this warrants a frontier item in sensing — a funded
+    programme is not a result, so the answer is probably no, and saying so is a
+    complete answer. Stop after five searches whatever you have found.
 
 ## Find D-Wave Nasdaq Verafin quantum-hybrid financial crime detection primary source
 agent: scout
 added: 2026-08-17
 source: issue #105
 
-    /focus scout: find the primary source for the D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection collaboration reported in August 2026. Determine whether this is a named pilot with a defined problem, or a general partnership announcement. If the former, add a news item under applications; if the latter, reject.
+    /focus scout: find the primary source for the D-Wave and Nasdaq Verafin
+    quantum-hybrid financial crime detection collaboration reported in August 2026.
+    Determine whether it is a named pilot with a defined problem or a general
+    partnership announcement — that distinction decides whether it belongs on the
+    board at all.
+
+    If it is a general partnership, reject it and say so; that is the likely answer
+    and a complete one. If it is a named pilot, you still cannot write to
+    content/news/ — report it under Worth Scout's attention with a focus line for
+    the newsroom, and say separately whether it warrants a frontier item in
+    applications. Stop after five searches.
 
 ## Find Israel Project Nexus quantum computing procurement primary source
 agent: scout
 added: 2026-08-17
 source: issue #105
 
-    /focus scout: find the primary source for Israel's Project Nexus quantum computing procurement tender, reported in the week ending 8 August 2026. If an official Israeli government or innovation authority source exists, add a news item under arch-superconducting or arch-trapped-ion as appropriate to the hardware type specified.
+    /focus scout: find the primary source for Israel's Project Nexus quantum
+    computing procurement tender, reported for the week ending 8 August 2026 — an
+    official Israeli government or innovation authority publication, not a trade
+    report.
+
+    You cannot write to content/news/. Report what you find under Worth Scout's
+    attention with a focus line for the newsroom, and note which hardware type the
+    tender specifies, since that is the part that bears on the board. A procurement
+    tender is E2 and evidences intent, not capability: it does not move
+    arch-superconducting or arch-trapped-ion. Stop after five searches; if no
+    official source is reachable, say so and add nothing.
