@@ -35,4 +35,9 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Assess arXiv:2607.25998 (Barron et al., IBM/Algorithmiq, dual-verification framework) for standalone item
+agent: sourcer
+added: 2026-08-17
+source: issue #121
+
+    /focus sourcer: review arXiv:2607.25998 (Barron, Mitchell, Filippov, Kandala et al., IBM/Algorithmiq, 'Observable Estimation in the Absence of Classical Verification', July 2026). This paper is currently listed as a corroborating source in app-quantum-materials-advantage. The scout (PR #127) flagged it as potentially warranting a standalone enabling or algorithms item on error-mitigation verification methodology — specifically whether the dual-verification framework for error-mitigated quantum expectation values without classical verification is a distinct methodological contribution from QESEM. If it warrants its own item, propose one at E3 (preprint). If not, confirm it is correctly placed as corroboration in app-quantum-materials-advantage and do not duplicate. Do not duplicate app-floquet-prethermalization-qesem.
