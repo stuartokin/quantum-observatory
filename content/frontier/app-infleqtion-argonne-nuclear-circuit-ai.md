@@ -11,6 +11,8 @@ cluster: nuclear-physics
 actors:
   - Argonne National Laboratory
   - Infleqtion
+  - Northwestern University
+  - Dakota State University
 metrics:
   - name: phase
     value: 'Phase I'
@@ -40,7 +42,7 @@ confidence: low
 evidence:
   level: E2
   verified: '2026-08-17'
-  claim: 'Argonne National Laboratory and Infleqtion were awarded a DOE Genesis Mission Phase I project to develop an AI agent using reinforcement learning to automate quantum circuit design for nuclear structure and scattering problems. The agent will explore encoding schemes, algorithmic strategies, and hardware configurations, evaluating circuits against gate count, circuit depth, and expected accuracy. Infleqtion contributes its Superstaq compilation platform. No experimental output or preprint exists; this describes the planned Phase I framework. The Argonne project page (anl.gov) is the primary technical description available.'
+  claim: 'Argonne National Laboratory and Infleqtion were awarded a DOE Genesis Mission Phase I project to develop an AI agent using reinforcement learning to automate quantum circuit design for nuclear structure and scattering problems. Lead PI is Dr. Anna McCoy (Argonne); partners include Infleqtion, Northwestern University, and Dakota State University (Dr. Peng Guo). The agent will explore encoding schemes, algorithmic strategies, and hardware configurations, evaluating circuits against gate count, circuit depth, and expected accuracy. Infleqtion contributes its Superstaq compilation platform. No experimental output or preprint exists as of 2026-08-17; this describes the planned Phase I framework. The Argonne project page (anl.gov) is the primary technical description available.'
   sources:
     - url: 'https://www.anl.gov/genesis-mission/projects/ai-enabled-optimization-of-quantum-circuit-design-for-realistic-nuclear-problems'
       role: vendor
@@ -48,7 +50,7 @@ evidence:
       publisher: Argonne National Laboratory
       date: '2026-07-22'
       accessed: '2026-08-17'
-      note: 'National laboratory project page describing the Phase I scope, methodology and goals. Programme description, not an experimental result. Treated as E2: authoritative programme statement, no measured output.'
+      note: 'National laboratory project page describing the Phase I scope, methodology and goals. Programme description, not an experimental result. Treated as E2: authoritative programme statement, no measured output. Lead PI Dr. Anna McCoy named; partners Infleqtion, Northwestern University, Dakota State University confirmed.'
     - url: 'https://ir.infleqtion.com/news-events/press-releases/detail/196/infleqtion-secures-three-genesis-mission-projects-from-u-s-department-of-energy'
       role: vendor
       title: 'Infleqtion Secures Three Genesis Mission Projects from U.S. Department of Energy'
@@ -60,13 +62,14 @@ status: draft
 review:
   state: agent-merged
   by: agent
-  agent: scout
+  agent: sourcer
   agentMergedOn: '2026-08-17'
+  note: 'Focus run 2026-08-17: searched arXiv quant-ph and nucl-th August 2026 listings and targeted author/project searches; no preprint found. Project announced July 22, 2026; Phase I framework work. Additional partners confirmed: Northwestern University and Dakota State University (Dr. Peng Guo joined ~August 13, 2026). Lead PI confirmed as Dr. Anna McCoy. Actors field updated. Verified date advanced. E2 and readiness emerging unchanged.'
 ---
 
 ## What happened
 
-On 22 July 2026, Infleqtion announced three DOE Genesis Mission Phase I awards. One is a collaboration with Argonne National Laboratory to build an AI agent that automates quantum circuit design for nuclear physics. The Argonne project page describes the technical scope: the agent will use reinforcement learning to navigate the space of encoding schemes, algorithmic strategies, and hardware configurations, evaluating outputs against gate count, circuit depth, and accuracy. Infleqtion contributes its Superstaq compilation platform. Phase I focuses on nuclear structure and scattering problems.
+On 22 July 2026, Infleqtion announced three DOE Genesis Mission Phase I awards. One is a collaboration with Argonne National Laboratory to build an AI agent that automates quantum circuit design for nuclear physics. The Argonne project page describes the technical scope: the agent will use reinforcement learning to navigate the space of encoding schemes, algorithmic strategies, and hardware configurations, evaluating outputs against gate count, circuit depth, and accuracy. Infleqtion contributes its Superstaq compilation platform. Phase I focuses on nuclear structure and scattering problems. Lead PI is Dr. Anna McCoy (Argonne); confirmed partners include Infleqtion, Northwestern University, and Dakota State University.
 
 ## Why it matters
 
