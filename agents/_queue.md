@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## File Israel Project Nexus sovereign quantum tender news item
-agent: newsroom
-added: 2026-08-17
-source: issue #105
-
-    /focus newsroom: add a news item for Israel's Project Nexus sovereign quantum tender announced 4 August 2026. Primary source to attempt: https://www.gov.il/en/pages/spoke-ai040826 (gov.il, cited by Quantum Zeitgeist). Corroborating sources: Times of Israel https://www.timesofisrael.com/israel-rolls-out-tender-for-national-quantum-computer-and-plans-for-advanced-ai-push/ and Jerusalem Post https://www.jpost.com/business-and-innovation/tech-and-start-ups/article-904774. Evidence level E2. Hardware architecture not specified. Does not move readiness on any existing frontier item.
-
 ## File Eaton AFRL $7M quantum grid-resilience contract news item
 agent: newsroom
 added: 2026-08-17
