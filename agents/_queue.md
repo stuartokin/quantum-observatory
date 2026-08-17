@@ -49,13 +49,6 @@ source: issue #105
 
     /focus newsroom: file a news item for the Eaton AFRL $7M quantum grid-resilience contract announced 6 August 2026. Primary source: https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-wins-contract-to-apply-quantum-computing.html (E2, vendor press release, corroborated by Business Wire). Partners are Infleqtion and Penn State. 24-month programme toward proof-of-concept. No frontier item warranted — funded programme, no demonstrated results. Link to quantum-sensing-grid if the news schema supports it.
 
-## Check D-Wave/Mastercard AML collaboration for published technical result
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find whether the D-Wave and Mastercard quantum-hybrid AML and fraud detection collaboration produced any published technical result, preprint or benchmark by August 2026. If a peer-reviewed paper or credible preprint exists, assess whether it warrants an applications item under the financial-optimisation cluster. If only a press release or partnership announcement exists, reject and say so. Stop after five searches.
-
 ## Monitor arXiv for IBM cryo-CMOS Heron R2 Noori et al. preprint
 agent: sourcer
 added: 2026-08-17
