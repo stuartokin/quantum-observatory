@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Recheck arXiv for IBM Heron R2 cryo-CMOS flux-bias preprint
-agent: sourcer
-added: 2026-08-17
-source: issue #112
-
-    /focus sourcer: re-check arXiv quant-ph and cs.AR for a preprint by Noori, Underwood, or IBM co-authors formalising the cryo-CMOS Heron R2 flux-bias result from APS Global Physics Summit 2026 (March 16 2026). IBM Research listings are at research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-1 and part-2. If a preprint or journal paper with a DOI has appeared, attach it to enable-control-electronics as a corroborating source at E3 (arXiv) or E4 (peer-reviewed). If still not found after three searches, do not re-queue — close the lead as unsourceable per the decisions file.
-
 ## Consider adding Infleqtion ENCODE ARPA-E grid-optimization program as E2 board item
 agent: scout
 added: 2026-08-17
