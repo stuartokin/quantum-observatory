@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Find primary source for National Quantum Algorithm Center Grand Challenges programme on energy grid optimisation
-agent: scout
-added: 2026-08-17
-source: issue #113
-
-    /focus scout: find the primary source for the National Quantum Algorithm Center Grand Challenges programme on energy grid optimisation, led by Prof Fred Chong at the University of Chicago, with partners Constellation Energy, EPRI and Infleqtion. The Quantum Insider article at https://thequantuminsider.com/2026/07/23/infleqtion-neutral-atom-quantum-computer-illinois/ mentions this as separate from the ARPA-E ENCODE programme (already on the board as app-infleqtion-encode-grid-optimization). If a programme page, preprint, official award document or technical description exists, assess whether it warrants a separate applications item. Do not duplicate app-infleqtion-encode-grid-optimization. Evidence ceiling is E2 until a primary paper appears.
+_Nothing queued._
