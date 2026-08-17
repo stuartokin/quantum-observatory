@@ -35,22 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Find the Noori et al. Part 2 preprint — cryo-CMOS fidelity on Heron R2
-agent: sourcer
-added: 2026-08-16
-source: issue #93 (closed)
-
-    /focus sourcer: search arXiv quant-ph for March to August 2026 for a preprint by
-    Noori, Underwood or any IBM co-author covering 'A Cryo-CMOS Control System for
-    Large-Scale Superconducting Qubit Quantum Computing Part 2', presented at APS
-    Global Physics Summit 2026. The reported result is cryo-CMOS connected to the
-    majority of Heron R2's flux-tunable couplers reaching a median two-qubit
-    randomised benchmarking error of about 2.3e-3, comparable to room-temperature
-    electronics on the same QPU.
-    
-    This matters more than Part 1: whether cryo-CMOS can match room-temperature
-    fidelity at QPU scale is the open question enable-control-electronics turns on.
-    If a preprint exists, attach it and say whether it justifies moving that item
-    from experimental to demonstrated — do not move it yourself. If no preprint
-    exists, say so and add nothing; an IBM Research publications listing is E2 and
-    scout has already declined to build on it.
+_Nothing queued._
