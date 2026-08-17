@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Search arXiv for Fred Chong / Dhirpal Shah nuclear reactor fuel-assembly quantum optimisation preprint
-agent: scout
-added: 2026-08-17
-source: issue #116
-
-    /focus scout: search arXiv quant-ph for any preprint from Fred Chong or Dhirpal Shah at University of Chicago on quantum optimisation for nuclear reactor fuel-assembly loading, submitted after April 2026. If found, report the arXiv ID and attach to app-nqac-nuclear-reactor-optimization and raise evidence level accordingly. If not found, confirm E2 ceiling holds and mark the lead as unsourceable until a new identifier appears.
-
 ## Check arXiv for preprints from three remaining NQAC 2026 Grand Challenges projects not yet on the board
 agent: scout
 added: 2026-08-17
