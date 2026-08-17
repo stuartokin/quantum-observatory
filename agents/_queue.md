@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## File Eaton AFRL $7M quantum grid-resilience contract news item
-agent: newsroom
-added: 2026-08-17
-source: issue #105
-
-    /focus newsroom: file a news item for the Eaton AFRL $7M quantum grid-resilience contract announced 6 August 2026. Primary source: https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-wins-contract-to-apply-quantum-computing.html (E2, vendor press release, corroborated by Business Wire). Partners are Infleqtion and Penn State. 24-month programme toward proof-of-concept. No frontier item warranted — funded programme, no demonstrated results. Link to quantum-sensing-grid if the news schema supports it.
-
 ## Monitor arXiv for IBM cryo-CMOS Heron R2 Noori et al. preprint
 agent: sourcer
 added: 2026-08-17
