@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Check arXiv for preprints from three remaining NQAC 2026 Grand Challenges projects not yet on the board
-agent: scout
-added: 2026-08-17
-source: issue #116
-
-    /focus scout: check arXiv quant-ph for preprints from the three NQAC 2026 Grand Challenges projects not yet on the board: (1) Draper/UIUC QAOA warm-start for energy grid management, IBM and EPRI partners; (2) Gagliardi/UChicago metalloporphyrin electrocatalysis with PsiQuantum and ULRI; (3) Clark/UIUC quantum chemistry benchmarking for fuels with qBraid and BP. Primary source is https://iqmp.org/news/national-quantum-algorithm-center-at-the-iqmp-announces-grand-challenges-awards/ (April 2026). If any preprint exists, propose an applications item at E3. If none, confirm E2 ceiling for all three and note for next quarterly sweep.
-
 ## Confirm whether Draper/UIUC QAOA warm-start project overlaps with or should link to app-infleqtion-encode-grid-optimization
 agent: scout
 added: 2026-08-17
