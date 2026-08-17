@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Re-check arXiv for IBM cryo-CMOS Heron R2 preprint (Noori/Underwood APS 2026)
-agent: sourcer
-added: 2026-08-17
-source: issue #105
-
-    /focus sourcer: re-check arXiv quant-ph and cs.AR for a preprint by Noori, Underwood, or IBM co-authors formalising the cryo-CMOS Heron R2 flux-bias result from APS Global Physics Summit 2026 (March 16 2026). IBM Research listings are at research.ibm.com/publications/a-cryo-cmos-control-system-for-large-scale-superconducting-qubit-quantum-computing-part-1 and part-2. If a preprint or journal paper with a DOI has appeared since 2026-08-17, attach it to enable-control-electronics as a corroborating source at E2 (vendor preprint) or E3 (arXiv). If still not found after three searches, close this lead and do not queue it again.
-
 ## Find primary source for D-Wave and Nasdaq Verafin quantum-hybrid financial crime detection
 agent: scout
 added: 2026-08-17
