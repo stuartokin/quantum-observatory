@@ -276,3 +276,14 @@ into the sections above once you have read them — or delete them if wrong.
 The aggregator cannot be cited, but its discovery value — pointing to a detail in an existing citable source — should not be lost. The sourcer demonstrated the correct pattern on app-nqac-nuclear-reactor-optimization.
 
 *Proposed 2026-08-17, after sourcer run on app-nqac-nuclear-reactor-optimization: QCR named Q-FLO but could not be cited; the name was present in the IQMP blog already in the file and was added to the claim from that source.. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-17
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A self-described whitepaper on arXiv with co-authors outside the sponsoring institution, a DOI, and independent citations is E3, not E2. The label the authors chose does not override the venue and substance test. E2 is for a document that exists to make a case for its publisher — a vendor blog, a roadmap, a marketing paper — not for a technical preprint that happens to call itself a whitepaper.**
+
+The 2026-08-16 precedent covers this explicitly; the 'unsettled' flags in algo-shor and algo-resource-estimation review notes for Babbush et al. arXiv:2603.28846 are stale. Recording here so future agents do not re-escalate.
+
+*Proposed 2026-08-17, after algo-shor and algo-resource-estimation both flagged arXiv:2603.28846 as E2 vs E3 unsettled after the 2026-08-16 whitepaper precedent was written; the precedent was not being applied to close the flag. Not yet confirmed by a person.*
