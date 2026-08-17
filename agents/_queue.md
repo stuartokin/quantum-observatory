@@ -35,21 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Assess arXiv:2603.19912 — active-learning photosensitizer screening
-agent: scout
-added: 2026-08-16
-source: issue #93 (closed)
-
-    /focus scout: evaluate arXiv:2603.19912 (Fallani, Haase et al., Algorithmiq,
-    March 2026) on data-efficient active-learning discovery of transition-metal
-    photosensitizers for Type I photodynamic therapy.
-    
-    Establish first whether this is a quantum result at all or a machine-learning
-    screening method with quantum-adjacent framing — that distinction decides
-    whether it belongs on this board. If it is a genuine application demonstration,
-    propose an item and say which constellation. If it is a methodology paper with
-    no quantum computation, record that plainly and add nothing.
-
 ## Assess arXiv:2512.15889 — fault-tolerant algorithms for PDT photoreactivity
 agent: scout
 added: 2026-08-16
