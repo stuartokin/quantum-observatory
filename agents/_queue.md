@@ -55,13 +55,6 @@ source: issue #93 (closed)
     exists, say so and add nothing; an IBM Research publications listing is E2 and
     scout has already declined to build on it.
 
-## Find Communications Physics Rydberg microwave electrometry ML-PCA paper (Aug 2026)
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find the Communications Physics paper on Rydberg microwave electrometry with a machine-learning PCA framework that appears in the August 2026 recent articles listing. Identify authors, publication date and DOI. If it is a new peer-reviewed result rather than a restatement of earlier work (e.g. NComms 2022 Rydberg+deep learning), add a news item under sense-rf-rydberg.
-
 ## Evaluate Weizmann PRX 7 033021 Peleg et al. — experimental or theoretical?
 agent: scout
 added: 2026-08-17
