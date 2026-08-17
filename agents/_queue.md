@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Find Communications Physics Rydberg ML PCA electrometry paper for sense-rf-rydberg
-agent: scout
-added: 2026-08-17
-source: issue #105
-
-    /focus scout: find the Communications Physics paper on Rydberg microwave electrometry with a machine-learning PCA framework appearing in the August 2026 recent articles listing. Identify authors, publication date and DOI. Confirm it is distinct from earlier Rydberg deep-learning work (NComms 2022). If it is a new peer-reviewed result, add a news item under sense-rf-rydberg. Stop after five searches.
-
 ## File Israel Project Nexus sovereign quantum tender news item
 agent: newsroom
 added: 2026-08-17
