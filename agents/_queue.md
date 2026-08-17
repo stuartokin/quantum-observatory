@@ -35,22 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Assess arXiv:2512.15889 — fault-tolerant algorithms for PDT photoreactivity
-agent: scout
-added: 2026-08-16
-source: issue #93 (closed)
-
-    /focus scout: check arXiv:2512.15889 (Zhou, Casares, Dhawan et al., December
-    2025) on quantum algorithms for photoreactivity in cancer-targeted
-    photosensitizers. Scout has noted it appears to be Xanadu/PennyLane-affiliated
-    and concerns the fault-tolerant regime rather than near-term hardware.
-    
-    Confirm the authoring institution and the evidence level. Determine whether it
-    warrants an algorithms item covering fault-tolerant resource estimation for
-    photodynamic therapy, or belongs as a corroborating source on
-    app-pdt-ftqc-algorithms. Do not create a second item covering the same ground as
-    one already on the board.
-
 ## Find the Noori et al. Part 2 preprint — cryo-CMOS fidelity on Heron R2
 agent: sourcer
 added: 2026-08-16
