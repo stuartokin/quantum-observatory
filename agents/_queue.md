@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Northwestern NQAC Grand Challenges compiler — assess for board entry
-agent: scout
-added: 2026-08-17
-source: issue #117
-
-    /focus scout: check arXiv and Northwestern McCormick Engineering pages for any preprint from Hardavellas and dos Reis (Northwestern) on a Hamiltonian simulation compiler for drug design and materials discovery, in collaboration with IBM and AbbVie under the NQAC Grand Challenges 2026 programme. Primary source is https://www.mccormick.northwestern.edu/news/articles/2026/04/hardavellas-and-dos-reis-named-awardees-of-nqac-quantum-grand-challenges-program/ If a preprint exists, propose an enabling or applications item at E3. If not, propose at E2 on the institutional announcement and note for Q4 2026 sweep.
-
 ## RWS-QAOA arXiv:2603.10191 — assess for algorithms board entry
 agent: scout
 added: 2026-08-17
