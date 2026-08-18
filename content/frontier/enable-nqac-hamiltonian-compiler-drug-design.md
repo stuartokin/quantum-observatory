@@ -59,11 +59,12 @@ status: draft
 origin: agent
 added: '2026-08-17'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: steward
   agentMergedOn: '2026-08-17'
-  note: 'Focus run. No preprint found on arXiv or DBLP as of 17 Aug 2026. Rated E2 per board decisions: institutional award announcement is not a technical document. Confidence low: this is a funded project with no results yet. Flag for Q4 2026 sweep once postdoc output is expected.'
+  reviewedOn: '2026-08-18'
+  note: 'State moved from agent-merged to agent-reviewed. Sources confirmed: three institutional announcements, all E2-consistent. No preprint found as of 2026-08-18. E2 correct: institutional award announcement, no technical output. Confidence low and emerging readiness correct. Flag for Q4 2026 sweep once postdoc output expected.'
 ---
 
 ## What happened

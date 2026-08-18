@@ -75,17 +75,18 @@ evidence:
       identifier: 'arXiv:2505.08424'
       doi: 10.48550/arXiv.2505.08424
       accessed: '2026-08-16'
-      note: 'Mayer, Weber, Music, Moran Guizan, Lang, Schwarzenbach, Dhieb, Kiliclar, Maiwald, Luo, Lerch, Zahn, Eisele, Pereira, Kutter. Fraunhofer EMFT Munich and Technical University of Munich. 200 mm wafer, CMOS-established subtractive processes. 99.7% JJ yield across >10,000 junctions; median T1 up to 100 µs; individual devices approaching 200 µs in long-term measurements (not the median). Preprint v3 updated 20 May 2025; not peer-reviewed as of 2026-08-16. Evidence ceiling E3 for this source; overall item remains E4 on the peer-reviewed imec Nature paper.'
+      note: 'Mayer et al.; Fraunhofer EMFT Munich and Technical University of Munich. 200 mm wafer, CMOS-established subtractive processes. 99.7% JJ yield across >10,000 junctions; median T1 up to 100 µs; individual devices approaching 200 µs in long-term measurements. Preprint v3 updated 20 May 2025; not peer-reviewed as of 2026-08-16. Evidence ceiling E3 for this source; overall item remains E4 on the peer-reviewed imec Nature paper.'
 confidence: high
 status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-16'
-  note: 'Added Fraunhofer EMFT arXiv:2505.08424 as corroborating source per focus instruction 2026-08-16. Metric correction: focus instruction stated >200 µs T1; preprint abstract specifies median T1 up to 100 µs with individual devices approaching 200 µs. Metric block updated to reflect both wafer sizes and both institutions. Evidence level remains E4 on primary imec Nature paper; the corroborating preprint is E3 on its own. Plain text and claim updated to reflect both results. Country updated to include DE.'
+  reviewedOn: '2026-08-18'
+  note: 'State moved from agent-merged to agent-reviewed. Primary source Nature 634, 74-79 (2024) confirmed via prior sourcer pass. Fraunhofer EMFT arXiv:2505.08424 added by sourcer on 2026-08-16 as corroborating source. E4 correct on the peer-reviewed imec Nature paper; corroborating preprint is E3 on its own. Country updated to include DE. No further corrections needed.'
 ---
 
 Superconducting transmon qubits manufactured in industrial foundry environments have now been demonstrated across two European institutions on different wafer sizes, establishing that CMOS-compatible fabrication of high-coherence superconducting qubits is reproducible rather than specific to one process or facility.

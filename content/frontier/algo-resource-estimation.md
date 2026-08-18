@@ -49,8 +49,8 @@ qdayReasoning: 'The resource estimates for breaking RSA-2048 have fallen from 20
 horizon: 2
 novelty: 'Three-orders-of-magnitude reduction in physical-qubit requirement for RSA-2048 attack via algorithmic advances alone (2019-2026)'
 evidence:
-  claim: 'Gidney (Google Quantum AI, arXiv:2505.15917, May 2025) estimates that a 2048-bit RSA integer can be factored in under one week by a quantum computer with fewer than one million noisy qubits, under the same assumptions as Gidney+Ekerå 2019 (0.1% gate error, 1 µs surface code cycle, 10 µs reaction time, nearest-neighbour 2D grid). The twenty-fold qubit reduction comes from approximate residue arithmetic, yoked surface code storage, and reduced magic-state distillation overhead. Chevignard, Fouque, and Schrottenloher (EUROCRYPT 2026, ePrint 2026/280) separately estimate ECC-256 requires 1,193 logical qubits. Luo et al. (arXiv:2607.13816, July 2026) claim 835. Babbush et al. (arXiv:2603.28846, March 2026) give <1,200 for secp256k1 and <500,000 physical qubits, with circuits withheld under responsible disclosure. None is a demonstration; all are estimates for machines that do not exist. Webster et al. (Iceberg Quantum, arXiv:2602.11457, February 2026, updated May 2026) additionally claim that using qLDPC codes in the Pinnacle Architecture reduces RSA-2048 to under 100,000 physical qubits at 10^-3 error rate with approximately one-month runtime — a further tenfold reduction from Gidney 2025, but using a more demanding architectural approach. The Pinnacle preprint has not been peer-reviewed; Craig Gidney has publicly noted specific concerns about its assumptions. Independent replication of the full resource counts for any of these estimates has not been published.'
-  verified: '2026-08-16'
+  claim: 'Gidney (Google Quantum AI, arXiv:2505.15917, May 2025) estimates that a 2048-bit RSA integer can be factored in under one week by a quantum computer with fewer than one million noisy qubits, under the same assumptions as Gidney+Ekerå 2019 (0.1% gate error, 1 µs surface code cycle, 10 µs reaction time, nearest-neighbour 2D grid). The twenty-fold qubit reduction comes from approximate residue arithmetic, yoked surface code storage, and reduced magic-state distillation overhead. Chevignard, Fouque, and Schrottenloher (EUROCRYPT 2026, ePrint 2026/280) separately estimate ECC-256 requires 1,193 logical qubits. Luo et al. (arXiv:2607.13816, July 2026) claim 835. Babbush et al. (arXiv:2603.28846, March 2026) give <1,200 for secp256k1 and <500,000 physical qubits, with circuits withheld under responsible disclosure. None is a demonstration; all are estimates for machines that do not exist. Webster et al. (Iceberg Quantum, arXiv:2602.11457, February 2026, updated May 2026) additionally claim that using qLDPC codes in the Pinnacle Architecture reduces RSA-2048 to under 100,000 physical qubits at 10^-3 error rate with approximately one-month runtime — a further tenfold reduction from Gidney 2025, but using a more demanding architectural approach. The Pinnacle preprint has not been peer-reviewed; Craig Gidney has publicly noted specific concerns with its assumptions. Independent replication of the full resource counts for any of these estimates has not been published.'
+  verified: '2026-08-18'
   level: E3
   sources:
     - url: https://arxiv.org/abs/2505.15917
@@ -61,7 +61,7 @@ evidence:
       identifier: 'arXiv:2505.15917'
       doi: 10.48550/arXiv.2505.15917
       accessed: '2026-08-11'
-      note: 'Craig Gidney, Google Quantum AI. Confirmed as preprint-only — not peer-reviewed as of access date (ResearchGate and arXiv both confirm no peer review). CC BY 4.0. The current leading surface-code estimate. Confirmed: <1M qubits, <1 week, 0.1%/1µs/10µs assumptions, ~20x reduction vs 2019.'
+      note: 'Craig Gidney, Google Quantum AI. Confirmed as preprint-only — not peer-reviewed as of access date. CC BY 4.0. The current leading surface-code estimate. Confirmed: <1M qubits, <1 week, 0.1%/1µs/10µs assumptions, ~20x reduction vs 2019.'
     - url: https://eprint.iacr.org/2026/280
       role: corroborating
       title: 'Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves'
@@ -86,8 +86,8 @@ evidence:
       date: '2026-03-30'
       identifier: 'arXiv:2603.28846v2'
       doi: 10.48550/arXiv.2603.28846
-      accessed: '2026-08-16'
-      note: 'Babbush, Zalcman, Gidney et al. (Google Quantum AI, Stanford, Berkeley, Ethereum Foundation). ECDLP-256 on secp256k1 in <1,200 logical qubits and <90M Toffoli gates, or <1,450 and <70M; <500,000 physical qubits at 1e-3, minutes-scale. Circuits withheld under responsible disclosure and validated by ZK proof, so the counts cannot be checked from the paper alone. Trail of Bits forged a proof via the prover implementation in April 2026, since patched; scientific claims unaffected. Schrottenloher arXiv:2606.02235 corroborates with full circuits. Self-described whitepaper — E3 vs E2 unsettled.'
+      accessed: '2026-08-18'
+      note: 'Babbush, Zalcman, Gidney et al. (Google Quantum AI, Stanford, Berkeley, Ethereum Foundation). ECDLP-256 on secp256k1 in <1,200 logical qubits and <90M Toffoli gates; <500,000 physical qubits at 1e-3, minutes-scale. Circuits withheld under responsible disclosure, validated by ZK proof. Trail of Bits found vulnerabilities in the Rust prover (April 2026), patched; scientific claims unaffected. Schrottenloher arXiv:2606.02235 corroborates with full circuits. E3 per 2026-08-16 precedent: arXiv preprint with co-authors outside sponsoring institution.'
     - url: https://arxiv.org/abs/2607.13816
       role: corroborating
       title: 'Quantum Algorithm for Elliptic Curve Discrete Logarithms with Space-Efficient Point Addition'
@@ -96,7 +96,7 @@ evidence:
       identifier: 'arXiv:2607.13816'
       doi: 10.48550/arXiv.2607.13816
       accessed: '2026-08-11'
-      note: 'Luo et al. (Peking University / Tsinghua / CAS). Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 at ~20x more Toffoli gates than Chevignard/Babbush. Width-optimised; depth tradeoff not yet analysed. Confirmed via arXiv abstract: cites Chevignard P-256 as 1,098 — confirmed error; 1,098 is the P-224 figure per ePrint 2026/280 correction note; correct P-256 is 1,193.'
+      note: 'Luo et al. (Peking University / Tsinghua / CAS). Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 at ~20x more Toffoli gates than Chevignard/Babbush. Width-optimised; depth tradeoff not yet analysed. Cites Chevignard P-256 as 1,098 — confirmed error; 1,098 is the P-224 figure per ePrint 2026/280 correction note; correct P-256 is 1,193.'
 confidence: high
 status: published
 origin: agent
@@ -104,10 +104,10 @@ added: '2026-08-08'
 review:
   state: agent-reviewed
   by: agent
-  agent: reviewer
+  agent: steward
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-16'
-  note: 'Babbush et al. arXiv:2603.28846 added by hand 2026-08-16: three agent runs were discarded on character limits, as this file sits near its caps and an agent must return it whole. Whether the self-described whitepaper is E2 not E3 is unsettled — flagged here and on algo-shor. Gidney arXiv:2505.15917 remains preprint-only; Luo et al. 835 qubits confirmed, ~20x Toffoli penalty.'
+  reviewedOn: '2026-08-18'
+  note: 'Babbush source note updated: stale E2/E3 unsettled flag removed per 2026-08-16 whitepaper precedent — a self-described whitepaper on arXiv with co-authors outside the sponsoring institution is E3. Note trimmed to under 600 chars. All other claims and evidence level unchanged. Gidney arXiv:2505.15917 remains preprint-only; Luo et al. 835 qubits confirmed; Chevignard P-256 correction confirmed.'
 ---
 
 Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.

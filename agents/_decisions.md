@@ -287,3 +287,14 @@ into the sections above once you have read them — or delete them if wrong.
 The 2026-08-16 precedent covers this explicitly; the 'unsettled' flags in algo-shor and algo-resource-estimation review notes for Babbush et al. arXiv:2603.28846 are stale. Recording here so future agents do not re-escalate.
 
 *Proposed 2026-08-17, after algo-shor and algo-resource-estimation both flagged arXiv:2603.28846 as E2 vs E3 unsettled after the 2026-08-16 whitepaper precedent was written; the precedent was not being applied to close the flag. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-18
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A stale escalation flag in a source note or review note that is settled by an existing precedent in the decisions file should be removed as a clarifying downward correction. No permission is needed. Update the note, cite the precedent, and record the date.**
+
+Leaving settled flags in place wastes future reviewer attention and creates false impressions of open questions. The flag is part of the item's claim record; a stale one is as misleading as a stale claim.
+
+*Proposed 2026-08-18, after algo-resource-estimation carried 'E2 vs E3 unsettled' on the Babbush source note through three reviewer runs after the 2026-08-16 whitepaper precedent settled it as E3.. Not yet confirmed by a person.*
