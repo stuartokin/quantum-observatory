@@ -17,12 +17,12 @@ priority: P2
 qdayImpact: 0
 novelty: 'First FTQC resource estimate for PDT photosensitizer simulation'
 metrics:
-  - name: 'logical qubits (BODIPY, 11–45 orbitals)'
-    value: '180–350'
+  - name: 'logical qubits (BODIPY, 11-45 orbitals)'
+    value: '180-350'
     unit: 'logical qubits'
     note: 'Resource estimates using PennyLane; no hardware run'
   - name: 'Toffoli gate depth'
-    value: '1e7–1e9'
+    value: '1e7-1e9'
     unit: 'Toffoli gates'
     note: 'Varies by molecule size and algorithm choice'
 links:
@@ -50,10 +50,12 @@ status: draft
 origin: agent
 added: '2026-08-16'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-16'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2512.15889 opened. Xanadu Toronto confirmed (lead author Yanbing Zhou et al., 8 authors). BODIPY derivatives, 11-45 spatial orbitals, 180-350 logical qubits, Toffoli depths 10^7-10^9, three algorithms (threshold projection, evolution-proxy, vibronic dynamics), PennyLane resource estimates all confirmed. Preprint-only, no journal record found. E3 correct. No changes.'
 ---
 
 ## What happened

@@ -78,10 +78,12 @@ country:
   - US
 novelty: 'First autonomous cryo-CMOS error correction in silicon; full QPU integration on commercial semiconductor lines'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-14'
+  reviewedOn: '2026-08-18'
+  note: 'Nature 655, 1154-1159 confirmed as cover article 29 Jul 2026. arXiv:2604.16216 HTML opened: cable carries 296 traces (body text corrected from ''150 control waveforms'' to ''296 traces''). 70M transistors, 18 EO qubits, 4.7x d5/d3 suppression, <3.5 W power all confirmed. E4 correct.'
 ---
 
 ## What happened
@@ -90,7 +92,7 @@ On 29 July 2026 HRL Laboratories published a Nature cover article demonstrating 
 
 ## Why it matters
 
-The wiring bottleneck is a recognised constraint on scaling every qubit platform, most acutely for silicon spin qubits. HRL's result demonstrates a complete prototype architecture in which the signal-generation problem is moved inside the cryostat. The choice of exchange-only qubits — controlled by baseband voltage pulses rather than microwaves or lasers — is what makes this tractable: those pulses are close enough to standard digital signals that a CMOS chip can generate them at low power. The superconducting ribbon cable solves the thermal isolation problem, carrying 150 control waveforms from 4 K to millikelvin without heating the qubits.
+The wiring bottleneck is a recognised constraint on scaling every qubit platform, most acutely for silicon spin qubits. HRL's result demonstrates a complete prototype architecture in which the signal-generation problem is moved inside the cryostat. The choice of exchange-only qubits — controlled by baseband voltage pulses rather than microwaves or lasers — is what makes this tractable: those pulses are close enough to standard digital signals that a CMOS chip can generate them at low power. The superconducting ribbon cable solves the thermal isolation problem, carrying 296 traces from 4 K to millikelvin without heating the qubits.
 
 The manufacturing argument is as significant as the performance result. All three components are fabricated on commercial semiconductor wafer processes. The qubit chip uses 200 mm isotopically enriched silicon-germanium wafers. If the architecture scales, it inherits the yield, cost, and supply chain of the transistor industry.
 
