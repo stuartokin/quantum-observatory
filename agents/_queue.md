@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Check IEEE Xplore for SEQC proceedings DOI after QCE26
-agent: sourcer
-added: 2026-08-18
-source: issue #129
-
-    /focus sourcer: check IEEE Xplore for the published proceedings record of 'SEQC: Stratify-Elaborate Quantum Compilation Towards Modular Hybrid Architectures' (Jeng et al., arXiv:2501.08478) from IEEE QCE26 (September 2026, Toronto). If the DOI is available, update enable-seqc-chiplet-compiler: set evidence level to E4, update the primary source record with the published url, publisher 'IEEE', date, identifier, and doi fields, and update the source note to remove the 'not yet on IEEE Xplore' caveat. The conference ran 13-18 September 2026. Do not run this before late September 2026.
+_Nothing queued._
