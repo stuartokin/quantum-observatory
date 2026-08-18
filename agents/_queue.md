@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Create standalone board item for Rausch et al. arXiv:2606.04771 (Multiverse Computing classical counter)
-agent: scout
-added: 2026-08-18
-source: issue #129
-
-    /focus scout: arXiv:2606.04771 (Rausch, Singh, Jahromi, Kshetrimayum, Orús; Multiverse Computing and Donostia IPC, Jun 2026) uses GPU-accelerated TDVP exploiting U(1)×SU(2) symmetry at bond dimension ~62,000 on four NVIDIA H200 GPUs to classically reproduce Q-CTRL/IBM 1D Fermi-Hubbard dynamics (arXiv:2605.04025), reaching the high-entanglement regime t∈[5.2,6] and advancing the classical frontier to t=7 beyond the quantum run at t=6. This is a distinct result from arXiv:2608.13805 (Ouyang, Caltech, transverse TN at BD=32). Propose a standalone board item in algorithms (cluster: classical-advantage-narrowing) at E3 (preprint), readiness emerging, confidence medium. Link to algo-classical-fermi-hubbard-ouyang (competes-with) and algo-qctrl-fermi-hubbard-advantage (competes-with).
+_Nothing queued._
