@@ -321,3 +321,14 @@ The precedent was written for app-quantum-materials-advantage where the countere
 Creating the counter as a standalone item preserves the result and its significance without forcing an ill-fitting modification to an existing item that does not cover the countered claim.
 
 *Proposed 2026-08-18, after algo-classical-fermi-hubbard-ouyang created as standalone item; Q-CTRL preprint listed as corroborating source. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-18
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A 'Worth Scout's attention' lead that names a paper already cited as a published source in the relevant board item is satisfied and should not be re-queued. Record the finding in the issue comment and close the lead.**
+
+Re-queuing a sourcer or scout run to attach a source that is already in the file wastes a run and teaches agents the queue does not track what has been done.
+
+*Proposed 2026-08-18, after Scout issue #129 flagged checking Tindall et al. arXiv:2503.05693 Science publication status for arch-annealing and algo-quantum-simulation; both items already cite it as Science 392, 6800: 868 (2026).. Not yet confirmed by a person.*

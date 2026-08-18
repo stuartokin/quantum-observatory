@@ -80,10 +80,12 @@ status: draft
 origin: agent
 added: '2026-08-18'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: steward
   agentMergedOn: '2026-08-18'
+  reviewedOn: '2026-08-18'
+  note: 'Steward review 2026-08-18. E3 correct for three preprints (arXiv:2605.04025, arXiv:2606.04771, arXiv:2608.13805). Confidence low correct: two independent classical counter-papers from different groups using different methods reproduce the quantum result. qdayImpact 0 correct: 1D Fermi-Hubbard dynamics on a NISQ device has no cryptanalytic relevance. Readiness emerging correct: the advantage claim is contested, not the physics. No downward corrections needed. The Q-CTRL paper (primary source) is itself a preprint and the countered claim; citing it as primary with counters as corroborating is the correct structure per the 2026-08-18 precedent on classical-counter items.'
 ---
 
 ## What happened
