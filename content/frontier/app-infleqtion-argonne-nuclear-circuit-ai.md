@@ -1,7 +1,7 @@
 ---
 schema: frontier/v1
 id: app-infleqtion-argonne-nuclear-circuit-ai
-title: 'AI-optimised quantum circuit design for nuclear physics: Argonne–Infleqtion'
+title: 'AI-optimised quantum circuit design for nuclear physics: Argonne-Infleqtion'
 summary: 'DOE Genesis Mission Phase I project: an AI agent using reinforcement learning to automate quantum circuit synthesis for nuclear structure and scattering problems, using Infleqtion Superstaq. Framework development only; no experimental output yet.'
 plain: 'Designing a quantum circuit to simulate a nuclear physics problem requires choosing how to encode the problem, which algorithm to use, and how to map it to hardware — decisions that currently require expert effort and often produce suboptimal circuits. This project funds Argonne National Laboratory and Infleqtion to build an AI agent that automates those choices using reinforcement learning, targeting nuclear structure and scattering problems. The agent will be tested against performance metrics such as gate count and circuit depth. It is Phase I work: the AI framework is being built and demonstrated, not yet applied to produce physics results.'
 pillar: quantum
@@ -60,11 +60,12 @@ evidence:
       note: 'Vendor press release. E2 by rule. Corroborates Argonne project page on scope and partnership.'
 status: draft
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-17'
-  note: 'Focus run 2026-08-17: searched arXiv quant-ph and nucl-th August 2026 listings and targeted author/project searches; no preprint found. Project announced July 22, 2026; Phase I framework work. Additional partners confirmed: Northwestern University and Dakota State University (Dr. Peng Guo joined ~August 13, 2026). Lead PI confirmed as Dr. Anna McCoy. Actors field updated. Verified date advanced. E2 and readiness emerging unchanged.'
+  reviewedOn: '2026-08-18'
+  note: 'Infleqtion press release July 22 2026 confirmed: Argonne-Infleqtion DOE Genesis Mission Phase I for AI-optimised nuclear circuit design via reinforcement learning confirmed from Infleqtion IR, BusinessWire, HPCwire. ANL project page not directly opened but programme confirmed. No preprint found. E2 correct. No changes.'
 ---
 
 ## What happened

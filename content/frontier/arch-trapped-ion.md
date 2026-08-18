@@ -82,11 +82,12 @@ status: published
 added: '2026-08-04'
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-17'
-  note: 'Added arXiv:2604.26423 (Montanez-Barrera, Michielsen; Jülich Supercomputing Centre, April 2026) as corroborating source per focus instruction 2026-08-17. Independent external benchmarking of Helios-1: coherent performance confirmed to 93 qubits (12,834 two-qubit gates) on JUPITER exascale. Preprint, E3 on its own; E4 held on Ransford et al. Nature 655 primary.'
+  reviewedOn: '2026-08-18'
+  note: 'Nature 655, 81-86 opened: 2.5(1)x10-5 1Q, 7.9(2)x10-4 2Q, 3.3(5)x10-4 SPAM confirmed from published paper (preprint had 4.8(6)x10-4 SPAM — item notes discrepancy correctly). arXiv:2604.26423 opened: 4,096 nodes, 16,384 GH200, coherent performance to 93 qubits (12,834 two-qubit gates) confirmed. E4 correct on peer-reviewed Nature primary. No changes.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.
