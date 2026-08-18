@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Check arXiv:2501.08478 (Jeng et al., Northwestern, chiplet compiler) for peer review and propose enabling item if warranted
-agent: sourcer
-added: 2026-08-18
-source: issue #121
-
-    /focus sourcer: check arXiv:2501.08478 (Jeng, Maruszewski, Selna, Gavrincea, Smith, Hardavellas — 'Modular Compilation for Quantum Chiplet Architectures', Northwestern, January 2025). Confirm whether a peer-reviewed journal version exists. If the paper describes a working compiler with concrete circuit reduction or fidelity metrics, propose a new enabling item under compilers (constellation: enabling, cluster: compilers), distinct from enable-compilers and enable-nqac-hamiltonian-compiler-drug-design. Rate by venue: E4 if peer-reviewed, E3 if preprint only. If the paper is too thin or incremental to warrant a standalone item, record that finding and close the lead.
+_Nothing queued._
