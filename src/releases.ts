@@ -24,6 +24,33 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.48.0',
+    date: '2026-08-18',
+    headline: 'Click a label to hone, and the board settles rather than appears.',
+    ui: [
+      'Clicking a supergroup name, a readiness band or a year on the axis shows only that. Clicking again clears it. It means "only this" rather than "hide this" — one gesture instead of unticking eight boxes — and the Filters panel carries the same controls, so the panel and the board never describe different states.',
+      'Honing narrows what the checkbox filters already allow and never reveals something they have hidden. Honing on a year excludes undated items, unlike the year checkboxes which keep them: there the reader is trimming a range, here they are asking for one year specifically.',
+      'Items that moved readiness in the last four months now travel from the band they left, slowly enough to follow. Items added in the last six weeks fade up in place — no travel, because they did not come from anywhere and inventing a journey would misdescribe what happened. Everything else is simply drawn where it belongs.',
+      'A demotion drags a faint trail back to where the item was. The axis runs emerging at the top to mainstream at the bottom, so progress descends and a rising body has been corrected downward — the board saying it was wrong, which should not look like an advance.',
+      'Five nebula columns drift behind the starfield, one per supergroup, tracking their own lanes. They survived two invisible versions: the first keyed colour to the wrong index, the second created its gradient outside the transform it drew in, so the gradient centre landed at twice the offset and every fill drew the transparent end.',
+      'The provenance banner is a badge you can open. Four lines of caveat above a two-line title buried the thing a reader came for; the badge carries the state and clicking it carries the reasoning. It closes again when a different item is opened.',
+      'Dates read as 27 July 2026 rather than 2026-07-27, and an estimate says "about" rather than carrying a tilde. ISO stays in the front matter, where machines sort by it.',
+      'Help opens with what the board is and what it is not — including the two caveats: it is a derivative of the literature rather than a replacement, and its coverage is a judgement made by agents against rules a person wrote.',
+    ],
+  },
+  {
+    version: '0.47.0',
+    date: '2026-08-16',
+    headline: 'A queue between deciding what to research and doing it.',
+    agents: [
+      'The steward reads the open issues and writes focus instructions into agents/_queue.md; the agents drain them one per run. Nothing runs in the pass that proposes it — there is always a committed file a person can read and delete from before anything executes.',
+      'One instruction per run, deliberately. Several drained into one pass would be several runs of work in a single summary, and the summary is how anybody judges whether the work was good.',
+      'An entry that fails twice is dropped; one older than 21 days is dropped rather than run. Duplicates are matched on the arXiv id or DOI they name, not on their titles, after the same job was queued twice under three different phrasings.',
+      'Agents are told which jobs they can actually do. Scout sees the board index and not item contents, so it cannot edit an existing item — asked to attach a source it will confirm the source, decline to invent a file it cannot read, and escalate. Six runs were spent that way before the routing was written down.',
+      'A run that reaches a conclusion but not its JSON now has the tail of its reasoning, and any identifiers it mentioned, written to the issue. The queue entry is spent either way; the finding should not be.',
+    ],
+  },
+  {
     version: '0.46.0',
     date: '2026-08-13',
     headline: 'Undated is now a last resort, and the questions have an overview.',
@@ -117,24 +144,6 @@ export const RELEASES: Release[] = [
     ui: [
       'Headlines became a window rather than a strip: moveable, resizable, minimisable, switching between a rolling ticker and an archive grouped by year and month. Dragging it taller or shorter switches the view.',
       'Panel titles are clickable where there is something to say — the headline counts, their span, how many are verified and how many trace back to research.',
-    ],
-  },
-  {
-    version: '0.36.0',
-    date: '2026-08-10',
-    headline: 'Applications, and honest caveats.',
-    agents: [
-      'The newsroom now hunts deliberately for applications — named organisations using quantum systems for real problems, pilots, investment behind a specific application, sensing deployed in the field.',
-      'It may publish an early-stage claim but never as a result. A funding round is evidence that investors believe something, which is a different fact from the technology working, and the item must say which it is.',
-    ],
-  },
-  {
-    version: '0.34.0',
-    date: '2026-08-10',
-    headline: 'The browser stops downloading a YAML parser.',
-    ui: [
-      'Content is parsed at build time by a Vite plugin. front-matter and js-yaml are gone from the bundle; the only runtime dependencies left are React and React DOM.',
-      'The performance budget came down from 106 KB to 88, then learned to measure the entry chunk separately from code loaded on demand — it had been counting a code split as growth, which punished exactly the change it asked for.',
     ],
   },
 ]

@@ -11,7 +11,7 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.47.12.** Board at roughly 80 frontier items across nine
+**Version 0.48.8.** Board at roughly 80 frontier items across nine
 constellations, ~90 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
@@ -20,6 +20,12 @@ steward, and a queue.
 **The applications constellation was empty a week ago** and now holds four
 items, all correctly hedged: no verified quantum advantage on a commercially
 relevant problem has been published, and the board says so.
+
+**The interface now**: galaxy and timeline in separate windows, a constellation
+window, the twelve questions, a key shared by every plot, a dock that lists what
+is put away rather than everything that exists. Zoom drives three levels of
+detail; clicking a supergroup, readiness band or year hones to it. Nothing is
+ever hidden by zoom — demoted items become small dim dots, still clickable.
 
 **Recent significant content**: the July 2026 IBM/Qedma/Algorithmiq advantage
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
@@ -100,14 +106,37 @@ behind it, rather than reasoning about causes.**
 
 ---
 
+## The known next task
+
+**Let an agent return a patch rather than a whole file.**
+
+Every capped field is validated before writing and an agent must return the file
+entire, so one overflow discards everything — including the parts that were
+right. Five runs lost across four items on four different fields, each after the
+research was done.
+
+The mitigation in place is a pre-flight warning listing items with under 150
+characters of headroom, plus prompt guidance to replace rather than append. It
+reduces the frequency and cannot remove the failure mode.
+
+The change is in `scripts/run-agent.mjs` and `scripts/agent-io.mjs`: accept a
+`fields` object alongside or instead of `content`, apply it to the existing file,
+and validate the result. `checkFile` already takes a schema path, so validation
+does not change. The agent prompts would then say what they can say honestly —
+*send the fields you are changing* — which is also a smaller and more reviewable
+thing to ask for.
+
+Worth doing early in a session rather than at the end of one.
+
 ## What a new conversation needs to be given
 
 Not much, if these are read:
 
 1. `OPERATING.md` — the loop, what a person decides, how to write a queue entry
 2. `agents/_decisions.md` — every settled question, so none is reopened
-3. This file
-4. `package.json` — for the current version number
+3. `DESIGN-LOG.md` — the interface decisions and the failures behind them
+4. This file
+5. `package.json` — for the current version number
 
 Then whichever specific files a task touches. Do not accept an edit to a file
 that has not been read in that conversation; blind edits are where the silent

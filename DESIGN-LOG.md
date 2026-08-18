@@ -140,6 +140,98 @@ into a two-character string. Every case belongs in the self-test.
 
 ---
 
+## Failures worth keeping, August 2026
+
+Five days of work on the interface and the agent loop, and the useful record is
+not the features but the ways they failed.
+
+### A canvas gradient resolves against the transform at fill time
+
+The nebula was invisible twice. The first version keyed each cloud to a
+readiness band and then coloured it from the constellation list — five bands
+indexing a nine-element array, so it drew arbitrary hues at an alpha low enough
+to see nothing.
+
+The second was subtler and worth remembering. The gradient was created at screen
+coordinates `(cx, cy)`, and the fill then translated to that same point — so the
+gradient's centre landed at `(2cx, 2cy)`, off screen, and every fill drew the
+transparent end. **A canvas gradient is resolved against the matrix in force when
+it is filled, not when it is made.** Create it inside the transform.
+
+### Height computed from a position that has since changed
+
+`intoView` clamped a frame's `y` into the viewport and then computed its height
+from the *original* `y`. A window near the bottom got a height measured from
+where it used to be, ran off the screen, and opened underneath whatever was
+already there — which reads exactly like not opening at all.
+
+Three wrong diagnoses preceded the right one, all reasoned from a description.
+The fourth came from a screenshot with the obscuring window shrunk, and took
+seconds. **When something is invisible, the useful information is what is behind
+it.**
+
+### Building the right thing in the wrong place
+
+The honing state was declared in `Board` and used in `Sky`, a different
+component. The filter panel worked; the label drawing and the click handler did
+not. Before that, a year-window filter was computed and never passed to the
+layout it was meant to change, and a `setShowNewsOverlay` existed with no button
+to call it.
+
+Each was correct code somewhere nobody could reach it. **After writing something
+new, check that the old code path now calls it.**
+
+### A budget that was never consistent with its ceiling
+
+The reviewer's prompt said eight to twelve items a run. Each check returns a
+whole file at around 6,300 characters, so twelve is roughly 75,000 before the
+summary — against a ceiling that holds about that much in total. Twelve was the
+exact edge; the run that attempted fourteen wrote nothing at all.
+
+Two numbers had been set independently and never reconciled with the arithmetic.
+The prompt now defers to the budget the runner injects, and the runner measures
+the board's own average item size and warns when a budget cannot be met.
+
+### Returning whole files makes every limit total
+
+This is the one still outstanding. Every capped field is validated before
+writing and an agent must return the file entire, so a single overflow discards
+everything — including the parts that were right. Five runs have been lost to it
+across four items, on four different fields, each time after the research was
+already done.
+
+The current mitigation is a pre-flight warning listing items with under 150
+characters of headroom. **The structural answer is to let an agent return a patch
+— the fields it means to change — so an overflow in one cannot discard the
+rest.** Recorded here rather than built, because it is the right first task for a
+session that can give it proper attention.
+
+### Four gates now exist because of these
+
+None of them is something TypeScript can see, and each was written after making
+the mistake rather than before, which is the honest order but not the cheap one.
+
+- **`check-order`** — a `const` used above its declaration. Cost three runs.
+- **`check-exports`** — one symbol exported from two modules. `glyphFor` lived in
+  both `tower.ts` and `glyphs.ts`; the board imported the wrong one, so two
+  versions changed nothing on screen while the version number rose.
+- **`check-state`** — a `setX()` with no `useState` behind it. A block inserted by
+  a substitution that matched nothing leaves every reference orphaned, and a
+  check that merely looks for the name finds it, in the uses.
+- **JSX comment form** — `//` inside an opening tag parses as attributes.
+
+### The one that produced all of them
+
+**A text substitution that matches nothing does nothing, quietly.** Half a dozen
+edits in one week silently no-opped because an anchor did not match — wrong
+indentation, a ternary spread over three lines, a comment since reworded. Every
+time, the check afterwards confirmed the wrong thing: that the file still parsed,
+rather than that the change had landed.
+
+Verify by reading back what the file now says.
+
+---
+
 ## Open, and deliberately so
 
 - **Non-English coverage is poor.** Chinese and Japanese programmes are on the
