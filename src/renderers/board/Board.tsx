@@ -1376,6 +1376,16 @@ function Sky({
 
   /** Animated positions. Nodes ease between tower and orbit rather than jumping. */
   const anim = useRef(new Map<string, { x: number; y: number }>())
+
+  /**
+   * Bodies currently making an entrance, and which kind.
+   *
+   * A moved item travels from the band it left; a new one fades up where it
+   * belongs. Both are cleared once the entrance is done, so the effect happens
+   * on arrival and never again — a body that pulsed forever would be
+   * decoration rather than a signal.
+   */
+  const entering = useRef(new Map<string, { kind: 'moved' | 'new'; at: number }>())
   /** Bodies the reader has moved by hand. These win over any computed target,
    *  so rearranging to read a label is never undone by the layout. */
   /**
@@ -1420,17 +1430,36 @@ function Sky({
    * Behind the starfield, which is itself behind everything that means
    * anything. Atmosphere must never compete with data.
    */
+  /**
+   * One nebula column per supergroup, sitting under its own lane.
+   *
+   * The columns are the board's horizontal grammar — Computing, Applications,
+   * Cryptography, Communications, Sensing — so the atmosphere follows them
+   * rather than inventing a second organisation. Each column drifts downward
+   * behind the stars, which are themselves behind everything that means
+   * anything.
+   *
+   * The first version keyed these on readiness bands and then coloured them
+   * from the constellation list, which indexes differently — so it drew
+   * arbitrary hues at an alpha low enough to be invisible. Nobody saw it and
+   * nothing was lost, which is the only good thing about that bug.
+   */
   const nebula = useRef(
-    Array.from({ length: 18 }, (_, i) => ({
-      band: i % LEVELS.length,
-      x: Math.random(),
-      y: Math.random(),
-      // Slower than the stars, so the layers separate rather than moving as one.
-      v: 0.004 + Math.random() * 0.008,
-      w: 0.10 + Math.random() * 0.18,
-      h: 0.16 + Math.random() * 0.22,
-      a: 0.012 + Math.random() * 0.020,
-    })),
+    SUPERGROUPS.flatMap((gp, i) =>
+      Array.from({ length: 3 }, () => ({
+        group: gp,
+        // Anchored near the lane's own x, wandering only a little, so the
+        // column reads as belonging to it.
+        x: 0,
+        drift: (Math.random() - 0.5) * 0.10,
+        y: Math.random() * 1.4 - 0.2,
+        v: 0.005 + Math.random() * 0.010,
+        w: 0.09 + Math.random() * 0.10,
+        h: 0.28 + Math.random() * 0.30,
+        a: 0.05 + Math.random() * 0.05,
+        seed: i,
+      })),
+    ),
   )
 
   const stars = useRef(
@@ -2057,25 +2086,32 @@ function Sky({
       if (!reduced) {
         for (const c of nebula.current) {
           c.y += c.v * dt
-          if (c.y > 1.3) {
-            c.y = -0.3
-            c.x = Math.random()
+          if (c.y > 1.35) {
+            c.y = -0.35
+            c.drift = (Math.random() - 0.5) * 0.10
           }
-          const cx = c.x * W
+          // The lane's own position, so the column tracks its supergroup even
+          // as the view is panned and zoomed.
+          const home = supergroupHome(c.group, (con) => CONSTELLATION_HOME[con] ?? 0.5)
+          const cx = X(home + c.drift)
           const cy = c.y * H
           const rx = c.w * W
           const ry = c.h * H
+          if (cx < -rx || cx > W + rx) continue
+
           const grad = g.createRadialGradient(cx, cy, 0, cx, cy, Math.max(rx, ry))
-          const hue = constellationColour(
-            CONSTELLATIONS[c.band % CONSTELLATIONS.length],
-          )
-          grad.addColorStop(0, hue)
+          // Two stops, both the plain colour, with globalAlpha doing the fade.
+          // The palette's alpha argument exists but is not visible from here,
+          // and a call built on an unverified signature is how the first
+          // version of this drew nothing at all.
+          grad.addColorStop(0, supergroupColour(c.group))
           grad.addColorStop(1, 'rgba(0,0,0,0)')
-          g.globalAlpha = c.a * Math.min(1, (1.3 - c.y) * 2) * Math.min(1, (c.y + 0.3) * 2)
+          g.globalAlpha =
+            c.a * Math.min(1, (1.35 - c.y) * 1.6) * Math.min(1, (c.y + 0.35) * 1.6)
           g.fillStyle = grad
           g.save()
           g.translate(cx, cy)
-          g.scale(1, ry / Math.max(rx, ry))
+          g.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry))
           g.beginPath()
           g.arc(0, 0, Math.max(rx, ry), 0, Math.PI * 2)
           g.fill()
@@ -2131,36 +2167,66 @@ function Sky({
           }
         }
         /**
-         * An entrance rather than an appearance.
+         * Only what changed moves.
          *
-         * A body the easing has never seen starts from its readiness band and
-         * settles into place, so the eye follows it there — and a filter change
-         * reads as the board rearranging rather than as a different board
-         * flashing into existence.
+         * The first version gave every body an entrance, so eighty-seven of
+         * them flew in at once and the motion pointed at nothing. Movement is a
+         * way of directing the eye, and directing it everywhere is the same as
+         * not directing it at all.
          *
-         * Anything that moved readiness recently, or arrived recently, starts
-         * further out and takes longer, because those are the ones worth
-         * watching arrive. Everything else settles almost at once.
+         * So: a body that moved readiness in the last 120 days travels from
+         * where it used to sit, which is the movement actually being reported.
+         * A body added in the last 45 days fades up in place. Everything else
+         * is simply drawn where it belongs, with no entrance at all.
          */
         if (!anim.current.has(n.id)) {
           const item = itemById.get(n.id)
-          const notable =
-            (item?.moved?.on &&
-              (Date.now() - new Date(item.moved.on).getTime()) / 864e5 < 120) ||
-            (item?.added && (Date.now() - new Date(item.added).getTime()) / 864e5 < 45)
-          // Enter along the band, from off to one side — never from the middle,
-          // which would read as bodies falling out of the same hole.
-          anim.current.set(n.id, {
-            x: notable ? n.x + (n.x > 0.5 ? 0.55 : -0.55) : n.x + (Math.random() - 0.5) * 0.12,
-            y: n.y,
-          })
+          const movedOn = item?.moved?.on
+          const recentlyMoved =
+            movedOn && (Date.now() - new Date(movedOn).getTime()) / 864e5 < 120
+          const from = item?.moved?.from
+
+          if (recentlyMoved && from && LEVELS.includes(from as never)) {
+            // Start on the band it left, at its own x, and travel to the new
+            // one. The path is the readiness change, drawn.
+            const fromRow = LEVELS.indexOf(from as never)
+            anim.current.set(n.id, {
+              x: n.x,
+              y: (fromRow + 0.5) / LEVELS.length,
+            })
+            entering.current.set(n.id, { kind: 'moved', at: performance.now() })
+          } else {
+            const addedOn = item?.added
+            const isNew =
+              addedOn && (Date.now() - new Date(addedOn).getTime()) / 864e5 < 45
+            anim.current.set(n.id, { x: n.x, y: n.y })
+            if (isNew) entering.current.set(n.id, { kind: 'new', at: performance.now() })
+          }
         }
 
         const a = anim.current.get(n.id) ?? { x: n.x, y: n.y }
+        const enter = entering.current.get(n.id)
         const speed =
-          nodeDrag.current?.id === n.id ? 1 : held ? 0.25 : projected ? 1 : reduced ? 1 : 0.09
-        // A body still travelling to its first position moves more slowly, so
-        // the arrival is legible rather than a jump.
+          nodeDrag.current?.id === n.id
+            ? 1
+            : held
+              ? 0.25
+              : projected
+                ? 1
+                : reduced
+                  ? 1
+                  : // A body travelling from the band it left moves slowly, so the
+                    // journey can be followed. Everything else settles as before.
+                    enter?.kind === 'moved'
+                    ? 0.022
+                    : 0.09
+
+        // The entrance is over once it has arrived, or after eight seconds —
+        // whichever comes first, so nothing pulses indefinitely.
+        if (enter) {
+          const arrived = Math.hypot(tgt.x - a.x, tgt.y - a.y) < 0.004
+          if (arrived || performance.now() - enter.at > 8000) entering.current.delete(n.id)
+        }
         a.x += (tgt.x - a.x) * speed
         a.y += (tgt.y - a.y) * speed
         anim.current.set(n.id, a)
@@ -2400,10 +2466,24 @@ function Sky({
         const off = (mode === 'orbit' && n.constellation !== focusCon ? 0.12 : 1) * depthFade
         const fade = (dimmed && !sel ? 0.3 : 1) * off
         const isProminent = prominent(n) || sel || hov
+
+        /**
+         * A new item fades up where it belongs.
+         *
+         * No travel — it did not come from anywhere, and inventing a journey
+         * would be a small lie about what happened. It simply was not here
+         * before and now is, over about two seconds.
+         */
+        const ent = entering.current.get(n.id)
+        const enterFade =
+          ent?.kind === 'new' ? Math.min(1, (performance.now() - ent.at) / 2000) : 1
+        // The glow rises with it, so the arrival is visible on a dim body too.
+        const enterGlow = ent?.kind === 'new' ? 1 + (1 - enterFade) * 14 : 1
+
         g.shadowColor = colour
-        g.shadowBlur = isProminent ? (n.sourced ? 16 + n.weight * 12 : 5) : 0
+        g.shadowBlur = (isProminent ? (n.sourced ? 16 + n.weight * 12 : 5) : 0) * enterGlow
         g.globalAlpha =
-          (isProminent ? (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) : 0.3) * fade
+          (isProminent ? (n.sourced ? 0.85 + n.weight * 0.15 : 0.42) : 0.3) * fade * enterFade
         // Hue carries the constellation and nothing else.
         //
         // Actor used to shift the hue by up to 34 degrees, but adjacent
