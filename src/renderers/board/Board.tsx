@@ -105,6 +105,21 @@ export function Board() {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   /** Kinds of organisation to show. Empty is meaningless, so null means all. */
   const [orgTypes, setOrgTypes] = useState<ActorType[] | null>(null)
+
+  /**
+   * Honing: show one field, one readiness band, or one year.
+   *
+   * Clicking a label means "only this", not "hide this". A reader clicking
+   * Cryptography wants to see cryptography — one gesture rather than unticking
+   * eight boxes. Clicking the same label again clears it.
+   *
+   * These sit alongside the checkbox filters rather than replacing them, and
+   * the panel reflects them: two sources of truth about what is shown, with no
+   * way to tell which is authoritative, is the fault the year toggle had.
+   */
+  const [onlyGroup, setOnlyGroup] = useState<Supergroup | null>(null)
+  const [onlyLevel, setOnlyLevel] = useState<string | null>(null)
+  const [onlyYear, setOnlyYear] = useState<number | null>(null)
   const [openNews, setOpenNews] = useState<NewsItem | null>(null)
   /** Headlines are off by default — there will eventually be a great many. */
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
