@@ -60,11 +60,12 @@ status: draft
 origin: agent
 horizon: 2
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
-  note: 'Focus run: added arXiv:2606.03884 as vendor preprint corroboration per focus instruction. Evidence level held at E2, readiness held at emerging per instruction. 2029 roadmap date recorded in metrics. Nature news piece added as corroborating source for the skepticism framing.'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2606.03884 confirmed: >20 s Z-parity, InAs-Pb tetron, all Microsoft authors, no peer review, no X measurements. Nature news (d41586-026-01788-y) confirmed documenting Legg/Frolov skepticism. Characteristic lifetime ~22 s per press sources, consistent with ">20 s" claim. E2 correct; confidence low correct. No changes.'
 ---
 
 ## What happened

@@ -96,8 +96,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-11'
-  reviewedOn: '2026-08-11'
-  note: 'All three sources confirmed this run. He et al. PRL 135, 260601 institution confirmed via phys.org: USTC/Jian-Wei Pan group on Zuchongzhi 3.2 processor (97 qubits). Source note updated to record this. Google Willow Lambda=2.14±0.02 confirmed; Bluvstein et al. 2.14(13)x confirmed via nature.com. E5 correct — three independent institutions, two modalities. Amended a sourcer-merged item; no changes to evidence level or readiness.'
+  reviewedOn: '2026-08-18'
+  note: 'Nature 638, 920-926 re-confirmed via nature.com: Lambda=2.14+/-0.02, 101-qubit d=7 code, 0.143%/cycle, 2.4x break-even. All three sources verified this run. E5 correct — three independent institutions, two hardware modalities. No changes.'
 ---
 
 Below-threshold surface code operation — where adding more physical qubits suppresses logical errors exponentially — has been confirmed independently across two hardware platforms and at least three research groups, meeting the E5 standard for independent replication.

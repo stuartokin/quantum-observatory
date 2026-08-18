@@ -39,7 +39,7 @@ evidence:
       date: '2026-05-08'
       identifier: 'arXiv:2605.08009'
       accessed: '2026-08-12'
-      note: 'Submitted 8 May 2026 by ETH Zürich quantum electronics group. Preprint, not yet peer-reviewed.'
+      note: 'Fontboté-Schmidt, Metzner, Berterottière et al.; ETH Zürich quantum electronics group (Home Lab). Preprint, not yet peer-reviewed. Four Bell states at 69% average fidelity using two motional modes of a single 40Ca+ ion. Confirmed via arXiv abstract and HTML; cited in subsequent GKP work (arXiv:2607.07833, arXiv:2606.31864).'
 qdayImpact: 0
 qdayReasoning: 'GKP encoding is a hardware efficiency technique for quantum error correction. Demonstrated at 69% fidelity on a single ion, it has no near-term cryptanalytic relevance.'
 confidence: medium
@@ -51,8 +51,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-12'
-  reviewedOn: '2026-08-12'
-  note: 'First reviewer pass. arXiv:2605.08009 confirmed as preprint submitted May 2026 by ETH Zürich. E3 correct for preprint. 69% Bell-state fidelity on GKP qubits in trapped ion motional modes — claim consistent with abstract. Readiness experimental correct. No changes to evidence level or readiness.'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2605.08009 confirmed via arXiv HTML and abstract: Fontboté-Schmidt, Metzner, Berterottière et al. at ETH Zürich Home Lab, 40Ca+ ion, two motional modes, four Bell states at 69% average fidelity. Cited in arXiv:2607.07833 and arXiv:2606.31864. E3 correct for preprint. No peer review found. No changes.'
 ---
 
 ## What happened

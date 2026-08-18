@@ -43,7 +43,7 @@ evidence:
       identifier: 'PRX Quantum 7, 033021 (2026)'
       doi: 10.1103/r78y-3q89
       accessed: '2026-08-17'
-      note: 'Peer-reviewed theoretical and algorithmic paper. No hardware measurements. Preprint arXiv:2307.09566 submitted July 2023.'
+      note: 'Peer-reviewed theoretical and algorithmic paper. No hardware measurements. Preprint arXiv:2307.09566 submitted July 2023. Confirmed via APS PRX Quantum listing (Published 31 July 2026) and Weizmann Ozeri Lab publications page.'
     - url: https://arxiv.org/abs/2307.09566
       role: preprint
       title: 'Fast design and scaling of multi-qubit gates in large-scale trapped-ion quantum computers'
@@ -57,10 +57,12 @@ status: draft
 origin: agent
 added: '2026-08-17'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'PRX Quantum 7, 033021 confirmed via APS listing (31 July 2026) and Weizmann Ozeri Lab page. Peleg, Schwerdt, Nemirovsky, Shapira, Akerman, Stern, Ben Kish, Ozeri — all Weizmann. Theoretical paper, no hardware measurements confirmed. E1 correct per decisions file (peer-reviewed theoretical paper). No changes.'
 ---
 
 ## What happened
