@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Add arXiv:2606.04771 (Rausch et al., Multiverse Computing) as corroborating source to algo-classical-fermi-hubbard-ouyang
-agent: sourcer
-added: 2026-08-18
-source: issue #129
-
-    /focus sourcer: add arXiv:2606.04771 (Rausch, Rams et al., Multiverse Computing, Jun 2026) as a corroborating source to algo-classical-fermi-hubbard-ouyang. The paper uses GPU-accelerated TDVP at bond dimension ~62,000 to classically simulate the Q-CTRL/IBM 1D Fermi-Hubbard circuit (arXiv:2605.04025), reproducing results including the high-entanglement regime and advancing the classical frontier to t=7 beyond the quantum run at t=6. This is a different method from arXiv:2608.13805 (Ouyang, transverse TN at BD=32) and constitutes a prior independent counter. Add as role corroborating with note explaining method distinction. Do not create a new item.
-
 ## Evaluate arXiv:2607.08811 (Krinitsin et al.) for counter-paper impact on board items
 agent: scout
 added: 2026-08-18
