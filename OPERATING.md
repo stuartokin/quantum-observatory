@@ -57,6 +57,43 @@ yet** — that gap is the design, not a formality.
   drains stops being read, and an unread queue is worse than none because it
   looks like a plan.
 
+### What each agent does
+
+**scout** — proposes new topics. The only agent that may add an item. Sees the
+board index, not item contents. Also maintains the twelve standing questions on
+a standing run. Weekly.
+
+**sourcer** — attaches evidence to items that have none, and corrects citations.
+Sees every field of every item. Campaign agent: run by hand, never scheduled.
+
+**verifier** — re-opens the sources behind an item and checks the claim still
+matches them. Every four weeks, and on demand when a counter-result appears.
+
+**reviewer** — checks a claim against its own sources, tests the evidence level
+against the source type, and corrects downward. It can only ever make an entry
+more cautious, never more confident. Weekly, skipping anything checked in the
+last 28 days so the queue drains rather than re-examining the same P0 items.
+
+**newsroom** — gathers headlines, validates each before publishing, and links
+them to the research behind them. Weekly, and by month for a backfill.
+
+**steward** — reads the open issues, applies settled precedent, and writes the
+queue. Runs by hand only.
+
+### Confirm and veto
+
+Each agent run opens a pull request, merges it, and says so on the issue with a
+line pointing at both:
+
+- **Confirm** — Actions → Confirm or veto → `mark-reviewed`. Moves the item from
+  `agent-merged` to `reviewed`: a person has read it.
+- **Veto** — the Revert button on the pull request. The item comes off the board
+  and the reason is recorded.
+
+Neither is urgent. An unconfirmed item sits on the board labelled
+`agent-merged — not read by a person`, which is honest, and the header counts it
+as unreviewed until you say otherwise.
+
 ### Write instructions the agent can actually carry out
 
 Getting this wrong wastes a run, because a good agent refuses rather than

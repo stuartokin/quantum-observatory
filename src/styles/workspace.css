@@ -883,3 +883,49 @@
 /* The questions window manages its own scrolling, so the frame must not add
    a second scrollbar around it. */
 .frame__body--flush .questions { padding: var(--gap-s) var(--gap-m); }
+
+/* ---------- Honing: one field, one band, one year ---------- */
+
+.filter-group__clear {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  min-height: 0;
+  margin-left: auto;
+}
+.filter-group__clear:hover { color: var(--ink); }
+
+.hone {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0;
+  padding: 0;
+}
+.hone button {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  min-height: 0;
+}
+.hone button:hover { color: var(--ink); border-color: var(--ink-faint); }
+.hone button[data-on] { border-color: currentColor; }
+.hone--levels button { font-size: 0.5rem; }
+
+/* The board's own labels are clickable, so say so on approach. */
+.frame__body--flush canvas { cursor: default; }

@@ -11,6 +11,7 @@ import {
   supergroupHome,
   SUPERGROUPS,
   SUPERGROUP_LABEL,
+  type Supergroup,
 } from '../../constellationPalette'
 import { formatBuildTime } from '../../buildInfo'
 import {
@@ -313,9 +314,23 @@ export function Board() {
           (!orgTypes ||
             (i.actors ?? []).length === 0 ||
             (i.actors ?? []).some((a) => orgTypes.includes(actorType(a)))) &&
-          (!sourcedOnly || isSourced(i)),
+          (!sourcedOnly || isSourced(i)) &&
+          // Honing, from a clicked label. Narrower than the checkboxes and
+          // applied on top of them, so a hone never reveals something a filter
+          // has hidden.
+          (!onlyGroup || supergroupOf(i.constellation) === onlyGroup) &&
+          (!onlyLevel || i.readiness === onlyLevel) &&
+          (() => {
+            if (!onlyYear) return true
+            const d = dateOf(i)
+            // An undated item cannot be shown to belong to a year, so honing on
+            // one excludes it — unlike the year checkboxes, which keep undated
+            // items because hiding them would shrink the board silently. Here
+            // the reader has asked for one year specifically.
+            return d ? d.getFullYear() === onlyYear : false
+          })(),
       ),
-    [pool, cons, levels, actorsOn, sourcedOnly, hiddenYears, orgTypes],
+    [pool, cons, levels, actorsOn, sourcedOnly, hiddenYears, orgTypes, onlyGroup, onlyLevel, onlyYear],
   )
 
   const nodes = useMemo(() => layout(visible, { offsets: {} as Offsets }), [visible])
@@ -1060,6 +1075,63 @@ export function Board() {
           render={(l) => l}
         />
 
+        {/* Honing, shown as a section so the panel and the board agree. A
+            reader who clicks a label and then opens Filters must find the same
+            state described, or neither is trustworthy. */}
+        <section className="filter-group">
+          <header>
+            <span className="label">Showing only</span>
+            {(onlyGroup || onlyLevel || onlyYear) && (
+              <button
+                className="filter-group__clear"
+                onClick={() => {
+                  setOnlyGroup(null)
+                  setOnlyLevel(null)
+                  setOnlyYear(null)
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </header>
+
+          <ul className="hone">
+            {SUPERGROUPS.map((gp) => (
+              <li key={gp}>
+                <button
+                  data-on={onlyGroup === gp || undefined}
+                  onClick={() => setOnlyGroup((c) => (c === gp ? null : gp))}
+                  style={onlyGroup === gp ? { color: supergroupColour(gp) } : undefined}
+                >
+                  {SUPERGROUP_LABEL[gp]}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <ul className="hone hone--levels">
+            {LEVELS.map((lvl) => (
+              <li key={lvl}>
+                <button
+                  data-on={onlyLevel === lvl || undefined}
+                  onClick={() => setOnlyLevel((c) => (c === lvl ? null : lvl))}
+                  style={onlyLevel === lvl ? { color: colour } : undefined}
+                >
+                  {lvl}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <p className="filter-group__note">
+            One field, one readiness band, one year. Clicking a label on the
+            board does the same thing — and clicking it again clears it. This
+            narrows whatever the filters below already allow; it never brings
+            back something they have hidden.
+            {onlyYear ? ` Currently also showing only ${onlyYear}.` : ''}
+          </p>
+        </section>
+
         <FilterSection
           label="Kind of organisation"
           all={ACTOR_TYPES as unknown as string[]}
@@ -1297,6 +1369,18 @@ function Sky({
   /** Where the headline satellites landed, so a click can find one. */
   const newsHits = useRef<{ x: number; y: number; r: number; item: NewsItem }[]>([])
 
+  /**
+   * Clickable label regions, recorded while drawing.
+   *
+   * The labels are canvas text, so there is nothing to attach a handler to.
+   * Recording the box each one occupied as it is drawn is the only way to make
+   * it clickable, and it keeps the hit area exactly where the reader sees the
+   * word rather than somewhere derived a second time.
+   */
+  const labelHits = useRef<
+    { x: number; y: number; w: number; h: number; kind: 'group' | 'level' | 'year'; value: string }[]
+  >([])
+
   /** Ids nobody has read. Marked on the board, not only in the detail panel. */
   const unreviewed = useMemo(
     () =>
@@ -1508,6 +1592,9 @@ function Sky({
 
       g.setTransform(dpr, 0, 0, dpr, 0, 0)
       g.clearRect(0, 0, W, H)
+      // Rebuilt every frame, so a label that moved or vanished cannot leave a
+      // stale hit region behind it.
+      labelHits.current = []
 
       // ---------------- TIMELINE ----------------
       if (tl) {
@@ -1528,8 +1615,13 @@ function Sky({
           g.moveTo(fx, 24)
           g.lineTo(fx, H - 6)
           g.stroke()
-          g.fillStyle = 'rgba(134,151,176,0.75)'
-          g.fillText(String(yr), fx + 5, 20)
+          const only = onlyYear === yr
+          g.fillStyle = only ? colour : onlyYear ? 'rgba(134,151,176,0.35)' : 'rgba(134,151,176,0.75)'
+          const text = String(yr)
+          g.fillText(text, fx + 5, 20)
+          const tw = g.measureText(text).width
+          if (only) g.fillRect(fx + 5, 24, tw, 1)
+          labelHits.current.push({ x: fx + 1, y: 6, w: tw + 8, h: 18, kind: 'year', value: text })
         }
 
         LEVELS.forEach((lvl, i) => {
@@ -1843,8 +1935,17 @@ function Sky({
         g.fillRect(0, 0, AXIS - 2, H)
         LEVELS.forEach((lvl, i) => {
           const y = TY((i + 0.5) / LEVELS.length)
-          g.fillStyle = 'rgba(134,151,176,0.9)'
-          g.fillText(lvl.toUpperCase(), 8, y + 4)
+          const only = onlyLevel === lvl
+          g.fillStyle = only
+            ? colour
+            : onlyLevel
+              ? 'rgba(134,151,176,0.4)'
+              : 'rgba(134,151,176,0.9)'
+          const text = lvl.toUpperCase()
+          g.fillText(text, 8, y + 4)
+          const tw = g.measureText(text).width
+          if (only) g.fillRect(8, y + 8, tw, 1)
+          labelHits.current.push({ x: 4, y: y - 10, w: Math.max(tw + 8, 90), h: 20, kind: 'level', value: lvl })
         })
         g.globalAlpha = 1
 
@@ -1922,8 +2023,13 @@ function Sky({
           g.moveTo(0, y)
           g.lineTo(W, y)
           g.stroke()
-          g.fillStyle = 'rgba(134,151,176,0.85)'
-          g.fillText(lvl.toUpperCase(), 8, y + 15)
+          const only = onlyLevel === lvl
+          g.fillStyle = only ? colour : onlyLevel ? 'rgba(134,151,176,0.3)' : 'rgba(134,151,176,0.85)'
+          const text = lvl.toUpperCase()
+          g.fillText(text, 8, y + 15)
+          const tw = g.measureText(text).width
+          if (only) g.fillRect(8, y + 19, tw, 1)
+          labelHits.current.push({ x: 4, y: y + 3, w: Math.max(tw + 8, 100), h: 20, kind: 'level', value: lvl })
         })
 
         // Q-Day on the galaxy. There is no time axis here, so it is a caption
@@ -1966,9 +2072,16 @@ function Sky({
             const label = SUPERGROUP_LABEL[gp].toUpperCase()
             const tw = g.measureText(label).width
             const x = Math.max(4, Math.min(W - tw - 4, cx - tw / 2))
+            const only = onlyGroup === gp
             g.fillStyle = supergroupColour(gp)
-            g.globalAlpha = 0.95
+            g.globalAlpha = onlyGroup && !only ? 0.35 : 0.95
             g.fillText(label, x, 16)
+            // Underline the one being shown alone, so the board says what it
+            // is doing rather than leaving the reader to infer it.
+            if (only) {
+              g.fillRect(x, 20, tw, 1)
+            }
+            labelHits.current.push({ x: x - 4, y: 2, w: tw + 8, h: 20, kind: 'group', value: gp })
           })
           g.globalAlpha = 1
         }
@@ -2273,7 +2386,7 @@ function Sky({
 
     raf = requestAnimationFrame(safeDraw)
     return () => cancelAnimationFrame(raf)
-  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, pool, fitScale, newsOverlay, itemById])
+  }, [size, nodes, links, targets, colour, selected, view, activeCons, mode, focusCon, tl, cam, orbit3d, unreviewed, forecast, pool, fitScale, newsOverlay, itemById, onlyGroup, onlyLevel, onlyYear])
 
   const toWorld = (cx: number, cy: number) => {
     const r = cv.current!.getBoundingClientRect()
@@ -2322,6 +2435,35 @@ function Sky({
 
   function onPointerDown(e: React.PointerEvent) {
     idleSince.current = performance.now()
+
+    /**
+     * A label takes the pointer before anything else.
+     *
+     * The labels sit over the plot, so a click on one would otherwise fall
+     * through to whatever body happens to be behind it — and the reader would
+     * get a detail panel when they asked to hone.
+     */
+    {
+      const r = cv.current!.getBoundingClientRect()
+      const px = e.clientX - r.left
+      const py = e.clientY - r.top
+      const hit = labelHits.current.find(
+        (l) => px >= l.x && px <= l.x + l.w && py >= l.y && py <= l.y + l.h,
+      )
+      if (hit) {
+        // Clicking the same label again clears it. Anything else replaces it —
+        // two hones of the same kind at once is not a thing a reader can mean.
+        if (hit.kind === 'group') {
+          setOnlyGroup((cur) => (cur === hit.value ? null : (hit.value as Supergroup)))
+        } else if (hit.kind === 'level') {
+          setOnlyLevel((cur) => (cur === hit.value ? null : hit.value))
+        } else {
+          const yr = Number(hit.value)
+          setOnlyYear((cur) => (cur === yr ? null : yr))
+        }
+        return
+      }
+    }
 
     // A headline satellite takes the pointer before the body it orbits.
     if (newsOverlay && newsHits.current.length) {
