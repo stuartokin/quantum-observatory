@@ -978,7 +978,20 @@ for (const f of files) {
     return text.replace(fm[1], head)
   }
 
-  const content = withIdentity(normaliseFile(rawContent), f.path)
+  /**
+   * normaliseFile repairs whole-file agent output — stray code fences, an
+   * unclosed front-matter delimiter, an unquoted colon anywhere in the
+   * document. All of that is a model formatting its own from-scratch
+   * output; none of it applies to a patch, whose text came out of
+   * `applyFields`, which already re-serialised only the blocks it touched
+   * through js-yaml and left everything else as the original, already-valid
+   * bytes. Running normaliseFile's colon-quoting scan over the whole
+   * document anyway would requote scalars in blocks the patch never
+   * touched, the same "diff touches fields nobody named" problem the patch
+   * mechanism exists to prevent — one layer up, at the file level instead
+   * of the field level.
+   */
+  const content = withIdentity(hasFields ? rawContent : normaliseFile(rawContent), f.path)
   // Validate against the schema that actually governs this collection.
   const check = checkFile(content, schemaForPath(f.path))
 

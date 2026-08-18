@@ -22,6 +22,23 @@ export const LEVELS: Readiness[] = [
   'mainstream',
 ]
 
+/**
+ * `readiness` is enum-constrained by the schema before anything merges, so
+ * this should never see a value outside LEVELS — but `Math.max(0,
+ * LEVELS.indexOf(...))` used to fold "not found" into "emerging" (index 0)
+ * exactly the same as a genuinely emerging item, with nothing to say which
+ * one happened. Warn once so a bypassed gate is visible rather than a
+ * silently misplaced item.
+ */
+export function levelIndex(readiness: Readiness): number {
+  const i = LEVELS.indexOf(readiness)
+  if (i === -1) {
+    console.warn(`Unrecognised readiness "${readiness}" — drawing as emerging.`)
+    return 0
+  }
+  return i
+}
+
 export const CONSTELLATIONS = [
   'architectures',
   'error-correction',
@@ -88,8 +105,14 @@ export function hash(s: string): number {
   return ((h >>> 0) % 100000) / 100000
 }
 
+// evidence.claim is schema-required, so this should never see a published
+// item without one — but the schema gate is a build-time promise, not a
+// runtime one, and this is read on every frame. Guard rather than throw; a
+// missing claim reads as unsourced, never as sourced by default.
 export const isSourced = (i: FrontierItem) =>
-  i.status === 'published' && !i.evidence.claim.startsWith('NEEDS PRIMARY SOURCE')
+  i.status === 'published' &&
+  !!i.evidence?.claim &&
+  !i.evidence.claim.startsWith('NEEDS PRIMARY SOURCE')
 
 /**
  * Attention must be EARNED. The first version gave it to anything recently
@@ -134,7 +157,7 @@ export function layout(items: FrontierItem[], opts: LayoutOpts): Node[] {
 
   const nodes: Node[] = items.map((item) => {
     const con = item.constellation ?? ''
-    const level = Math.max(0, LEVELS.indexOf(item.readiness))
+    const level = levelIndex(item.readiness)
     const off = offsets[con] ?? { dx: 0, dy: 0 }
 
     // Scatter on a disc around the constellation's home, so members form a

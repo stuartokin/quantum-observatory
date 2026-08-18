@@ -24,6 +24,24 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.48.11',
+    date: '2026-08-18',
+    headline: 'A full review of the codebase, and the zoom floor finally means what it says.',
+    ui: [
+      'Zooming out on the galaxy hit a hardcoded floor of 0.5 rather than the fit-to-frame value the board already computes for exactly this purpose. On a fully spread board that value can sit well under 0.5, so part of it could end up permanently off-screen with nothing to reach it — the wheel and pinch handlers now clamp to the real floor.',
+      "A headline's position on the timeline was computed to the month and then thrown away: yearFraction took a fractional year but built its date with `new Date(year, 0, 1)`, which truncates a non-integer year argument to 1 January. Every headline in the same calendar year rendered stacked at the same point regardless of which month it happened. Fixed by interpolating between the year's start and the next year's start.",
+      'Draft items could render live in two places: the news loader excluded archived and rejected items but never checked for `published`, and the "most changed constellation" panel queried every status rather than the published-only set the rest of the board reads from.',
+      'An unrecognised readiness value silently drew as "emerging" with nothing to say so happened. Now warns once rather than misplacing an item quietly.',
+    ],
+    agents: [
+      'A patch touching one field of a block that also held an unquoted date could silently rewrite that date as an ISO timestamp instead of leaving it as the plain string the schema expects — applyFields never normalised the types YAML hands back, unlike every other parser in this pipeline. Fixed, and covered by a regression test.',
+      'Patch output was still being run through the whole-file colon-quoting repair pass built for a model\'s from-scratch text, which could requote a scalar in a block the patch never touched — undermining, one layer up, the "untouched bytes survive" guarantee the patch mechanism exists to provide. Patch output now skips that pass.',
+      "content/forecasts/ had no schema and no validation gate anywhere, and the loader destructured `estimates` with no guard — a malformed hand-edit to the Q-Day file would have crashed the whole app to the error screen. Added content/schema/forecast.schema.json, wired it into validate-content.mjs, and the loader now skips a malformed forecast rather than crashing.",
+      'A dotted path addressing into an array — `evidence.sources.role`, which was never supported — silently overwrote the whole array with `{}` while building the path. Refused now, with a clear reason, instead of destroying it.',
+      "The review field's TypeScript type had drifted from the schema (optional in code, required by the schema) and isSourced read evidence.claim with no guard. Both fixed so a bypassed gate fails safe rather than surprising.",
+    ],
+  },
+  {
     version: '0.48.0',
     date: '2026-08-18',
     headline: 'Click a label to hone, and the board settles rather than appears.',
@@ -129,21 +147,6 @@ export const RELEASES: Release[] = [
       'Headline satellites appear on the timeline at their own date, not beside the item they bear on — so several announcements about one development read as a sequence rather than a stack. A faint thread links each back to its item once there is room to draw one.',
       'The timeline key now documents the shapes as well as the colours. Half the visual grammar had gone unexplained.',
       'ETH Zürich, ETH Zurich and ETHZ were three organisations wearing three shapes. Actor names are normalised — diacritics, punctuation, legal suffixes and common aliases — before the shape is chosen.',
-    ],
-  },
-  {
-    version: '0.37.0',
-    date: '2026-08-10',
-    headline: 'The newsroom stops repeating itself, and starts finding things.',
-    agents: [
-      'The newsroom had never been shown its own back catalogue, so every run started from nothing and had no way to avoid duplication. It now gets every published headline with its date and subject, and a coverage-by-month table showing where the gaps are.',
-      'Two duplicate gates: same source and similar wording fails the build; similar wording with different sources warns, because companion papers exist and failing on a guess trains people to ignore the check.',
-      'Dates must record when something happened, never when it was found. One paper reached the board twice because the two runs dated it differently.',
-      'A backfill method rather than a search: read one month of an aggregator archive and follow each item to its primary source, then sweep the journal tables of contents for the same month. One month per run — a year in one run produces eight items and the impression that eight is all there was.',
-    ],
-    ui: [
-      'Headlines became a window rather than a strip: moveable, resizable, minimisable, switching between a rolling ticker and an archive grouped by year and month. Dragging it taller or shorter switches the view.',
-      'Panel titles are clickable where there is something to say — the headline counts, their span, how many are verified and how many trace back to research.',
     ],
   },
 ]

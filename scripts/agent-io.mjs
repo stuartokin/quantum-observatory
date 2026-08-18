@@ -247,7 +247,19 @@ function setPath(obj, path, value) {
   let cur = obj
   for (let i = 0; i < parts.length - 1; i++) {
     const k = parts[i]
-    if (cur[k] == null || typeof cur[k] !== 'object' || Array.isArray(cur[k])) {
+    if (Array.isArray(cur[k])) {
+      // A path addressing *into* an array — "evidence.sources.role" and
+      // the like — isn't supported; there is no per-element merge verb,
+      // deliberately (see the comment on applyFields). Silently replacing
+      // the whole array with {} to build the rest of the path is worse
+      // than refusing: it destroys real data on a path that was never
+      // going to mean what the agent thought it meant.
+      throw new Error(
+        `"${path}" addresses into "${parts.slice(0, i + 1).join('.')}", which is an array — ` +
+          `replace the whole array by its own top-level path instead`,
+      )
+    }
+    if (cur[k] == null || typeof cur[k] !== 'object') {
       if (value === null) return // nothing to delete on a path that isn't there
       cur[k] = {}
     }
@@ -327,7 +339,15 @@ export function applyFields(existingRaw, fields) {
   const m = existingRaw.match(FRONT_MATTER)
   if (!m) throw new Error('the existing file has no front matter to patch')
   const yaml = require('js-yaml')
-  const data = yaml.load(m[1])
+  // Same reason checkStructure normalises: YAML parses an unquoted date into
+  // a Date object, not a string. Only the fields named in `fields` end up
+  // re-dumped below, but that dump re-serialises the *whole* top-level block
+  // the field lives in — so an unrelated unquoted date sharing a block with
+  // a touched field would otherwise round-trip as an ISO timestamp
+  // (`2026-08-01T00:00:00.000Z`) instead of surviving as the plain date
+  // string the schema expects. Normalising the parsed copy before anything
+  // is read from it closes that off, the same way checkStructure already does.
+  const data = normaliseTypes(yaml.load(m[1]))
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     throw new Error('the existing front matter is not an object')
   }

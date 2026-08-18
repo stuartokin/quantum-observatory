@@ -2722,7 +2722,7 @@ function Sky({
     const r = cv.current!.getBoundingClientRect()
     const cx = e.clientX - r.left - 108
     const cy = e.clientY - r.top - 10
-    const k = Math.min(5, Math.max(0.5, view.k * (e.deltaY < 0 ? 1.15 : 0.87)))
+    const k = Math.min(5, Math.max(fitScale, view.k * (e.deltaY < 0 ? 1.15 : 0.87)))
     setView({ k, tx: view.tx + cx / k - cx / view.k, ty: view.ty + cy / k - cy / view.k })
   }
 
@@ -2913,7 +2913,7 @@ function Sky({
       return
     }
 
-    const k = Math.min(5, Math.max(0.5, (pinch.current.k * d) / pinch.current.d))
+    const k = Math.min(5, Math.max(fitScale, (pinch.current.k * d) / pinch.current.d))
     setView({ k, tx: view.tx + mx / k - mx / view.k, ty: view.ty + my / k - my / view.k })
   }
 

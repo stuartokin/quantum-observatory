@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { allFrontier } from '../content/frontier'
+import { frontier } from '../content/frontier'
 import type { FrontierItem } from '../content/frontierTypes'
-import { LEVELS } from '../renderers/board/tower'
+import { LEVELS, levelIndex } from '../renderers/board/tower'
 import { drawBody } from '../renderers/board/glyphs'
 import { DEFAULT_CAMERA, project, ringPosition } from '../renderers/board/orbit3d'
 import type { NewsEntry } from '../renderers/board/news'
@@ -29,17 +29,18 @@ export function MiniOrbit({
   const wrap = useRef<HTMLDivElement>(null)
 
   const members = useMemo(
-    () =>
-      allFrontier.filter(
-        (i) => i.constellation === constellation && i.status !== 'archived',
-      ),
+    // `frontier` is already published-only — the rest of the app's canonical
+    // view. This used to read `allFrontier` and filter only non-archived,
+    // which let a draft item appear lit and clickable here before anyone had
+    // published it.
+    () => frontier.filter((i) => i.constellation === constellation),
     [constellation],
   )
 
   const rings = useMemo(() => {
     const byLevel = new Map<number, FrontierItem[]>()
     for (const m of members) {
-      const lvl = Math.max(0, LEVELS.indexOf(m.readiness))
+      const lvl = levelIndex(m.readiness)
       if (!byLevel.has(lvl)) byLevel.set(lvl, [])
       byLevel.get(lvl)!.push(m)
     }

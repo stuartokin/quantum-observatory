@@ -11,11 +11,32 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.48.8.** Board at roughly 80 frontier items across nine
-constellations, ~90 headlines, twelve standing questions, five agents plus a
+**Version 0.48.11**, built in this session but not yet dragged into
+`main` — see "Delivery now goes through the browser, not git push" below
+before assuming otherwise. Board at roughly 88 frontier items across nine
+constellations, ~97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
 **Live at** stuartokin.github.io, deployed from `main` via GitHub Pages.
+
+**This session (0.48.11) fixed everything a full-repo code review turned
+up**, on request, after the review itself was written up and delivered
+first. Three real bugs a reader would notice — the zoom-out floor was
+computed and never wired to the actual zoom clamp, so a spread-out board
+could have unreachable off-screen area with no scrollbar to recover it;
+timeline headlines were positioned to the month and then that precision was
+silently discarded by `yearFraction`'s `new Date(year, 0, 1)`, stacking a
+year's headlines at one point; and draft items could render live in the news
+ticker and the "most changed constellation" panel, which read from the
+unfiltered collection instead of the published-only one. Plus one that
+matters more than it sounds: `applyFields` (the patch mechanism below) could
+silently round-trip an unquoted date into an ISO timestamp if it shared a
+touched block with a patched field — dormant only because current content
+happens to quote every date. Full list, file by file, with the verification
+for each: `CODE-REVIEW-2026-08-18.md`, also saved in the Claude Project as
+`claude/2026-08-18-code-review.md`. All fixes are covered by the existing
+gates (`npm run build` chain) plus two new regression tests in
+`test-agent-io.mjs`; everything was green before this was handed back.
 
 **The applications constellation was empty a week ago** and now holds four
 items, all correctly hedged: no verified quantum advantage on a commercially
@@ -31,6 +52,44 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## Delivery now goes through the browser, not git push
+
+**Read this before doing anything else in a new session.** Stuart now works
+from Claude Projects and updates GitHub by hand through the browser — not
+by asking a session to `git push`. An earlier session already hit this from
+the other direction: its git proxy declined push access to
+`stuartokin/stuartokin.github.io` outright, and the fix that session shipped
+went out as a raw diff file for manual `git apply`. That was a one-off
+workaround; this is now the standing way changes leave a session; don't
+attempt `git push` and don't be surprised when it isn't available.
+
+**What a session owes at the end of a change, every time:**
+
+1. **A zip of only the changed and new files**, each at its real
+   repo-relative path (`src/renderers/board/Board.tsx`, not `Board.tsx`) —
+   so unzipping locally reproduces a small tree that drops straight onto the
+   repo, and dragging that tree into GitHub's "Add file → Upload files" page
+   preserves the paths and offers to replace what's there. A zip of the
+   *whole* repo when three files changed makes the reader hunt for what
+   actually moved; don't do that.
+2. **`package.json`'s version bumped**, same convention as always — one
+   version per delivered change, regardless of size, so a report of a
+   problem can name a build.
+3. **A new entry at the top of `src/releases.ts`**, in the project's own
+   voice (what changed and why it was wrong before, not a commit-message
+   summary of files touched) — this is what actually renders in the Help
+   panel's "last N releases", which is the only changelog a reader of the
+   live site ever sees. Trim the oldest entry to keep the array at ten, per
+   its own docstring.
+4. **A plain-language note of exactly which files changed**, in the chat
+   response, so Stuart doesn't have to open the zip to know what he's about
+   to overwrite.
+
+None of this replaces `HANDOVER.md` itself — still update it the same way
+this entry does, so the next session isn't rediscovering the same ground.
 
 ---
 
@@ -106,58 +165,48 @@ behind it, rather than reasoning about causes.**
 
 ---
 
-## The known next task — done, not yet merged
+## Patch mode is live
 
-**Let an agent return a patch rather than a whole file.** Built in a later
-session (patch not yet applied to `main` — see below for why). `agent-io.mjs`
-gained `applyFields(existingRaw, fields)`: `fields` is a flat object of dotted
-paths (`evidence.claim`, `review.note`, `qdayImpact`) to new values, applied to
-the item as it stands on `content/frontier/<id>.md` — never the inbox, which
-holds only this run's unmerged proposals. `null` deletes a field. The special
-key `body` replaces the markdown below the front matter. `evidence.sources`
-still replaces the whole array — no per-element merge verb, as expected.
+**Let an agent return a patch rather than a whole file.** This landed in
+`main` since the last rewrite of this section — confirmed by `writeMode:
+"patch"` present in `sourcer`, `verifier` and `reviewer`'s `agent.json`, and
+by the version number having moved from 0.48.8 to 0.48.10 before this
+session started. `agent-io.mjs` has `applyFields(existingRaw, fields)`:
+`fields` is a flat object of dotted paths (`evidence.claim`, `review.note`,
+`qdayImpact`) to new values, applied to the item as it stands on
+`content/frontier/<id>.md` — never the inbox, which holds only a run's
+unmerged proposals. `null` deletes a field. The special key `body` replaces
+the markdown below the front matter. `evidence.sources` still replaces the
+whole array — no per-element merge verb, deliberately.
 
-`run-agent.mjs` reads the live file, applies the patch, and runs it through the
-same `checkFile` a whole file always went through — so an overflowing field is
-rejected exactly as before, except now only the fields in that one patch are
-at risk, not everything else about the item. `sourcer`, `verifier` and
-`reviewer` are marked `"writeMode": "patch"` in their `agent.json` and may no
-longer send `content` at all; `scout` and `newsroom` are untouched and still
-create whole files, since a file that doesn't exist yet has nothing to patch.
+`run-agent.mjs` reads the live file, applies the patch, and runs it through
+the same `checkFile` a whole file always went through, so an overflowing
+field is rejected exactly as before — except now only the fields in that one
+patch are at risk, not everything else about the item. `scout` and
+`newsroom` are untouched and still create whole files, since a file that
+doesn't exist yet has nothing to patch.
 
-**One real bug found and fixed on the way, worth knowing if this is touched
-again:** the first version of `applyFields` re-serialised the *whole* document
-through `js-yaml.dump()` after every patch. That's correct — js-yaml never
-mis-quotes a colon or an apostrophe the way hand-written YAML can — but it also
-reformats every field's quoting for the whole file, because js-yaml decides
-quoting style for the object as a whole, not per field. A patch touching one
-line in `review.note` produced a diff touching the title, the summary, every
-metric and every source. The fix, now in place: only the *top-level* YAML
-blocks named in the patch are re-serialised and spliced back into the original
-text; everything else survives byte for byte. Tested against a real board item
-— see the `applyFields` tests added to `scripts/test-agent-io.mjs`.
+**This session's review found and fixed two more bugs in it**, both recorded
+in full in `CODE-REVIEW-2026-08-18.md`: `applyFields` didn't normalise a
+Date object YAML hands back for an unquoted date, so a patch could silently
+round-trip an unrelated date field into an ISO timestamp; and
+`run-agent.mjs` ran patch output through `normaliseFile`'s whole-document
+colon-quoting repair pass regardless, which could requote a scalar the patch
+never touched — the exact "diff touches fields nobody named" problem the
+patch mechanism exists to prevent, one layer up. Both fixed; the first is
+now covered by a regression test in `scripts/test-agent-io.mjs`.
 
-**A second, unrelated bug turned up in `check-order.mjs` while building this**
-— recorded in `DESIGN-LOG.md` since it's a gotcha for anyone editing
-`run-agent.mjs`'s context-building code, not specific to patches.
+**Still open, not part of this session's ask — worth a look:**
 
-**Not yet resolved, worth a look before merging:**
-
-- `verifier`'s prompt was left setting `review.state: agent-merged` on every
-  patch, matching what it already said before this change — but the schema's
-  own description of `agent-merged` is "published by an agent, unchecked",
-  and verifier's whole job is *checking*. That reads like it should be
-  `agent-reviewed`, matching what `reviewer` sets. Not changed here since it
-  wasn't part of the ask and predates this session — flagging rather than
-  quietly fixing it, per the standing rule on decisions.
+- `verifier`'s prompt sets `review.state: agent-merged` on every patch, but
+  the schema's own description of `agent-merged` is "published by an agent,
+  unchecked", and verifier's whole job is *checking*. Reads like it should be
+  `agent-reviewed`, matching what `reviewer` sets. Flagging rather than
+  quietly changing it, per the standing rule on decisions.
 - Budgets (`budget.proposals` in each `agent.json`) were sized for whole-file
-  output economics and left untouched. A patch is far smaller than a full
-  item, so these are probably now conservative rather than tight — worth
-  revisiting once a run or two shows the real size of a patch response.
-- This session had no push access to this repo (the environment's git proxy
-  declined it), so the change is a patch file, not a merged commit. Someone
-  needs to `git apply` it, run the checks listed in the delivery README, and
-  push.
+  output economics. A patch is far smaller than a full item, so these are
+  probably conservative now rather than tight — worth revisiting once a run
+  or two shows the real size of a patch response.
 
 ## What a new conversation needs to be given
 
@@ -166,7 +215,8 @@ Not much, if these are read:
 1. `OPERATING.md` — the loop, what a person decides, how to write a queue entry
 2. `agents/_decisions.md` — every settled question, so none is reopened
 3. `DESIGN-LOG.md` — the interface decisions and the failures behind them
-4. This file
+4. This file — including "Delivery now goes through the browser, not git
+   push" above, which changes what a session owes at the end of any change
 5. `package.json` — for the current version number
 
 Then whichever specific files a task touches. Do not accept an edit to a file

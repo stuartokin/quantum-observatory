@@ -82,7 +82,10 @@ export interface FrontierItem {
   qdayReasoning?: string
   horizon?: 1 | 2 | 3
   novelty?: string
-  review?: Review
+  // frontier.schema.json marks this required (every item declares whether a
+  // human has read it) — the TS type had drifted to optional, which would
+  // mask a genuine omission if the schema gate were ever bypassed.
+  review: Review
   status: 'draft' | 'published' | 'archived'
   moved?: { from?: Readiness; on?: string }
   articles?: string[]

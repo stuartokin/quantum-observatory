@@ -11,7 +11,11 @@ export const allNews: NewsItem[] = Object.entries(files)
   .filter(([path]) => !path.endsWith('README.md'))
   .map(([, { attributes, body }]) => ({ ...(attributes as unknown as NewsItem), body }))
   .filter((n) => n.schema === 'news/v1')
-  .filter((n) => n.status !== 'archived' && n.validation?.status !== 'rejected')
+  // 'draft' is a real status a file can carry mid-edit; it never enforced
+  // published-only the way frontier.ts and loader.ts do for their own
+  // collections, so a draft news file rendered live indistinguishably from
+  // a published one.
+  .filter((n) => n.status === 'published' && n.validation?.status !== 'rejected')
   .sort((a, b) => b.date.localeCompare(a.date))
 
 export const newsFor = (pillar: string): NewsItem[] =>

@@ -189,6 +189,20 @@ t('  the review block gained the note', /note: .*Checked: Shor''s result confirm
 t('  review.state survives untouched', /state: agent-merged/.test(patchedNote))
 t('  body is untouched', patchedNote.includes('Body paragraph one.'))
 
+// checkStructure normalises an unquoted YAML date (a Date object once
+// parsed) back to a plain string; applyFields used to skip that step, so a
+// patch touching one field of a block that also held an unquoted date
+// re-dumped the date as an ISO timestamp instead of leaving it as the date
+// string the schema expects. doc3 mirrors doc2 but with `agentMergedOn`
+// written unquoted, the way an agent sometimes does.
+const doc3 = doc2.replace("  agentMergedOn: '2026-08-01'", '  agentMergedOn: 2026-08-01')
+const patchedUnquotedDate = applyFields(doc3, { 'review.note': 'Checked again.' })
+t('an unquoted date sharing a touched block survives as a plain date', (() => {
+  const m = patchedUnquotedDate.match(/agentMergedOn: (\S+)/)
+  return !!m && m[1].replace(/'/g, '') === '2026-08-01'
+})())
+t('  not re-dumped as an ISO timestamp', !/agentMergedOn: 2026-08-01T/.test(patchedUnquotedDate))
+
 const patchedNested = applyFields(doc2, { 'evidence.claim': 'A revised claim: with a colon.' })
 t('nested dotted path replaces one leaf, keeps its siblings', (() => {
   const m = patchedNested.match(/evidence:\n([\s\S]*?)\nreview:/)
@@ -200,6 +214,18 @@ const patchedList = applyFields(doc2, { 'evidence.sources': [{ url: 'https://exa
 t('evidence.sources replaces the whole array', (() => {
   const m = patchedList.match(/sources:\n([\s\S]*?)\nreview:/)
   return m[1].includes('example.com/new') && !m[1].includes('arxiv.org/abs/1234.5678')
+})())
+
+// A path that addresses *into* an array (per-element addressing was never
+// supported) used to silently overwrite the whole array with {} while
+// building the intermediate path, rather than refusing the patch.
+t('a dotted path into an array is refused rather than destroying it', (() => {
+  try {
+    applyFields(doc2, { 'evidence.sources.role': 'primary' })
+    return false
+  } catch (e) {
+    return /is an array/.test(e.message)
+  }
 })())
 
 const patchedNewKey = applyFields(doc2, { qdayImpact: 1 })

@@ -1,5 +1,5 @@
 import type { FrontierItem } from '../../content/frontierTypes'
-import { LEVELS } from './tower'
+import { LEVELS, levelIndex } from './tower'
 
 /**
  * TIMELINE
@@ -131,7 +131,7 @@ export function layoutTimeline(
   const marks: Mark[] = items.map((item, i) => {
     const d = dates[i]
     const prec = resolved[i].precision
-    const level = Math.max(0, LEVELS.indexOf(item.readiness))
+    const level = levelIndex(item.readiness)
     const weight = item.confidence === 'high' ? 1 : item.confidence === 'medium' ? 0.65 : 0.35
     const src = opts.sourced(item)
     const att = opts.attention(item)
@@ -184,7 +184,20 @@ export function layoutTimeline(
   return { marks, from: new Date(lo), to: new Date(hi), years, undated: un.length }
 }
 
+/**
+ * `year` may carry a fractional part — Board.tsx computes one deliberately
+ * so a headline lands within its year rather than always at 1 January, which
+ * is the whole point of aligning it by month. `new Date(year, 0, 1)`
+ * truncates a non-integer year argument (`new Date(2026.5, 0, 1)` is
+ * `2026-01-01`, not halfway through 2026), which silently discarded that
+ * precision and stacked every headline in a year at the same x. Interpolate
+ * between the year's start and the next year's start instead.
+ */
 export function yearFraction(year: number, from: Date, to: Date): number {
-  const t = new Date(year, 0, 1).getTime()
+  const y0 = Math.floor(year)
+  const frac = year - y0
+  const start = new Date(y0, 0, 1).getTime()
+  const end = new Date(y0 + 1, 0, 1).getTime()
+  const t = start + (end - start) * frac
   return GUTTER + ((t - from.getTime()) / (to.getTime() - from.getTime())) * (1 - GUTTER)
 }

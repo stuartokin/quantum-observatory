@@ -40,9 +40,22 @@ const files = import.meta.glob('/content/forecasts/*.md', {
 }) as Record<string, { attributes: Record<string, unknown>; body: string }>
 
 
-export const forecasts: Forecast[] = Object.values(files).map(
-  ({ attributes, body }) => ({ ...(attributes as unknown as Forecast), body }),
-)
+export const forecasts: Forecast[] = Object.values(files)
+  .map(({ attributes, body }): Forecast | null => {
+    const f = attributes as unknown as Forecast
+    // Now schema-gated at build time (content/schema/forecast.schema.json),
+    // but this is the one collection consumers destructure straight into —
+    // Panels.tsx reads forecast.estimates.{earliest,...} with no guard of
+    // its own, so a malformed file here would crash the whole app to the
+    // ErrorBoundary rather than just being missing. Same defence frontier.ts
+    // already applies per item: skip and warn rather than take the board down.
+    if (!f?.id || !f.estimates) {
+      console.warn('Skipping malformed forecast file')
+      return null
+    }
+    return { ...f, body }
+  })
+  .filter((f): f is Forecast => f !== null)
 
 export const forecastFor = (pillar: string): Forecast | undefined =>
   forecasts.find((f) => f.pillar === pillar)
