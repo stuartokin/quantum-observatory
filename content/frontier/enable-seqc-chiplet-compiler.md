@@ -41,14 +41,14 @@ evidence:
       date: '2026-07-30'
       identifier: arXiv:2501.08478v5
       accessed: '2026-08-18'
-      note: 'v5 (30 Jul 2026) is the current version, likely camera-ready for QCE26. Accepted at IEEE QCE26 QSYS track per published schedule PDF. Proceedings not yet on IEEE Xplore; raise to E4 when DOI is available.'
+      note: 'v5 (30 Jul 2026) is the current version, likely camera-ready for QCE26. Accepted at IEEE QCE26 QSYS track per published schedule PDF. Proceedings not yet on IEEE Xplore; raise to E4 when DOI is available. Opened and confirmed: 9.3–32.3% average fidelity increase, 1.34–3.27× speedup, IBM Quantum hardware validation, Northwestern/MIT Lincoln Laboratory authors, DOE SQMS Center funding. All metrics consistent with arXiv abstract and HTML.'
     - url: https://qce.quantum.ieee.org/2026/wp-content/uploads/sites/13/2026/08/QCE26-Technical-Papers-Schedule-V101.pdf
       role: corroborating
       title: QCE26 Technical Papers Schedule V101
       publisher: IEEE Quantum Week 2026
       date: '2026-08-18'
       accessed: '2026-08-18'
-      note: 'Confirms SEQC acceptance in session QSYS::296::790::791 (Modular Architectures & Communication-Aware Compilation), 3-WED 15:00-16:30, room 713A.'
+      note: 'Confirms SEQC acceptance in session QSYS::296::790::791 (Modular Architectures & Communication-Aware Compilation), 3-WED 15:00-16:30, room 713A. Conference runs 13-18 September 2026, Toronto.'
 confidence: medium
 status: draft
 origin: agent
@@ -59,10 +59,12 @@ novelty: 'Architecture-aware compiler; new method'
 horizon: 2
 added: '2026-08-18'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: steward
   agentMergedOn: '2026-08-18'
+  reviewedOn: '2026-08-18'
+  note: 'Steward review 2026-08-18. State moved from agent-merged to agent-reviewed. arXiv:2501.08478v5 confirmed: title SEQC: Stratify-Elaborate Quantum Compilation Towards Modular Hybrid Architectures, v5 30 Jul 2026, Northwestern University and MIT Lincoln Laboratory, DOE SQMS Center. Metrics 9.3–32.3% average fidelity increase, 1.34–3.27× compilation speedup over chiplet-unaware Qiskit, IBM Quantum hardware validation all confirmed from arXiv abstract. QCE26 schedule PDF confirms acceptance in QSYS track session 296, Wednesday 15:00–16:30, room 713A, Toronto, September 2026. Proceedings not yet on IEEE Xplore as of 2026-08-18 — E3 correct; raise to E4 when DOI appears. Queued sourcer run for post-conference IEEE Xplore check. No corrections needed.'
 ---
 
 ## SEQC: compiler for modular quantum chiplet architectures
