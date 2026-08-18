@@ -68,10 +68,12 @@ status: draft
 origin: agent
 added: '2026-08-17'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2607.24937 opened; 74-qubit heavy-hex Floquet Ising, IBM Heron r3, QESEM, Fugaku Pauli-path divergence at cycle 15 (51 qubits), >500k CPU-hours, cross-platform Quantinuum H2 and Helios all confirmed from arXiv abstract and HTML. E3 correct for preprint. No peer review found. No changes.'
 ---
 
 ## What happened
