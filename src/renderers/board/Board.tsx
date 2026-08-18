@@ -1385,7 +1385,9 @@ function Sky({
    * on arrival and never again — a body that pulsed forever would be
    * decoration rather than a signal.
    */
-  const entering = useRef(new Map<string, { kind: 'moved' | 'new'; at: number }>())
+  const entering = useRef(
+    new Map<string, { kind: 'moved' | 'demoted' | 'new'; at: number }>(),
+  )
   /** Bodies the reader has moved by hand. These win over any computed target,
    *  so rearranging to read a label is never undone by the layout. */
   /**
@@ -1456,7 +1458,9 @@ function Sky({
         v: 0.005 + Math.random() * 0.010,
         w: 0.09 + Math.random() * 0.10,
         h: 0.28 + Math.random() * 0.30,
-        a: 0.05 + Math.random() * 0.05,
+        // Deliberately generous. This was invisible twice; better to see it and
+        // dial it back than to guess again at a number nobody can check.
+        a: 0.10 + Math.random() * 0.08,
         seed: i,
       })),
     ),
@@ -2082,13 +2086,22 @@ function Sky({
       }
 
 
-      // Nebula first: it sits behind the stars, which sit behind everything.
-      if (!reduced) {
+      /**
+       * Nebula first: behind the stars, which are behind everything that means
+       * anything.
+       *
+       * Drawn even when motion is reduced — a soft colour field is not motion,
+       * and hiding it there would remove depth from the readers who most need
+       * the board to be calm. Only its drift is suppressed.
+       */
+      {
         for (const c of nebula.current) {
-          c.y += c.v * dt
-          if (c.y > 1.35) {
-            c.y = -0.35
-            c.drift = (Math.random() - 0.5) * 0.10
+          if (!reduced) {
+            c.y += c.v * dt
+            if (c.y > 1.35) {
+              c.y = -0.35
+              c.drift = (Math.random() - 0.5) * 0.10
+            }
           }
           // The lane's own position, so the column tracks its supergroup even
           // as the view is panned and zoomed.
@@ -2099,21 +2112,29 @@ function Sky({
           const ry = c.h * H
           if (cx < -rx || cx > W + rx) continue
 
-          const grad = g.createRadialGradient(cx, cy, 0, cx, cy, Math.max(rx, ry))
-          // Two stops, both the plain colour, with globalAlpha doing the fade.
-          // The palette's alpha argument exists but is not visible from here,
-          // and a call built on an unverified signature is how the first
-          // version of this drew nothing at all.
-          grad.addColorStop(0, supergroupColour(c.group))
-          grad.addColorStop(1, 'rgba(0,0,0,0)')
-          g.globalAlpha =
-            c.a * Math.min(1, (1.35 - c.y) * 1.6) * Math.min(1, (c.y + 0.35) * 1.6)
-          g.fillStyle = grad
+          /*
+           * The gradient is created inside the transform, not outside it.
+           *
+           * A canvas gradient is resolved against the matrix in force when it
+           * is filled, not when it is made. Creating one at screen coordinates
+           * and then translating to that same point put its centre at twice
+           * the offset — off screen — so every fill drew the transparent end
+           * and the whole layer was invisible.
+           */
           g.save()
           g.translate(cx, cy)
           g.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry))
+
+          const R = Math.max(rx, ry)
+          const grad = g.createRadialGradient(0, 0, 0, 0, 0, R)
+          grad.addColorStop(0, supergroupColour(c.group))
+          grad.addColorStop(1, 'rgba(0,0,0,0)')
+
+          g.globalAlpha =
+            c.a * Math.min(1, (1.35 - c.y) * 1.6) * Math.min(1, (c.y + 0.35) * 1.6)
+          g.fillStyle = grad
           g.beginPath()
-          g.arc(0, 0, Math.max(rx, ry), 0, Math.PI * 2)
+          g.arc(0, 0, R, 0, Math.PI * 2)
           g.fill()
           g.restore()
         }
@@ -2186,6 +2207,15 @@ function Sky({
             movedOn && (Date.now() - new Date(movedOn).getTime()) / 864e5 < 120
           const from = item?.moved?.from
 
+          /*
+           * A demotion looks different from a promotion.
+           *
+           * The axis runs emerging at the top to mainstream at the bottom, so
+           * progress travels downward and a body that rises has been corrected
+           * to a less mature readiness. That is the more consequential news —
+           * the board saying it was wrong — and it should not be told in the
+           * same visual language as an advance.
+           */
           if (recentlyMoved && from && LEVELS.includes(from as never)) {
             // Start on the band it left, at its own x, and travel to the new
             // one. The path is the readiness change, drawn.
@@ -2194,7 +2224,11 @@ function Sky({
               x: n.x,
               y: (fromRow + 0.5) / LEVELS.length,
             })
-            entering.current.set(n.id, { kind: 'moved', at: performance.now() })
+            const toRow = LEVELS.indexOf(n.level as never)
+            entering.current.set(n.id, {
+              kind: toRow < fromRow ? 'demoted' : 'moved',
+              at: performance.now(),
+            })
           } else {
             const addedOn = item?.added
             const isNew =
@@ -2217,7 +2251,7 @@ function Sky({
                   ? 1
                   : // A body travelling from the band it left moves slowly, so the
                     // journey can be followed. Everything else settles as before.
-                    enter?.kind === 'moved'
+                    enter?.kind === 'moved' || enter?.kind === 'demoted'
                     ? 0.022
                     : 0.09
 
@@ -2479,6 +2513,30 @@ function Sky({
           ent?.kind === 'new' ? Math.min(1, (performance.now() - ent.at) / 2000) : 1
         // The glow rises with it, so the arrival is visible on a dim body too.
         const enterGlow = ent?.kind === 'new' ? 1 + (1 - enterFade) * 14 : 1
+
+        /*
+         * A demoted body drags a faint trail back to where it was.
+         *
+         * Rising already reads as odd on an axis where progress descends, and
+         * that oddness is doing useful work — but the trail says which
+         * direction the claim moved, which the position alone does not.
+         */
+        if (ent?.kind === 'demoted' && isProminent) {
+          const item = itemById.get(n.id)
+          const fromRow = LEVELS.indexOf((item?.moved?.from ?? '') as never)
+          if (fromRow >= 0) {
+            const fy = Y((fromRow + 0.5) / LEVELS.length)
+            g.globalAlpha = 0.22 * fade
+            g.strokeStyle = colour
+            g.lineWidth = 1
+            g.setLineDash([2, 4])
+            g.beginPath()
+            g.moveTo(px, py)
+            g.lineTo(px, fy)
+            g.stroke()
+            g.setLineDash([])
+          }
+        }
 
         g.shadowColor = colour
         g.shadowBlur = (isProminent ? (n.sourced ? 16 + n.weight * 12 : 5) : 0) * enterGlow
