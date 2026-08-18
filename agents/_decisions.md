@@ -298,3 +298,26 @@ into the sections above once you have read them — or delete them if wrong.
 Leaving settled flags in place wastes future reviewer attention and creates false impressions of open questions. The flag is part of the item's claim record; a stale one is as misleading as a stale claim.
 
 *Proposed 2026-08-18, after algo-resource-estimation carried 'E2 vs E3 unsettled' on the Babbush source note through three reviewer runs after the 2026-08-16 whitepaper precedent settled it as E3.. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-18
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**When the 2026-08-16 counter-paper confidence-downgrade precedent applies, it requires a named board item whose primary claim is being countered. A counter-paper that simulates a circuit from a preprint not present as a standalone board item does not trigger a confidence downgrade on any existing item; record the counter in the new classical-counter item instead.**
+
+The precedent was written for app-quantum-materials-advantage where the countered claim was the board item's own primary claim. Applying it to unrelated items because they are adjacent would be overreach.
+
+*Proposed 2026-08-18, after algo-classical-fermi-hubbard-ouyang: Q-CTRL arXiv:2605.04025 is not a board item, so no existing item confidence changed. Not yet confirmed by a person.*
+
+**A resource estimate for a physics-simulation crossover (fault-tolerant simulation of condensed matter or quantum dynamics) has qdayImpact 0 regardless of qubit count. The qubit count in such estimates is sized for a physics problem, not a cryptanalytic circuit; citing it as a Q-Day signal would conflate simulation progress with cryptographic capability.**
+
+370,000 physical qubits for Ising dynamics is not 370,000 physical qubits for Shor. The error in the board would be quantum advantage equated with cryptographic capability.
+
+*Proposed 2026-08-18, after algo-ftqc-ising-crossover: 370,000-qubit crossover estimate for mixed-field Ising dynamics, qdayImpact correctly 0. Not yet confirmed by a person.*
+
+**A classical counter-result that defeats a quantum advantage claim from a preprint not currently on the board as a standalone item belongs as a new board item in the algorithms constellation (cluster: classical-advantage-narrowing), not as a modification to an existing item. The counter is the result; the countered preprint is cited as corroborating context.**
+
+Creating the counter as a standalone item preserves the result and its significance without forcing an ill-fitting modification to an existing item that does not cover the countered claim.
+
+*Proposed 2026-08-18, after algo-classical-fermi-hubbard-ouyang created as standalone item; Q-CTRL preprint listed as corroborating source. Not yet confirmed by a person.*

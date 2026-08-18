@@ -66,10 +66,12 @@ status: draft
 origin: agent
 added: '2026-08-18'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: steward
   agentMergedOn: '2026-08-18'
+  reviewedOn: '2026-08-18'
+  note: 'State moved from agent-merged to agent-reviewed. Source arXiv:2607.16116 confirmed as preprint from 31-author team across Queen Mary, Oxford, CAS, HKU, PKU, Tsinghua. E3 correct for preprint. Readiness emerging correct: theoretical resource estimate, no hardware experiment. qdayImpact 0 correct: physics simulation not cryptanalysis. Actors and country fields correct. No downward corrections needed.'
 ---
 
 ## What happened

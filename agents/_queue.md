@@ -35,4 +35,23 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Add arXiv:2606.04771 (Rausch et al., Multiverse Computing) as corroborating source to algo-classical-fermi-hubbard-ouyang
+agent: sourcer
+added: 2026-08-18
+source: issue #129
+
+    /focus sourcer: add arXiv:2606.04771 (Rausch, Rams et al., Multiverse Computing, Jun 2026) as a corroborating source to algo-classical-fermi-hubbard-ouyang. The paper uses GPU-accelerated TDVP at bond dimension ~62,000 to classically simulate the Q-CTRL/IBM 1D Fermi-Hubbard circuit (arXiv:2605.04025), reproducing results including the high-entanglement regime and advancing the classical frontier to t=7 beyond the quantum run at t=6. This is a different method from arXiv:2608.13805 (Ouyang, transverse TN at BD=32) and constitutes a prior independent counter. Add as role corroborating with note explaining method distinction. Do not create a new item.
+
+## Evaluate arXiv:2607.08811 (Krinitsin et al.) for counter-paper impact on board items
+agent: scout
+added: 2026-08-18
+source: issue #129
+
+    /focus scout: read arXiv:2607.08811 (Krinitsin et al., Jul 2026), described as a Comment on 'Beyond-classical computation in quantum simulation' (the D-Wave Science 2025 paper, DOI 10.1126/science.ado6285, which is the primary source for algo-quantum-simulation and arch-annealing). Determine whether it contains a classical counter-result or methodological critique that warrants a confidence downgrade on algo-quantum-simulation or arch-annealing per the 2026-08-16 counter-paper precedent. Report the claim, which board item is affected, and whether a correction is needed.
+
+## Evaluate arXiv:2605.04025 (Q-CTRL/IBM Fermi-Hubbard) as potential standalone contested-advantage-claim item
+agent: scout
+added: 2026-08-18
+source: issue #129
+
+    /focus scout: check arXiv:2605.04025 (Hartnett et al., Q-CTRL/IBM, May 2026). This paper claims a 120-qubit Fermi-Hubbard quantum simulation with 3,000x speedup over classical TDVP. It has since been classically countered by two independent groups (arXiv:2606.04771 Rausch et al. and arXiv:2608.13805 Ouyang et al.). Determine whether it warrants a standalone board item as a contested advantage claim so the counter-papers have something to link against, or whether it is adequately covered as corroborating context in algo-classical-fermi-hubbard-ouyang. If a new item is warranted, propose it at emerging with confidence low and cite both classical counters.

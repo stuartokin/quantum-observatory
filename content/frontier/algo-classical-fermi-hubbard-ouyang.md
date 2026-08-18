@@ -62,11 +62,12 @@ status: draft
 origin: agent
 added: '2026-08-18'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: steward
   agentMergedOn: '2026-08-18'
-  note: 'Caltech preprint E3. Targeted Q-CTRL result (2605.04025) is a preprint not on the board as a standalone item. Two independent classical counters exist for this advantage claim. Pattern matches algo-classical-femoco and algo-classical-fe4s4-advantage.'
+  reviewedOn: '2026-08-18'
+  note: 'State moved from agent-merged to agent-reviewed. Sources confirmed: arXiv:2608.13805 (Caltech, Ouyang/Chi/Chan) is a preprint counter-simulation; E3 correct. arXiv:2605.04025 (Q-CTRL/IBM) correctly listed as corroborating target circuit. Readiness emerging correct for a counter-result item. Actors and country (Caltech, US) correct. The Q-CTRL advantage claim is not a standalone board item so the 2026-08-16 confidence-downgrade precedent does not trigger against any existing item. No downward corrections needed. Sourcer run to add arXiv:2606.04771 (Rausch et al.) as second corroborating source queued.'
 ---
 
 ## What happened
@@ -87,6 +88,6 @@ Q-CTRL's TDVP benchmark at bond dimension 4,096 was the explicit comparison poin
 
 Both counter-papers are preprints. The Q-CTRL paper (arXiv:2605.04025) is also a preprint. The 1D Fermi-Hubbard model with these parameters may have structure that tensor networks exploit especially well; harder instances — 2D models, larger system sizes, different parameter regimes — could behave differently.
 
-## What would change this assessment
+## What would change the assessment
 
 If peer review identifies an error in the Ouyang or Rausch classical simulations, or if Q-CTRL demonstrates advantage on a circuit that both classical methods provably fail, the picture changes. As it stands, this task is not a credible quantum advantage benchmark.
