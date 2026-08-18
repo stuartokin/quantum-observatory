@@ -30,7 +30,7 @@ links:
   - to: arch-superconducting
     relation: depends-on
 evidence:
-  claim: 'Algorithmiq white paper (Q4Bio perspective, algorithmiq.fi, 2024/2026) describes a QB-DMRG hybrid workflow combining low-depth quantum circuits with classical DMRG tensor networks for excited-state electronic structure of BODIPY photosensitizers. Circuits ran on IBM quantum hardware at up to 100 qubits. The paper states quantum-generated samples achieved lower energy than classical DMRG at the same bond dimension. IBM newsroom and Algorithmiq press release (April 2026) confirm Algorithmiq won the sole $2 million Q4Bio prize. No arXiv preprint or journal DOI has been found for the full QB-DMRG pipeline as of 2026-08-16. Evidence ceiling is E2: company PDF plus vendor/prize-body press releases.'
+  claim: 'Algorithmiq white paper (Q4Bio perspective, algorithmiq.fi, 2024/2026) describes a QB-DMRG hybrid workflow combining low-depth quantum circuits with classical DMRG tensor networks for excited-state electronic structure of BODIPY photosensitizers. Circuits ran on IBM quantum hardware at up to 100 qubits. The paper states quantum-generated samples achieved lower energy than classical DMRG at the same bond dimension. IBM newsroom and Algorithmiq press release (April 2026) confirm Algorithmiq won the sole $2 million Q4Bio prize. No arXiv preprint or journal DOI has been found for the full QB-DMRG pipeline as of 2026-08-18. Evidence ceiling is E2: company PDF plus vendor/prize-body press releases.'
   verified: '2026-08-16'
   level: E2
   sources:
@@ -40,7 +40,7 @@ evidence:
       publisher: Algorithmiq
       date: '2024-01-01'
       accessed: '2026-08-16'
-      note: 'Company white paper; no arXiv ID or journal DOI. Date is approximate — document carries no explicit publication date; the Q4Bio prize was awarded April 2026. Describes QB-DMRG workflow and 100-qubit IBM hardware demonstration. E2: vendor document on company website.'
+      note: 'Company white paper; no arXiv ID or journal DOI. Date approximate — no explicit publication date on document; Q4Bio prize awarded April 2026. Describes QB-DMRG workflow and 100-qubit IBM hardware demonstration. E2: vendor document on company website.'
     - url: https://algorithmiq.fi/news/algorithmiq-wins-2-million-wellcome-leap-prize-for-quantum-enabled-cancer-drug-discovery-development/
       role: vendor
       title: 'Algorithmiq Wins $2 Million Wellcome Leap Prize for Quantum-Enabled Cancer Drug Discovery and Development'
@@ -57,11 +57,12 @@ horizon: 2
 novelty: 'first healthcare domain application at 100 qubits; QB-DMRG method novel'
 added: '2026-08-16'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-16'
-  note: 'E2 ceiling: only citable sources are company white paper and press releases. Raise to E3 if an arXiv preprint or journal record for the full QB-DMRG pipeline appears. Domain and method are distinct from app-hybrid-protein-simulation (PDT excited-state vs protein-ligand docking; QB-DMRG vs tensor-network hybrid).'
+  reviewedOn: '2026-08-18'
+  note: 'Q4Bio outcome confirmed via wellcomeleap.org: $2M for scalable path to future advantage, $5M grand prize unawarded, Algorithmiq sole winner. 100-qubit claim in both white paper and press release. No arXiv preprint found for QB-DMRG pipeline as of 2026-08-18. E2 correct: vendor white paper and press releases only. Raise to E3 if arXiv preprint appears. No changes.'
 ---
 
 ## QB-DMRG for photodynamic therapy drug design
@@ -72,6 +73,6 @@ review:
 
 **Previous state of the art.** Classical DMRG is the leading method for strongly correlated electronic structure; its cost scales with bond dimension. VQE and ADAPT-VQE methods have been demonstrated for excited states of small photosensitizer molecules (Nykänen et al., J. Phys. Chem. Lett. 2024), but not at the 100-qubit scale claimed here.
 
-**Limitations.** The full QB-DMRG pipeline result has not been published as a peer-reviewed paper or arXiv preprint as of 2026-08-16. The evidence is an Algorithmiq white paper and prize-body press releases, placing the ceiling at E2. The 100-qubit figure is a circuit-width claim; it does not imply 100 logical or error-corrected qubits. No independent replication of the QB-DMRG advantage claim has been reported.
+**Limitations.** The full QB-DMRG pipeline result has not been published as a peer-reviewed paper or arXiv preprint as of 2026-08-18. The evidence is an Algorithmiq white paper and prize-body press releases, placing the ceiling at E2. The 100-qubit figure is a circuit-width claim; it does not imply 100 logical or error-corrected qubits. No independent replication of the QB-DMRG advantage claim has been reported.
 
 **What would change this assessment.** An arXiv preprint or journal publication of the full QB-DMRG pipeline result would raise this to E3 or E4. Independent replication on a different hardware platform would be E5 evidence for the method. A classical counter-simulation showing the same energy can be reached without quantum hardware would reduce confidence further.

@@ -57,7 +57,7 @@ evidence:
       identifier: 'arXiv:2605.01138'
       doi: '10.48550/arXiv.2605.01138'
       accessed: '2026-08-16'
-      note: 'Primary experimental source. 24 authors; lead Kenneth M. Merz Jr. at Cleveland Clinic and Michigan State University; RIKEN Japan and IBM Quantum co-institutions. Preprint only as of 2026-08-16; no peer-reviewed journal version confirmed.'
+      note: 'Primary experimental source. 24 authors; lead Kenneth M. Merz Jr. at Cleveland Clinic; RIKEN Japan and IBM Quantum co-institutions. Merz holds dual affiliation with MSU (adjunct) though paper lists Cleveland Clinic only. Preprint only as of 2026-08-18; no peer-reviewed journal version confirmed.'
     - url: https://www.nature.com/articles/s41587-026-03233-x
       role: corroborating
       title: 'Quantum computing in transition'
@@ -82,10 +82,12 @@ evidence:
       accessed: '2026-08-16'
       note: 'Independent characterisation. States quantum machines have no advantage over classical machines yet. Key corroboration that this is not an advantage result.'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-16'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2605.01138 HTML opened: ibm_cleveland and ibm_kobe (156-qubit), up to 94 qubits, 9,200 circuits, >100 hours, 1.3e9 outcomes, 11,608 and 12,635 atoms, >40x increase confirmed. Merz: Cleveland Clinic primary in paper; MSU adjunct per Google Scholar and Merz lab page — actors field defensible. wellcomeleap.org: $5M prize unawarded, Algorithmiq sole $2M winner confirmed. E3 correct for preprint. No changes.'
 ---
 
 ## Hybrid quantum-classical protein-ligand simulation at 12,635-atom scale
