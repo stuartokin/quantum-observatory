@@ -2815,10 +2815,36 @@ function FilterSection({
   )
 }
 
+/**
+ * A date a person reads, not a date a machine sorts by.
+ *
+ * "27 July 2026" in a panel meant for reading; ISO stays in the front matter
+ * where it belongs. The month is spelled out because 07/06 is ambiguous across
+ * the Atlantic and this board has readers on both sides of it.
+ */
+function longDate(d: Date | string): string {
+  const date = typeof d === 'string' ? new Date(d) : d
+  if (isNaN(date.getTime())) return 'an unknown date'
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
 function Detail({ item, definition }: { item: FrontierItem; definition?: string }) {
   const colour = PILLAR_SPECTRUM[item.pillar].colour
   const needsSource = item.evidence.claim.startsWith('NEEDS PRIMARY SOURCE')
   const rev = item.review
+
+  /**
+   * The provenance explanation, closed by default.
+   *
+   * Declared here rather than in Board: this is the component that shows it,
+   * and state belongs with the thing that uses it. Putting it a level up is how
+   * the honing controls ended up out of scope.
+   *
+   * Closed each time a different item is opened — an explanation left expanded
+   * from the previous entry is describing the wrong one.
+   */
+  const [provOpen, setProvOpen] = useState(false)
+  useEffect(() => setProvOpen(false), [item.id])
 
   return (
     <div className="detail">
@@ -2834,8 +2860,8 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
               title={PRECISION_NOTE[precision]}
               data-estimated={precision !== 'exact' ? '' : undefined}
             >
-              {precision === 'exact' ? '' : '~'}
-              {date.toISOString().slice(0, 10)}
+              {precision === 'exact' ? '' : 'about '}
+              {longDate(date)}
             </span>
           )
         })()}
@@ -2852,33 +2878,42 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
         {needsSource && <span className="badge" data-conf="low">unsourced</span>}
       </div>
 
-      {/* Provenance first, before any claim. The reader should know who stands
-          behind this before they read what it says. */}
-      <div style={{ marginTop: 'var(--gap-s)' }}>
-        {rev?.state === 'agent-merged' ? (
-          <span className="prov prov--agent">
-            <span className="prov__dot" />
-            Agent-merged — not yet reviewed
-          </span>
-        ) : rev?.state === 'agent-reviewed' ? (
-          <span className="prov prov--checked">
-            <span className="prov__dot" />
-            Agent-checked — not read by a person
-          </span>
-        ) : rev?.state === 'vetoed' ? (
-          <span className="prov prov--vetoed">
-            <span className="prov__dot" />
-            Vetoed
-          </span>
-        ) : (
-          <span className="prov">
-            <span className="prov__dot" />
-            Reviewed {ago(rev?.on)}
-          </span>
-        )}
+      {/**
+        * Provenance is a badge, and the explanation is behind it.
+        *
+        * The reader should know who stands behind an entry before they read
+        * what it says — but four lines of caveat above a two-line title buries
+        * the thing they came for. The badge carries the state; clicking it
+        * carries the reasoning.
+        */}
+      <div className="prov-row">
+        <button
+          className={
+            rev?.state === 'agent-merged'
+              ? 'prov prov--agent prov--button'
+              : rev?.state === 'agent-reviewed'
+                ? 'prov prov--checked prov--button'
+                : rev?.state === 'vetoed'
+                  ? 'prov prov--vetoed prov--button'
+                  : 'prov prov--button'
+          }
+          onClick={() => setProvOpen((v) => !v)}
+          aria-expanded={provOpen}
+          title="What this means"
+        >
+          <span className="prov__dot" />
+          {rev?.state === 'agent-merged'
+            ? 'Agent-merged — not yet reviewed'
+            : rev?.state === 'agent-reviewed'
+              ? 'Agent-checked — not read by a person'
+              : rev?.state === 'vetoed'
+                ? 'Vetoed'
+                : `Reviewed ${ago(rev?.on)}`}
+          <span className="prov__caret">{provOpen ? '▾' : '▸'}</span>
+        </button>
       </div>
 
-      {rev?.state === 'agent-reviewed' && (
+      {provOpen && rev?.state === 'agent-reviewed' && (
         <p className="prov-note">
           <strong>Checked by the reviewer agent</strong> {ago(rev.reviewedOn)}: sources
           opened, claim compared against them, evidence level tested against the
@@ -2889,12 +2924,19 @@ function Detail({ item, definition }: { item: FrontierItem; definition?: string 
         </p>
       )}
 
-      {rev?.state === 'agent-merged' && (
+      {provOpen && rev?.state === 'agent-merged' && (
         <p className="prov-note">
           <strong>Published by the {rev.agent ?? 'research'} agent</strong>{' '}
           {ago(rev.agentMergedOn)}, without human review. The sources below are
           real and were checked by the agent, but nobody has yet read this entry
           and confirmed it. Weigh it accordingly.
+        </p>
+      )}
+
+      {provOpen && rev?.state === 'reviewed' && (
+        <p className="prov-note">
+          A person has read this entry and confirmed it{rev.on ? ` on ${longDate(rev.on)}` : ''}.
+          {rev.note ? ` ${rev.note}` : ''}
         </p>
       )}
 

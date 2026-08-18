@@ -929,3 +929,23 @@
 
 /* The board's own labels are clickable, so say so on approach. */
 .frame__body--flush canvas { cursor: default; }
+
+/* ---------- Provenance as a badge you can open ---------- */
+
+.prov-row { margin-top: var(--gap-s); }
+
+.prov--button {
+  cursor: pointer;
+  border: 1px solid currentColor;
+  background: transparent;
+  min-height: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+}
+.prov--button:hover { background: rgb(255 255 255 / 0.04); }
+.prov__caret { opacity: 0.6; font-size: 0.7em; margin-left: 2px; }
+
+/* The explanation is now optional, so it can afford to be quieter. */
+.prov-note { margin-top: 6px; }
