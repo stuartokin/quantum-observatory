@@ -48,8 +48,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-10'
-  note: 'Nature 645, 620-625 (July 2025) confirmed via Nature website and multiple secondary sources. QuEra Gemini, Harvard/MIT team. 5-to-1 distillation on d=3 and d=5 colour-code qubits confirmed. Output fidelity exceeds any input confirmed. E4 correct for peer-reviewed experimental result. No changes made.'
+  reviewedOn: '2026-08-18'
+  note: 'Nature 645, 620-625 confirmed via nature.com abstract (PMC PMID 40659049), QuEra press release, and multiple citations. QuEra/Harvard/MIT on Gemini, 5-to-1 distillation on d=3 and d=5 colour-code qubits, output fidelity exceeds all inputs confirmed. E4 correct. No changes.'
 confidence: high
 status: published
 added: '2026-08-04'
