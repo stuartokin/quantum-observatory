@@ -22,11 +22,10 @@ until the backlog clears — then you go quiet.
    pointing at an unevidenced one is a visible weak link
 4. Everything else
 
-**Six items maximum per run.** This is an output-budget limit, not an ambition
-limit: a full file with sources, metrics and a card runs to well over a thousand
-tokens, and twelve of them will not fit in one response. A run that returns four
-complete files is a success; one that returns twelve truncated ones returns
-nothing at all.
+**Six items maximum per run.** A patch is small — a handful of fields, not a
+whole item — so the output budget is generous here. The limit is about depth
+of research, not response size: six items sourced properly is a success, and
+twelve sourced thinly is not better than six done well.
 
 Run the campaign several times rather than trying to finish it in one.
 
@@ -114,10 +113,24 @@ non-specialist reader and that is a different skill from sourcing.
 
 Do your searching first. Then produce the JSON object and stop — **no
 commentary after it**. Prose in the final message spends the same budget as
-file content, and running out mid-file loses the entire run.
+your patches, and running out mid-response loses the entire run.
 
-Write the **complete revised file** for each item you sourced to
-`content/frontier/_inbox/<id>.md`, preserving everything you did not change.
+For each item you sourced, send a **patch** — not a file:
+
+```json
+{ "path": "content/frontier/_inbox/<id>.md", "fields": { "evidence": { "claim": "...", "level": "E3", "verified": "2026-08-18", "sources": [ ... ] }, "actors": [ ... ], "country": [ ... ], "metrics": [ ... ], "readiness": "experimental" } }
+```
+
+Name only the fields you are setting. You do not resend `title`, `plain`,
+`pillar`, or anything else you have not touched — the runner applies your
+fields to the item as it stands on the board and leaves everything else
+exactly as it is. This is the whole point: a field that overflows its limit
+now costs the fields in that one patch, not the entire item, including
+everything about it that was already right.
+
+Set `review` field by field, not as one block — `review.by`, `review.agent`,
+`review.agentMergedOn`, `review.note` — so you never overwrite a part of it
+you did not mean to touch.
 
 In your summary, three lists:
 
@@ -148,18 +161,18 @@ Everything you produce **publishes automatically**. There is no human gate
 before it reaches the site. That rests entirely on the reader being able to see
 that a human has not checked it.
 
-Every file you write must carry:
+Every item you patch must end up with these `review` fields set, whether the
+item already had them from Scout or you are setting them for the first time:
 
-```yaml
-review:
-  state: agent-merged
-  by: agent
-  agent: sourcer
-  agentMergedOn: '<today>'
+```json
+"review.state": "agent-merged",
+"review.by": "agent",
+"review.agent": "sourcer",
+"review.agentMergedOn": "<today>"
 ```
 
-**You may never write `state: reviewed` or `by: human`.** Only a person sets
-those, and CI fails your run if you try.
+**You may never write `review.state: reviewed` or `review.by: human`.** Only
+a person sets those, and CI fails your run if you try.
 
 ## What you must escalate rather than merge
 
@@ -174,64 +187,38 @@ unwritten.
 Never delete or archive an existing item. If you conclude something does not
 belong on the board at all, say so in your summary and leave it in place.
 
-## File format — exactly this
+## Sending a patch
 
-Each entry in `files` is a complete Markdown document. It must begin with the
-front matter opener on the very first line:
+A patch is JSON, not YAML, and not a file. Send plain values — strings,
+numbers, arrays, objects — and the runner encodes them into the item's front
+matter correctly. You do not open a code fence, you do not write `---`, and
+you never touch anything outside `fields`.
 
-```
----
-schema: frontier/v1
-id: ...
-```
+Each entry in `evidence.sources` may use only these keys — the schema rejects
+any other, and an unknown key discards that patch:
 
-**No code fence around it. No heading above it. No commentary before it.** The
-runner rejects anything that does not start with `---` and the file is lost.
-
-End it with a newline. Nothing after the closing front matter except the card
-body.
-
-## Source fields — these exactly, no others
-
-The schema rejects unknown fields, and a file with one is discarded. Each entry
-in `evidence.sources` may use only:
-
-```yaml
-- url: https://...          # required
-  role: primary             # required: primary | preprint | standard | vendor | corroborating
-  title: ...
-  publisher: ...
-  date: '2025-07-14'        # quote it, or YAML reads it as a date object
-  identifier: 'Nature 645, 620-625 (2025)'
-  doi: 10.1038/s41586-025-09367-3
-  accessed: '2026-08-07'
-  note: ...
+```json
+{
+  "url": "https://...",
+  "role": "primary",
+  "title": "...",
+  "publisher": "...",
+  "date": "2025-07-14",
+  "identifier": "Nature 645, 620-625 (2025)",
+  "doi": "10.1038/s41586-025-09367-3",
+  "accessed": "2026-08-07",
+  "note": "..."
+}
 ```
 
-There is no `authors` field, no `arxivId`, no `journal`. Put an arXiv number in
-`identifier`, the journal in `publisher`, and anything else in `note`.
+`url` and `role` are required (`role` is one of `primary`, `preprint`,
+`standard`, `vendor`, `corroborating`). There is no `authors` field, no
+`arxivId`, no `journal`. Put an arXiv number in `identifier`, the journal in
+`publisher`, and anything else in `note`.
 
-**Quote every number and date.** Unquoted, YAML turns `2.14` into a float and
-`2025` into an integer, and the schema wants strings. This applies to
-`metrics.value` as well.
-
-## Close the front matter
-
-Every file has **two** lines of three dashes: one opening, one closing.
-
-```
----
-schema: frontier/v1
-id: ...
-review:
-  state: agent-merged
----
-
-Card body goes here.
-```
-
-Omitting the closing `---` is the single most common way a well-researched file
-gets discarded. The runner will try to repair it, but do not rely on that.
+Send `evidence.sources` as the **whole list** you want on the item, including
+sources that were already there and correct — there is no way to add one
+source to what is already attached.
 
 ## Field limits
 
@@ -255,44 +242,6 @@ thrown away over a number nobody had measured. Write what the field needs. If
 you are near a limit the field is probably carrying an argument that belongs in
 your summary instead.
 
-
-## Quote anything containing a colon
-
-This is the most common way a well-written file fails to parse.
-
-YAML reads `a: b` as a key and a value, wherever it appears. So an unquoted
-value containing a colon followed by a space breaks the whole document:
-
-```yaml
-# breaks — "magnetometers, atomic clocks: timing" parses as a nested key
-summary: Quantum sensors: magnetometers, atomic clocks: timing assurance
-
-# correct
-summary: 'Quantum sensors: magnetometers, atomic clocks: timing assurance'
-```
-
-Quote the value if it contains a colon, a `#`, or begins with any of
-`% & * ! | > @ \` [ {`. Quote every number and date. When in doubt, quote it —
-single quotes cost nothing and never hurt.
-
-## Never use backslash escapes in YAML
-
-YAML is not JSON. Inside single quotes an apostrophe is escaped by **doubling
-it**, and a backslash means nothing at all:
-
-```yaml
-# breaks — the string ends at the backslash and the rest is garbage
-summary: 'Shor\'s algorithm breaks RSA'
-
-# correct
-summary: 'Shor''s algorithm breaks RSA'
-
-# also correct, and easier — avoid the apostrophe
-summary: 'The Shor algorithm breaks RSA'
-```
-
-The same applies to `\n`, `\t` and `\"`. If a value needs a line break, use a
-block scalar with `|`. If it needs quotes inside, double them.
 
 ## Do not state totals in your summary
 
@@ -504,10 +453,11 @@ summary untrustworthy, including the parts that are accurate.
 
 ## The fields that fail a run
 
-Two passes were discarded today for these, after the searching was already done.
-A file is validated before it is written, so a missing field costs the whole run.
-
-**Required on every frontier item:** confidence, evidence, id, pillar, readiness, review, schema, status, title.
+A patch is validated the same way a full file always was — against the item
+as it stands once your fields are applied. **Required on every frontier
+item:** confidence, evidence, id, pillar, readiness, review, schema, status,
+title — these are already on the item from when it was created, so your
+patch only needs to touch one of them if you are actually changing it.
 
 **Length limits, in characters:**
 - `novelty` — 200
@@ -520,25 +470,25 @@ A file is validated before it is written, so a missing field costs the whole run
 somebody who does not work in the field — two or three sentences, not the whole
 argument. If it runs past the limit you are writing the claim twice.
 
-Check both before you return: a run rejected on a character count has done all
+Check before you send: a patch rejected on a character count has done all
 the thinking and thrown it away.
 
 ## review.note is a log, and logs need pruning
 
 It caps at 800 characters and it is the field most likely to overflow, because
-every pass appends to it. A file discarded on that limit loses the whole run —
-the searching, the reading, the judgement, all of it — and the queue entry is
-spent either way.
+every pass appends to it. Send `review.note` as one patch field — the runner
+replaces it whole, so there is no way to accidentally append to what was there.
 
-**Replace the note; do not extend it.** Keep what still bears on the item's
-current state: an unsettled question, a correction that explains why a field
-reads as it does. Drop what is only a record of a pass that changed nothing.
-"Confirmed unchanged" from three weeks ago is not worth the characters it costs.
+**Write the note fresh; do not extend the old one.** Keep what still bears on
+the item's current state: an unsettled question, a correction that explains
+why a field reads as it does. Drop what is only a record of a pass that
+changed nothing. "Confirmed unchanged" from three weeks ago is not worth the
+characters it costs.
 
 If what you need to say will not fit in 800, the item's history belongs in the
 body rather than the front matter.
 
-## Check the caps before you return a file
+## Check the caps before you send a patch
 
 Your context lists any item that is near a limit, and in which field. On those:
 
@@ -546,9 +496,9 @@ Your context lists any item that is near a limit, and in which field. On those:
   to. Put a new finding in a source note, which is where the detail belongs.
 - **sources[].note at 600** — one source, one note. Do not fold a second
   paper's detail into an existing note.
-- **review.note at 800** — prune, as above.
+- **review.note at 800** — write fresh, as above.
 - **plain at 1600** — if it runs past, you are writing the claim twice.
 
-Three runs on this board have been discarded on these limits, on three
-different fields, each time after the work was already done. Counting is
-cheaper than repeating.
+A patch that overflows one of these loses the fields in that patch — the
+research behind it is not lost, because the fields you did not touch are
+never at risk. Counting is still cheaper than sending it twice.

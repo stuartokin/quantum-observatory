@@ -225,6 +225,146 @@ export function collectionsFor(writeScope = []) {
 }
 
 /**
+ * The directory an existing, already-published file for this path actually
+ * lives in — the collection's own directory, never a staging subfolder like
+ * `_inbox`. An agent's write_scope points at `_inbox`, because that is where
+ * a new proposal is queued for the workflow to move onto the board; the file
+ * a patch means to change is not there; it is already live.
+ */
+export function collectionDirFor(path) {
+  const hit = COLLECTIONS.find((c) => path.includes(c.dir) || path.includes(`/${c.name}/`))
+  return hit ? hit.dir : 'content/frontier/'
+}
+
+/**
+ * Set a value at a dotted path inside a plain object, creating intermediate
+ * objects as needed. A `null` value deletes the path instead of setting it —
+ * the schema has no use for an explicit null, and "take this field out"
+ * needs some way to be said without a second verb.
+ */
+function setPath(obj, path, value) {
+  const parts = path.split('.')
+  let cur = obj
+  for (let i = 0; i < parts.length - 1; i++) {
+    const k = parts[i]
+    if (cur[k] == null || typeof cur[k] !== 'object' || Array.isArray(cur[k])) {
+      if (value === null) return // nothing to delete on a path that isn't there
+      cur[k] = {}
+    }
+    cur = cur[k]
+  }
+  const last = parts[parts.length - 1]
+  if (value === null) delete cur[last]
+  else cur[last] = value
+}
+
+/**
+ * Find a top-level YAML key's block in a list of front-matter lines: the
+ * line it starts on, and the line it ends before — the next line that opens
+ * a new top-level key (no leading whitespace), or the end of the front
+ * matter. Everything indented, every list item, every blank line in between
+ * belongs to the key above it.
+ */
+function findBlock(lines, key) {
+  const start = lines.findIndex((l) => new RegExp(`^${key}:`).test(l))
+  if (start === -1) return null
+  let end = lines.length
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^[A-Za-z_][\w-]*:/.test(lines[i])) {
+      end = i
+      break
+    }
+  }
+  return { start, end }
+}
+
+/**
+ * Apply a set of field changes to an existing file, returning a new full
+ * file text.
+ *
+ * This is the fix for the failure mode that discarded five runs across four
+ * items: an agent that must return a whole file bundles every field of that
+ * item into one return, so one overflowing field loses the other twenty that
+ * were already correct along with it. A patch only ever contains the fields
+ * actually being changed — usually a handful — so the same overflow now
+ * costs that handful, not the item's entire state.
+ *
+ * Each key in `fields` is a dotted path into the parsed document —
+ * "evidence.claim", "review.note", "qdayImpact" — replacing exactly the
+ * value at that path and leaving everything else untouched. A path into an
+ * array such as "evidence.sources" replaces the whole array; there is no
+ * merge protocol for one element of a list, deliberately — the lists here
+ * are short, and a merge protocol is a second thing to get wrong for a
+ * problem that resending the whole list already solves.
+ *
+ * The special key "body" replaces the markdown below the closing front
+ * matter.
+ *
+ * Only the *top-level* keys named in `fields` are re-serialised — the
+ * runner locates each one's block in the original text and replaces exactly
+ * that block, dumped fresh with js-yaml. Everything else in the front
+ * matter is left as bytes, untouched.
+ *
+ * That's deliberate, and cost a wasted first attempt to learn: dumping the
+ * *whole* document through js-yaml after every patch is correct — it never
+ * mis-quotes a colon or an apostrophe the way text substitution can — but it
+ * also re-serialises every field that was never touched, because js-yaml
+ * decides quoting style for the object as a whole. A patch that changed one
+ * line in `review.note` produced a diff touching the title, the summary,
+ * every metric and every source, because js-yaml prefers plain scalars over
+ * quoted ones and none of this content happened to need quoting by its
+ * rules. A diff like that defeats the reason a patch exists: reviewing one
+ * changed field should not require reading twenty unchanged ones to confirm
+ * they are, in fact, unchanged.
+ *
+ * Scoping the re-serialisation to the touched top-level blocks keeps
+ * js-yaml's correctness — it still owns quoting and escaping for anything it
+ * writes — while confining the blast radius of *that* to the keys the patch
+ * actually named, which is the same scoping principle the patch itself is
+ * built on.
+ */
+export function applyFields(existingRaw, fields) {
+  const m = existingRaw.match(FRONT_MATTER)
+  if (!m) throw new Error('the existing file has no front matter to patch')
+  const yaml = require('js-yaml')
+  const data = yaml.load(m[1])
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('the existing front matter is not an object')
+  }
+
+  let newBody = existingRaw.slice(m[0].length)
+  const touchedKeys = new Set()
+  for (const [key, value] of Object.entries(fields ?? {})) {
+    if (key === 'body') {
+      newBody = '\n\n' + String(value).trim() + '\n'
+      continue
+    }
+    setPath(data, key, value)
+    touchedKeys.add(key.split('.')[0])
+  }
+
+  const lines = m[1].split('\n')
+  const DUMP_OPTS = { lineWidth: -1, noRefs: true, quotingType: "'" }
+  for (const key of touchedKeys) {
+    const block = findBlock(lines, key)
+    const stillPresent = Object.prototype.hasOwnProperty.call(data, key)
+    // lineWidth: -1 so a long claim is never hard-wrapped — wrapping would
+    // change a scalar's on-disk form without changing its meaning.
+    const fragment = stillPresent ? yaml.dump({ [key]: data[key] }, DUMP_OPTS) : ''
+    const fragmentLines = fragment ? fragment.replace(/\n$/, '').split('\n') : []
+    if (block) {
+      lines.splice(block.start, block.end - block.start, ...fragmentLines)
+    } else if (fragmentLines.length) {
+      // A key that was not there before — e.g. an item that never had
+      // qdayImpact set — is appended at the end of the front matter.
+      lines.push(...fragmentLines)
+    }
+  }
+
+  return `---\n${lines.join('\n')}\n---${newBody}`
+}
+
+/**
  * Full schema validation before anything is written, using the same validator
  * CI uses — one definition of valid, checked at the earliest possible moment.
  */

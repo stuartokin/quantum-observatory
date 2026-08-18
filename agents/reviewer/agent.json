@@ -13,5 +13,6 @@
     "searches": 20,
     "proposals": 6
   },
-  "existingIdsOnly": true
+  "existingIdsOnly": true,
+  "writeMode": "patch"
 }

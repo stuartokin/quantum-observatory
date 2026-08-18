@@ -12,6 +12,8 @@ import {
   extractJson,
   balancedObjects,
   schemaForPath,
+  applyFields,
+  checkFile,
   FRONT_MATTER,
 } from './agent-io.mjs'
 let pass = 0
@@ -145,6 +147,79 @@ t('braces inside strings', balancedObjects('{"a":"} not the end"}').length === 1
 t('news paths take the news schema', schemaForPath('content/news/a.md').includes('news.schema'))
 t('  frontier paths take the frontier schema',
   schemaForPath('content/frontier/_inbox/a.md').includes('frontier.schema'))
+
+// applyFields — the patch mechanism. A patch is validated by feeding the
+// result through the same checkFile a full file always went through, so
+// these tests use the real frontier schema rather than a stand-in.
+const doc2 = [
+  '---',
+  'schema: frontier/v1',
+  'id: algo-shor',
+  "title: 'A title with a colon: like this'",
+  'pillar: quantum',
+  'readiness: emerging',
+  'status: draft',
+  'confidence: medium',
+  'actors:',
+  "  - 'Some Lab'",
+  'evidence:',
+  "  claim: 'Original claim.'",
+  '  level: E3',
+  "  verified: '2026-08-01'",
+  '  sources:',
+  '    - url: https://arxiv.org/abs/1234.5678',
+  '      role: preprint',
+  'review:',
+  '  state: agent-merged',
+  '  by: agent',
+  '  agent: scout',
+  "  agentMergedOn: '2026-08-01'",
+  '---',
+  '',
+  'Body paragraph one.',
+  '',
+].join('\n')
+
+const patchedNote = applyFields(doc2, { 'review.note': "Checked: Shor's result confirmed." })
+t('patch touches only the named top-level block', (() => {
+  const untouchedLines = doc2.split('\n').filter((l) => !l.startsWith('review'))
+  return untouchedLines.every((l) => patchedNote.includes(l) || l === '')
+})())
+t('  the review block gained the note', /note: .*Checked: Shor''s result confirmed\./.test(patchedNote))
+t('  review.state survives untouched', /state: agent-merged/.test(patchedNote))
+t('  body is untouched', patchedNote.includes('Body paragraph one.'))
+
+const patchedNested = applyFields(doc2, { 'evidence.claim': 'A revised claim: with a colon.' })
+t('nested dotted path replaces one leaf, keeps its siblings', (() => {
+  const m = patchedNested.match(/evidence:\n([\s\S]*?)\nreview:/)
+  return m[1].includes('level: E3') && m[1].includes('sources:') && m[1].includes('revised claim')
+})())
+t('  untouched top-level fields survive byte for byte', patchedNested.includes("title: 'A title with a colon: like this'"))
+
+const patchedList = applyFields(doc2, { 'evidence.sources': [{ url: 'https://example.com/new', role: 'primary' }] })
+t('evidence.sources replaces the whole array', (() => {
+  const m = patchedList.match(/sources:\n([\s\S]*?)\nreview:/)
+  return m[1].includes('example.com/new') && !m[1].includes('arxiv.org/abs/1234.5678')
+})())
+
+const patchedNewKey = applyFields(doc2, { qdayImpact: 1 })
+t('a field absent from the original is appended, not fabricated elsewhere', /^qdayImpact: 1$/m.test(patchedNewKey))
+
+const patchedDelete = applyFields(patchedNewKey, { qdayImpact: null })
+t('null deletes a field rather than writing a null', !/qdayImpact/.test(patchedDelete))
+
+const patchedBody = applyFields(doc2, { body: 'Replaced body.' })
+t('the special "body" key replaces the markdown below the front matter', patchedBody.trim().endsWith('Replaced body.'))
+t('  front matter is untouched by a body-only patch', patchedBody.includes("claim: 'Original claim.'"))
+
+const okCheck = checkFile(applyFields(doc2, { 'evidence.claim': 'A fine, valid, short claim.' }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
+t('a well-formed patch validates against the real frontier schema', okCheck.ok === true)
+
+const overflowCheck = checkFile(applyFields(doc2, { 'evidence.claim': 'x'.repeat(1700) }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
+t('an overflowing field is rejected by the same schema a full file always used', overflowCheck.ok === false)
+
+const unknownCheck = checkFile(applyFields(doc2, { notARealField: 'nope' }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
+t('a field name outside the schema is rejected before anything is written', unknownCheck.ok === false)
 
 console.log(`\n  ${pass} passed, ${fail} failed`)
 process.exit(fail ? 1 : 0)

@@ -192,19 +192,64 @@ Two numbers had been set independently and never reconciled with the arithmetic.
 The prompt now defers to the budget the runner injects, and the runner measures
 the board's own average item size and warns when a budget cannot be met.
 
-### Returning whole files makes every limit total
+### Returning whole files makes every limit total — fixed
 
-This is the one still outstanding. Every capped field is validated before
-writing and an agent must return the file entire, so a single overflow discards
-everything — including the parts that were right. Five runs have been lost to it
-across four items, on four different fields, each time after the research was
-already done.
+Every capped field is validated before writing and an agent used to have to
+return the file entire, so a single overflow discarded everything — including
+the parts that were right. Five runs were lost to it across four items, on
+four different fields, each time after the research was already done.
 
-The current mitigation is a pre-flight warning listing items with under 150
-characters of headroom. **The structural answer is to let an agent return a patch
-— the fields it means to change — so an overflow in one cannot discard the
-rest.** Recorded here rather than built, because it is the right first task for a
-session that can give it proper attention.
+Fixed by letting `sourcer`, `verifier` and `reviewer` return a `fields` patch
+— dotted paths to the values they are changing — instead of `content`.
+`run-agent.mjs` applies it to the live file and validates the result through
+the same `checkFile` as before, so an overflow now costs the fields in that
+one patch, not everything else about the item.
+
+**The first implementation of the patch itself had a version of the same
+lesson this file keeps recording, one layer down.** `applyFields` originally
+parsed the whole item with js-yaml and re-serialised the whole thing with
+`yaml.dump()` after every patch. Correct — js-yaml owns quoting and escaping,
+so it can't mis-quote a colon or garble an apostrophe the way hand-written
+YAML can — but `dump()` decides quoting style for the object as a whole, not
+per field, so a one-line change to `review.note` produced a diff touching the
+title, the summary, every metric and every source, because js-yaml prefers
+plain scalars over quoted ones and reformats the entire document to match.
+**Correctness for the field you touch is not the same as leaving the fields
+you didn't touch alone**, and a patch that reformats everything it didn't
+mean to change defeats the reason a patch exists: reviewing one changed field
+should not require reading twenty unchanged ones to confirm they're unchanged.
+Fixed by re-serialising only the top-level YAML blocks actually named in the
+patch and splicing those back into the original text; everything else in the
+file is left as bytes.
+
+### check-order.mjs cannot see a template literal nested in `${}`
+
+Found while building the patch mechanism above, not caused by it, but a real
+trap for the next person to edit `run-agent.mjs`'s context-building code.
+
+`check-order.mjs` tracks whether a line sits inside a multi-line template
+literal by counting raw backtick characters per line and toggling a flag on
+odd counts — deliberately "cruder than parsing", per its own comment. Every
+existing multi-line-if-a-template-literal-is-needed spot in `run-agent.mjs`
+works around this by writing one *single-line* template per line and joining
+with `+`, so no line ever has a lone unmatched backtick. A new block that
+instead opened a nested template on its own line (`` ? ` `` ... `` ` : '' ``)
+is valid JavaScript — a template literal can legally nest inside another
+one's `${}` — but the checker has no concept of nesting: it just flips a
+global flag per backtick. The nested open flipped the flag **off** instead of
+signalling a deeper level, so everything until the matching nested close was
+misread as real top-level code — and the misreading didn't stop at the
+nested close either, because the checker's state doesn't know the difference
+between "one level deeper" and "back at zero". The visible symptom was two
+unrelated false positives, `body` and `text`, "used before declaration" at
+line numbers far from the actual edit.
+
+**The fix, and the rule:** in this file, a multi-line string built inside
+`${}` must be a plain-quoted array joined with `.join('\n')`, never a nested
+backtick template — regular quotes don't trip the checker's backtick count no
+matter what they contain. Anything that needs a literal backtick for markdown
+inline code (`` `like this` ``) is fine inside a single- or double-quoted
+string; it's a plain character there, not a delimiter.
 
 ### Four gates now exist because of these
 

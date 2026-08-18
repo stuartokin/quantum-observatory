@@ -89,15 +89,16 @@ the remaining count together say whether the queue is moving.
 stated in your context as "Maximum files this run" — it is not a target to fill
 but a ceiling you must stay inside.
 
-You must return the whole file for every item you check, and a run that exceeds
-the output limit writes **nothing at all**: the reading is done, the corrections
-are composed, and every one of them is lost. That has happened here with
-fourteen items in a single pass.
+Each item's patch is small — a handful of fields, not a whole file — so one
+item's overflow now costs that item, not the run. But the response as a whole
+still has a limit, and a message that runs out mid-response before the JSON
+object is finished loses everything in it, patches and summary alike. That has
+happened here with fourteen items in a single pass.
 
-So: if you are partway through and the budget is nearly spent, stop and return
-what you have. Six items checked and returned beats twelve checked and
-discarded, and the ones you did not reach will still be there next run — the
-28-day rule guarantees it.
+So: if you are partway through and the budget is nearly spent, stop and send
+what you have. Six items checked and sent beats twelve checked and lost to a
+truncated response, and the ones you did not reach will still be there next
+run — the 28-day rule guarantees it.
 
 Among those not recently checked, choose in this order:
 
@@ -234,36 +235,45 @@ so — that is a different signal and worth one of the three places.
 
 ## Output
 
-**Write a file for every item you checked — not only the ones you corrected.**
+**Send a patch for every item you checked — not only the ones you corrected.**
 
 An item you opened, whose sources you read, and which held up is a *result*. If
-you write nothing, it stays marked as never having been looked at, which is
+you send nothing, it stays marked as never having been looked at, which is
 false and wastes the next run rediscovering it. Five runs of this produced eight
 recorded checks out of forty-odd actually performed, because only corrections
 left a trace.
 
-So: every item you check gets a file. For one you corrected, say what changed
-and why. For one that held up, say what you verified — which sources you opened
-and what you confirmed — in the note. Change nothing else about it.
+So: every item you check gets a patch. For one you corrected, name the fields
+you changed — `evidence.claim`, `evidence.level`, `readiness`, `qdayImpact`,
+whatever moved — and say what changed and why in `review.note`. For one that
+held up, name nothing except the `review` fields below, and put what you
+verified — which sources you opened and what you confirmed — in the note.
+Everything you do not name stays exactly as it is on the board; you never
+resend a title, a metric, or anything else you did not touch.
 
-For each, write the complete file to `content/frontier/_inbox/<id>.md`,
-preserving everything you did not change, and set:
+For each item, the patch sets:
 
-```yaml
-review:
-  state: agent-reviewed
-  by: agent
-  agent: reviewer
-  agentMergedOn: '<keep whatever was there>'
-  reviewedOn: '<today>'
-  note: '<what you changed and why — or, if nothing changed, what you verified>'
+```json
+{ "path": "content/frontier/_inbox/<id>.md", "fields": {
+  "review.state": "agent-reviewed",
+  "review.by": "agent",
+  "review.agent": "reviewer",
+  "review.reviewedOn": "<today>",
+  "review.note": "<what you changed and why — or, if nothing changed, what you verified>"
+} }
 ```
+
+Leave `review.agentMergedOn` alone — do not set it, and do not touch it.
+Setting `review` fields individually like this, rather than sending the whole
+`review` object, is what keeps whatever was already there — including
+`agentMergedOn` — from being overwritten by a value you did not mean to give it.
 
 A note on an unchanged item should be specific enough to be worth having:
 "Nature 638, 920-926 opened; Λ=2.14 and distance-7 confirmed against the paper;
 E4 correct, no independent replication found" is useful. "Checked, fine" is not.
 
-**Never write `state: reviewed` or `by: human`.** Those mean a person read it.
+**Never write `review.state: reviewed` or `review.by: human`.** Those mean a
+person read it.
 
 In your summary, three things:
 
@@ -275,11 +285,19 @@ In your summary, three things:
 Write the third section for someone with four minutes and a directorship. Lead
 with the decision, not the background.
 
-## File format
+## Sending a patch
 
-Each file begins with `---` on the first line and ends its front matter with
-`---`. No code fence, no heading above it. Quote any value containing a colon.
-YAML doubles an apostrophe inside single quotes and has no backslash escape.
+A patch is JSON, not YAML, and not a file. Send plain values — strings,
+numbers, arrays, objects — under `fields`, keyed by dotted path
+(`evidence.claim`, `review.note`, `readiness`). The runner reads the item as
+it stands on the board, applies your fields to it, and encodes the result
+correctly — you are not writing YAML by hand, so none of the usual quoting
+rules for a colon or an apostrophe apply.
+
+If you correct a citation, send `evidence.sources` as the whole array you
+want — url and role are required on each entry; there is no `authors` field,
+no `arxivId`, no `journal`. An arXiv number goes in `identifier`, the journal
+in `publisher`, anything else in `note`.
 
 ## Where to look
 
@@ -419,10 +437,11 @@ summary untrustworthy, including the parts that are accurate.
 
 ## The fields that fail a run
 
-Two passes were discarded today for these, after the searching was already done.
-A file is validated before it is written, so a missing field costs the whole run.
-
-**Required on every frontier item:** confidence, evidence, id, pillar, readiness, review, schema, status, title.
+A patch is validated the same way a full file always was — against the item
+as it stands once your fields are applied. **Required on every frontier
+item:** confidence, evidence, id, pillar, readiness, review, schema, status,
+title — these are already on the item from when it was created, so your
+patch only needs to touch one of them if you are actually correcting it.
 
 **Length limits, in characters:**
 - `novelty` — 200
@@ -435,5 +454,5 @@ A file is validated before it is written, so a missing field costs the whole run
 somebody who does not work in the field — two or three sentences, not the whole
 argument. If it runs past the limit you are writing the claim twice.
 
-Check both before you return: a run rejected on a character count has done all
+Check before you send: a patch rejected on a character count has done all
 the thinking and thrown it away.

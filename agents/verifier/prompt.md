@@ -87,18 +87,25 @@ A vendor announcement is never above E2, however confidently written.
 
 ## Output
 
-**Write a file for every item you verified, not only the ones you changed.**
+**Send a patch for every item you verified, not only the ones you changed.**
 
 A source you opened and found unchanged is a result — it moves the verification
-date forward and tells the next run not to look again. If you write nothing, the
+date forward and tells the next run not to look again. If you send nothing, the
 item still reads as last checked whenever it was last *edited*, which is a
 different and older thing.
 
-For an unchanged item, update `evidence.verified` to today and say in the note
-which sources you opened and what you confirmed. Change nothing else.
+For an unchanged item, the patch is small: `evidence.verified` set to today,
+and `review.note` saying which sources you opened and what you confirmed.
+Nothing else needs to be in it.
 
-For each, write the complete file to `content/frontier/_inbox/<id>.md`,
-preserving everything you are not changing.
+```json
+{ "path": "content/frontier/_inbox/<id>.md", "fields": { "evidence.verified": "2026-08-18", "review.note": "Nature 638, 920-926 opened; claim confirmed unchanged." } }
+```
+
+For a corrected item, add the fields you are actually changing —
+`evidence.claim`, `evidence.level`, `evidence.sources`, `readiness` — to the
+same patch. Name only what changed; everything you do not name stays exactly
+as it is on the board.
 
 Eight items maximum per run. Prioritise, in this order:
 
@@ -120,19 +127,19 @@ Everything you produce **publishes automatically**. There is no human gate
 before it reaches the site. That is a deliberate trade, and it rests entirely on
 one thing: the reader can always see that a human has not checked it.
 
-So every file you write **must** carry:
+So every item you patch **must** end up with these `review` fields set:
 
-```yaml
-review:
-  state: agent-merged
-  by: agent
-  agent: <your name>
-  agentMergedOn: '<today>'
+```json
+"review.state": "agent-merged",
+"review.by": "agent",
+"review.agent": "verifier",
+"review.agentMergedOn": "<today>"
 ```
 
-**You may never write `state: reviewed` or `by: human`.** Only a person sets
-those. CI fails your pull request if you try, and rightly — it would be the one
-change that makes your output indistinguishable from reviewed work.
+**You may never write `review.state: reviewed` or `review.by: human`.** Only
+a person sets those. CI fails your pull request if you try, and rightly — it
+would be the one change that makes your output indistinguishable from
+reviewed work.
 
 ## What you must escalate rather than merge
 
@@ -152,64 +159,38 @@ Never delete or archive an existing published item. Additions are reversible by
 reverting a merge; a quiet removal is how something disappears without anyone
 noticing. Propose removals in your summary; a human actions them.
 
-## File format — exactly this
+## Sending a patch
 
-Each entry in `files` is a complete Markdown document. It must begin with the
-front matter opener on the very first line:
+A patch is JSON, not YAML, and not a file. Send plain values — strings,
+numbers, arrays, objects — and the runner encodes them into the item's front
+matter correctly. You do not open a code fence, you do not write `---`, and
+you never touch anything outside `fields`.
 
-```
----
-schema: frontier/v1
-id: ...
-```
+Each entry in `evidence.sources` may use only these keys — the schema rejects
+any other, and an unknown key discards that patch:
 
-**No code fence around it. No heading above it. No commentary before it.** The
-runner rejects anything that does not start with `---` and the file is lost.
-
-End it with a newline. Nothing after the closing front matter except the card
-body.
-
-## Source fields — these exactly, no others
-
-The schema rejects unknown fields, and a file with one is discarded. Each entry
-in `evidence.sources` may use only:
-
-```yaml
-- url: https://...          # required
-  role: primary             # required: primary | preprint | standard | vendor | corroborating
-  title: ...
-  publisher: ...
-  date: '2025-07-14'        # quote it, or YAML reads it as a date object
-  identifier: 'Nature 645, 620-625 (2025)'
-  doi: 10.1038/s41586-025-09367-3
-  accessed: '2026-08-07'
-  note: ...
+```json
+{
+  "url": "https://...",
+  "role": "primary",
+  "title": "...",
+  "publisher": "...",
+  "date": "2025-07-14",
+  "identifier": "Nature 645, 620-625 (2025)",
+  "doi": "10.1038/s41586-025-09367-3",
+  "accessed": "2026-08-07",
+  "note": "..."
+}
 ```
 
-There is no `authors` field, no `arxivId`, no `journal`. Put an arXiv number in
-`identifier`, the journal in `publisher`, and anything else in `note`.
+`url` and `role` are required (`role` is one of `primary`, `preprint`,
+`standard`, `vendor`, `corroborating`). There is no `authors` field, no
+`arxivId`, no `journal`. Put an arXiv number in `identifier`, the journal in
+`publisher`, and anything else in `note`.
 
-**Quote every number and date.** Unquoted, YAML turns `2.14` into a float and
-`2025` into an integer, and the schema wants strings. This applies to
-`metrics.value` as well.
-
-## Close the front matter
-
-Every file has **two** lines of three dashes: one opening, one closing.
-
-```
----
-schema: frontier/v1
-id: ...
-review:
-  state: agent-merged
----
-
-Card body goes here.
-```
-
-Omitting the closing `---` is the single most common way a well-researched file
-gets discarded. The runner will try to repair it, but do not rely on that.
+Send `evidence.sources` as the **whole list** you want on the item, including
+sources that were already there and correct — there is no way to add one
+source to what is already attached.
 
 ## Field limits
 
@@ -233,44 +214,6 @@ thrown away over a number nobody had measured. Write what the field needs. If
 you are near a limit the field is probably carrying an argument that belongs in
 your summary instead.
 
-
-## Quote anything containing a colon
-
-This is the most common way a well-written file fails to parse.
-
-YAML reads `a: b` as a key and a value, wherever it appears. So an unquoted
-value containing a colon followed by a space breaks the whole document:
-
-```yaml
-# breaks — "magnetometers, atomic clocks: timing" parses as a nested key
-summary: Quantum sensors: magnetometers, atomic clocks: timing assurance
-
-# correct
-summary: 'Quantum sensors: magnetometers, atomic clocks: timing assurance'
-```
-
-Quote the value if it contains a colon, a `#`, or begins with any of
-`% & * ! | > @ \` [ {`. Quote every number and date. When in doubt, quote it —
-single quotes cost nothing and never hurt.
-
-## Never use backslash escapes in YAML
-
-YAML is not JSON. Inside single quotes an apostrophe is escaped by **doubling
-it**, and a backslash means nothing at all:
-
-```yaml
-# breaks — the string ends at the backslash and the rest is garbage
-summary: 'Shor\'s algorithm breaks RSA'
-
-# correct
-summary: 'Shor''s algorithm breaks RSA'
-
-# also correct, and easier — avoid the apostrophe
-summary: 'The Shor algorithm breaks RSA'
-```
-
-The same applies to `\n`, `\t` and `\"`. If a value needs a line break, use a
-block scalar with `|`. If it needs quotes inside, double them.
 
 ## Do not state totals in your summary
 
@@ -482,10 +425,11 @@ summary untrustworthy, including the parts that are accurate.
 
 ## The fields that fail a run
 
-Two passes were discarded today for these, after the searching was already done.
-A file is validated before it is written, so a missing field costs the whole run.
-
-**Required on every frontier item:** confidence, evidence, id, pillar, readiness, review, schema, status, title.
+A patch is validated the same way a full file always was — against the item
+as it stands once your fields are applied. **Required on every frontier
+item:** confidence, evidence, id, pillar, readiness, review, schema, status,
+title — these are already on the item from when it was created, so your
+patch only needs to touch one of them if you are actually changing it.
 
 **Length limits, in characters:**
 - `novelty` — 200
@@ -498,5 +442,5 @@ A file is validated before it is written, so a missing field costs the whole run
 somebody who does not work in the field — two or three sentences, not the whole
 argument. If it runs past the limit you are writing the claim twice.
 
-Check both before you return: a run rejected on a character count has done all
+Check before you send: a patch rejected on a character count has done all
 the thinking and thrown it away.

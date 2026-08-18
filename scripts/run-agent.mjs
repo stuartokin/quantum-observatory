@@ -22,6 +22,8 @@ import {
   checkFile,
   schemaForPath,
   collectionsFor,
+  applyFields,
+  collectionDirFor,
 } from './agent-io.mjs'
 import { readQueue, writeQueue, takeFor, returnFailed } from './queue.mjs'
 
@@ -356,6 +358,15 @@ if (focus.length) {
  * hard-coded check. Scout writes both frontier items and questions; being
  * shown only the first is why it wrote questions in the shape of items.
  */
+/**
+ * A patch agent sends only the fields it is changing, applied to the file
+ * already on disk, rather than a whole file every time. Set this on an
+ * agent that only ever revises what already exists — sourcer, verifier,
+ * reviewer — never on one that also creates new files, since a file that
+ * does not exist yet has nothing to patch.
+ */
+const patchMode = cfg.writeMode === 'patch'
+
 const writable = collectionsFor(cfg.write_scope ?? [])
 const schemas = (writable.length ? writable : [{ schema: 'content/schema/frontier.schema.json', name: 'frontier' }])
   .filter((c) => existsSync(c.schema))
@@ -397,7 +408,11 @@ ${tightFields().map((r) => `- ${r}`).join('\n')}
 **On these, replace rather than append.** review.note is a log and old passes
 that changed nothing can go. A claim already at its limit says everything it
 needs to; put a new finding in a source note instead. If what you must say does
-not fit, say less in the front matter and more in the body.
+not fit, say less in the front matter and more in the body.${
+  patchMode
+    ? ' Send just that field — you do not need to resend the rest of the item to change one line.'
+    : ''
+}
 `
     : ''
 }
@@ -505,9 +520,50 @@ Reply with a single JSON object and nothing else — no prose, no markdown fence
   "escalations": [ { "what": "...", "why": "what is wrong and what decision is needed" } ],
   "worthScout": [ { "what": "...", "source": "url", "focus": "/focus <agent>: the exact instruction to run next" } ],
   "rejected": [ { "what": "...", "why": "..." } ],
-  "files": [ { "path": "content/frontier/_inbox/<id>.md", "content": "<full file>" } ]
+  "files": [ ${
+    patchMode
+      ? `{ "path": "content/frontier/_inbox/<id>.md", "fields": { "<field>": <new value>, ... } }`
+      : `{ "path": "content/frontier/_inbox/<id>.md", "content": "<full file>" }`
+  } ]
 }
-
+${
+  patchMode
+    ? // A plain-quoted array joined with newlines, not a nested template
+      // literal — check-order.mjs tracks template nesting by counting raw
+      // backticks per line, and a multi-line backtick block nested inside
+      // this one's ${} broke that count for everything after it in the file.
+      [
+        '',
+        'Each entry in **files** names an item already on the board and the fields you',
+        'are changing on it — nothing else. **Do not send "content".** You are not',
+        'writing a file; you are applying a small change to one that already exists,',
+        'and the runner reads the current file and merges your fields into it.',
+        '',
+        'A field name is a dotted path into the item: "evidence.claim", "review.note",',
+        '"qdayImpact", "actors". Send only what changed. Everything you do not name is',
+        'left exactly as it is on the board now — you do not repeat a title or a',
+        'metric you are not touching, and you should not.',
+        '',
+        'A few things that follow from that:',
+        '',
+        '- **"evidence.sources" replaces the whole sources array.** There is no way to',
+        '  add one source to the list that is already there — send the complete list',
+        '  you want, including the sources that were already correct.',
+        '- To edit the body text below the front matter, send a field named "body"',
+        '  with the complete replacement text.',
+        "- Values are plain JSON — a string, a number, an array, an object. You are",
+        '  not writing YAML by hand, and none of the usual rules about quoting a',
+        "  colon or escaping an apostrophe apply here: write `Shor's algorithm`",
+        '  exactly like that, as an ordinary JSON string, and the runner encodes it',
+        '  correctly.',
+        '- Sending `null` for a field removes it rather than setting it to nothing.',
+        '- A field name that is not part of the schema, or an id that is not on the',
+        '  board, is rejected before anything is written — the same as an invalid',
+        '  full file always was.',
+        '',
+      ].join('\n')
+    : ''
+}
 The lists matter as much as the files. couldNotSource and badlyFramed tell the
 reviewer where the board is weak, which is not visible from the items that
 worked. Return them even when empty.
@@ -517,36 +573,40 @@ searching freely.
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
 Maximum files this run: ${focusCap}${
-  (() => {
-    /*
-     * Warn when the budget cannot fit in the output ceiling.
-     *
-     * An agent returning whole files has a hard arithmetic limit: items on this
-     * board average around 6,000 characters, and an output ceiling of N tokens
-     * holds roughly N * 3.6 / 6000 of them alongside a summary. A budget above
-     * that cannot be met, and the failure mode is total — the run writes
-     * nothing, so every check it did is lost.
-     *
-     * The reviewer was configured for twelve and attempted fourteen.
-     */
-    const avg = items.length
-      ? readdirSync('content/frontier')
-          .filter((f) => f.endsWith('.md'))
-          .reduce((t, f) => t + readFileSync(join('content/frontier', f), 'utf8').length, 0) /
-        items.length
-      : 6000
-    // Half the ceiling, not most of it. The observed failure came at fourteen
-    // items where the arithmetic said twelve would fit — so twelve was the edge,
-    // and a ceiling with no headroom is one an agent falls off.
-    const fits = Math.floor(((cfg.maxTokens ?? 32000) * 3.6 * 0.5) / avg)
-    return focusCap > fits
-      ? `\n\n**Your budget of ${focusCap} does not fit your output limit.** Items here ` +
-        `average ${Math.round(avg)} characters and you must return each in full, so ` +
-        `about ${fits} is the most that can be written alongside a summary. Return ` +
-        `${fits} properly formed rather than ${focusCap} truncated: a run that ` +
-        `exceeds the limit writes nothing at all.`
-      : ''
-  })()
+  patchMode
+    ? ''
+    : (() => {
+        /*
+         * Warn when the budget cannot fit in the output ceiling.
+         *
+         * An agent returning whole files has a hard arithmetic limit: items on this
+         * board average around 6,000 characters, and an output ceiling of N tokens
+         * holds roughly N * 3.6 / 6000 of them alongside a summary. A budget above
+         * that cannot be met, and the failure mode is total — the run writes
+         * nothing, so every check it did is lost.
+         *
+         * The reviewer was configured for twelve and attempted fourteen. Patch
+         * agents are exempt: a patch is a handful of fields, not a whole item,
+         * and this arithmetic was never calibrated for that shape.
+         */
+        const avg = items.length
+          ? readdirSync('content/frontier')
+              .filter((f) => f.endsWith('.md'))
+              .reduce((t, f) => t + readFileSync(join('content/frontier', f), 'utf8').length, 0) /
+            items.length
+          : 6000
+        // Half the ceiling, not most of it. The observed failure came at fourteen
+        // items where the arithmetic said twelve would fit — so twelve was the edge,
+        // and a ceiling with no headroom is one an agent falls off.
+        const fits = Math.floor(((cfg.maxTokens ?? 32000) * 3.6 * 0.5) / avg)
+        return focusCap > fits
+          ? `\n\n**Your budget of ${focusCap} does not fit your output limit.** Items here ` +
+            `average ${Math.round(avg)} characters and you must return each in full, so ` +
+            `about ${fits} is the most that can be written alongside a summary. Return ` +
+            `${fits} properly formed rather than ${focusCap} truncated: a run that ` +
+            `exceeds the limit writes nothing at all.`
+          : ''
+      })()
 }${
   cfg.existingIdsOnly
     ? '\n\nYou may ONLY write files whose id already appears in the board list above.\nA file with any other id is rejected. You are not here to add topics.'
@@ -831,6 +891,62 @@ for (const f of files) {
     process.exit(1)
   }
 
+  const hasFields = f.fields && typeof f.fields === 'object' && !Array.isArray(f.fields)
+  const hasContent = typeof f.content === 'string'
+
+  if (hasFields && hasContent) {
+    rejected.push({ path: f.path, reason: 'file has both "content" and "fields" — send exactly one', head: '' })
+    continue
+  }
+  if (!hasFields && !hasContent) {
+    rejected.push({ path: f.path, reason: 'file has neither "content" nor "fields"', head: '' })
+    continue
+  }
+  if (hasContent && patchMode) {
+    // The whole point of a patch agent is that it never needs to reconstruct
+    // fields it isn't touching. A content return here is the old failure
+    // mode arriving anyway, so it is refused rather than accepted.
+    rejected.push({
+      path: f.path,
+      reason: `${agent} edits existing items only — send "fields", not "content"`,
+      head: f.content.slice(0, 240),
+    })
+    continue
+  }
+
+  /**
+   * A patch is applied to the item as it stands on the board right now, not
+   * to whatever the agent believes is there. The id comes from the
+   * filename — the inbox is where a proposal is staged, not where the live
+   * file lives, so the file being patched is read from the collection's own
+   * directory.
+   */
+  let rawContent
+  if (hasFields) {
+    const id = f.path.split('/').pop().replace(/\.md$/, '')
+    const livePath = `${collectionDirFor(f.path)}${id}.md`
+    if (!existsSync(livePath)) {
+      rejected.push({
+        path: f.path,
+        reason: `no existing file at ${livePath} to patch — "${id}" is not on the board`,
+        head: JSON.stringify(f.fields).slice(0, 240),
+      })
+      continue
+    }
+    try {
+      rawContent = applyFields(readFileSync(livePath, 'utf8'), f.fields)
+    } catch (e) {
+      rejected.push({
+        path: f.path,
+        reason: `could not apply fields: ${e.message}`,
+        head: JSON.stringify(f.fields).slice(0, 240),
+      })
+      continue
+    }
+  } else {
+    rawContent = f.content
+  }
+
   /**
    * Restore identity fields the agent left to the filename.
    *
@@ -862,7 +978,7 @@ for (const f of files) {
     return text.replace(fm[1], head)
   }
 
-  const content = withIdentity(normaliseFile(f.content), f.path)
+  const content = withIdentity(normaliseFile(rawContent), f.path)
   // Validate against the schema that actually governs this collection.
   const check = checkFile(content, schemaForPath(f.path))
 

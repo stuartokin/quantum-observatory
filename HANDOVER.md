@@ -106,27 +106,58 @@ behind it, rather than reasoning about causes.**
 
 ---
 
-## The known next task
+## The known next task — done, not yet merged
 
-**Let an agent return a patch rather than a whole file.**
+**Let an agent return a patch rather than a whole file.** Built in a later
+session (patch not yet applied to `main` — see below for why). `agent-io.mjs`
+gained `applyFields(existingRaw, fields)`: `fields` is a flat object of dotted
+paths (`evidence.claim`, `review.note`, `qdayImpact`) to new values, applied to
+the item as it stands on `content/frontier/<id>.md` — never the inbox, which
+holds only this run's unmerged proposals. `null` deletes a field. The special
+key `body` replaces the markdown below the front matter. `evidence.sources`
+still replaces the whole array — no per-element merge verb, as expected.
 
-Every capped field is validated before writing and an agent must return the file
-entire, so one overflow discards everything — including the parts that were
-right. Five runs lost across four items on four different fields, each after the
-research was done.
+`run-agent.mjs` reads the live file, applies the patch, and runs it through the
+same `checkFile` a whole file always went through — so an overflowing field is
+rejected exactly as before, except now only the fields in that one patch are
+at risk, not everything else about the item. `sourcer`, `verifier` and
+`reviewer` are marked `"writeMode": "patch"` in their `agent.json` and may no
+longer send `content` at all; `scout` and `newsroom` are untouched and still
+create whole files, since a file that doesn't exist yet has nothing to patch.
 
-The mitigation in place is a pre-flight warning listing items with under 150
-characters of headroom, plus prompt guidance to replace rather than append. It
-reduces the frequency and cannot remove the failure mode.
+**One real bug found and fixed on the way, worth knowing if this is touched
+again:** the first version of `applyFields` re-serialised the *whole* document
+through `js-yaml.dump()` after every patch. That's correct — js-yaml never
+mis-quotes a colon or an apostrophe the way hand-written YAML can — but it also
+reformats every field's quoting for the whole file, because js-yaml decides
+quoting style for the object as a whole, not per field. A patch touching one
+line in `review.note` produced a diff touching the title, the summary, every
+metric and every source. The fix, now in place: only the *top-level* YAML
+blocks named in the patch are re-serialised and spliced back into the original
+text; everything else survives byte for byte. Tested against a real board item
+— see the `applyFields` tests added to `scripts/test-agent-io.mjs`.
 
-The change is in `scripts/run-agent.mjs` and `scripts/agent-io.mjs`: accept a
-`fields` object alongside or instead of `content`, apply it to the existing file,
-and validate the result. `checkFile` already takes a schema path, so validation
-does not change. The agent prompts would then say what they can say honestly —
-*send the fields you are changing* — which is also a smaller and more reviewable
-thing to ask for.
+**A second, unrelated bug turned up in `check-order.mjs` while building this**
+— recorded in `DESIGN-LOG.md` since it's a gotcha for anyone editing
+`run-agent.mjs`'s context-building code, not specific to patches.
 
-Worth doing early in a session rather than at the end of one.
+**Not yet resolved, worth a look before merging:**
+
+- `verifier`'s prompt was left setting `review.state: agent-merged` on every
+  patch, matching what it already said before this change — but the schema's
+  own description of `agent-merged` is "published by an agent, unchecked",
+  and verifier's whole job is *checking*. That reads like it should be
+  `agent-reviewed`, matching what `reviewer` sets. Not changed here since it
+  wasn't part of the ask and predates this session — flagging rather than
+  quietly fixing it, per the standing rule on decisions.
+- Budgets (`budget.proposals` in each `agent.json`) were sized for whole-file
+  output economics and left untouched. A patch is far smaller than a full
+  item, so these are probably now conservative rather than tight — worth
+  revisiting once a run or two shows the real size of a patch response.
+- This session had no push access to this repo (the environment's git proxy
+  declined it), so the change is a patch file, not a merged commit. Someone
+  needs to `git apply` it, run the checks listed in the delivery README, and
+  push.
 
 ## What a new conversation needs to be given
 
