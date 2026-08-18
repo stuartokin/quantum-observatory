@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Evaluate arXiv:2608.13805 — Ouyang et al. classical simulation of Fermi-Hubbard quantum processor
-agent: scout
-added: 2026-08-18
-source: issue #129
-
-    /focus scout: check arXiv:2608.13805 (Ouyang et al., 13 Aug 2026, classical simulation of Fermi-Hubbard quantum processor experiment). If it classically simulates a result currently on the board as an advantage claim for a named quantum processor, determine which board item is affected and whether the counter-paper warrants a confidence downgrade on that item per the 2026-08-16 counter-paper precedent. Report what circuit it simulates, which board item (if any) makes the corresponding advantage claim, and whether the simulated result is currently on the board.
-
 ## Evaluate arXiv:2607.16116 — Sun et al. quantum-classical crossover for fault-tolerant dynamics simulation
 agent: scout
 added: 2026-08-18
