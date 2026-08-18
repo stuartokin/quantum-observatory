@@ -35,7 +35,7 @@ links:
   - to: quantum-sensing-grid
     relation: competes-with
 evidence:
-  claim: 'ARPA-E Vision OPEN 2024 project descriptions list Infleqtion (ColdQuanta Inc. DBA Infleqtion) as an awardee for Enhancing Neutral-atom Computers for Optimizing Delivery of Energy at $6,165,189. The stated goal is to deliver higher quality unit commitment solutions than achievable through classical methods, at scale and runtime consistent with energy-sector workflows. Contract execution was announced by Infleqtion on 9 February 2026. Partners are Argonne National Laboratory, National Laboratory of the Rockies, EPRI and ComEd. No experimental result or primary paper exists as of 2026-08-17. Evidence is capped at E2: the ARPA-E document is a funded-project listing describing intended work, not a demonstrated result.'
+  claim: 'ARPA-E Vision OPEN 2024 project descriptions list Infleqtion (ColdQuanta Inc. DBA Infleqtion) as an awardee for Enhancing Neutral-atom Computers for Optimizing Delivery of Energy at $6,165,189. The stated goal is to deliver higher quality unit commitment solutions than achievable through classical methods, at scale and runtime consistent with energy-sector workflows. Contract execution was announced by Infleqtion on 9 February 2026. Partners are Argonne National Laboratory, National Laboratory of the Rockies, EPRI and ComEd. No experimental result or primary paper exists as of 2026-08-18. Evidence is capped at E2: the ARPA-E document is a funded-project listing describing intended work, not a demonstrated result.'
   level: E2
   verified: '2026-08-17'
   sources:
@@ -44,7 +44,7 @@ evidence:
       title: 'ARPA-E Vision OPEN 2024 Project Descriptions'
       publisher: 'U.S. Department of Energy Advanced Research Projects Agency-Energy'
       date: '2025-01'
-      note: 'Official government document listing funded projects. Lists Infleqtion ENCODE at $6,165,189 with stated goal of superior unit-commitment solutions vs classical methods. This is a programme description, not an experimental result.'
+      note: 'Official government document listing funded projects. Lists Infleqtion ENCODE at $6,165,189 with stated goal of superior unit-commitment solutions vs classical methods. Programme description, not an experimental result.'
       accessed: '2026-08-17'
     - url: https://infleqtion.com/infleqtion-advances-arpa-e-quantum-computing-grid-optimization-program/
       role: vendor
@@ -58,10 +58,12 @@ status: draft
 origin: agent
 added: '2026-08-17'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'ARPA-E Vision OPEN 2024 PDF confirmed via search: $6,165,189 for Infleqtion ENCODE confirmed. Contract execution February 2026 and first-ARPA-E-quantum-award claim confirmed from multiple press sources and ARPA-E PDF. Partners Argonne, NLR, EPRI, ComEd confirmed. E2 correct: programme description, no technical results. No changes.'
 ---
 
 ## What happened

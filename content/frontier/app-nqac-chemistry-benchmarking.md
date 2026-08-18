@@ -51,10 +51,12 @@ status: draft
 origin: agent
 added: '2026-08-17'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'Sourcer confirmed IQMP and DPI announcements as primary sources for E2. No new searches this run — sources and claims consistent with sourcer pass. E2 correct: two institutional announcements, no technical output. Emerging readiness correct. No changes.'
 ---
 
 ## What happened

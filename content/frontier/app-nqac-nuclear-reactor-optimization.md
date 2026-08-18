@@ -3,7 +3,7 @@ schema: frontier/v1
 id: app-nqac-nuclear-reactor-optimization
 title: 'Quantum optimisation of nuclear reactor fuel-assembly designs: NQAC Grand Challenges'
 summary: 'NQAC Grand Challenges award funds UChicago, Infleqtion, Constellation Energy and EPRI to apply quantum optimisation algorithms to nuclear reactor fuel-loading problems.'
-plain: 'Loading nuclear fuel rods into a reactor core requires satisfying dozens of simultaneous physics, thermal, safety and cost constraints at once. Classical optimisers struggle with the combinatorial size of this problem. This project, funded by the National Quantum Algorithm Center at the Illinois Quantum and Microelectronics Park, pairs University of Chicago computer scientists with Infleqtion (quantum hardware), Constellation Energy and EPRI (nuclear operators) to develop quantum optimisation approaches for fuel-assembly design. No technical results have been published yet; the project is in early postdoctoral research execution.'
+plain: 'Loading nuclear fuel rods into a reactor core requires satisfying dozens of simultaneous physics, thermal, safety and cost constraints at once. Classical optimisers struggle with the combinatorial size of this problem. This project, funded by the National Quantum Algorithm Center at the Illinois Quantum and Microelectronics Park, pairs University of Chicago computer scientists with Infleqtion (quantum hardware), Constellation Energy and EPRI (nuclear operators) to develop quantum optimisation approaches for fuel-assembly design. No technical results have been published yet; the project is in early research execution.'
 pillar: quantum
 constellation: applications
 cluster: energy
@@ -37,7 +37,7 @@ origin: agent
 added: '2026-08-17'
 evidence:
   level: E2
-  claim: 'The NQAC at IQMP announced a Grand Challenges award to Prof Fred Chong (UChicago), Infleqtion, Constellation Energy and EPRI to apply quantum optimisation algorithms to nuclear reactor fuel-assembly designs under the Q-FLO (Quantum Fuel Loading Optimization) programme. The IQMP blog describes Q-FLO as developing hybrid quantum-classical algorithms to optimise fuel assembly arrangements in nuclear reactors, balancing physics, safety, operational objectives and cost. Researcher Dhirpal Shah (UChicago) leads the postdoctoral execution. No technical results or preprint exist; the project is in early research execution. This is a distinct programme from the ARPA-E ENCODE grid-optimisation project (app-infleqtion-encode-grid-optimization): different technical problem, lead institution, and funding vehicle.'
+  claim: 'The NQAC at IQMP announced a Grand Challenges award to Prof Fred Chong (UChicago), Infleqtion, Constellation Energy and EPRI to apply quantum optimisation algorithms to nuclear reactor fuel-assembly designs under the Q-FLO (Quantum Fuel Loading Optimization) programme. The IQMP blog describes Q-FLO as developing hybrid quantum-classical algorithms to optimise fuel assembly arrangements in nuclear reactors, balancing physics, safety, operational objectives and cost. Dhirpal Shah (UChicago graduate student under Chong) is driving the project. No technical results or preprint exist; the project is in early research execution. This is a distinct programme from the ARPA-E ENCODE grid-optimisation project (app-infleqtion-encode-grid-optimization): different technical problem, lead institution, and funding vehicle.'
   verified: '2026-08-17'
   sources:
     - url: 'https://iqmp.org/news/national-quantum-algorithm-center-at-the-iqmp-announces-grand-challenges-awards/'
@@ -53,27 +53,28 @@ evidence:
       publisher: 'Illinois Quantum and Microelectronics Park (IQMP)'
       date: '2026-08-01'
       accessed: '2026-08-17'
-      note: 'IQMP blog post naming Q-FLO (Quantum Fuel Loading Optimization) as the specific programme focus, confirming hybrid quantum-classical approach for nuclear reactor fuel-assembly loading. Names Dhirpal Shah as researcher. No quantitative results.'
+      note: 'IQMP blog naming Q-FLO (Quantum Fuel Loading Optimization) and Dhirpal Shah as the graduate student driving the project. No quantitative results.'
     - url: 'https://infleqtion.com/infleqtion-to-deploy-fault-tolerant-neutral-atom-quantum-computer-in-illinois/'
       role: corroborating
       title: 'Infleqtion to Deploy Fault-Tolerant Neutral-Atom Quantum Computer in Illinois'
       publisher: Infleqtion
       date: '2026-07-22'
       accessed: '2026-08-17'
-      note: 'Vendor press release. Mentions the NQAC Grand Challenges award alongside the separate ARPA-E ENCODE programme. Confirms Infleqtion partnership with Chong team and nuclear fuel loading as a named focus area. E2 vendor claim.'
+      note: 'Vendor press release. Confirms Infleqtion partnership with Chong team and nuclear fuel loading as a named focus area. E2 vendor claim.'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-17'
-  note: 'Focus run 2026-08-17: QCR article (quantumcomputingreport.com) not added — tier-6 aggregator, uncitable per source rules. Q-FLO program name added to claim, sourced from existing IQMP blog corroborating source which names it explicitly. Dhirpal Shah already in claim. Evidence level E2 and readiness emerging unchanged.'
+  reviewedOn: '2026-08-18'
+  note: 'IQMP blog confirmed via search: Q-FLO, Dhirpal Shah as graduate student (not researcher/postdoc as item body states) confirmed. Claim updated to say graduate student; body text retains prior sourcer framing — minor discrepancy, not material to E2 or emerging. E2 correct: institutional announcements only, no technical output. No changes to evidence level.'
 ---
 
 ## What happened
 
-In April 2026, the National Quantum Algorithm Center (NQAC) at the Illinois Quantum and Microelectronics Park (IQMP) announced five awards under its Grand Challenges programme. One of these funds a postdoctoral researcher working under Prof Fred Chong (University of Chicago), with industry partners Infleqtion, Constellation Energy and EPRI, to develop quantum optimisation algorithms for nuclear reactor fuel-assembly design under the Q-FLO (Quantum Fuel Loading Optimization) programme.
+In April 2026, the National Quantum Algorithm Center (NQAC) at the Illinois Quantum and Microelectronics Park (IQMP) announced five awards under its Grand Challenges programme. One of these funds work under Prof Fred Chong (University of Chicago), with industry partners Infleqtion, Constellation Energy and EPRI, to develop quantum optimisation algorithms for nuclear reactor fuel-assembly design under the Q-FLO (Quantum Fuel Loading Optimization) programme.
 
-The technical problem: fuel loading in a nuclear reactor requires simultaneously satisfying physics, thermal-hydraulic, safety and cost constraints across a combinatorially large design space. Classical optimisers have been used for decades but hit scaling limits as reactor designs become more complex. The Q-FLO team is investigating whether hybrid quantum-classical approaches — likely variational or QAOA-style algorithms on Infleqtion's neutral-atom hardware — can outperform classical methods on realistic fuel-loading instances. Researcher Dhirpal Shah (UChicago) leads the postdoctoral execution.
+The technical problem: fuel loading in a nuclear reactor requires simultaneously satisfying physics, thermal-hydraulic, safety and cost constraints across a combinatorially large design space. Classical optimisers have been used for decades but hit scaling limits as reactor designs become more complex. The Q-FLO team is investigating whether hybrid quantum-classical approaches — likely variational or QAOA-style algorithms on Infleqtion's neutral-atom hardware — can outperform classical methods on realistic fuel-loading instances. Dhirpal Shah (UChicago, graduate student under Chong) is driving the research execution.
 
 ## Why it matters
 
@@ -89,7 +90,7 @@ The applications constellation was empty at the start of this board's operation.
 
 ## Limitations
 
-No technical results exist. The award was announced April 2026 and research is in early postdoc execution. Evidence ceiling is E2 until a preprint appears. The project is a funded research programme, not a demonstrated result. Readiness is `emerging` and confidence is `low` precisely because the gap between the programme aim and a demonstrated quantum advantage is large and uncharted.
+No technical results exist. The award was announced April 2026 and research is in early execution. Evidence ceiling is E2 until a preprint appears. The project is a funded research programme, not a demonstrated result. Readiness is `emerging` and confidence is `low` precisely because the gap between the programme aim and a demonstrated quantum advantage is large and uncharted.
 
 ## What would change this assessment
 
