@@ -67,8 +67,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'GRI 2025b report and Scholten et al. review confirmed in prior run (2026-08-10). No new sources to check. E3 correct for review article + expert survey. No changes made. 26 respondents, 28-49% (10yr), 51-70% (15yr) figures unchanged.'
+  reviewedOn: '2026-08-18'
+  note: 'GRI 2025b confirmed via globalriskinstitute.org: 28-49% CRQC within 10 years, 51-70% within 15 years, 26 respondents confirmed. Multiple independent sources corroborate these figures. E3 correct for review + expert survey. No changes.'
 ---
 
 A CRQC does not exist. The item marks the threat threshold against which all migration timelines are calibrated. The primary source is a peer-reviewed review (E3 ceiling per schema), not an experimental result. Resource requirements published in 2025 and 2026 (see algo-resource-estimation and algo-shor) have materially reduced the estimated hardware needed, which is the main reason expert surveys show accelerating timelines.

@@ -61,8 +61,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-10'
-  note: 'Nature 638, 927-934 confirmed via Nature website and Caltech repository. Distance-5 repetition code on cat qubits confirmed; 1.65% logical error rate at d=5 confirmed. E4 correct for peer-reviewed Nature paper. No independent replication by a separate institution found. No changes made.'
+  reviewedOn: '2026-08-18'
+  note: 'Nature 638, 927-934 (2025) confirmed via PMC (PMC11864976), CaltechAUTHORS, and nature.com. Putterman et al. (AWS/Caltech). 1.75(2)% d=3 and 1.65(3)% d=5 logical error per cycle confirmed from CaltechAUTHORS record. Below-threshold repetition code, intrinsic bit-flip suppression confirmed. E4 correct. No changes.'
 ---
 
 Cat qubits encode quantum information in superpositions of coherent states of a microwave cavity. The nonlinear dissipation that stabilises the encoding strongly suppresses bit-flip errors, making only phase-flip errors the dominant noise channel. A simple classical repetition code — much cheaper in hardware than the surface code — can then correct the remaining phase flips.

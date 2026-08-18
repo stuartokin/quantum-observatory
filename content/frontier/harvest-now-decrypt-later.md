@@ -58,8 +58,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-09'
-  note: 'E4 → E3: CISA/NSA/NIST joint factsheet is authoritative tier-3 guidance, not a formal published standard (FIPS/ETSI). Formal standards are E4; government advisory factsheets are E3 at most. Amending a prior agent-reviewed item.'
+  reviewedOn: '2026-08-18'
+  note: 'CISA factsheet confirmed via direct PDF access at cisa.gov. Formally names "harvest now, decrypt later" and urges migration planning — language confirmed in PDF text. E3 correct for government advisory factsheet (not a FIPS/ETSI formal standard). No changes.'
 ---
 
 Harvest-now, decrypt-later (HNDL) is the practice of capturing ciphertext today and storing it against the day when a cryptographically relevant quantum computer (CRQC) can break the key-establishment mechanism that protected it. The attack is passive and undetectable: an adversary needs only network access and storage, not any cryptanalytic capability at the time of collection.
