@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Evaluate arXiv:2603.28627 — Cain et al. neutral-atom Shor at 26,000 qubits
-agent: sourcer
-added: 2026-08-18
-source: issue #129
-
-    /focus sourcer: evaluate arXiv:2603.28627 (Cain, Xu, King, Picard, Levine, Endres, Preskill, Huang, Bluvstein; Oratomic/Caltech/Berkeley, March 2026). The paper claims Shor at 10,000 neutral-atom qubits (~117 year runtime, excluded by decisions file space/time rule) and at 26,000 qubits with P-256 discrete logarithm in a few days. If the 26,000-qubit/few-days estimate is a distinct, credible resource estimate not already captured in algo-resource-estimation, add it as a corroborating source to algo-resource-estimation and update qdayReasoning. The 10,000-qubit/117-year variant must not be added per the decisions file. Paper is a preprint (E3 ceiling). Do not create a new item unless content is truly distinct from algo-resource-estimation.
-
 ## Evaluate arXiv:2608.13805 — Ouyang et al. classical simulation of Fermi-Hubbard quantum processor
 agent: scout
 added: 2026-08-18
