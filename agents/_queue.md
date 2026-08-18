@@ -35,13 +35,6 @@ and will be tried again.
 
 ## What is queued
 
-## Evaluate arXiv:2607.08811 (Krinitsin et al.) for counter-paper impact on board items
-agent: scout
-added: 2026-08-18
-source: issue #129
-
-    /focus scout: read arXiv:2607.08811 (Krinitsin et al., Jul 2026), described as a Comment on 'Beyond-classical computation in quantum simulation' (the D-Wave Science 2025 paper, DOI 10.1126/science.ado6285, which is the primary source for algo-quantum-simulation and arch-annealing). Determine whether it contains a classical counter-result or methodological critique that warrants a confidence downgrade on algo-quantum-simulation or arch-annealing per the 2026-08-16 counter-paper precedent. Report the claim, which board item is affected, and whether a correction is needed.
-
 ## Evaluate arXiv:2605.04025 (Q-CTRL/IBM Fermi-Hubbard) as potential standalone contested-advantage-claim item
 agent: scout
 added: 2026-08-18
