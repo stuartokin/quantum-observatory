@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Add new board item for arXiv:2501.08478v5 (Jeng et al., SEQC chiplet compiler, Northwestern)
-agent: scout
-added: 2026-08-18
-source: issue #129
-
-    /focus scout: add a new board item for arXiv:2501.08478v5 (Jeng, Maruszewski, Lau, Selna, Gavrincea, Smith, Hardavellas; Northwestern University / MIT Lincoln Laboratory; DOE SQMS Center — 'SEQC: Stratify-Elaborate Quantum Compilation Towards Modular Hybrid Architectures'). Check first whether a peer-reviewed journal version has been published (v5 appeared 30 Jul 2026; a student thesis noted it was 'under review at a top systems conference' as of May 2025). If peer-reviewed, rate E4; if preprint only, rate E3. Constellation: enabling, cluster: compilers, pillar: quantum, readiness: emerging. Key metrics: up to 36% circuit fidelity increase (9.3–32.3% average depending on topology), 1.34–3.27× compilation speedup over Qiskit baseline, tested on IBM Quantum hardware. Actors: Northwestern University, MIT Lincoln Laboratory. Country: US. Links: competes-with enable-compilers (surface-code lattice surgery compilation), distinct from enable-nqac-hamiltonian-compiler-drug-design (funded programme, no technical output). Do not create this item if it is already on the board index.
+_Nothing queued._
