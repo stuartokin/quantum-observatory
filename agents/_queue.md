@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Evaluate arXiv:2605.04025 (Q-CTRL/IBM Fermi-Hubbard) as potential standalone contested-advantage-claim item
-agent: scout
-added: 2026-08-18
-source: issue #129
-
-    /focus scout: check arXiv:2605.04025 (Hartnett et al., Q-CTRL/IBM, May 2026). This paper claims a 120-qubit Fermi-Hubbard quantum simulation with 3,000x speedup over classical TDVP. It has since been classically countered by two independent groups (arXiv:2606.04771 Rausch et al. and arXiv:2608.13805 Ouyang et al.). Determine whether it warrants a standalone board item as a contested advantage claim so the counter-papers have something to link against, or whether it is adequately covered as corroborating context in algo-classical-fermi-hubbard-ouyang. If a new item is warranted, propose it at emerging with confidence low and cite both classical counters.
+_Nothing queued._
