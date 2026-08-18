@@ -60,16 +60,18 @@ evidence:
       identifier: 'arXiv:2603.10191'
       doi: '10.48550/arXiv.2603.10191'
       accessed: '2026-08-17'
-      note: 'All seven authors at JPMorganChase GTAR. Hardware run on Quantinuum Helios. The 1.3M qubit crossover is explicitly labelled a projection by the authors.'
+      note: 'All seven authors at JPMorganChase GTAR. Hardware run on Quantinuum Helios (cited as ransford2025 in paper). The 1.3M qubit crossover is explicitly labelled a projection by the authors.'
 confidence: medium
 status: draft
 origin: agent
 added: '2026-08-17'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2603.10191 HTML opened; all 7 authors at JPMorganChase GTAR confirmed. Helios hardware confirmed (paper cites ransford2025). 96-node 3-regular graphs, outperforms GW and HLZ confirmed. E3 correct for preprint. No changes.'
 ---
 
 ## What happened

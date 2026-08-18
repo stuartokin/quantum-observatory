@@ -54,10 +54,12 @@ evidence:
       note: 'Preprint only as of verification date; no journal version found. Code withheld as commercially sensitive; numerical data on Zenodo.'
 confidence: medium
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'arXiv:2603.23444 HTML opened; all authors confirmed at Algorithmiq Ltd. TLD1433 active spaces 28/40/52 confirmed. <1.6 mHa at cutoff 4 confirmed. Code withheld commercially sensitive confirmed. Data on Zenodo confirmed. E3 correct for preprint. No changes.'
 ---
 
 **What happened.** Algorithmiq researchers introduced ADAPT-VMPE, a classical algorithm that generates quantum circuit ansätze for molecular ground-state problems using their Majorana Propagation (MP) framework. MP tracks operator evolution under fermionic gates in Heisenberg picture and truncates high-length Majorana monomials — terms the theory proves contribute exponentially little to expectation values. The result is a scalable circuit-construction procedure with polynomial cost and provable error bounds, demonstrated on up to 100-qubit problems for TLD1433.

@@ -65,7 +65,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-17'
   reviewedOn: '2026-08-18'
-  note: 'arXiv:2606.03884 confirmed: >20 s Z-parity, InAs-Pb tetron, all Microsoft authors, no peer review, no X measurements. Nature news (d41586-026-01788-y) confirmed documenting Legg/Frolov skepticism. Characteristic lifetime ~22 s per press sources, consistent with ">20 s" claim. E2 correct; confidence low correct. No changes.'
+  note: 'arXiv:2606.03884 abstract and HTML opened; characteristic ~22 s parity lifetime consistent with ">20 s" claim. All authors Microsoft Quantum confirmed. No X measurements confirmed; paper explicitly defers X measurements to future work. Nature news d41586-026-01788-y corroborates Legg/Frolov skepticism. E2 correct; confidence low correct. No changes.'
 ---
 
 ## What happened
