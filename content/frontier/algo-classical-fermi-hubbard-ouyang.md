@@ -39,24 +39,32 @@ links:
 evidence:
   level: E3
   verified: '2026-08-18'
-  claim: 'Ouyang, Chi, and Chan (arXiv:2608.13805, Caltech, 13 Aug 2026) study Neel quench dynamics of the 1D Fermi-Hubbard model run on an IBM superconducting processor (arXiv:2605.04025, Hartnett et al., Q-CTRL/IBM, May 2026). They demonstrate that all 7,260 observable trajectories from the quantum experiment can be reproduced more quickly and accurately by transverse tensor-network contraction at bond dimension 32, and extended to longer times than the hardware simulation. A prior counter-paper (arXiv:2606.04771, Rausch et al., Multiverse Computing, Jun 2026) used GPU-accelerated TDVP at bond dimension approx 62,000 to reproduce Q-CTRL results including the previously unresolved high-entanglement regime, and advanced the classical frontier to t=7, beyond the quantum run at t=6. The Q-CTRL source (arXiv:2605.04025) is a preprint not present as a standalone board item.'
+  claim: Ouyang, Chi, and Chan (arXiv:2608.13805, Caltech, 13 Aug 2026) study Neel quench dynamics of the 1D Fermi-Hubbard model run on an IBM superconducting processor (arXiv:2605.04025, Hartnett et al., Q-CTRL/IBM, May 2026). They demonstrate that all 7,260 observable trajectories from the quantum experiment can be reproduced more quickly and accurately by transverse tensor-network contraction at bond dimension 32, and extended to longer times than the hardware simulation. A prior counter-paper (arXiv:2606.04771, Rausch et al., Multiverse Computing, Jun 2026) used GPU-accelerated TDVP at bond dimension approx 62,000 to reproduce Q-CTRL results including the previously unresolved high-entanglement regime, and advanced the classical frontier to t=7, beyond the quantum run at t=6. The Q-CTRL source (arXiv:2605.04025) is a preprint not present as a standalone board item.
   sources:
-    - url: 'https://arxiv.org/abs/2608.13805'
+    - url: https://arxiv.org/abs/2608.13805
       role: primary
-      title: 'Fast classical simulation of Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor'
+      title: Fast classical simulation of Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor
       publisher: arXiv
       date: '2026-08-13'
-      identifier: 'arXiv:2608.13805'
+      identifier: arXiv:2608.13805
       accessed: '2026-08-18'
-      note: 'Caltech (Chan group). Transverse tensor-network contraction at bond dimension 32 reproduces all observables from Q-CTRL/IBM 120-qubit Fermi-Hubbard run faster and more accurately, extending to longer times. Preprint; E3.'
-    - url: 'https://arxiv.org/abs/2605.04025'
+      note: Caltech (Chan group). Transverse tensor-network contraction at bond dimension 32 reproduces all observables from Q-CTRL/IBM 120-qubit Fermi-Hubbard run faster and more accurately, extending to longer times. Preprint; E3.
+    - url: https://arxiv.org/abs/2605.04025
       role: corroborating
-      title: 'Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor'
+      title: Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor
       publisher: arXiv
       date: '2026-05-05'
-      identifier: 'arXiv:2605.04025'
+      identifier: arXiv:2605.04025
       accessed: '2026-08-18'
-      note: 'Q-CTRL/IBM experiment being classically countered. 120 qubits, claimed 3000x speedup over TDVP at bond dimension 4096 on CPU cluster. Preprint; E3 at most. Included here as the target of arXiv:2608.13805.'
+      note: Q-CTRL/IBM experiment being classically countered. 120 qubits, claimed 3000x speedup over TDVP at bond dimension 4096 on CPU cluster. Preprint; E3 at most. Included here as the target of arXiv:2608.13805 and arXiv:2606.04771.
+    - url: https://arxiv.org/abs/2606.04771
+      role: corroborating
+      title: Pushing the Classical Frontier of 1D Fermi-Hubbard Quench Dynamics Beyond Current Quantum Simulations
+      publisher: arXiv
+      date: '2026-06-03'
+      identifier: arXiv:2606.04771
+      accessed: '2026-08-18'
+      note: Rausch, Singh, Jahromi, Kshetrimayum, Orús; Multiverse Computing (Spain/Canada) and Donostia International Physics Center. GPU-accelerated TDVP exploiting U(1)×SU(2) symmetry; bond dimension ~62,000 on four NVIDIA H200 GPUs (15x Q-CTRL classical baseline). Reproduces Q-CTRL results including high-entanglement regime t∈[5.2,6] where Q-CTRL benchmark failed; advances classical frontier to t=7 beyond quantum run at t=6. Prior independent counter to arXiv:2608.13805 using a different method. Preprint; E3.
 confidence: medium
 status: draft
 origin: agent
@@ -64,10 +72,10 @@ added: '2026-08-18'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: sourcer
   agentMergedOn: '2026-08-18'
   reviewedOn: '2026-08-18'
-  note: 'State moved from agent-merged to agent-reviewed. Sources confirmed: arXiv:2608.13805 (Caltech, Ouyang/Chi/Chan) is a preprint counter-simulation; E3 correct. arXiv:2605.04025 (Q-CTRL/IBM) correctly listed as corroborating target circuit. Readiness emerging correct for a counter-result item. Actors and country (Caltech, US) correct. The Q-CTRL advantage claim is not a standalone board item so the 2026-08-16 confidence-downgrade precedent does not trigger against any existing item. No downward corrections needed. Sourcer run to add arXiv:2606.04771 (Rausch et al.) as second corroborating source queued.'
+  note: 'Focus run 2026-08-18. Added arXiv:2606.04771 (Rausch et al., Multiverse Computing, Jun 2026) as corroborating source. Method: GPU-accelerated TDVP at χ≈62,000 on 4× H200 GPUs; reproduces Q-CTRL high-entanglement regime and advances classical frontier to t=7 beyond quantum t=6. Distinct from arXiv:2608.13805 (Ouyang, transverse TN at BD=32). Stale ''Sourcer run queued'' note resolved. E3 correct; preprint, not peer-reviewed. No other changes.'
 ---
 
 ## What happened
