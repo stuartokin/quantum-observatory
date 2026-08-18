@@ -97,7 +97,7 @@ review:
   agent: reviewer
   agentMergedOn: '2026-08-16'
   reviewedOn: '2026-08-18'
-  note: 'arXiv:2608.13110 details confirmed: Manabe (SUTD), Gu (NVIDIA), Pan (SUTD); 32 nodes × 8 H100 = 256 GPUs; 37.3 minutes; tensor 2^35 entries = 256x smaller than IBM estimate. log-XEB 0.35034, compatible with IBM fidelity bound. This counter-paper addresses only arXiv:2607.25941 (IBM/UChicago); Qedma and Algorithmiq circuits are structurally different and unaddressed. Item correctly records all this. No changes.'
+  note: 'arXiv:2608.13110 abstract and HTML opened: Manabe and Pan at SUTD, Gu at NVIDIA confirmed. 32 nodes × 8 H100 = 256 GPUs, 37.3 minutes, tensor 2^35 entries (256× smaller than IBM estimate), log-XEB 0.35034 confirmed. Counter-paper addresses only arXiv:2607.25941 (IBM/UChicago); Qedma and Algorithmiq Floquet Ising circuits unaddressed. Item claims and confidence-low assessment all correct. No changes.'
 ---
 
 ## What happened
