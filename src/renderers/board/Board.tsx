@@ -120,6 +120,21 @@ export function Board() {
   const [onlyGroup, setOnlyGroup] = useState<Supergroup | null>(null)
   const [onlyLevel, setOnlyLevel] = useState<string | null>(null)
   const [onlyYear, setOnlyYear] = useState<number | null>(null)
+
+  /**
+   * One place that decides what a clicked label does.
+   *
+   * Clicking the same label again clears it; anything else replaces it. Two
+   * hones of the same kind at once is not a thing a reader can mean.
+   */
+  const hone = (kind: 'group' | 'level' | 'year', value: string) => {
+    if (kind === 'group') setOnlyGroup((c) => (c === value ? null : (value as Supergroup)))
+    else if (kind === 'level') setOnlyLevel((c) => (c === value ? null : value))
+    else {
+      const yr = Number(value)
+      setOnlyYear((c) => (c === yr ? null : yr))
+    }
+  }
   const [openNews, setOpenNews] = useState<NewsItem | null>(null)
   /** Headlines are off by default — there will eventually be a great many. */
   const [showNewsOverlay, setShowNewsOverlay] = useState(false)
@@ -736,6 +751,10 @@ export function Board() {
         }
       >
         <Sky
+          onlyGroup={onlyGroup}
+          onlyLevel={onlyLevel}
+          onlyYear={onlyYear}
+          onHone={hone}
           onHover={setHoveredId}
           nodes={nodes}
           colour={colour}
@@ -783,6 +802,10 @@ export function Board() {
           }
         >
           <Sky
+            onlyGroup={onlyGroup}
+            onlyLevel={onlyLevel}
+            onlyYear={onlyYear}
+            onHone={hone}
             onHover={setHoveredId}
             nodes={nodes}
             colour={colour}
@@ -821,6 +844,10 @@ export function Board() {
         flush
       >
         <Sky
+          onlyGroup={onlyGroup}
+          onlyLevel={onlyLevel}
+          onlyYear={onlyYear}
+          onHone={hone}
           onHover={setHoveredId}
           nodes={nodes}
           colour={colour}
@@ -1276,6 +1303,10 @@ export function Board() {
 /* ---------------------------------------------------------------- */
 
 function Sky({
+  onlyGroup,
+  onlyLevel,
+  onlyYear,
+  onHone,
   nodes,
   colour,
   selected,
@@ -1317,6 +1348,17 @@ function Sky({
   pool: FrontierItem[]
   newsOverlay: boolean
   onOpenNews: (n: NewsItem) => void
+  /**
+   * Honing state, owned by Board and passed down.
+   *
+   * Sky draws the labels and knows where they landed, so it must know which is
+   * active to mark it — but the filtering happens in Board, so Board owns the
+   * state. One owner, one direction of travel.
+   */
+  onlyGroup: Supergroup | null
+  onlyLevel: string | null
+  onlyYear: number | null
+  onHone: (kind: 'group' | 'level' | 'year', value: string) => void
 }) {
   const cv = useRef<HTMLCanvasElement>(null)
   const wrap = useRef<HTMLDivElement>(null)
@@ -2468,14 +2510,7 @@ function Sky({
       if (hit) {
         // Clicking the same label again clears it. Anything else replaces it —
         // two hones of the same kind at once is not a thing a reader can mean.
-        if (hit.kind === 'group') {
-          setOnlyGroup((cur) => (cur === hit.value ? null : (hit.value as Supergroup)))
-        } else if (hit.kind === 'level') {
-          setOnlyLevel((cur) => (cur === hit.value ? null : hit.value))
-        } else {
-          const yr = Number(hit.value)
-          setOnlyYear((cur) => (cur === yr ? null : yr))
-        }
+        onHone(hit.kind, hit.value)
         return
       }
     }
