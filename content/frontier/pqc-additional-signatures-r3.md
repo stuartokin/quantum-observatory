@@ -67,10 +67,10 @@ added: '2026-08-16'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-16'
-  reviewedOn: '2026-08-17'
-  note: 'Downward correction applied 2026-08-17: metric for distinct mathematical families corrected from 6 to 4, and summary/claim updated to reflect NIST IR 8610 organisation. The prior file (scout-written) followed secondary-source framing of six mathematical assumptions; NIST IR 8610 itself organises the nine candidates into four families (AES-based, lattice, supersingular-isogeny, multivariate/MPC-in-the-head). FAEST is MPC-in-the-head, not a separate AES-based family distinct from MPC-in-the-head. Reviewer agent had identified this error in PR #106 but that file was discarded for bad YAML; correction applied here to the live file. Downward correction, no permission required.'
+  reviewedOn: '2026-08-18'
+  note: 'NIST IR 8610 PDF and csrc.nist.gov confirmed: nine candidates (FAEST, HAWK, MAYO, MQOM, QR-UOV, SDitH, SNOVA, SQIsign, UOV) advancing to round 3; five eliminated (CROSS, LESS, Mirath, PERK, RYDE). Second round concluded May 14, 2026 after 18 months. Third round ~2 years, 7th conference spring/summer 2027 near Gaithersburg. Four mathematical families per IR 8610. E4 correct for formally published NIST Internal Report. No changes.'
 ---
 
 NIST launched the Additional Digital Signatures process in September 2022 specifically because ML-DSA and FN-DSA — its two lattice-based signature standards — rest on related mathematical problems. A structural breakthrough in lattice cryptanalysis could compromise both simultaneously. The nine candidates in round three are spread across incompatible mathematical foundations so that a single breakthrough cannot invalidate the whole portfolio.

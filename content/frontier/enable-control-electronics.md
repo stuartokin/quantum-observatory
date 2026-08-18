@@ -65,11 +65,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: reviewer
   agentMergedOn: '2026-08-16'
-  note: 'PRX Quantum 5, 010326 confirmed; all gate error figures verified. Added arXiv:2505.08424 (Fraunhofer EMFT) as corroborating source per focus instruction 2026-08-16. Claim unchanged.'
+  note: PRX Quantum 5, 010326 confirmed via APS DOI, IBM Research publications page, and NASA/ADS. Underwood et al., IBM Watson Research Center. 14 nm FinFET CMOS ASIC at 4 K, cross-resonance gate on fixed-frequency transmons, 23 mW/qubit, single-qubit error 8×10⁻⁴, two-qubit error 1.4×10⁻², all confirmed from IBM Research abstract and ADS record. E4 correct for peer-reviewed PRX Quantum. No changes.
+  reviewedOn: '2026-08-18'
 ---
 
 Superconducting transmon qubits live inside dilution refrigerators cooled to millikelvin temperatures. Controlling them has traditionally required thousands of cables routed from room-temperature electronics — a wiring problem that grows worse as qubit counts increase. One solution is to place the control electronics inside the refrigerator itself. IBM Research demonstrated a 14 nm CMOS chip that operates at 4 K, generating the microwave pulses needed to control transmon qubits and successfully performing a two-qubit gate. The chip consumed just 23 mW per qubit and achieved gate errors comparable to room-temperature control systems, showing that cryogenic integration is feasible.

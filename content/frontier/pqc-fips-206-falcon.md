@@ -36,6 +36,6 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-09'
-  note: 'E4 → E3: source is the NIST CSRC project page for a standard still in development. FIPS 206 IPD submitted August 2025; final expected late 2026/early 2027. A project page for a forthcoming standard is E3, not E4 — formal standard rule applies only when the standard is published. Readiness already corrected to experimental in prior run.'
+  reviewedOn: '2026-08-18'
+  note: 'Multiple sources confirm FIPS 206 remains draft-only as of mid-2026: IPD submitted August 28, 2025; final expected late 2026 or early 2027. DigiCert (Sep 2025), Encryption Consulting (Jul 2026), qubitchain.io (May 2026) all consistent. E3 correct for project page of forthcoming standard. Readiness experimental correct. No changes.'
 ---

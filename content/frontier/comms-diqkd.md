@@ -68,10 +68,12 @@ evidence:
       accessed: '2026-08-16'
       note: 'Posted after journal publication; same result. Free to access. Submitted 10 Feb 2026.'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-16'
+  reviewedOn: '2026-08-18'
+  note: 'Science 391, 592-597 opened via science.org and arXiv:2602.09596 HTML. Authors confirmed: Bo-Wei Lu, Chao-Wei Yang et al. (USTC Pan group, Hefei National Lab, Jinan Institute). 87Rb atoms confirmed. 100 km spooled fibre, positive asymptotic key rate confirmed. 0.112 bits/event finite-size secure key at 11 km, 1.2M Bell pairs over 624 hours confirmed. Single-photon interference heralding, QFC to 1.3 µm, Rydberg emission scheme confirmed. E4 correct for peer-reviewed Science paper. No changes.'
 ---
 
 ## What happened
