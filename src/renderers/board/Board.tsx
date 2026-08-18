@@ -1409,6 +1409,30 @@ function Sky({
   const nodeDrag = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null)
 
   /** Starfield, in screen space so it reads as depth behind the board. */
+  /**
+   * Nebula columns, one per readiness band, drifting down behind the stars.
+   *
+   * The bands already carry colour in the labels; this gives them presence
+   * without adding a channel. Very low alpha and slow — the test is that a
+   * reader notices the board feels deep and cannot say why, not that they see
+   * clouds.
+   *
+   * Behind the starfield, which is itself behind everything that means
+   * anything. Atmosphere must never compete with data.
+   */
+  const nebula = useRef(
+    Array.from({ length: 18 }, (_, i) => ({
+      band: i % LEVELS.length,
+      x: Math.random(),
+      y: Math.random(),
+      // Slower than the stars, so the layers separate rather than moving as one.
+      v: 0.004 + Math.random() * 0.008,
+      w: 0.10 + Math.random() * 0.18,
+      h: 0.16 + Math.random() * 0.22,
+      a: 0.012 + Math.random() * 0.020,
+    })),
+  )
+
   const stars = useRef(
     Array.from({ length: 160 }, () => ({
       x: Math.random(),
@@ -1418,6 +1442,21 @@ function Sky({
       a: 0.08 + Math.random() * 0.22,
     })),
   )
+
+  /**
+   * Forget where a body was once it is filtered out.
+   *
+   * Without this the easing remembers it, and a body brought back by clearing
+   * a filter simply reappears where it left off — no entrance, no sense of the
+   * board rearranging. Pruning also stops the map growing with every item that
+   * has ever been shown.
+   */
+  useEffect(() => {
+    const live = new Set(nodes.map((n) => n.id))
+    for (const id of anim.current.keys()) {
+      if (!live.has(id)) anim.current.delete(id)
+    }
+  }, [nodes])
 
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes])
   /** Items, not nodes. Prominence asks about moved, added and priority. */
@@ -2014,6 +2053,37 @@ function Sky({
       }
 
 
+      // Nebula first: it sits behind the stars, which sit behind everything.
+      if (!reduced) {
+        for (const c of nebula.current) {
+          c.y += c.v * dt
+          if (c.y > 1.3) {
+            c.y = -0.3
+            c.x = Math.random()
+          }
+          const cx = c.x * W
+          const cy = c.y * H
+          const rx = c.w * W
+          const ry = c.h * H
+          const grad = g.createRadialGradient(cx, cy, 0, cx, cy, Math.max(rx, ry))
+          const hue = constellationColour(
+            CONSTELLATIONS[c.band % CONSTELLATIONS.length],
+          )
+          grad.addColorStop(0, hue)
+          grad.addColorStop(1, 'rgba(0,0,0,0)')
+          g.globalAlpha = c.a * Math.min(1, (1.3 - c.y) * 2) * Math.min(1, (c.y + 0.3) * 2)
+          g.fillStyle = grad
+          g.save()
+          g.translate(cx, cy)
+          g.scale(1, ry / Math.max(rx, ry))
+          g.beginPath()
+          g.arc(0, 0, Math.max(rx, ry), 0, Math.PI * 2)
+          g.fill()
+          g.restore()
+        }
+        g.globalAlpha = 1
+      }
+
       // Starfield, screen space, descending. Atmosphere — never data.
       if (!reduced) {
         g.fillStyle = colour
@@ -2060,9 +2130,37 @@ function Sky({
             tgt = { x: held.x + (home.x - held.x) * k, y: held.y + (home.y - held.y) * k }
           }
         }
+        /**
+         * An entrance rather than an appearance.
+         *
+         * A body the easing has never seen starts from its readiness band and
+         * settles into place, so the eye follows it there — and a filter change
+         * reads as the board rearranging rather than as a different board
+         * flashing into existence.
+         *
+         * Anything that moved readiness recently, or arrived recently, starts
+         * further out and takes longer, because those are the ones worth
+         * watching arrive. Everything else settles almost at once.
+         */
+        if (!anim.current.has(n.id)) {
+          const item = itemById.get(n.id)
+          const notable =
+            (item?.moved?.on &&
+              (Date.now() - new Date(item.moved.on).getTime()) / 864e5 < 120) ||
+            (item?.added && (Date.now() - new Date(item.added).getTime()) / 864e5 < 45)
+          // Enter along the band, from off to one side — never from the middle,
+          // which would read as bodies falling out of the same hole.
+          anim.current.set(n.id, {
+            x: notable ? n.x + (n.x > 0.5 ? 0.55 : -0.55) : n.x + (Math.random() - 0.5) * 0.12,
+            y: n.y,
+          })
+        }
+
         const a = anim.current.get(n.id) ?? { x: n.x, y: n.y }
         const speed =
           nodeDrag.current?.id === n.id ? 1 : held ? 0.25 : projected ? 1 : reduced ? 1 : 0.09
+        // A body still travelling to its first position moves more slowly, so
+        // the arrival is legible rather than a jump.
         a.x += (tgt.x - a.x) * speed
         a.y += (tgt.y - a.y) * speed
         anim.current.set(n.id, a)

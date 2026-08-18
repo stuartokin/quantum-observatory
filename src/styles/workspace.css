@@ -942,7 +942,16 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font: inherit;
+  /* Match the readiness and evidence badges beside it.
+     `font: inherit` took the panel's body type, which made this the largest
+     thing in a row of small ones — the loudest element on the panel was the
+     caveat rather than the claim. */
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: var(--radius);
 }
 .prov--button:hover { background: rgb(255 255 255 / 0.04); }
 .prov__caret { opacity: 0.6; font-size: 0.7em; margin-left: 2px; }
