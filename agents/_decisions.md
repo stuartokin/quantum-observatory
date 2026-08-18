@@ -388,3 +388,14 @@ Acceptance confirms peer review occurred but is not the same as a published cita
 Re-queuing a sourcer or scout run to attach a source already in the file wastes a run and teaches agents the queue does not track completed work.
 
 *Proposed 2026-08-18, after Tindall et al. Science 392 lead in Issue #129 was flagged and re-flagged across four steward passes after both arch-annealing and algo-quantum-simulation already cited it as the published journal record. Rule proposed twice previously in decisions file under 'Proposed' sections; consolidating as a single confirmed rule here.. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-18
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A 'Worth Scout's attention' or 'Could not source' lead that names a paper already present as a published source (with DOI or journal identifier) in the relevant board item is satisfied. Record the finding in the issue comment and do not re-queue it. A lead is only outstanding if the source is absent from the file.**
+
+Re-queuing a sourcer or scout run to attach a source already in the file wastes a run and teaches agents the queue does not track completed work.
+
+*Proposed 2026-08-18, after The Tindall et al. Science 392 lead in issue #129 was flagged and re-flagged across multiple steward passes after both arch-annealing and algo-quantum-simulation already cited it as Science 392, 6800: 868 (2026), DOI 10.1126/science.adx2728. Multiple near-identical versions of this rule were proposed in the decisions file; this is the consolidated confirmed version.. Not yet confirmed by a person.*
