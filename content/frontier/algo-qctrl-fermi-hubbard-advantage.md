@@ -45,47 +45,47 @@ links:
   - to: app-quantum-materials-advantage
     relation: competes-with
 evidence:
-  claim: 'Hartnett et al. (Q-CTRL, arXiv:2605.04025, May 2026) report digital quantum simulation of 1D Fermi-Hubbard dynamics on a superconducting IBM processor using up to 120 qubits and up to 90 Trotter steps, with error suppression via Fire Opal. They claim a 3000x wall-clock speedup over TDVP at bond dimension chi=4096 on a CPU cluster. Rausch et al. (arXiv:2606.04771, Multiverse Computing, Jun 2026) counter by exploiting full SU(2)xU(1) symmetry and GPU acceleration, reaching chi~62,000 on four H200 GPUs and reproducing the experiment classically; Q-CTRL acknowledged this in v2 (Jul 2026). Ouyang, Chi & Chan (arXiv:2608.13805, Caltech, Aug 2026) counter using transverse tensor-network contraction at bond dimension 32, reproducing all 7260 observable trajectories faster and more accurately than the quantum hardware run. The advantage claim is not established.'
+  claim: Hartnett et al. (Q-CTRL, arXiv:2605.04025, May 2026) report digital quantum simulation of 1D Fermi-Hubbard dynamics on a superconducting IBM processor using up to 120 qubits and up to 90 Trotter steps, with error suppression via Fire Opal. They claim a 3000x wall-clock speedup over TDVP at bond dimension chi=4096 on a CPU cluster. Rausch et al. (arXiv:2606.04771, Multiverse Computing, Jun 2026) counter by exploiting full SU(2)xU(1) symmetry and GPU acceleration, reaching chi~62,000 on four H200 GPUs and reproducing the experiment classically. Q-CTRL v2 (Jul 2026) characterises Rausch et al. as providing 'independent validation of the accuracy of our quantum-computer simulations' and does not revise the 3000x speedup figure; the v2 text notes that classical computational runtimes could be improved via future algorithm modifications. Ouyang, Chi & Chan (arXiv:2608.13805, Caltech, Aug 2026) counter using transverse tensor-network contraction at bond dimension 32, reproducing all 7260 observable trajectories faster and more accurately than the quantum hardware run. The advantage claim is not established.
   level: E3
   verified: '2026-08-18'
   sources:
-    - url: 'https://arxiv.org/abs/2605.04025'
+    - url: https://arxiv.org/abs/2605.04025
       role: primary
-      title: 'Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor'
+      title: Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor
       publisher: arXiv
       date: '2026-05-05'
-      identifier: 'arXiv:2605.04025'
-      doi: '10.48550/arXiv.2605.04025'
+      identifier: arXiv:2605.04025
+      doi: 10.48550/arXiv.2605.04025
       accessed: '2026-08-18'
-      note: 'v2 updated 2026-07-15 to acknowledge Rausch et al. classical counter. All authors at Q-CTRL (US/AU). Preprint, not yet peer-reviewed.'
-    - url: 'https://arxiv.org/abs/2606.04771'
+      note: v2 updated 2026-07-15. v2 characterises Rausch et al. as providing 'independent validation of the accuracy' of hardware results and notes classical runtimes could be improved; does not revise the 3000x speedup figure. All authors at Q-CTRL (US/AU). Preprint, not yet peer-reviewed.
+    - url: https://arxiv.org/abs/2606.04771
       role: corroborating
-      title: 'Pushing the Classical Frontier of 1D Fermi-Hubbard Quench Dynamics Beyond Current Quantum Simulations'
+      title: Pushing the Classical Frontier of 1D Fermi-Hubbard Quench Dynamics Beyond Current Quantum Simulations
       publisher: arXiv
       date: '2026-06-03'
-      identifier: 'arXiv:2606.04771'
-      doi: '10.48550/arXiv.2606.04771'
+      identifier: arXiv:2606.04771
+      doi: 10.48550/arXiv.2606.04771
       accessed: '2026-08-18'
-      note: 'Rausch et al., Multiverse Computing and Donostia IPC. GPU-accelerated TDVP at chi~62,000 on 4 H200 GPUs, fifteen times Q-CTRL classical benchmark. Preprint.'
-    - url: 'https://arxiv.org/abs/2608.13805'
+      note: Rausch et al., Multiverse Computing and Donostia IPC. GPU-accelerated TDVP at chi~62,000 on 4 H200 GPUs, fifteen times Q-CTRL classical benchmark. Preprint.
+    - url: https://arxiv.org/abs/2608.13805
       role: corroborating
-      title: 'Fast classical simulation of Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor'
+      title: Fast classical simulation of Fast, accurate, high-resolution simulation of large-scale Fermi-Hubbard models on a digital quantum processor
       publisher: arXiv
       date: '2026-08-13'
-      identifier: 'arXiv:2608.13805'
-      doi: '10.48550/arXiv.2608.13805'
+      identifier: arXiv:2608.13805
+      doi: 10.48550/arXiv.2608.13805
       accessed: '2026-08-18'
-      note: 'Ouyang, Chi, Chan (Caltech). Transverse tensor-network contraction at bond dimension 32 reproduces all 7260 quantum experiment trajectories faster and more accurately.'
+      note: Ouyang, Chi, Chan (Caltech). Transverse tensor-network contraction at bond dimension 32 reproduces all 7260 quantum experiment trajectories faster and more accurately.
 status: draft
 origin: agent
 added: '2026-08-18'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: sourcer
   agentMergedOn: '2026-08-18'
   reviewedOn: '2026-08-18'
-  note: 'Steward review 2026-08-18. E3 correct for three preprints (arXiv:2605.04025, arXiv:2606.04771, arXiv:2608.13805). Confidence low correct: two independent classical counter-papers from different groups using different methods reproduce the quantum result. qdayImpact 0 correct: 1D Fermi-Hubbard dynamics on a NISQ device has no cryptanalytic relevance. Readiness emerging correct: the advantage claim is contested, not the physics. No downward corrections needed. The Q-CTRL paper (primary source) is itself a preprint and the countered claim; citing it as primary with counters as corroborating is the correct structure per the 2026-08-18 precedent on classical-counter items.'
+  note: Focus run 2026-08-18. Opened arXiv:2605.04025v2 HTML (15 Jul 2026). v2 characterises Rausch et al. as 'independent validation of the accuracy of our quantum-computer simulations' — accuracy certification, not concession of defeat. The 3000x speedup figure is not revised; v2 adds caveat that classical runtimes could be improved. Claim text updated from vague 'acknowledged this' to precise v2 framing. Confidence low correct; E3 correct.
 ---
 
 ## What happened
