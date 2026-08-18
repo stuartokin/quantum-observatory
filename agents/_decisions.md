@@ -343,3 +343,20 @@ into the sections above once you have read them — or delete them if wrong.
 Re-queuing a sourcer or scout run to attach a source already present in the file wastes a run and teaches agents the queue does not track completed work.
 
 *Proposed 2026-08-18, after Scout issue #129 flagged checking Tindall et al. arXiv:2503.05693 Science publication status for arch-annealing and algo-quantum-simulation; both items already cite it as Science 392, 6800: 868 (2026). Steward noted this in the previous cycle comment but the rule was not recorded.. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-18
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A 'Worth Scout's attention' or 'Could not source' lead that names a paper already present as a published source (with DOI or journal identifier) in the relevant board item is satisfied. Record the finding in the issue comment and do not re-queue it. A lead is only outstanding if the source is absent from the file.**
+
+Re-queuing a sourcer or scout run to attach a source already in the file wastes a run and teaches agents the queue does not track completed work.
+
+*Proposed 2026-08-18, after Tindall et al. Science 392 lead in Issue #129 flagged twice across two steward passes after both arch-annealing and algo-quantum-simulation already cited it as the published journal record.. Not yet confirmed by a person.*
+
+**A 'Worth Scout's attention' lead that names a specific arXiv preprint as a candidate for a new board item, where that preprint has not been checked for peer-reviewed publication status or proposed as an item, qualifies for a single sourcer run to confirm venue and propose the item if warranted. It does not qualify for a scout run unless the item is genuinely absent from the board index.**
+
+Scout cannot see file contents and cannot attach sources to existing items; sourcer is the correct agent to confirm a preprint's venue and propose or update an item.
+
+*Proposed 2026-08-18, after arXiv:2501.08478 (Jeng et al., Northwestern chiplet compiler) flagged in Issue #121 scout run under 'Worth Scout's attention' with a queued /focus scout instruction; the job is actually a sourcer job since it involves confirming a venue and proposing an item, not adding a topic to the board index.. Not yet confirmed by a person.*
