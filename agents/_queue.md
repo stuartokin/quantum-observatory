@@ -35,9 +35,4 @@ and will be tried again.
 
 ## What is queued
 
-## Evaluate arXiv:2607.16116 — Sun et al. quantum-classical crossover for fault-tolerant dynamics simulation
-agent: scout
-added: 2026-08-18
-source: issue #129
-
-    /focus scout: check arXiv:2607.16116 (Jinzhao Sun et al., 17 Jul 2026, quantum-classical crossover in fault-tolerant quantum dynamics simulation). The paper reportedly claims a concrete quantum-classical crossover for fault-tolerant simulation of mixed-field Ising dynamics at approximately 370,000 physical qubits for a 100-site 1D system at p=1e-3 error rate. If it provides a credible resource estimate for a physics simulation crossover distinct from cryptanalytic resource estimates, determine whether this warrants a new board item in the applications or algorithms constellation, or an update to algo-quantum-simulation or app-quantum-materials-advantage. Report the claim, authors, institution, and evidence level.
+_Nothing queued._
