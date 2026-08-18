@@ -517,6 +517,37 @@ searching freely.
 
 Every path must sit inside: ${cfg.write_scope.join(', ')}
 Maximum files this run: ${focusCap}${
+  (() => {
+    /*
+     * Warn when the budget cannot fit in the output ceiling.
+     *
+     * An agent returning whole files has a hard arithmetic limit: items on this
+     * board average around 6,000 characters, and an output ceiling of N tokens
+     * holds roughly N * 3.6 / 6000 of them alongside a summary. A budget above
+     * that cannot be met, and the failure mode is total — the run writes
+     * nothing, so every check it did is lost.
+     *
+     * The reviewer was configured for twelve and attempted fourteen.
+     */
+    const avg = items.length
+      ? readdirSync('content/frontier')
+          .filter((f) => f.endsWith('.md'))
+          .reduce((t, f) => t + readFileSync(join('content/frontier', f), 'utf8').length, 0) /
+        items.length
+      : 6000
+    // Half the ceiling, not most of it. The observed failure came at fourteen
+    // items where the arithmetic said twelve would fit — so twelve was the edge,
+    // and a ceiling with no headroom is one an agent falls off.
+    const fits = Math.floor(((cfg.maxTokens ?? 32000) * 3.6 * 0.5) / avg)
+    return focusCap > fits
+      ? `\n\n**Your budget of ${focusCap} does not fit your output limit.** Items here ` +
+        `average ${Math.round(avg)} characters and you must return each in full, so ` +
+        `about ${fits} is the most that can be written alongside a summary. Return ` +
+        `${fits} properly formed rather than ${focusCap} truncated: a run that ` +
+        `exceeds the limit writes nothing at all.`
+      : ''
+  })()
+}${
   cfg.existingIdsOnly
     ? '\n\nYou may ONLY write files whose id already appears in the board list above.\nA file with any other id is rejected. You are not here to add topics.'
     : ''

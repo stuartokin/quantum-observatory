@@ -85,8 +85,21 @@ are never opened at all.
 Say in your summary how many you skipped as recently checked. That figure and
 the remaining count together say whether the queue is moving.
 
-**Check eight to twelve items per run**, and write a file for each. Among those
-not recently checked, choose in this order:
+**Check as many items as your file budget allows, and no more.** That number is
+stated in your context as "Maximum files this run" — it is not a target to fill
+but a ceiling you must stay inside.
+
+You must return the whole file for every item you check, and a run that exceeds
+the output limit writes **nothing at all**: the reading is done, the corrections
+are composed, and every one of them is lost. That has happened here with
+fourteen items in a single pass.
+
+So: if you are partway through and the budget is nearly spent, stop and return
+what you have. Six items checked and returned beats twelve checked and
+discarded, and the ones you did not reach will still be there next run — the
+28-day rule guarantees it.
+
+Among those not recently checked, choose in this order:
 
 1. Anything at **E4 or E5** — the strongest claims, so the most costly if wrong
 2. Anything with a **non-zero Q-Day score**
