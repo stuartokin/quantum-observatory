@@ -36,7 +36,7 @@ status: draft
 added: '2026-08-17'
 evidence:
   level: E2
-  claim: 'The NQAC Grand Challenges programme announced an award to Prof. Patrick Draper (UIUC) in collaboration with IBM and EPRI to investigate warm-starting QAOA with SQD for power-grid decentralisation, renewables integration, and reliability constraints. The source is an IQMP institutional press release (April 2026); no preprint or technical paper has been located. Evidence ceiling is E2.'
+  claim: 'The NQAC Grand Challenges programme announced an award to Prof. Patrick Draper (UIUC) in collaboration with IBM and EPRI to investigate warm-starting QAOA with SQD for power-grid decentralisation, renewables integration, and reliability constraints. The source is an IQMP institutional press release (April 2026); no preprint or technical paper has been located. Evidence ceiling is E2. Note: the IQMP source names "SQD" without specifying whether this refers to IBM Sample-based Quantum Diagonalization (a chemistry/eigenvalue technique) or semi-definite programming (SDP); the correct interpretation will become clear when a preprint appears.'
   verified: '2026-08-17'
   sources:
     - url: 'https://iqmp.org/news/national-quantum-algorithm-center-at-the-iqmp-announces-grand-challenges-awards/'
@@ -47,10 +47,12 @@ evidence:
       accessed: '2026-08-17'
       note: 'Institutional press release announcing five Grand Challenges awards. Names Draper, IBM, EPRI and describes the warm-start QAOA with SQD approach for grid decentralisation. No technical paper attached. E2 ceiling applies.'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-17'
+  reviewedOn: '2026-08-18'
+  note: 'IQMP announcement confirmed via web search: Draper, IBM, EPRI, warm-starting QAOA with SQD for grid decentralisation confirmed. No preprint found. E2 correct: single institutional announcement. Claim note added flagging SQD ambiguity (IBM SQD vs SDP) — will resolve when preprint appears.'
 ---
 
 **What happened.** The National Quantum Algorithm Center (NQAC) at the Illinois Quantum and Microelectronics Park announced five Grand Challenges awards in April 2026. One went to Prof. Patrick Draper at the University of Illinois Urbana-Champaign, working with IBM and EPRI, to investigate whether QAOA warm-started with IBM's Sample-based Quantum Diagonalization (SQD) technique can deliver practical advantage on power-grid problems — specifically decentralisation, renewables integration, and reliability constraints.
