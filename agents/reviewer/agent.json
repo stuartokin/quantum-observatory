@@ -10,8 +10,8 @@
   "output": "pull_request",
   "enabled": true,
   "budget": {
-    "searches": 30,
-    "proposals": 14
+    "searches": 20,
+    "proposals": 6
   },
   "existingIdsOnly": true
 }
