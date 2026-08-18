@@ -64,7 +64,7 @@ export default function Help({ colour, pool }: { colour: string; pool: FrontierI
     })
 
   const SECTIONS = [
-    'reading', 'controls', 'provenance', 'decisions', 'sources',
+    'what', 'reading', 'controls', 'provenance', 'decisions', 'sources',
     'prompts', 'design', 'operating', 'plan', 'data', 'versions', 'elsewhere',
   ]
   const allOpen = SECTIONS.every((id) => open.has(id))
@@ -111,6 +111,56 @@ export default function Help({ colour, pool }: { colour: string; pool: FrontierI
           {allOpen ? 'Collapse all' : 'Expand all'}
         </button>
       </div>
+
+      <Section id="what" title="What this is, and what it is not" open={open.has('what')} onToggle={toggle}>
+        <p>
+          Horizon Q is not a feed, and its value comes from what it refuses to
+          include. Thousands of quant-ph preprints appear each year, hundreds of
+          peer-reviewed results across computing, cryptography, communications
+          and sensing, and a trade press that publishes daily. The aggregators
+          cover that volume already, and faster than any individual could.
+        </p>
+        <p>
+          What they cannot do is tell you, six months later, which of those
+          announcements turned out to matter — because they have no mechanism
+          for going back and marking one down when a classical result narrows
+          it.
+        </p>
+        <p>
+          This board does. Every item carries an evidence level tied to the kind
+          of source behind it, a readiness position tied to what has been built
+          rather than announced, and a date recording when that assessment last
+          moved. Agents correct downward on their own judgement and may never
+          raise anything without a person. So a claim that weakens gets weaker
+          here, and the record shows when and why.
+        </p>
+        <p>
+          The output is not <em>here is what happened this week</em> but{' '}
+          <em>here is what is currently true, and how confident anyone should be
+          about it</em>. Tens of items where a feed would have thousands, because
+          that is what survives the requirement that each be traceable to a
+          primary source and mean something for planning.
+        </p>
+        <p>
+          And it says what it does not know. The applications constellation held
+          nothing for months, which was the correct answer: no verified quantum
+          advantage on a commercially relevant problem had been published.
+          Several of the twelve standing questions still read{' '}
+          <em>not yet answered</em>, with a note on what evidence would settle
+          them. A board that only shows the questions it can answer is
+          describing itself rather than the field.
+        </p>
+        <p className="filter-group__note">
+          Two honest caveats. This is a derivative of that literature — it could
+          not exist without the journals and aggregators, and it uses the trade
+          press constantly to locate papers it then refuses to cite. It is a
+          different layer, not a replacement: they establish what was published,
+          this establishes what it amounts to. And its coverage is a judgement
+          about what belongs, made by agents against rules a person wrote. It is
+          narrower than the literature by design, and the things it leaves out
+          are chosen rather than absent.
+        </p>
+      </Section>
 
       <Section id="reading" title="Reading the board" open={open.has('reading')} onToggle={toggle}>
         <p>
