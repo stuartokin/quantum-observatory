@@ -3,7 +3,7 @@ schema: frontier/v1
 id: algo-classical-fermi-hubbard-rausch
 title: 'GPU-accelerated TDVP certifies Q-CTRL Fermi-Hubbard run and advances classical frontier to t=7'
 summary: 'Multiverse Computing and Donostia IPC exploit U(1)×SU(2) symmetry with GPU-accelerated TDVP at bond dimension χ≈62,000 on four NVIDIA H200s to certify the Q-CTRL/IBM 120-qubit Fermi-Hubbard simulation across t∈[0,6] — including the previously unresolved high-entanglement regime — and extend the classical frontier to t=7, beyond the quantum run. At comparable bond dimension the GPU implementation completes in ~100 minutes, reducing the claimed 3000× quantum speedup to ~36×.'
-plain: 'Quantum advantage claims require showing that a quantum processor outperforms the best possible classical method, not a suboptimal one. The Q-CTRL team ran 120-qubit Fermi-Hubbard dynamics on an IBM processor in under three minutes and compared it against a classical simulation that took over 160 hours — claiming a 3000× speedup. But that classical baseline used a well-known algorithm (TDVP) without two available improvements: GPU hardware and exploitation of the physical symmetries of the problem. Rausch et al. applied both, reaching a bond dimension of ~62,000 on four NVIDIA H200 GPUs — fifteen times larger than Q-CTRL''s baseline. At this level the classical method fully converges across the entire simulation window, including the high-entanglement region t∈[5.2,6] that Q-CTRL''s own classical benchmark failed to resolve. When run at comparable bond dimension (χ≈4,880), the GPU implementation finishes in ~100 minutes rather than 160 hours, which revises the quantum advantage from 3000× to ~36×. The classical simulation also extends to t=7, beyond the quantum hardware''s reach at t=6. This certifies that the hardware results are correct while showing they are not yet beyond classical reach.'
+plain: 'Quantum advantage claims require showing that a quantum processor outperforms the best possible classical method, not a suboptimal one. The Q-CTRL team ran 120-qubit Fermi-Hubbard dynamics on an IBM processor in under three minutes and compared it against a classical simulation that took over 160 hours — claiming a 3000× speedup. But that classical baseline used a well-known algorithm (TDVP) without two available improvements: GPU hardware and exploitation of the physical symmetries of the problem. Rausch et al. applied both, reaching a bond dimension of ~62,000 on four NVIDIA H200 GPUs — fifteen times larger than Q-CTRL''s baseline. At this level the classical method fully converges across the entire simulation window, including the high-entanglement region t∈[5.2,6] that Q-CTRL''s own classical benchmark failed to resolve. When run at comparable bond dimension (χ≈4,880), the GPU implementation finishes in ~100 minutes rather than 160 hours, which the authors calculate revises the quantum advantage from 3000× to ~36× against bare QPU time. The classical simulation also extends to t=7, beyond the quantum hardware''s reach at t=6. This certifies that the hardware results are correct while showing they are not yet beyond classical reach.'
 pillar: quantum
 readiness: emerging
 constellation: algorithms
@@ -65,10 +65,12 @@ status: draft
 origin: agent
 added: '2026-08-18'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: steward
   agentMergedOn: '2026-08-18'
+  reviewedOn: '2026-08-18'
+  note: 'Steward review 2026-08-18. arXiv:2606.04771 confirmed as preprint from Multiverse Computing (Spain/Canada) and Donostia IPC. E3 correct for preprint primary source. Confidence medium correct: single independent classical counter using GPU-TDVP with symmetry exploitation; not yet peer-reviewed. qdayImpact 0 correct: 1D Fermi-Hubbard dynamics, no cryptanalytic relevance. Readiness emerging correct: advantage claim contested, not the physics. Country ES (Donostia, Spain) and CA (Multiverse Computing, Canada) correct. All metrics consistent with arXiv abstract. No downward corrections needed.'
 ---
 
 ## What happened

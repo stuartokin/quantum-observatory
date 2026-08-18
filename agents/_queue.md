@@ -35,4 +35,9 @@ and will be tried again.
 
 ## What is queued
 
-_Nothing queued._
+## Check algo-qctrl-fermi-hubbard-advantage v2 claim text for downgrade
+agent: sourcer
+added: 2026-08-18
+source: issue #129
+
+    /focus sourcer: check arXiv:2605.04025 v2 (July 2026) — the Q-CTRL/IBM Fermi-Hubbard preprint — to confirm whether the authors explicitly accept that Rausch et al. (arXiv:2606.04771) certify their hardware results and revise the 3000× speedup claim. If the v2 text supports it, update algo-qctrl-fermi-hubbard-advantage claim text to reflect the authors' own acknowledgement, and lower confidence from low to low (it is already low — check whether the claim text itself overstates the advantage). This is a downward correction needing no permission.
