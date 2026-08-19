@@ -11,13 +11,14 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.52.0**, built in this session but not yet dragged into
+**Version 0.53.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
-**0.49.0 through 0.52.0 are Phases 0–3 of the Q-Day work.** Five of the seven
+**0.49.0 through 0.53.0 are Phases 0–3 of the Q-Day work, plus a
+presentation pass.** Five of the seven
 Observatory sections are live; Threats and Readiness wait on Phase 4.
 `QDAY-PLAN.md` carries the sequence; the four sections below carry what a
 session needs before touching any of it.
@@ -57,6 +58,56 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## The Observatory's presentation kit
+
+**0.53.0.** Stuart compared the Observatory against the research prototype it
+replaces and preferred the prototype's formatting. He was right, and the
+reasons are specific rather than a matter of taste — so they were adopted
+rather than argued with.
+
+`src/qday/ui/` now holds the shared pieces. **Use them rather than hand-rolling
+another layout in a tab:**
+
+- **`Section`** — a foldable small-caps rule with an optional `(i)` holding how
+  the section was computed. Density is the enemy on these pages; folding is
+  the cheapest answer, and the working belongs beside the result rather than
+  in a footnote.
+- **`BoardFigure`** — the card that explains itself, and the most important
+  thing here. It takes a **frontier item id**, not prose, and fills its own
+  drawer: `plain` → "in plain terms", `evidence.claim` → what the evidence
+  says, `evidence.level` and `review.state` → the badges, `evidence.sources[0]`
+  → the link. **It takes an id on purpose.** A card that could be handed
+  arbitrary prose would eventually be handed some, and would then drift from
+  the board silently. Use `DerivedFigure` where the figure genuinely has no
+  single item behind it.
+- **`Takeaway`** — the implication of a chart, stated as a claim a reader can
+  disagree with rather than woven into the caption as if it were data.
+- **`Chips` / `useMulti` / `useSingle`** — filters in one row above the chart.
+  Colour follows the entity, never its rank: hiding a series must not repaint
+  the survivors.
+- **`useTooltip` / `ChartTooltip`** — a real hover layer. An SVG `<title>` is a
+  tooltip only in the sense that it eventually appears, in the OS's styling,
+  and on a touchscreen not at all. Positioned against the figure so it travels
+  with the chart, and flipped left near the right edge.
+
+### Things worth not re-learning
+
+- `.qday-surface__main > *` sets one content width for every tab. Each tab used
+  to set its own, so a wide monitor stretched the Plan gantt to 1900px and put
+  its row labels a foot from its data.
+- `.qd-stack__grid` and `.qd-plan__grid` use `align-items: start`. Without it a
+  grid row stretches every card to its tallest sibling, so opening one drawer
+  left two neighbours with a foot of empty panel.
+- The gantt's window label sits **above** the band. In the tick row it printed
+  straight through "2039".
+- **Stack still has no completion percentages, and the bars are not them.** They
+  are a log-scale position between one qubit and the published requirement,
+  with no number printed, the multiple as the headline, and nothing summed.
+  If a future session is asked for a progress bar or a total, that is the
+  argument against it.
 
 ---
 

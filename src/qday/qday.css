@@ -887,3 +887,363 @@
 @media (max-width: 760px) {
   .qd-learn__questions > li { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   THE SHARED KIT — sections, cards, chips, tooltips
+
+   Borrowed from the research prototype's presentation, which
+   handles density and progressive disclosure better than the
+   flat stacks this surface first shipped with. Three ideas do
+   most of the work:
+
+     · a small-caps rule you can fold, so six analyses on one
+       page stay a reference rather than a wall;
+     · a card whose figure is visible and whose *provenance is
+       one tap away* — the prototype hand-writes that prose,
+       this reads it off the item, so it cannot drift;
+     · an (i) beside each section holding how it was computed,
+       next to the result rather than in a footnote.
+   ============================================================ */
+
+.qd-chev { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.15s ease; }
+.qd-chev[data-open] { transform: rotate(180deg); }
+
+/* ---------------------------------------------------------- section */
+
+.qd-section { margin-bottom: var(--gap-l); }
+.qd-section__bar { display: flex; align-items: center; gap: var(--gap-s); border-bottom: 1px solid var(--hairline); }
+.qd-section__head {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-s);
+  background: none;
+  border: 0;
+  padding: 0 0 var(--gap-xs);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--qd-threat);
+  text-align: left;
+}
+.qd-section__head:hover { color: var(--ink); }
+.qd-section__info {
+  width: 22px; height: 22px; flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  background: none;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  cursor: pointer;
+  margin-bottom: var(--gap-xs);
+}
+.qd-section__info:hover, .qd-section__info[aria-expanded='true'] { color: var(--qd-defence); border-color: var(--qd-defence); }
+.qd-section__method {
+  font-family: var(--body);
+  font-size: var(--step--1);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  border-left: 2px solid var(--qd-defence);
+  background: color-mix(in oklab, var(--ground-raised) 70%, transparent);
+  padding: var(--gap-s) var(--gap-m);
+  margin: var(--gap-s) 0;
+  max-width: var(--measure);
+}
+.qd-section__method code { font-family: var(--mono); font-size: 0.9em; color: var(--ink); }
+.qd-section > div[hidden] { display: none; }
+.qd-section > div:not([hidden]) { padding-top: var(--gap-s); }
+
+/* ---------------------------------------------------------- takeaway */
+
+.qd-takeaway { margin-top: var(--gap-s); }
+.qd-takeaway__body {
+  margin-top: var(--gap-s);
+  border-left: 2px solid var(--qd-threat);
+  padding: var(--gap-s) var(--gap-m);
+  background: color-mix(in oklab, var(--qd-threat) 6%, transparent);
+  max-width: var(--measure);
+}
+.qd-takeaway__body p { font-family: var(--body); font-size: var(--step--1); line-height: 1.65; color: var(--ink-muted); margin: 0 0 var(--gap-xs); }
+.qd-takeaway__body p:last-child { margin-bottom: 0; }
+.qd-disc { display: inline-flex; align-items: center; gap: 0.45rem; }
+
+/* ---------------------------------------------------------- figure card */
+
+.qd-fig {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--ground-panel) 72%, transparent);
+  padding: var(--gap-m);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.qd-fig[data-open] { border-color: color-mix(in oklab, var(--qd-defence) 34%, var(--hairline)); }
+.qd-fig__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--gap-s); }
+.qd-fig__top h3 {
+  font-family: var(--display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-transform: none;
+  margin: 0;
+}
+.qd-fig__badge {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  white-space: nowrap;
+  color: var(--qd-threat);
+  border: 1px solid color-mix(in oklab, var(--qd-threat) 40%, var(--hairline));
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+}
+.qd-fig__headline {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.5;
+}
+.qd-fig__sub { display: block; font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.2rem; line-height: 1.55; }
+.qd-fig__meter { height: 6px; border-radius: 999px; background: color-mix(in oklab, var(--ground) 70%, transparent); overflow: hidden; margin: 0.2rem 0; }
+.qd-fig__meter i { display: block; height: 100%; background: var(--qd-chart-required); }
+
+.qd-fig__toggle {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-s);
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  padding: var(--gap-xs) 0 0;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  text-align: left;
+}
+.qd-fig__toggle:hover { color: var(--qd-defence); }
+.qd-fig__drawer { display: grid; gap: 0.25rem; padding-top: var(--gap-xs); }
+.qd-fig__label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--qd-threat);
+  margin: var(--gap-xs) 0 0;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.qd-fig__level { color: var(--qd-defence); letter-spacing: 0.06em; text-transform: none; }
+.qd-fig__review { color: var(--ink-faint); letter-spacing: 0.06em; text-transform: none; }
+.qd-fig__review--agent { color: var(--line-ai); }
+.qd-fig__plain, .qd-fig__claim {
+  font-family: var(--body);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 0;
+}
+.qd-fig__claim { color: var(--ink-faint); }
+.qd-fig__source { font-family: var(--mono); font-size: 0.58rem; color: var(--ink-faint); margin: 0.3rem 0 0; }
+.qd-fig__source a { color: var(--qd-defence); text-decoration: none; }
+.qd-fig__source a:hover { text-decoration: underline; }
+.qd-fig__missing { font-family: var(--mono); font-size: 0.6rem; color: var(--line-energy); margin: 0; }
+
+.qd-stack__grid, .qd-plan__grid {
+  display: grid;
+  gap: var(--gap-s);
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+}
+
+/* ---------------------------------------------------------- chips */
+
+.qd-chips { display: flex; gap: 0.35rem; flex-wrap: wrap; margin: var(--gap-s) 0; }
+.qd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+.qd-chip i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid; display: inline-block; }
+.qd-chip:hover { color: var(--ink); }
+.qd-chip[aria-pressed='true'] { color: var(--ink); border-color: color-mix(in oklab, var(--qd-defence) 45%, var(--hairline)); background: color-mix(in oklab, var(--qd-defence) 10%, transparent); }
+
+/* ---------------------------------------------------------- tooltip */
+
+.qd-chart__hit { cursor: pointer; }
+.qd-chart__hit:focus-visible { outline: 2px solid var(--qd-defence); outline-offset: 2px; }
+.qd-tip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  max-width: 280px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  background: color-mix(in oklab, var(--ground-panel) 96%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.6);
+  display: grid;
+  gap: 0.2rem;
+}
+.qd-tip b { font-family: var(--mono); font-size: 0.68rem; color: var(--ink); font-weight: 500; }
+.qd-tip span { font-family: var(--body); font-size: 0.74rem; line-height: 1.5; color: var(--ink-muted); }
+.qd-tip i { font-family: var(--mono); font-size: 0.56rem; font-style: normal; color: var(--ink-faint); }
+.qd-chart, .qd-gantt { position: relative; }
+
+/* ---------------------------------------------------------- gantt */
+
+.qd-gantt { margin: 0; }
+.qd-gantt svg { width: 100%; height: auto; display: block; overflow: visible; }
+.qd-gantt__window { fill: color-mix(in oklab, var(--qd-threat) 12%, transparent); stroke: color-mix(in oklab, var(--qd-threat) 45%, transparent); }
+.qd-gantt__windowlabel { font-family: var(--mono); font-size: 9px; fill: var(--qd-threat); text-anchor: middle; }
+.qd-gantt__tick { font-family: var(--mono); font-size: 9px; fill: var(--ink-faint); text-anchor: middle; }
+.qd-gantt__now { stroke: var(--qd-defence); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.qd-gantt__nowlabel { font-family: var(--mono); font-size: 9px; fill: var(--qd-defence); text-anchor: middle; }
+.qd-gantt__row { font-family: var(--display); font-size: 15px; font-weight: 700; fill: var(--ink); text-anchor: end; }
+.qd-gantt__rowsub { font-family: var(--mono); font-size: 8.5px; fill: var(--ink-faint); text-anchor: end; }
+.qd-gantt__span { stroke: color-mix(in oklab, var(--qd-defence) 45%, var(--ground)); stroke-width: 9; stroke-linecap: round; }
+.qd-gantt__dot { fill: var(--qd-threat); stroke: var(--ground); stroke-width: 2; cursor: pointer; }
+.qd-gantt__dot[data-status='met'] { fill: var(--qd-defence); }
+.qd-gantt__dot:focus-visible { outline: 2px solid var(--qd-defence); outline-offset: 2px; }
+.qd-gantt__end { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
+.qd-legend__line { width: 14px; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--qd-defence) 45%, var(--ground)); }
+.qd-legend__band { width: 12px; height: 10px; border-radius: 2px; background: color-mix(in oklab, var(--qd-threat) 22%, transparent); border: 1px solid color-mix(in oklab, var(--qd-threat) 45%, transparent); }
+
+/* ---------------------------------------------------------- plan cards */
+
+.qd-plan__card { border: 1px solid var(--hairline); border-radius: 10px; background: color-mix(in oklab, var(--ground-panel) 72%, transparent); padding: var(--gap-s) var(--gap-m); }
+.qd-plan__cardhead { display: flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.68rem; color: var(--ink); margin: 0 0 var(--gap-xs); }
+.qd-plan__flag {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--qd-defence) 18%, transparent);
+  color: var(--qd-defence);
+}
+.qd-plan__rows { margin: 0; display: grid; gap: 0.4rem; }
+.qd-plan__rows > div { display: grid; grid-template-columns: 46px 1fr; gap: var(--gap-s); border-top: 1px solid var(--hairline); padding-top: 0.4rem; }
+.qd-plan__rows dt { font-family: var(--mono); font-size: 0.68rem; color: var(--qd-threat); }
+.qd-plan__rows > div[data-status='met'] dt { color: var(--qd-defence); }
+.qd-plan__rows dd { margin: 0; display: grid; gap: 0.15rem; }
+.qd-plan__rows dd b { font-family: var(--body); font-size: var(--step--1); color: var(--ink); font-weight: 600; }
+.qd-plan__what { font-family: var(--body); font-size: 0.8rem; line-height: 1.55; color: var(--ink-muted); }
+.qd-plan__plain { font-family: var(--body); font-size: 0.78rem; line-height: 1.5; color: var(--ink-faint); font-style: italic; }
+.qd-plan__meta { font-family: var(--mono); font-size: 0.55rem; color: var(--ink-faint); }
+.qd-plan__meta a { color: var(--qd-defence); text-decoration: none; }
+
+/* ---------------------------------------------------------- steps */
+
+.qd-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.qd-steps > li { border-bottom: 1px solid var(--hairline); }
+.qd-steps__head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px 1fr auto 16px;
+  gap: var(--gap-s);
+  align-items: center;
+  background: none;
+  border: 0;
+  padding: var(--gap-s) 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+}
+.qd-steps__head:hover .qd-steps__q { color: var(--qd-defence); }
+.qd-steps__n {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+}
+.qd-steps__q { font-family: var(--display); font-size: var(--step-0); font-weight: 600; }
+.qd-steps__state {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.qd-steps > li[data-state='moving'] .qd-steps__state { color: var(--qd-threat); }
+.qd-steps > li[data-state='unknown'] .qd-steps__state { color: var(--line-energy); }
+.qd-steps > li[data-state='contested'] .qd-steps__state { color: var(--line-ai); }
+.qd-steps > li[data-state='moving'] .qd-steps__n { border-color: color-mix(in oklab, var(--qd-threat) 45%, var(--hairline)); color: var(--qd-threat); }
+.qd-steps > li[data-state='unknown'] .qd-steps__n { border-color: color-mix(in oklab, var(--line-energy) 45%, var(--hairline)); color: var(--line-energy); }
+.qd-steps__body { padding: 0 0 var(--gap-s) calc(30px + var(--gap-s)); max-width: var(--measure); }
+.qd-steps__answer { font-family: var(--body); font-size: var(--step--1); line-height: 1.65; color: var(--ink-muted); margin: 0 0 0.3rem; }
+.qd-steps__meta { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint); margin: 0; line-height: 1.6; }
+
+/* ---------------------------------------------------------- misc lists */
+
+.qd-gaps__list, .qd-excluded__list { list-style: none; margin: 0 0 var(--gap-s); padding: 0; display: grid; gap: 0.4rem; }
+.qd-gaps__list li { font-family: var(--body); font-size: var(--step--1); line-height: 1.65; color: var(--ink-muted); border-left: 2px solid var(--hairline); padding-left: var(--gap-s); }
+.qd-gaps__list b { color: var(--ink); }
+.qd-gaps__list i { color: var(--ink-faint); }
+.qd-learn__bar { margin-bottom: var(--gap-s); }
+
+@media (max-width: 760px) {
+  .qd-steps__head { grid-template-columns: 26px 1fr 16px; }
+  .qd-steps__state { display: none; }
+  .qd-plan__rows > div { grid-template-columns: 40px 1fr; }
+}
+
+/* A measured column, not the full viewport.
+
+   The surface first shipped with each tab setting its own width, so a wide
+   monitor stretched the gantt to 1900px and put its row labels a foot from
+   its data. One wrapper, one width, every tab. */
+.qday-surface__main > * { max-width: 1240px; margin-inline: auto; }
+
+/* The container a chart sits in — the research prototype puts every chart in
+   one of these and it is why its charts read as objects rather than as marks
+   floating on the page background. */
+.qd-panel {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--ground-panel) 62%, transparent);
+  padding: var(--gap-m) var(--gap-m) var(--gap-s);
+}
+.qd-chart { border-radius: 10px; }
+
+/* Cards size to their own content.
+
+   Without this a grid row stretches every card to match its tallest sibling,
+   so opening one drawer left two neighbours with a foot of empty panel. */
+.qd-stack__grid, .qd-plan__grid { align-items: start; }
+
+/* A long `plain` field is a good thing to have and a bad thing to dump
+   whole into a card. Scroll it past a point rather than truncating, so
+   nothing is hidden and the grid stays legible. */
+.qd-fig__drawer { max-height: 26rem; overflow-y: auto; }
+
+.qday-surface__mark {
+  font-family: var(--display);
+  font-size: 0.62em;
+  font-weight: 600;
+  color: var(--ink-muted);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.qday-surface__mark:hover { color: var(--line-quantum); }
+.qday-surface__sep { font-family: var(--display); color: var(--ink-faint); margin: 0 0.35rem; font-size: 0.62em; }

@@ -2,23 +2,29 @@ import { useMemo, useState } from 'react'
 import { GLOSSARY } from '../glossary'
 import { frontierById } from '../../content/frontier'
 import { allQuestions } from '../../content/questions'
+import { Section } from '../ui/Section'
 
 /**
- * LEARN — the vocabulary, and the twelve questions.
+ * LEARN — the vocabulary, and the questions the board is holding open.
  *
- * Two halves with different provenance, and the page keeps them apart.
- *
- * The glossary is definitions: presentational, written for this surface, and
- * making no claim that could be right or wrong against evidence. It lives in
- * code (`src/qday/glossary.ts`) for exactly that reason.
- *
- * The questions are the board's own standing questions, content, with dates
- * and states an agent maintains. They are the honest answer to "what is still
- * unsettled" — and four of the twelve currently read `unknown`, which is worth
- * a reader seeing rather than a page hiding.
+ * The numbered accordion is borrowed from the research prototype, where it is
+ * used for an eight-step explainer. Here the numbers are not decoration: the
+ * board's twelve standing questions are *already* numbered, ordered and
+ * maintained by an agent, so the pattern lands on content that was shaped for
+ * it. Four of them currently read `unknown`, which is a real answer and the
+ * most useful thing on the page.
  */
+const STATE_NOTE: Record<string, string> = {
+  moving: 'the answer changed recently',
+  steady: 'settled, nothing new',
+  slowing: 'progress has decelerated',
+  contested: 'credible parties disagree',
+  unknown: 'the board cannot answer this yet',
+}
+
 export function Learn() {
   const [q, setQ] = useState('')
+  const [open, setOpen] = useState<string | null>(null)
 
   const terms = useMemo(() => {
     const needle = q.trim().toLowerCase()
@@ -31,19 +37,66 @@ export function Learn() {
     )
   }, [q])
 
-  const quantumQuestions = allQuestions.filter((x) => x.pillar === 'quantum')
+  const questions = allQuestions.filter((x) => x.pillar === 'quantum')
 
   return (
     <div className="qd-learn">
-      <p className="qd-trends__lede">
-        The vocabulary this subject runs on, and the questions the board is holding open.
-        Definitions are written for this page and make no claim about the world; where the
-        board holds evidence on a term, the entry links to it.
-      </p>
+      <Section
+        title="What is still open"
+        info={
+          <>
+            The board&rsquo;s twelve standing questions, with the state an agent last recorded and
+            the date it was last confirmed. These are content, not copy — they change when the
+            evidence does. An answer of <b>unknown</b> means the board cannot currently tell
+            you, which is more use than a confident guess.
+          </>
+        }
+      >
+        <ol className="qd-steps">
+          {questions.map((x) => {
+            const isOpen = open === x.id
+            return (
+              <li key={x.id} data-state={x.state}>
+                <button
+                  className="qd-steps__head"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpen(isOpen ? null : x.id)}
+                >
+                  <span className="qd-steps__n">{x.number}</span>
+                  <span className="qd-steps__q">{x.question}</span>
+                  <span className="qd-steps__state">{x.state}</span>
+                  <svg className="qd-chev" viewBox="0 0 24 24" aria-hidden="true" data-open={isOpen || undefined}>
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {isOpen && (
+                  <div className="qd-steps__body">
+                    <p className="qd-steps__answer">{x.answer}</p>
+                    <p className="qd-steps__meta">
+                      {STATE_NOTE[x.state] ?? x.state} · confirmed {x.asOf}
+                      {x.lastChanged && ` · last materially changed ${x.lastChanged}`}
+                      {x.changedBy && <> — {x.changedBy}</>}
+                    </p>
+                  </div>
+                )}
+              </li>
+            )
+          })}
+        </ol>
+      </Section>
 
-      <section>
+      <Section
+        title="Glossary"
+        info={
+          <>
+            Definitions written for this page. They make no claim about the world that could be
+            right or wrong against evidence, which is why they live in the application rather
+            than in content — but where the board holds evidence on a term, the entry names the
+            item and its evidence level so the claim is one step away.
+          </>
+        }
+      >
         <div className="qd-learn__bar">
-          <h3>Glossary</h3>
           <input
             type="search"
             placeholder="Filter terms…"
@@ -84,33 +137,7 @@ export function Learn() {
           })}
         </dl>
         {terms.length === 0 && <p className="qd-note">Nothing matches “{q}”.</p>}
-      </section>
-
-      {quantumQuestions.length > 0 && (
-        <section>
-          <h3>What is still open</h3>
-          <p className="qd-note">
-            The board's standing questions, with the state an agent last recorded. An
-            answer of <b>unknown</b> is a real answer — it says the board cannot currently
-            tell you, which is more use than a confident guess.
-          </p>
-          <ol className="qd-learn__questions">
-            {quantumQuestions.map((x) => (
-              <li key={x.id} data-state={x.state}>
-                <span className="qd-learn__qstate">{x.state}</span>
-                <div>
-                  <p className="qd-learn__qtext">{x.question}</p>
-                  <p className="qd-learn__qanswer">{x.answer}</p>
-                  <p className="qd-learn__qmeta">
-                    as of {x.asOf}
-                    {x.lastChanged && ` · last changed ${x.lastChanged}`}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+      </Section>
     </div>
   )
 }

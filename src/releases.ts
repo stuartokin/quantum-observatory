@@ -24,6 +24,26 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.53.0',
+    date: '2026-08-19',
+    headline: 'The Observatory learns the research prototype\u2019s manners.',
+    ui: [
+      'Every figure now explains itself. A card shows the number, and one tap opens plain terms, what the evidence actually claims, its evidence level, whether a human has reviewed it, and the source \u2014 the pattern the research prototype uses on every card, which turns out to be this board\u2019s evidence model almost exactly. The difference is that the prototype hand-writes that prose and this reads it off the item, so a card cannot drift from the board and improves when an agent improves the item.',
+      'Sections fold, and each carries an (i) holding how it was worked out. On a page with six analyses, being able to shut four is the difference between a reference and a wall \u2014 and the working belongs next to the result rather than in a footnote nobody reaches.',
+      'Charts are interactive. Hovering or tabbing to any mark gives a real panel with the figure, the date and the paper behind it, positioned against the chart so it travels when the page scrolls. An SVG title tag is a tooltip only in the sense that it eventually appears, in the operating system\u2019s styling, and on a touchscreen not at all.',
+      'Plan became a chart. Every regulator\u2019s deadlines run as a track against the derived Q-Day band, with a "now" line through it \u2014 because the question a reader actually has is whether the migration finishes before the thing it defends against arrives, and that is a question about two intervals rather than a list of dates.',
+      'The Q-Day band on that chart is derived, not drawn. It comes from the same expert elicitation the Trends page uses, so when the evidence moves the band moves and the deadlines stay where their regulators put them.',
+      'Filter chips on Trends, so a reader can take one cryptographic target out and see the other on its own. Turning a series off never repaints the survivors \u2014 colour follows the entity, not its rank.',
+      'The twelve standing questions became a numbered accordion, which suits them because the board already numbers, orders and maintains them. Four still read unknown, and that remains the most useful thing on the page.',
+      'A "key takeaway" under each chart, stated as a claim you can disagree with rather than woven into the caption as though it were the data.',
+      'The header carries the Horizon Q wordmark and links back to the board. The two surfaces are one product and the header should say so.',
+    ],
+    agents: [
+      'Nothing changed about how content is written or validated. This release is presentation \u2014 but presentation that reads more of what agents already produce: the plain field, the evidence claim, the level, the review state and the source now all appear on the surface instead of only the number.',
+      'Stack still has no completion percentages. The bars are a log-scale position between one qubit and the published requirement \u2014 the axis this problem lives on, since every estimate has moved by orders of magnitude \u2014 with no figure printed on them, the multiple as the headline, and nothing summed.',
+    ],
+  },
+  {
     version: '0.52.0',
     date: '2026-08-19',
     headline: 'Five of the seven sections are live, and the board grew a memory.',
@@ -166,18 +186,6 @@ export const RELEASES: Release[] = [
       'The year toggle is labelled with what is showing rather than what the click will do. The other way round reads as a description of the current state, and sent a reader looking for a broken filter.',
       'A constellation opens in its own window instead of taking over the galaxy, which is the thing a reader navigates from.',
       'Un-docking a window puts it back inside the viewport. A frame keeps its last position while docked, and that position may since have moved off screen — opening something and not finding it reads as the click having failed.',
-    ],
-  },
-  {
-    version: '0.44.0',
-    date: '2026-08-12',
-    headline: 'The board shows less, and hides nothing.',
-    ui: [
-      'Three levels of detail driven by zoom. At the widest, five supergroups — Computing, Cryptography, Communications, Sensing, Applications — and about a dozen items drawn prominently. Zooming in splits the lanes into the nine constellations; zooming further shows everything.',
-      'Cryptography exists as a group because PQC and migration are neither computing nor applications. They are the response to the threat, and folding them into either misdescribes them.',
-      'Nothing is hidden at any level. A demoted item is a small dim dot — still there, still hoverable, still clickable, still counted. A reader who cannot see something is told it does not exist; one who sees it small is told it is there and quiet.',
-      'Links appear only when zoomed in and only between prominent bodies. Sixty hairlines behind sixty dots is texture rather than information.',
-      'Zoom never changes what is on the board, only how much of it is emphasised. Bringing back something a reader filtered out would be lying about what they asked for.',
     ],
   },
 ]

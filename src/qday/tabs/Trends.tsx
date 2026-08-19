@@ -3,6 +3,10 @@ import { frontier } from '../../content/frontier'
 import { allNews } from '../../content/newsroom'
 import type { Forecast } from '../../content/forecast'
 import { derive, type Derivation, type RequirementPoint, type SeriesPoint } from '../derive'
+import { Section, Takeaway } from '../ui/Section'
+import { DerivedFigure } from '../ui/Figure'
+import { Chips, useMulti } from '../ui/Chips'
+import { useTooltip, ChartTooltip } from '../ui/Tooltip'
 
 /**
  * TRENDS — what the board's own evidence says about Q-Day.
@@ -53,6 +57,7 @@ interface Plot {
  * disguise — the reader would compare two heights that are not comparable.
  */
 function GapChart({ plot }: { plot: Plot }) {
+  const { tip, show, hide } = useTooltip()
   const W = 560
   const H = 240
   const PAD = { t: 18, r: 96, b: 30, l: 52 }
@@ -143,9 +148,29 @@ function GapChart({ plot }: { plot: Plot }) {
               )}
               {pts.map((p, i) => (
                 <g key={`${p.itemId}-${p.metricName}-${p.date}`}>
-                  <circle cx={X(p.year)} cy={Y(p.value.n)} r={5} fill={REQUIRED} stroke="var(--ground)" strokeWidth={2}>
-                    <title>{`${p.value.raw} ${p.unit} — ${p.target}, ${p.date}\n${p.sourceTitle ?? p.itemId}`}</title>
-                  </circle>
+                  <circle
+                    cx={X(p.year)}
+                    cy={Y(p.value.n)}
+                    r={5}
+                    fill={REQUIRED}
+                    stroke="var(--ground)"
+                    strokeWidth={2}
+                    tabIndex={0}
+                    className="qd-chart__hit"
+                    onMouseEnter={(e) =>
+                      show(
+                        e,
+                        <>
+                          <b>{`${p.value.raw} ${p.unit}`}</b>
+                          <span>{`Required for ${p.target}, published ${p.date}`}</span>
+                          <i>{p.sourceTitle ?? p.itemId}</i>
+                        </>,
+                      )
+                    }
+                    onFocus={(e) => show(e, <b>{`${p.value.raw} ${p.unit} — ${p.target}`}</b>)}
+                    onMouseLeave={hide}
+                    onBlur={hide}
+                  />
                   <text
                     x={X(p.year)}
                     y={labelY(Y(p.value.n), i)}
@@ -184,9 +209,22 @@ function GapChart({ plot }: { plot: Plot }) {
               fill={DEMONSTRATED}
               stroke="var(--ground)"
               strokeWidth={2}
-            >
-              <title>{`${p.value} — ${p.qualifier ?? 'demonstrated'}, ${p.date}\n${p.headline}`}</title>
-            </rect>
+              tabIndex={0}
+              className="qd-chart__hit"
+              onMouseEnter={(e) =>
+                show(
+                  e,
+                  <>
+                    <b>{p.value.toLocaleString('en-GB')}</b>
+                    <span>{`${p.qualifier ?? 'demonstrated'} · ${p.date}`}</span>
+                    <i>{p.headline}</i>
+                  </>,
+                )
+              }
+              onFocus={(e) => show(e, <b>{`${p.value} — ${p.qualifier ?? 'demonstrated'}`}</b>)}
+              onMouseLeave={hide}
+              onBlur={hide}
+            />
             {/* Beside the mark, not above or below it. Centred labels were
                 being clipped by neighbouring marks where two results land at
                 a similar count a few weeks apart — 448 rendered as "148". */}
@@ -196,6 +234,7 @@ function GapChart({ plot }: { plot: Plot }) {
           </g>
         ))}
       </svg>
+      <ChartTooltip tip={tip} width={W} />
       <div className="qd-legend">
         <span>
           <i style={{ background: REQUIRED }} /> Required, as published
@@ -213,10 +252,18 @@ function GapChart({ plot }: { plot: Plot }) {
 export function Trends({ forecast }: { forecast?: Forecast }) {
   const d: Derivation = useMemo(() => derive(frontier, forecast, allNews), [forecast])
 
+  /** Targets present in the data rather than a fixed list — a third one
+   *  appearing on the board should show up here without a code change. */
+  const targets = useMemo(
+    () => [...new Set(d.requirement.points.map((p) => p.target))].sort(),
+    [d],
+  )
+  const { active, toggle } = useMulti(targets)
+
   const plots: Plot[] = (['physical', 'logical'] as const)
     .map((kind) => ({
       kind,
-      required: d.requirement.points.filter((p) => p.kind === kind),
+      required: d.requirement.points.filter((p) => p.kind === kind && active.includes(p.target)),
       demonstrated: d.capability.series
         .filter((sr) => sr.kind === `${kind}-qubits`)
         .flatMap((sr) => sr.points),
@@ -227,42 +274,95 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
 
   return (
     <div className="qd-trends">
-      <p className="qd-trends__lede">
-        Everything here is computed from the board's own items when the page loads. Nothing
-        is extrapolated forward, and no vendor roadmap contributes — the board's standing
-        rule is that a roadmap is a commercial statement and scores zero.
-      </p>
+      <Section
+        title="Required against demonstrated"
+        info={
+          <>
+            Everything on this page is computed from the board when it loads. Requirement
+            figures are dated by the paper their note names, matched against the item&rsquo;s own
+            sources — never by when the board last checked them, which would collapse the whole
+            trend onto one week. Demonstrated figures are dated measurements on news items,
+            because a frontier item holds the current best value and overwrites its own history.
+            <br />
+            <br />
+            No vendor roadmap contributes to anything here. The board&rsquo;s standing rule is that
+            a roadmap is a commercial statement and scores zero, which is also why there is no
+            projected crossing point: the only way to draw one is to extrapolate a roadmap.
+          </>
+        }
+      >
+        {headline && (
+          <DerivedFigure
+            title="The bar is falling"
+            badge={`${headline.ordersPerYear.toFixed(1)} orders per year`}
+            headline={
+              <>
+                {headline.orders.toFixed(1)} orders of magnitude
+                <span className="qd-fig__sub">
+                  {headline.target} {headline.kind} qubits: {headline.from.value.raw} →{' '}
+                  {headline.to.value.raw} in {headline.years.toFixed(1)} years
+                </span>
+              </>
+            }
+            drawer={
+              <>
+                <p className="qd-fig__plain">
+                  Between {headline.from.date} and {headline.to.date} the published requirement
+                  for {headline.target} fell from {headline.from.value.raw} to{' '}
+                  {headline.to.value.raw}. No hardware changed to cause that — it is algorithmic
+                  improvement, and it has moved the target faster than any machine has moved
+                  toward it.
+                </p>
+                <p className="qd-fig__source">
+                  {headline.from.sourceTitle ?? headline.from.itemId} → {headline.to.sourceTitle ?? headline.to.itemId}
+                </p>
+              </>
+            }
+          />
+        )}
 
-      {headline && (
-        <section className="qd-stat">
-          <p className="qd-stat__label">The bar is falling</p>
-          <p className="qd-stat__value">
-            {headline.orders.toFixed(1)} orders of magnitude
-          </p>
-          <p className="qd-stat__note">
-            {headline.target} {headline.kind} qubits: {headline.from.value.raw} →{' '}
-            {headline.to.value.raw} in {headline.years.toFixed(1)} years, between{' '}
-            {headline.from.date} and {headline.to.date}. Algorithmic improvement has moved
-            the requirement faster than any hardware has moved toward it.
-          </p>
-        </section>
-      )}
+        {targets.length > 1 && (
+          <Chips
+            chips={targets.map((t) => ({ id: t, label: t, colour: 'var(--qd-chart-required)' }))}
+            active={active}
+            onToggle={toggle}
+            label="Cryptographic target"
+          />
+        )}
 
-      <div className="qd-charts">
-        {plots.map((p) => (
-          <GapChart key={p.kind} plot={p} />
-        ))}
-      </div>
+        <div className="qd-charts">
+          {plots.map((p) => (
+            <GapChart key={p.kind} plot={p} />
+          ))}
+        </div>
+
+        <Takeaway>
+          <p>
+            The two lines are moving toward each other, and the faster one is the requirement.
+            That is the opposite of how this subject is usually described — the story is
+            normally about qubit counts rising, and the qubit counts have risen by about one
+            order of magnitude while the bar has come down by four since 2019.
+          </p>
+          <p>
+            It also means a break could arrive without any hardware surprise at all. A better
+            algorithm has moved the target twice in the last year; nothing rules out a third.
+          </p>
+        </Takeaway>
+      </Section>
 
       {d.capability.series.length > 0 && (
-        <section className="qd-series">
-          <h3>Capability over time, by platform</h3>
-          <p className="qd-note">
-            Dated from news, where an event records the figure it reported — the only place
-            on the board that can carry a history, because an item holds the current best
-            value and overwrites its own. Platforms are kept apart: counts on different
-            hardware are not points on one curve.
-          </p>
+        <Section
+          title="Capability over time, by platform"
+          defaultOpen={false}
+          info={
+            <>
+              Dated from news measurements — the only accumulating record on this board. A rate
+              is computed only where a group has three points sharing one qualifier and showing
+              growth; otherwise the group says which condition it failed. Platforms are never
+              mixed, because counts on different hardware are not points on one curve.
+            </>
+          }
+        >
           <ul className="qd-series__list">
             {d.capability.series.map((sr) => (
               <li key={`${sr.kind}-${sr.modality}`}>
@@ -270,9 +370,7 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
                   <b>{sr.modality.replace('-', ' ')}</b> · {sr.kind.replace('-', ' ')} ·{' '}
                   {sr.points.length} point{sr.points.length === 1 ? '' : 's'}
                   {sr.doublingMonths !== null && (
-                    <span className="qd-series__rate">
-                      doubling every ~{sr.doublingMonths.toFixed(0)} months
-                    </span>
+                    <span className="qd-series__rate">doubling every ~{sr.doublingMonths.toFixed(0)} months</span>
                   )}
                 </p>
                 {sr.rateWithheld && <p className="qd-series__withheld">No rate — {sr.rateWithheld}</p>}
@@ -288,20 +386,12 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
               </li>
             ))}
           </ul>
-          <p className="qd-note">
-            Seven measurements so far, on six events. Every one is a figure the board had
-            already verified elsewhere, so this is transcription rather than new research —
-            the newsroom fills the rest as it works. A rate needs three points sharing one
-            qualifier and showing growth; nothing clears that yet, and the page says so
-            rather than drawing a line through whatever is there.
-          </p>
-        </section>
+        </Section>
       )}
 
-      {d.capability.gaps.length > 0 && (
-        <section className="qd-gaps">
-          <h3>The distance still to cover</h3>
-          <ul>
+      <Section title="Where the estimate comes from">
+        {d.capability.gaps.length > 0 && (
+          <ul className="qd-gaps__list">
             {d.capability.gaps.map((g) => (
               <li key={g.kind}>
                 <b>{g.orders.toFixed(2)} orders</b> of magnitude in {g.kind} qubits — the most
@@ -312,72 +402,66 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
               </li>
             ))}
           </ul>
-          <p className="qd-note">
-            Quoted from the best possible reading on both sides. Where two demonstrations
-            differ in strength — error-detected against error-corrected on the same device —
-            the larger is used and named, because nothing structured separates them.
-          </p>
-        </section>
-      )}
+        )}
 
-      {d.probability && (
-        <section className="qd-prob">
-          <h3>The only evidence that maps to years</h3>
-          <ul>
-            {d.probability.bands.map((b) => (
-              <li key={b.withinYears}>
-                <b>
-                  {b.lowPct}–{b.highPct}%
-                </b>{' '}
-                within {b.withinYears} years → <b>{b.year}</b>
-              </li>
-            ))}
-          </ul>
-          <p className="qd-note">
-            Expert elicitation, evidence level {d.probability.evidenceLevel ?? '—'}. An opinion
-            survey, not a measurement, and it is the only thing on this board that turns into a
-            calendar year at all — which is why it sets the window and the hardware figures do
-            not.{' '}
-            {d.probability.sourceUrl && (
-              <a href={d.probability.sourceUrl} target="_blank" rel="noreferrer">
-                {d.probability.sourceTitle ?? 'source'} ↗
-              </a>
-            )}
-          </p>
-          {d.window?.caveat && <p className="qd-note qd-note--warn">{d.window.caveat}</p>}
-        </section>
-      )}
+        {d.probability && (
+          <>
+            <ul className="qd-gaps__list">
+              {d.probability.bands.map((b) => (
+                <li key={b.withinYears}>
+                  <b>
+                    {b.lowPct}–{b.highPct}%
+                  </b>{' '}
+                  within {b.withinYears} years → <b>{b.year}</b> · expert elicitation,{' '}
+                  {d.probability?.evidenceLevel ?? '—'}
+                </li>
+              ))}
+            </ul>
+            <p className="qd-note">
+              An opinion survey, not a measurement — and the only thing on this board that turns
+              into a calendar year at all, which is why it sets the window and the hardware
+              figures do not.{' '}
+              {d.probability.sourceUrl && (
+                <a href={d.probability.sourceUrl} target="_blank" rel="noreferrer">
+                  {d.probability.sourceTitle ?? 'source'} ↗
+                </a>
+              )}
+            </p>
+            {d.window?.caveat && <p className="qd-note qd-note--warn">{d.window.caveat}</p>}
+          </>
+        )}
 
-      <section className={d.comparison.consistent ? 'qd-verdict qd-verdict--ok' : 'qd-verdict qd-verdict--exposed'}>
-        <p className="qd-verdict__head">
-          {d.window
-            ? `Derived window ${d.window.from}–${d.window.to} · asserted ${d.comparison.asserted.aggressive ?? '?'}–${d.comparison.asserted.conservative ?? '?'}`
-            : 'No window could be derived'}
-        </p>
-        {d.comparison.notes.map((n) => (
-          <p className="qd-verdict__detail" key={n}>
-            {n}
+        <div className={d.comparison.consistent ? 'qd-verdict qd-verdict--ok' : 'qd-verdict qd-verdict--exposed'}>
+          <p className="qd-verdict__head">
+            {d.window
+              ? `Derived ${d.window.from}–${d.window.to} · asserted ${d.comparison.asserted.aggressive ?? '?'}–${d.comparison.asserted.conservative ?? '?'}`
+              : 'No window could be derived'}
           </p>
-        ))}
-      </section>
+          {d.comparison.notes.map((n) => (
+            <p className="qd-verdict__detail" key={n}>
+              {n}
+            </p>
+          ))}
+        </div>
+      </Section>
 
       {d.impact.entries.length > 0 && (
-        <section className="qd-impact">
-          <h3>What has been pushing, and which way</h3>
-          <p className="qd-note">
-            Each item on the board carries a Q-Day impact from −3 to +3, set with reasoning
-            under the board's own rules. The net is a <b>direction, not a number of years</b> —
-            +{d.impact.net} does not mean {d.impact.net} years. What it answers is the question
-            no countdown does: what would have to change for the estimate to move.
-          </p>
+        <Section
+          title="What has been pushing, and which way"
+          defaultOpen={false}
+          info={
+            <>
+              Each item carries a Q-Day impact from &minus;3 to +3, set with reasoning under the
+              board&rsquo;s own rules. The net is a direction, not a number of years — it answers the
+              question a countdown cannot: what would have to change for the estimate to move.
+            </>
+          }
+        >
           <ul className="qd-impact__list">
             {d.impact.entries.map((e) => (
               <li key={e.id}>
                 <span className="qd-impact__bar">
-                  <i
-                    data-dir={e.impact > 0 ? 'closer' : 'further'}
-                    style={{ width: `${(Math.abs(e.impact) / 3) * 100}%` }}
-                  />
+                  <i data-dir={e.impact > 0 ? 'closer' : 'further'} style={{ width: `${(Math.abs(e.impact) / 3) * 100}%` }} />
                 </span>
                 <span className="qd-impact__score" data-dir={e.impact > 0 ? 'closer' : 'further'}>
                   {e.impact > 0 ? '+' : ''}
@@ -388,17 +472,16 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
               </li>
             ))}
           </ul>
-        </section>
+        </Section>
       )}
 
       {d.excluded.length > 0 && (
-        <section className="qd-excluded">
-          <h3>Refused</h3>
+        <Section title="Refused" defaultOpen={false}>
           <p className="qd-note">
-            Figures the derivation would not guess at. A model that quietly drops what it
-            cannot read looks more complete than it is.
+            Figures the derivation would not guess at. A model that quietly drops what it cannot
+            read looks more complete than it is.
           </p>
-          <ul>
+          <ul className="qd-excluded__list">
             {d.excluded.map((e) => (
               <li key={`${e.itemId}-${e.metricName}`}>
                 <b>{e.itemId}</b> · {e.metricName}
@@ -406,7 +489,7 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
               </li>
             ))}
           </ul>
-        </section>
+        </Section>
       )}
 
       <p className="qd-trends__from">

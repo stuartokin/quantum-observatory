@@ -55,7 +55,14 @@ export default function QDay({ tab }: { tab: QDayTab }) {
         <button className="qday-surface__back" onClick={goToBoard}>
           ← Board
         </button>
+        {/* The board's own wordmark first, so a reader who arrives here from a
+            shared link knows what site they are on and that there is more of
+            it. The two surfaces are one product; the header should say so. */}
         <h1 className="qday-surface__title">
+          <a className="qday-surface__mark" href="#" onClick={(e) => { e.preventDefault(); goToBoard() }}>
+            Horizon Q
+          </a>
+          <span className="qday-surface__sep">·</span>
           Q-Day <span>Observatory</span>
         </h1>
         <p className="qday-surface__sub">
@@ -70,7 +77,7 @@ export default function QDay({ tab }: { tab: QDayTab }) {
         ) : tab === 'trends' ? (
           <Trends forecast={forecast} />
         ) : tab === 'plan' ? (
-          <Plan />
+          <Plan forecast={forecast} />
         ) : tab === 'stack' ? (
           <Stack forecast={forecast} />
         ) : tab === 'learn' ? (
