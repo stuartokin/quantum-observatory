@@ -186,24 +186,3 @@ source: Q-Day Observatory comparison, Phase 3 review
     algorithm.
     Prefer a peer-reviewed experiment over a preprint over a vendor statement,
     and say plainly in the claim which one you found.
-
-## Stack: circuit depth and runtime have no home on the board
-agent: scout
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus scout: Every published RSA-2048 resource estimate is a pair — a
-    qubit count and a runtime — and this board records only the qubit count.
-    That matters because the two trade against each other: an estimate can
-    always buy fewer qubits with a longer run, and the board's own precedent
-    says an estimate trading space for an impractical runtime is not a threat
-    metric.
-    The board has no item covering sustained circuit depth, coherence-limited
-    runtime, or the depth a cryptanalytic circuit requires. Without one, the
-    Stack page cannot show the component the prototype called "depth and
-    speed", and the requirement figures on the Trends page are quoted without
-    the runtime that qualifies them.
-    Propose one item covering it, with primary sources. Make sure the claim
-    states the runtime attached to each headline qubit figure the board already
-    carries — under a million qubits for RSA-2048 means little without the
-    "in under a week" that Gidney's estimate attaches to it.
