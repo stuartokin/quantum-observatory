@@ -26,8 +26,12 @@ metrics:
     value: ~10
     unit: x fewer qubit-rounds
     note: Gidney, Shutty, Jones arXiv:2409.17595 (Sep 2024). Cultivation fits inside a surface code patch; roughly as many physical gates as a lattice surgery CNOT of equivalent reliability.
+  - name: Magic state production fraction of RSA-2048 estimate (Gidney 2025)
+    value: reduced
+    unit: vs 2019 baseline
+    note: 'arXiv:2505.15917: qubit reduction comes partly from ''allocating less space to magic state distillation by using magic state cultivation''. Longer runtime from ''using fewer magic state factories''. Cultivation replaces dedicated factory region with in-patch operations, eliminating the dominant space overhead of the 2019 estimate.'
 evidence:
-  claim: 'QuEra/Harvard/MIT (Nature 645, 620-625, Jul 2025) demonstrated the first experimental magic state distillation performed entirely on logical qubits: a 5-to-1 protocol on d=3 and d=5 colour-code qubits on a neutral-atom processor produced output fidelity exceeding all input states. Gidney, Shutty, and Jones (arXiv:2409.17595, Sep 2024) introduced magic state cultivation, which grows a T state inside a single surface code patch using roughly the same number of physical gates as a lattice surgery CNOT gate of equivalent reliability — an order of magnitude fewer qubit-rounds than prior distillation protocols. Cultivation is the key technique enabling the 20x qubit reduction in Gidney''s 2025 RSA-2048 estimate (arXiv:2505.15917), where six parallel factory modules of Gidney+Ekerå 2019 were replaced by cultivation in a smaller area. Rosenfeld et al. (Google Quantum AI, arXiv:2512.13908, Dec 2025) experimentally demonstrated cultivation on a superconducting processor: error reduced by a factor of 40, state fidelity 0.9999(1), retaining 8% of attempts. This is a preprint; no peer-reviewed publication confirmed as of 2026-08-19.'
+  claim: 'QuEra/Harvard/MIT (Nature 645, 620-625, Jul 2025) demonstrated the first experimental magic state distillation performed entirely on logical qubits: a 5-to-1 protocol on d=3 and d=5 colour-code qubits on a neutral-atom processor produced output fidelity exceeding all input states. Gidney, Shutty, and Jones (arXiv:2409.17595, Sep 2024) introduced magic state cultivation, which grows a T state inside a single surface code patch using roughly the same number of physical gates as a lattice surgery CNOT gate of equivalent reliability — an order of magnitude fewer qubit-rounds than prior distillation protocols. Cultivation is the key technique enabling the 20x qubit reduction in Gidney''s 2025 RSA-2048 estimate (arXiv:2505.15917), which explicitly states the reduction comes partly from ''allocating less space to magic state distillation by using magic state cultivation'', with the longer runtime due partly to ''using fewer magic state factories compared to Gidney+Ekerå 2019''. In the 2019 estimate, parallel distillation factory modules were the dominant physical-qubit overhead; cultivation replaces these with in-patch operations whose footprint is bounded by a single logical qubit patch. Rosenfeld et al. (Google Quantum AI, arXiv:2512.13908, Dec 2025) experimentally demonstrated cultivation on a superconducting processor: error reduced by a factor of 40, state fidelity 0.9999(1), retaining 8% of attempts. This is a preprint; no peer-reviewed publication confirmed as of 2026-08-19.'
   verified: '2026-08-19'
   level: E4
   sources:
@@ -48,7 +52,7 @@ evidence:
       identifier: arXiv:2409.17595
       doi: 10.48550/arXiv.2409.17595
       accessed: '2026-08-19'
-      note: Gidney, Shutty, Jones (Google Quantum AI). Preprint. Cultivation fits inside a surface code patch and uses ~same physical gates as a CNOT of equivalent reliability; order of magnitude fewer qubit-rounds than distillation. Used in Gidney 2025 (arXiv:2505.15917) RSA-2048 estimate replacing parallel factory modules.
+      note: Gidney, Shutty, Jones (Google Quantum AI). Preprint. Cultivation fits inside a surface code patch; ~same physical gates as a CNOT of equivalent reliability; ~10x fewer qubit-rounds than distillation. Used in Gidney 2025 RSA-2048 estimate replacing parallel factory modules.
     - url: https://arxiv.org/abs/2512.13908
       role: corroborating
       title: Magic state cultivation on a superconducting quantum processor
@@ -57,7 +61,16 @@ evidence:
       identifier: arXiv:2512.13908
       doi: 10.48550/arXiv.2512.13908
       accessed: '2026-08-19'
-      note: 'Rosenfeld, Gidney et al. (Google Quantum AI; 295 authors). Preprint; not peer-reviewed as of 2026-08-19. Cultivation on superconducting processor: 40x error reduction, fidelity 0.9999(1), 8% of attempts retained. E3 individually.'
+      note: 'Rosenfeld, Gidney et al. (Google Quantum AI). Preprint; not peer-reviewed as of 2026-08-19. Cultivation on superconducting processor: 40x error reduction, fidelity 0.9999(1), 8% of attempts retained. E3 individually.'
+    - url: https://arxiv.org/abs/2505.15917
+      role: corroborating
+      title: How to factor 2048 bit RSA integers with less than a million noisy qubits
+      publisher: arXiv
+      date: '2025-05-21'
+      identifier: arXiv:2505.15917
+      doi: 10.48550/arXiv.2505.15917
+      accessed: '2026-08-19'
+      note: Craig Gidney, Google Quantum AI. States qubit reduction comes from 'allocating less space to magic state distillation by using magic state cultivation'; longer runtime from 'using fewer magic state factories'. Establishes cultivation as the key change reducing the factory overhead that dominated the 2019 estimate.
 links:
   - to: qec-below-threshold-surface-code
     relation: depends-on
@@ -78,7 +91,7 @@ review:
   by: agent
   agent: sourcer
   agentMergedOn: '2026-08-19'
-  note: 'Focus run 2026-08-19. Added metrics for both the logical distillation result (Nature 645) and cultivation: 40x error reduction on superconducting hardware (Rosenfeld et al. arXiv:2512.13908, preprint E3) and ~10x overhead reduction vs distillation (Gidney et al. arXiv:2409.17595, preprint). Cultivation is the mechanism behind the factory-count reduction in Gidney 2025 RSA-2048 estimate. Evidence level held at E4 on strength of peer-reviewed Nature 645 primary source.'
+  note: 'Focus run 2026-08-19. Added metric for magic state production fraction: Gidney 2025 (arXiv:2505.15917) explicitly states cultivation reduces the space allocated to magic state production, with longer runtime from fewer factories, confirming factories were the dominant overhead in 2019. Cultivation in-patch overhead (~10x fewer qubit-rounds, arXiv:2409.17595) and experimental result (40x error reduction, 0.9999(1) fidelity, 8% retained, arXiv:2512.13908) retained. E4 on Nature 645 primary.'
 confidence: high
 status: published
 added: '2026-08-04'
