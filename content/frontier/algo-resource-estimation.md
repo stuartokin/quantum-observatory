@@ -143,12 +143,12 @@ status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
   agent: sourcer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-18'
-  note: Focus run 2026-08-19. Added Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) and Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) as first-class metrics and sources so the Trends derivation can date these baseline figures. The 2019 source was already cited in metric notes and evidence.claim prose but absent from evidence.sources; the 2020 Häner source was entirely absent. Both papers are peer-reviewed.
+  reviewedOn: '2026-08-19'
+  note: 'Focus run 2026-08-19. Confirmed: Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) present as first-class metric and corroborating source; Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metric and corroborating source. Both identifiers confirmed in metric notes in form the Trends derivation matches. Prior sourcer run (same date) added these; this pass verifies them against primary sources. No other changes.'
 ---
 
 Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.
