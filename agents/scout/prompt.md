@@ -292,7 +292,8 @@ rejects any field not in it.
   it.** This is the field a reader checks you against, so an obligation the
   source words as "as soon as possible and no later than end 2030" should not
   become "by 2030" here.
-- `plain` says what it means for somebody who has to comply with it.
+- `plain` says what it means for somebody who has to comply with it, in
+  **400 characters** — a quarter of what a frontier item allows. Two sentences.
 - `about` links to frontier item ids the deadline bears on.
 
 The `review` block is the same as everywhere else, and the same rule applies:
@@ -422,9 +423,19 @@ Card body goes here.
 Omitting the closing `---` is the single most common way a well-researched file
 gets discarded. The runner will try to repair it, but do not rely on that.
 
-## Field limits
+## Field limits — read the one for the collection you are writing
 
-The schema enforces these. Exceeding one discards the file.
+**Every collection sets its own, and they are not the same.** `plain` is 1600
+characters on a frontier item and **400** on a milestone. Four runs were lost
+writing a frontier-length `plain` into a milestone: the research was done, the
+sources were found, and the file was discarded over a number taken from the
+wrong table.
+
+> **Where this brief and the schema in your context disagree, the schema
+> wins.** It is the thing that actually runs. If you notice a disagreement,
+> follow the schema and say so in your summary so the brief gets fixed.
+
+### Frontier items — `content/frontier/_inbox/`
 
 | Field | Maximum |
 | --- | --- |
@@ -438,11 +449,29 @@ The schema enforces these. Exceeding one discards the file.
 | `novelty` | 200 |
 | `metrics[].note` | 200 |
 
-These are generous on purpose. Three runs were discarded for exceeding the
-previous limits by a few dozen characters — research done, sources found, and
-thrown away over a number nobody had measured. Write what the field needs. If
-you are near a limit the field is probably carrying an argument that belongs in
-your summary instead.
+### Milestones — `content/milestones/`
+
+| Field | Maximum |
+| --- | --- |
+| `title` | 110 characters |
+| `what` | 600 |
+| `plain` | **400** |
+| `review.note` | **600** |
+| `source.title` | 200 |
+| `source.publisher` | 120 |
+
+A milestone is a date and an obligation. **400 characters of `plain` is two
+sentences**, and that is the right size for it: what the deadline requires and
+who it binds. The argument for why it matters, what it supersedes and how it
+compares with other jurisdictions belongs in your summary, where there is no
+limit at all and a person will actually read it.
+
+The same goes for `review.note`. Say which document, which section, and the
+sentence you read. Not the reasoning that got you there.
+
+These are generous on purpose. Write what the field needs. If you are near a
+limit the field is probably carrying an argument that belongs in your summary
+instead.
 
 
 ## Quote anything containing a colon
@@ -684,21 +713,28 @@ summary untrustworthy, including the parts that are accurate.
 
 ## The fields that fail a run
 
-Two passes were discarded today for these, after the searching was already done.
-A file is validated before it is written, so a missing field costs the whole run.
+A file is validated before it is written, so a missing field costs the whole
+run. Several passes have been discarded for these after the searching was
+already done.
 
-**Required on every frontier item:** confidence, evidence, id, pillar, readiness, review, schema, status, title.
+**Required on every frontier item:** confidence, evidence, id, pillar,
+readiness, review, schema, status, title.
 
-**Length limits, in characters:**
-- `novelty` — 200
-- `plain` — 1600
-- `qdayReasoning` — 1600
-- `summary` — 600
-- `title` — 110
+**Required on every milestone:** schema, id, title, jurisdiction, authority,
+date, kind, what, status, source. No readiness, no evidence, no confidence —
+those are frontier fields and the milestone schema rejects them outright.
 
-`plain` is the one that catches people. It is the plain-English reading for
-somebody who does not work in the field — two or three sentences, not the whole
-argument. If it runs past the limit you are writing the claim twice.
+**The length limits are per collection and are listed once, above, under
+"Field limits".** Do not carry a number across from the other table. `plain` is
+1600 on a frontier item and 400 on a milestone, and that single confusion has
+cost more runs than every other formatting fault put together.
 
-Check both before you return: a run rejected on a character count has done all
-the thinking and thrown it away.
+`plain` is the one that catches people wherever it appears. It is the
+plain-English reading for somebody who does not work in the field — two or
+three sentences, not the whole argument. If it runs past the limit you are
+writing the claim twice.
+
+**Count the two or three longest fields before you return.** A run rejected on
+a character count has done all the thinking and thrown it away, and you are the
+only thing in the chain that can prevent it: the runner cannot shorten a field
+for you without inventing prose, so it discards the file instead.

@@ -24,6 +24,20 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.54.2',
+    date: '2026-08-19',
+    headline: 'A failed run stops eating the job that would have fixed it.',
+    content: [
+      'The United States now has dated post-quantum requirements on the board, read from the executive order as published rather than from anyone’s summary of it: key establishment on federal high value assets by the end of 2030, digital signatures a year later. Key exchange goes first because a key agreed today can be recorded today and broken later; a signature cannot be forged in retrospect.',
+      'Australia is still missing, and still for the same reason — cyber.gov.au refuses automated fetching. The scout can reach it and has now done the work twice; both times the record was discarded on a character count. The queue entry now says which two fields and what their real limits are.',
+    ],
+    agents: [
+      'A run that has every one of its files rejected now puts its queue entry back. It used to spend it — on the rule that a usable answer spends the entry, which is right for a run that searched properly and found nothing, and wrong for one that searched, found the source, wrote the record and lost it to formatting. Those are not the same run and were being treated as one, which is why three consecutive failures each destroyed the job that would have retried them.',
+      'The scout’s brief printed one table of field limits with no collection named above it. They were the frontier item’s limits: `plain` is 1600 characters there and 400 on a milestone. Every table is now headed by the collection it governs, and where the brief and the schema disagree the brief now says the schema wins — it is the thing that actually runs.',
+      'Rejection messages say how far over a field is. "Must not have more than 400 characters" reads the same whether a field is 31 characters over or written to twice the limit, so the log could not tell a slip from a misunderstanding. It was a misunderstanding every time.',
+    ],
+  },
+  {
     version: '0.54.1',
     date: '2026-08-19',
     headline: 'The scout was right about the EU, and the runner was quietly rejecting its work.',
@@ -186,18 +200,6 @@ export const RELEASES: Release[] = [
       'The provenance banner is a badge you can open. Four lines of caveat above a two-line title buried the thing a reader came for; the badge carries the state and clicking it carries the reasoning. It closes again when a different item is opened.',
       'Dates read as 27 July 2026 rather than 2026-07-27, and an estimate says "about" rather than carrying a tilde. ISO stays in the front matter, where machines sort by it.',
       'Help opens with what the board is and what it is not — including the two caveats: it is a derivative of the literature rather than a replacement, and its coverage is a judgement made by agents against rules a person wrote.',
-    ],
-  },
-  {
-    version: '0.47.0',
-    date: '2026-08-16',
-    headline: 'A queue between deciding what to research and doing it.',
-    agents: [
-      'The steward reads the open issues and writes focus instructions into agents/_queue.md; the agents drain them one per run. Nothing runs in the pass that proposes it — there is always a committed file a person can read and delete from before anything executes.',
-      'One instruction per run, deliberately. Several drained into one pass would be several runs of work in a single summary, and the summary is how anybody judges whether the work was good.',
-      'An entry that fails twice is dropped; one older than 21 days is dropped rather than run. Duplicates are matched on the arXiv id or DOI they name, not on their titles, after the same job was queued twice under three different phrasings.',
-      'Agents are told which jobs they can actually do. Scout sees the board index and not item contents, so it cannot edit an existing item — asked to attach a source it will confirm the source, decline to invent a file it cannot read, and escalate. Six runs were spent that way before the routing was written down.',
-      'A run that reaches a conclusion but not its JSON now has the tail of its reasoning, and any identifiers it mentioned, written to the issue. The queue entry is spent either way; the finding should not be.',
     ],
   },
 ]

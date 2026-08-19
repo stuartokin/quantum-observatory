@@ -1056,6 +1056,32 @@ if (rejected.length) {
   // is not, so carry on with whatever was valid.
   if (written.length === 0) {
     console.error('Nothing valid was produced. See .agent-run/raw.json.')
+    /**
+     * The entry goes back on the queue.
+     *
+     * It was spent earlier, on the rule that a usable answer spends it — and
+     * that rule is right for a run which searched properly and found nothing,
+     * because repeating that weekly is a loop rather than diligence.
+     *
+     * This is not that run. Every file was rejected on its way to disk, which
+     * means the agent *did* find something: it searched, it read the source,
+     * it wrote the record, and a formatting fault threw all of it away. Three
+     * consecutive runs were lost that way — Australia's ASD deadline twice —
+     * each time spending the entry that would have caused it to be tried
+     * again. The research is in .agent-run/raw.json and nowhere else.
+     *
+     * So: nothing written and something rejected returns the entry, up to the
+     * same two attempts a truncated run gets. A job that fails this way twice
+     * is a job with a real problem in it, and should stop rather than cycle.
+     */
+    if (queued) {
+      const back = returnFailed(queued, queueRemaining, queueHead)
+      console.error(
+        `\nThe entry stays queued: "${queued.title}" (attempt ${back.attempts} of 2).\n` +
+          'Every file was rejected, so the looking was done and the result lost —\n' +
+          'that is worth retrying, unlike a run which searched and found nothing.',
+      )
+    }
     process.exit(1)
   }
   console.error(`Continuing with the ${written.length} valid file(s).\n`)

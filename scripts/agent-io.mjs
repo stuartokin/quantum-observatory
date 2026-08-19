@@ -459,6 +459,26 @@ export function checkStructure(text) {
   return { ok: true, id: data.id, data }
 }
 
+/**
+ * How far past a length limit a field actually is.
+ *
+ * Ajv says "must NOT have more than 400 characters", which states the rule and
+ * withholds the one fact needed to act on it. A field eleven characters over
+ * and a field written to twice the limit are the same message, so a person
+ * reading the log cannot tell a slip from a misunderstanding — and four runs
+ * were lost to exactly this before anyone realised the agent had been given
+ * the wrong limits rather than ignored the right ones.
+ */
+function overBy(data, err) {
+  if (err.keyword !== 'maxLength') return ''
+  const value = err.instancePath
+    .split('/')
+    .slice(1)
+    .reduce((cur, k) => (cur == null ? cur : cur[k.replace(/~1/g, '/').replace(/~0/g, '~')]), data)
+  if (typeof value !== 'string') return ''
+  return ` (it is ${value.length}, so ${value.length - err.params.limit} over)`
+}
+
 /** Structural checks, then the full schema. Same validator CI uses. */
 export function checkFile(text, schemaPath = 'content/schema/frontier.schema.json') {
   const base = checkStructure(text)
@@ -469,7 +489,7 @@ export function checkFile(text, schemaPath = 'content/schema/frontier.schema.jso
   if (!validate(data)) {
     const first = validate.errors
       .slice(0, 3)
-      .map((e) => `${e.instancePath || '/'} ${e.message}`)
+      .map((e) => `${e.instancePath || '/'} ${e.message}${overBy(data, e)}`)
       .join('; ')
     return { ok: false, reason: `schema: ${first}` }
   }

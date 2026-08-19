@@ -268,6 +268,29 @@ without it holding.
 
 If you ever find a fifth copy of that mapping, delete it the same way.
 
+**Fault three, found the run after — the brief's limits were the frontier's.**
+`plain` is 1600 characters on a frontier item and **400** on a milestone. The
+prompt printed one table of limits with no collection named above it, so the
+agent wrote a frontier-length `plain` into a milestone and lost the file. Four
+more records went that way, including Australia's ASD deadline twice — and it
+had reached cyber.gov.au, which this session cannot. The tables are now headed
+by collection, and the brief says explicitly that where it and the schema
+disagree, **the schema wins**, since the schema is the thing that runs.
+
+**Fault four, and the reason all of this kept costing whole runs.** A run whose
+files were *all* rejected still spent its queue entry. The rule was "a usable
+answer spends it", which is right for a run that searched properly and found
+nothing — repeating that weekly is a loop rather than diligence. But a run
+where every file was rejected did not find nothing: it searched, read the
+source, wrote the record, and lost it to a character count. It now returns the
+entry, up to the same two attempts a truncated run gets, so the retry that
+fixes it can actually happen.
+
+Ajv's message is also now told to say how far over: "must NOT have more than
+400 characters (it is 431, so 31 over)". A field 31 over and a field written to
+twice the limit read identically otherwise, so the log could not distinguish a
+slip from a misunderstanding — and it was a misunderstanding every time.
+
 **Fault two — `fixedCollections` said milestones could not grow.** That flag
 exists because the twelve questions are twelve; scout once wrote six more
 alongside them. Milestones were added to it by reflex in 0.54.0, which meant
