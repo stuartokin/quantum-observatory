@@ -98,27 +98,6 @@ source: Q-Day Observatory comparison, Phase 3 review
       appears there as a verified metric.
     Twelve to fifteen items in one run is plenty. Report how many you left.
 
-## The requirement trend needs its earlier points
-agent: sourcer
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus sourcer: The Trends page derives the falling requirement floor from
-    dated metrics on algo-resource-estimation and algo-shor. The trend is real
-    but short — it currently starts in May 2025, because the earlier estimates
-    exist only as prose inside metric notes and the derivation refuses to read
-    prose.
-    Add these as first-class metrics with their own dated sources, so the trend
-    reaches back to where it actually starts:
-    - Gidney and Ekera 2019: 20 million noisy physical qubits for RSA-2048 in 8
-      hours (arXiv:1905.09749).
-    - Haner et al. 2020: the 2,124-logical-qubit estimate for ECC-256 that
-      Chevignard's 1,193 improved on.
-    Each note must name its paper's identifier in the form the existing metrics
-    use ("arXiv:1905.09749"), because that string is what the derivation matches
-    against evidence.sources to date the figure. A metric whose note names no
-    source the item carries is refused and will not appear.
-
 ## The expert survey has earlier editions than the one on the board
 agent: sourcer
 added: 2026-08-19
