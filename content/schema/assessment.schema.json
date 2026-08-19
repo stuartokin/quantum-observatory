@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://horizonqltd.com/schema/assessment/v1",
+  "title": "Self-assessment questionnaire",
+  "description": "A questionnaire that helps a reader arrive at their own X and Y for the Mosca test. THIS IS NOT EVIDENCE. It is a structured prompt whose weights are editorial judgement, and every record has to say so — it is held as content so the questions can be argued with and revised, not so they can borrow the authority of the sourced material beside them.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "kind",
+    "title"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "assessment/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "enum": [
+        "questionnaire",
+        "levels"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "heuristic": {
+      "type": "string",
+      "maxLength": 600,
+      "description": "Why this is a prompt and not a measurement. Required in spirit on every questionnaire."
+    },
+    "questions": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "required": [
+          "question",
+          "dimension",
+          "options"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "dimension": {
+            "enum": [
+              "agility",
+              "shelf-life",
+              "maturity"
+            ],
+            "description": "agility feeds Y (how fast you could move), shelf-life feeds X (how long the data must stay secret), maturity feeds the level only."
+          },
+          "weight": {
+            "type": "number",
+            "description": "Editorial. How strongly this answer moves its dimension relative to the others."
+          },
+          "weightReason": {
+            "type": "string",
+            "maxLength": 400,
+            "description": "Why that weight. A weight with no stated reason is a number nobody can argue with."
+          },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "score"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "maxLength": 160
+                },
+                "score": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "levels": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "level",
+          "name",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "level": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 400
+          }
+        }
+      }
+    },
+    "added": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

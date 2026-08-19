@@ -25,5 +25,14 @@ export interface Milestone {
   status: 'upcoming' | 'met' | 'missed' | 'superseded'
   about?: string[]
   source: { url: string; title?: string; publisher?: string; date?: string }
+  /** Whether anyone has checked this date against the document that sets it.
+   *  Same vocabulary as every other collection rather than a new one. */
+  review?: {
+    state: 'reviewed' | 'agent-reviewed' | 'agent-merged' | 'vetoed'
+    by?: 'human' | 'agent'
+    on?: string
+    agent?: string
+    note?: string
+  }
   added?: string
 }

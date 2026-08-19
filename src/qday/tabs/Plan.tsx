@@ -8,6 +8,7 @@ import { derive } from '../derive'
 import { useNow } from '../countdown'
 import { Section, Takeaway } from '../ui/Section'
 import { useTooltip, ChartTooltip } from '../ui/Tooltip'
+import { SourceRef } from '../ui/SourceRef'
 
 /**
  * PLAN — the dated obligations against the estimate they are racing.
@@ -268,9 +269,14 @@ export function Plan({ forecast }: { forecast?: Forecast }) {
                               ? `${Math.abs(days).toLocaleString('en-GB')} days ago`
                               : `${days.toLocaleString('en-GB')} days left`}
                           {' · '}
-                          <a href={m.source.url} target="_blank" rel="noreferrer">
-                            {m.source.publisher ?? 'source'} ↗
-                          </a>
+                          <SourceRef
+                            source={{
+                              ...m.source,
+                              reviewNote: m.review?.note,
+                              accessed: m.review?.on,
+                            }}
+                            label={m.source.publisher ?? 'source'}
+                          />
                           {m.about && m.about.length > 0 && (
                             <>
                               {' · '}

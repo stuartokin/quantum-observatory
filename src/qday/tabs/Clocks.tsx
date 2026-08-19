@@ -3,6 +3,7 @@ import type { Forecast } from '../../content/forecast'
 import { scenariosFrom, yearsTo, type ScenarioId } from '../scenarios'
 import { milestones } from '../../content/milestones'
 import { parts, useNow } from '../countdown'
+import { ReadinessAssessment } from '../ui/ReadinessAssessment'
 
 const dateFmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -236,6 +237,8 @@ export function Clocks({ forecast }: { forecast?: Forecast }) {
       )}
 
       {/* ---------------------------------------------------------------- */}
+      <ReadinessAssessment onApply={(nx, ny) => { setX(nx); setY(ny) }} />
+
       <section className="qd-mosca">
         <h2>Test your exposure — the Mosca test</h2>
         <p className="qd-mosca__intro">

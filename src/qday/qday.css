@@ -1247,3 +1247,126 @@
 }
 .qday-surface__mark:hover { color: var(--line-quantum); }
 .qday-surface__sep { font-family: var(--display); color: var(--ink-faint); margin: 0 0.35rem; font-size: 0.62em; }
+
+/* ---------------------------------------------------------- source ref
+
+   A citation opens before it leaves. Everything the board knows about a
+   source was already held and none of it was on screen; a bare link asked
+   the reader to leave the page to find out whether leaving was worth it. */
+
+.qd-ref { position: relative; display: inline-block; }
+.qd-ref__btn {
+  background: none;
+  border: 0;
+  border-bottom: 1px dotted var(--qd-defence);
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--qd-defence);
+}
+.qd-ref__btn:hover, .qd-ref__btn[aria-expanded='true'] { border-bottom-style: solid; color: var(--ink); }
+.qd-ref__panel {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: calc(100% + 8px);
+  width: min(360px, 78vw);
+  display: grid;
+  gap: 0.3rem;
+  padding: var(--gap-s) var(--gap-m);
+  border: 1px solid color-mix(in oklab, var(--qd-defence) 32%, var(--hairline));
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--ground-panel) 97%, transparent);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 44px rgb(0 0 0 / 0.65);
+  text-align: left;
+  white-space: normal;
+}
+.qd-ref__title { font-family: var(--body); font-size: var(--step--1); line-height: 1.45; color: var(--ink); font-weight: 600; }
+.qd-ref__meta, .qd-ref__id, .qd-ref__url { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint); }
+.qd-ref__id { color: var(--ink-muted); }
+.qd-ref__level {
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--qd-defence); justify-self: start;
+  border: 1px solid color-mix(in oklab, var(--qd-defence) 38%, var(--hairline));
+  border-radius: 999px; padding: 0.1rem 0.5rem;
+}
+.qd-ref__note, .qd-ref__check { font-family: var(--body); font-size: 0.76rem; line-height: 1.5; color: var(--ink-muted); }
+.qd-ref__check { color: var(--ink-faint); font-style: italic; }
+.qd-ref__out { font-family: var(--mono); font-size: 0.62rem; color: var(--qd-threat); text-decoration: none; justify-self: start; }
+.qd-ref__out:hover { text-decoration: underline; }
+.qd-fig__more { color: var(--ink-faint); }
+.qd-fig__more .qd-ref { margin-right: 0.4rem; }
+
+/* ---------------------------------------------------------- assessment
+
+   The one thing on this surface that is not evidence. It sits inches from a
+   chart derived from peer-reviewed resource estimates, so it is styled a
+   little quieter than everything around it — bordered rather than filled,
+   with its heuristic warning given real weight rather than small print. */
+
+.qd-assess {
+  max-width: 820px;
+  margin: var(--gap-m) auto 0;
+  border: 1px dashed var(--hairline);
+  border-radius: var(--radius);
+  padding: var(--gap-m);
+}
+.qd-assess h3 { font-family: var(--display); font-size: var(--step-1); margin: 0 0 var(--gap-xs); text-transform: none; letter-spacing: -0.01em; color: var(--ink); }
+.qd-assess__intro, .qd-assess__hint, .qd-assess__caveat {
+  font-family: var(--body); font-size: var(--step--1); line-height: 1.65; color: var(--ink-muted); margin: 0 0 var(--gap-s);
+}
+.qd-assess__intro b { color: var(--qd-threat); }
+.qd-assess__heuristic {
+  font-family: var(--body); font-size: 0.82rem; line-height: 1.6; color: var(--ink-faint);
+  border-left: 2px solid var(--qd-threat); padding: var(--gap-xs) var(--gap-s);
+  background: color-mix(in oklab, var(--qd-threat) 6%, transparent);
+  margin: 0 0 var(--gap-s);
+}
+.qd-assess__step { font-family: var(--mono); font-size: 0.66rem; color: var(--ink-muted); display: flex; align-items: center; gap: 0.5rem; margin: 0 0 var(--gap-xs); }
+.qd-assess__personas { display: grid; gap: var(--gap-xs); grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: var(--gap-s); }
+.qd-assess__persona {
+  display: grid; gap: 0.2rem; text-align: left;
+  border: 1px solid var(--hairline); border-radius: 8px;
+  background: none; padding: var(--gap-s); cursor: pointer;
+}
+.qd-assess__persona:hover { border-color: var(--ink-faint); }
+.qd-assess__persona[aria-pressed='true'] { border-color: var(--qd-defence); background: color-mix(in oklab, var(--qd-defence) 10%, transparent); }
+.qd-assess__persona b { font-family: var(--display); font-size: var(--step-0); color: var(--ink); }
+.qd-assess__persona span { font-family: var(--mono); font-size: 0.56rem; color: var(--ink-faint); }
+.qd-assess__persona i { font-family: var(--body); font-size: 0.76rem; line-height: 1.5; color: var(--ink-muted); font-style: normal; }
+
+.qd-assess__qs { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--gap-s); }
+.qd-assess__qs > li { border-top: 1px solid var(--hairline); padding-top: var(--gap-s); }
+.qd-assess__q { font-family: var(--body); font-size: var(--step--1); line-height: 1.5; color: var(--ink); margin: 0 0 0.4rem; display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
+.qd-assess__dim {
+  font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid var(--hairline); border-radius: 999px; padding: 0.08rem 0.4rem; color: var(--ink-faint); white-space: nowrap;
+}
+.qd-assess__dim[data-dim='agility'] { color: var(--qd-threat); border-color: color-mix(in oklab, var(--qd-threat) 35%, var(--hairline)); }
+.qd-assess__dim[data-dim='shelf-life'] { color: var(--qd-defence); border-color: color-mix(in oklab, var(--qd-defence) 35%, var(--hairline)); }
+.qd-assess__opts { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+.qd-assess__opts button {
+  font-family: var(--mono); font-size: 0.6rem; padding: 0.35rem 0.7rem;
+  border: 1px solid var(--hairline); border-radius: 999px; background: none; color: var(--ink-muted); cursor: pointer;
+}
+.qd-assess__opts button:hover { color: var(--ink); }
+.qd-assess__opts button[aria-pressed='true'] { background: var(--qd-defence); border-color: var(--qd-defence); color: #06110f; }
+.qd-assess__why { font-family: var(--body); font-size: 0.76rem; line-height: 1.55; color: var(--ink-faint); margin: 0.35rem 0 0; }
+.qd-assess__why b { color: var(--ink-muted); font-weight: 400; }
+
+.qd-assess__result { margin-top: var(--gap-m); border-top: 1px solid var(--hairline); padding-top: var(--gap-s); display: grid; gap: var(--gap-xs); }
+.qd-assess__level { margin: 0; display: grid; gap: 0.15rem; }
+.qd-assess__level b { font-family: var(--display); font-size: var(--step-1); color: var(--qd-defence); }
+.qd-assess__level span { font-family: var(--body); font-size: var(--step--1); line-height: 1.6; color: var(--ink-muted); }
+.qd-assess__suggest { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-muted); margin: 0; }
+.qd-assess__suggest b { color: var(--ink); }
+.qd-assess__suggest i { color: var(--ink-faint); font-style: normal; }
+.qd-assess__apply {
+  justify-self: start;
+  font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.04em;
+  padding: 0.5rem 1rem; border-radius: 999px;
+  border: 1px solid var(--qd-threat); background: var(--qd-threat); color: #0a0e10; cursor: pointer;
+}
+.qd-assess__apply:disabled { opacity: 0.4; cursor: not-allowed; }
+.qd-assess__caveat { margin: 0; font-size: 0.78rem; color: var(--ink-faint); }

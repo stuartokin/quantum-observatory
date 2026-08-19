@@ -92,6 +92,14 @@ another layout in a tab:**
   tooltip only in the sense that it eventually appears, in the OS's styling,
   and on a touchscreen not at all. Positioned against the figure so it travels
   with the chart, and flipped left near the right edge.
+- **`SourceRef`** *(0.54.0)* — **every citation anywhere on this surface goes
+  through it.** It renders the reference inline and opens a panel with the
+  title, publisher, identifier, access date, evidence level, reviewer note and
+  a link out. Before it, a claim held a source in its data and showed the
+  reader a bare publisher name: the citation existed and was unreachable. If a
+  future tab prints `source.title` into a `<span>`, that is the thing to
+  replace.
+- **`ReadinessAssessment`** *(0.54.0)* — the Mosca test. See below.
 
 ### Things worth not re-learning
 
@@ -108,6 +116,37 @@ another layout in a tab:**
   with no number printed, the multiple as the headline, and nothing summed.
   If a future session is asked for a progress bar or a total, that is the
   argument against it.
+- **Escape is handled twice and the order is not the one you want.** The Q-Day
+  surface and `SourceRef` both listen on `document`; `SourceRef` mounts later,
+  so a bubbling listener closed the whole surface from inside an open panel.
+  It listens in the **capture** phase and calls `stopPropagation`. Any future
+  overlay on this surface needs the same, and the test is: open it, press
+  Escape, and check you are still on Q-Day.
+
+---
+
+## The Mosca test is content, not code
+
+**0.54.0.** `content/assessment/` holds three questionnaires — `exec.md` (4
+questions), `tech.md` (10), `auditor.md` (7) — plus `maturity-levels.md`.
+`ReadinessAssessment` reads them and plots x + y against z.
+
+- **x, y and z are years, and only x and y come from the questionnaire.** z is
+  the board's own derived Q-Day band, so the verdict moves when the evidence
+  moves. That is the whole reason to have built this here rather than kept the
+  prototype's static version.
+- **The weighting is stated on the page.** Every questionnaire carries a
+  `heuristic` string saying in plain words that the mapping from an answer to a
+  number is editorial judgement rather than measurement. It is printed beside
+  the questions. A weighting a reader cannot see is a weighting they cannot
+  argue with.
+- **Shelf-life options score in years (3 / 8 / 18 / 30), not on a 1–5 rating.**
+  This was got wrong once: multiplying the option score by six pinned the x
+  slider at its ceiling for every answer. The score *is* the number of years.
+  Level averaging deliberately excludes the shelf-life question for the same
+  reason — it is on a different scale from the rest.
+- Adding the collection touched the same five places the milestone collection
+  did. That checklist is in the section below and it still holds.
 
 ---
 
@@ -170,6 +209,25 @@ it should be.
   `content/schema/milestone.schema.json`, `validate-content.mjs`,
   `agent-io.mjs`, `src/content/collections.ts`, and a loader with a `hydrate`
   registered in `store.ts`.
+
+**0.54.0 added four and refused one.** The EU roadmap's end-2026 start and
+end-2030 high-risk deadline, and NIST's 2030 deprecation and 2035 disallowal,
+are in — each read from the primary document and marked `agent-reviewed` with a
+note saying what was checked. Milestones gained a `review` block for exactly
+this, using the same enum as every other collection.
+
+**The one that was refused matters more than the four.** The research prototype
+asserts an EU "2035 full transition" milestone. The Commission's own
+announcement sets end-2026 and end-2030 and sets no 2035 date. It was not
+imported. It is entry 1 in `agents/_queue.md` so an agent settles it against a
+source rather than the board inheriting a figure because a previous site was
+confident about it. **Australia's ASD deadline is real and also not here** —
+cyber.gov.au refuses automated fetching, so it is queued rather than typed from
+memory.
+
+`agents/scout/agent.json` now includes `content/milestones/**` and
+`content/questions/**` in its write scope. A regulatory deadline is a scouting
+result; routing it through a human retype was the only reason it wasn't.
 
 ---
 

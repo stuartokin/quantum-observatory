@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { frontierById } from '../../content/frontier'
+import { SourceRef } from './SourceRef'
 
 /**
  * THE CARD THAT EXPLAINS ITSELF.
@@ -120,11 +121,28 @@ export function BoardFigure({
 
               {source && (
                 <p className="qd-fig__source">
-                  <a href={source.url} target="_blank" rel="noreferrer">
-                    {source.title ?? source.publisher ?? source.identifier ?? 'source'} ↗
-                  </a>
-                  {source.date && <span> · {source.date}</span>}
-                  {item.evidence?.verified && <span> · checked {item.evidence.verified}</span>}
+                  <SourceRef
+                    source={{
+                      ...source,
+                      level: item.evidence?.level,
+                      accessed: item.evidence?.verified,
+                      reviewNote: item.review?.note,
+                    }}
+                  />
+                  {/* Every other source on the item, so a claim resting on
+                      five papers does not read as resting on one. */}
+                  {(item.evidence?.sources?.length ?? 0) > 1 && (
+                    <span className="qd-fig__more">
+                      {' + '}
+                      {item.evidence!.sources.slice(1).map((s2) => (
+                        <SourceRef
+                          key={s2.url}
+                          source={{ ...s2, level: item.evidence?.level }}
+                          label={s2.identifier ?? s2.publisher ?? 'source'}
+                        />
+                      ))}
+                    </span>
+                  )}
                 </p>
               )}
             </div>

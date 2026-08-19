@@ -110,6 +110,37 @@
     "added": {
       "type": "string",
       "format": "date"
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Whether anyone has checked this date against the document that sets it. Uses the same vocabulary as every other collection rather than inventing one.",
+      "properties": {
+        "state": {
+          "enum": [
+            "reviewed",
+            "agent-reviewed",
+            "agent-merged",
+            "vetoed"
+          ]
+        },
+        "by": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        },
+        "on": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 600
+        }
+      }
     }
   }
 }

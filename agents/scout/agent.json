@@ -5,7 +5,8 @@
   "everyWeeks": 1,
   "write_scope": [
     "content/frontier/_inbox/**",
-    "content/questions/**"
+    "content/questions/**",
+    "content/milestones/**"
   ],
   "output": "pull_request",
   "enabled": true,
@@ -15,6 +16,7 @@
   },
   "maxTokens": 32000,
   "fixedCollections": [
-    "questions"
+    "questions",
+    "milestones"
   ]
 }

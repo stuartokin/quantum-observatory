@@ -24,6 +24,28 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.54.0',
+    date: '2026-08-19',
+    headline: 'Every reference is clickable, the Mosca test is back, and Plan learns who else has a deadline.',
+    ui: [
+      'Any reference on the Q-Day surface now opens a detail panel: the title, the publisher, the identifier, the date it was accessed, the evidence level, whatever note the reviewer left, and a link out to the source itself. Previously a claim carried a source in its data and showed the reader a bare name — the citation existed and was unreachable, which is the worst of both.',
+      'The Mosca readiness test is on the Clocks tab, and it is content rather than code. Three questionnaires — executive, technical, auditor — put x (how long migration takes), y (how long data stays sensitive) and z (how long until Q-Day) on the same axis as the derived Q-Day band, and the verdict follows from x + y against z. The z axis is the board’s own derivation, so the test moves when the evidence does.',
+      'Each questionnaire states its own weighting in the open. The options score to years, and the mapping from an answer to a number is editorial judgement rather than measurement — so it is printed on the page next to the questions rather than buried in a function.',
+      'Plan now shows the EU and NIST alongside NCSC, CNSA 2.0 and the US federal target, as jurisdiction cards with their own sources. Four milestones added: the EU roadmap’s end-2026 start and end-2030 high-risk deadline, and NIST’s 2030 deprecation and 2035 disallowal of RSA and ECC.',
+      'The EU "2035 full transition" figure the research prototype asserted was checked and is not on this board. The Commission’s own roadmap sets end-2026 and end-2030 and does not set 2035. It is queued as a question for an agent to settle rather than imported because it looked plausible.',
+      'Australia is missing on purpose, not by oversight. The ASD deadline is real and cyber.gov.au refuses automated fetching, so it is first in the queue for a human-assisted pass rather than transcribed from memory.',
+      'Escape inside a source panel closes the panel, not the whole Q-Day surface. Both listen on the document and the later listener wins, which is exactly backwards from what a reader expects.',
+    ],
+    content: [
+      'A new `content/assessment/` collection holds the questionnaires and the maturity levels — four files, schema-validated like everything else. The Mosca test was the one part of the research prototype that was pure application code; putting it in content means an agent can improve a question, and the weighting can be argued with in a pull request instead of a refactor.',
+      'Milestones gained a `review` block, so an imported deadline carries the same review state as every other record and an unverified one is visibly unverified.',
+    ],
+    agents: [
+      '`agents/_queue.md` is rewritten as nine scouting jobs drawn from a pass over the research prototype: the EU 2035 claim, the ASD deadline, EO 14412 and OMB M-26-15, FIPS 206 and HQC and SP 800-57 Rev 6, a newsroom measurement backfill, the Gidney–Ekerå and Häner requirement points, earlier GRI survey editions and Mosca 2015, decoder and magic-state metrics, and a circuit-depth item.',
+      'Scout may now write to `content/questions/` and `content/milestones/` as well as the frontier inbox. A regulatory deadline is a scouting result, and routing it through a human retype was the only reason it was not.',
+    ],
+  },
+  {
     version: '0.53.0',
     date: '2026-08-19',
     headline: 'The Observatory learns the research prototype\u2019s manners.',
@@ -174,18 +196,6 @@ export const RELEASES: Release[] = [
       'The twelve questions gain an Overview: all twelve as cells, showing state and when each answer last changed, with the derived ones marked as counted. Click through to read one properly.',
       'What Changed says why it picked that constellation. A panel a reader cannot account for is one they stop trusting.',
       'The two-year timeline view is gone, and Headlines opens narrower and left-aligned instead of full width beneath everything else.',
-    ],
-  },
-  {
-    version: '0.45.0',
-    date: '2026-08-12',
-    headline: 'The key becomes a window, and the timeline stops moving its own axis.',
-    ui: [
-      'The key is a window of its own — moveable, closeable, shared by every plot. Asking for it from a second view brings the existing one forward rather than opening another: there is one visual grammar, so there is one key. Drawn on the canvas it was clipped by whichever frame owned it, and could appear twice.',
-      'The last-two-years view is now a camera position rather than a filter. Removing items changed the axis range under them, so a body sat at a different year depending on the window and zooming out could not recover the years that had been removed. Every item is always present; the view starts framed on the recent end.',
-      'The year toggle is labelled with what is showing rather than what the click will do. The other way round reads as a description of the current state, and sent a reader looking for a broken filter.',
-      'A constellation opens in its own window instead of taking over the galaxy, which is the thing a reader navigates from.',
-      'Un-docking a window puts it back inside the viewport. A frame keeps its last position while docked, and that position may since have moved off screen — opening something and not finding it reads as the click having failed.',
     ],
   },
 ]

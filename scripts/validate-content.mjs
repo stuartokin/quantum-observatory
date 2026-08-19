@@ -20,6 +20,7 @@ const COLLECTIONS = [
   { dir: 'content/frontier', schema: 'content/schema/frontier.schema.json', label: 'frontier' },
   { dir: 'content/forecasts', schema: 'content/schema/forecast.schema.json', label: 'forecasts' },
   { dir: 'content/milestones', schema: 'content/schema/milestone.schema.json', label: 'milestones' },
+  { dir: 'content/assessment', schema: 'content/schema/assessment.schema.json', label: 'assessment' },
 ]
 
 const ajv = new Ajv({ allErrors: true, strict: false })

@@ -7,6 +7,7 @@ import { Section, Takeaway } from '../ui/Section'
 import { DerivedFigure } from '../ui/Figure'
 import { Chips, useMulti } from '../ui/Chips'
 import { useTooltip, ChartTooltip } from '../ui/Tooltip'
+import { SourceRef } from '../ui/SourceRef'
 
 /**
  * TRENDS — what the board's own evidence says about Q-Day.
@@ -422,9 +423,15 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
               into a calendar year at all, which is why it sets the window and the hardware
               figures do not.{' '}
               {d.probability.sourceUrl && (
-                <a href={d.probability.sourceUrl} target="_blank" rel="noreferrer">
-                  {d.probability.sourceTitle ?? 'source'} ↗
-                </a>
+                <SourceRef
+                  source={{
+                    url: d.probability.sourceUrl,
+                    title: d.probability.sourceTitle,
+                    date: d.probability.anchorDate,
+                    level: d.probability.evidenceLevel,
+                    note: 'The window on this page is anchored to this record.',
+                  }}
+                />
               )}
             </p>
             {d.window?.caveat && <p className="qd-note qd-note--warn">{d.window.caveat}</p>}
