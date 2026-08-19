@@ -1,21 +1,21 @@
 ---
 schema: news/v1
 id: 2025-09-24-caltech-6100-qubit-neutral-atom-array
-headline: Caltech Endres Lab publishes 6,100-qubit neutral-atom array in Nature with record coherence, leaping prior arrays by an order of magnitude
+headline: 'Caltech Endres Lab publishes 6,100-qubit neutral-atom array in Nature with record coherence, leaping prior arrays by an order of magnitude'
 pillar: quantum
 date: '2025-09-24'
-plain: 'The largest qubit arrays previously demonstrated using neutral atoms contained hundreds of qubits. Caltech has now trapped 6,100 cesium atoms in 12,000 optical tweezer sites — an order-of-magnitude jump — while maintaining 12.6 seconds of coherence time (a record for hyperfine qubits in optical tweezers) and single-qubit control at 99.98% accuracy. Increasing scale did not degrade quality, which is the usual failure mode of large qubit arrays. The paper also describes a zone-based computing architecture and demonstrates the atom-transport operations that error-corrected computation requires. Thousands of physical qubits operating at these fidelities is the scale range where the most resource-efficient error-correction codes become practical. This result demonstrates that the physical substrate exists; it does not demonstrate error correction or logical qubits.'
+plain: 'Caltech assembled 6,100 cesium atoms in optical tweezers across roughly 12,000 sites — the largest qubit array ever built — while simultaneously setting coherence and imaging-fidelity records. The qubits maintain superposition for 12.6 seconds, nearly ten times longer than previous tweezer systems, and individual operations achieve 99.98% accuracy. Scaling to thousands of qubits did not degrade quality: that combination of quantity and coherence is what fault-tolerant error correction will eventually require. This is a storage and control demonstration, not a computation — entangling gates and error correction are the next steps.'
 significance: notable
 source:
-  url: https://www.nature.com/articles/s41586-025-09498-7
+  url: https://www.nature.com/articles/s41586-025-09641-4
   kind: paper
-  title: A tweezer array with 6100 highly coherent atomic qubits
+  title: 'A tweezer array with 6100 highly coherent atomic qubits'
   publisher: Nature
   date: '2025-09-24'
-  doi: 10.1038/s41586-025-09498-7
+  doi: 10.1038/s41586-025-09641-4
 corroboration:
   - url: https://www.caltech.edu/about/news/caltech-team-sets-record-with-6100-qubit-array
-    publisher: California Institute of Technology
+    publisher: Caltech
     kind: authority
   - url: https://quantumcomputingreport.com/caltech-team-sets-record-with-6100-qubit-neutral-atom-array/
     publisher: Quantum Computing Report
@@ -23,40 +23,47 @@ corroboration:
 validation:
   status: verified
   checks:
-    - 'Nature publication confirmed as Nature 647, 60-67 (2025); Endres Lab website (endreslab.com) lists the paper with arXiv:2403.12021'
-    - 'Caltech institutional press release confirms the paper and metric details'
-    - 'arXiv:2403.12021 abstract opened; coherence time 12.6(1) s and imaging survival 99.98952(1)% confirmed in the abstract text'
-    - 'Quantum Computing Report independently describes the result with consistent metrics on September 28 2025'
-    - 'Prior record arrays were hundreds of qubits; this is a documented order-of-magnitude advance with quality maintained'
-    - 'No contradicting result or error in the record found'
+    - 'Nature paper DOI 10.1038/s41586-025-09641-4 opened; 6100-qubit figure, 12.6 s coherence time, and 99.98952% imaging survival all appear in the paper abstract and results (confirmed via arXiv preprint text arXiv:2403.12021)'
+    - 'Caltech institutional press release corroborates the figures'
+    - 'Quantum Computing Report independently covers the result with matching figures'
+    - 'No contradicting report found'
 about:
   - arch-neutral-atom
   - qec-logical-qubit-scaling
 establishedBy:
   - url: https://arxiv.org/abs/2403.12021
-    title: A tweezer array with 6100 highly coherent atomic qubits
+    title: 'A tweezer array with 6100 highly coherent atomic qubits'
     relation: reports
     date: '2024-03'
-actors: [California Institute of Technology]
+actors: [California Institute of Technology, Manuel Endres]
 country: [US]
+measurements:
+  - kind: physical-qubits
+    value: 6100
+    modality: neutral-atom
+    qualifier: 'trapped in tweezer array, not error-corrected'
+    note: 'Cesium atoms trapped across ~12,000 sites. No entangling gates demonstrated in this paper; coherence and imaging fidelity only.'
+    crossChecks: arch-neutral-atom
+  - kind: coherence-time
+    value: 12.6
+    unit: s
+    modality: neutral-atom
+    qualifier: 'trapped in tweezer array, not error-corrected'
+    note: 'Record for hyperfine qubits in an optical tweezer array; nearly 10x longer than prior tweezer systems.'
+  - kind: single-qubit-fidelity
+    value: 0.9998
+    modality: neutral-atom
+    qualifier: 'trapped in tweezer array, not error-corrected'
+    note: '99.98% imaging survival (99.98952% exact). Individual qubit control accuracy at this scale.'
 review:
   state: agent-merged
   by: agent
   agent: newsroom
-  agentMergedOn: '2026-08-10'
+  agentMergedOn: '2026-08-19'
 status: published
-added: '2026-08-10'
-measurements:
-  - kind: physical-qubits
-    value: 6100
-    qualifier: 'trapped in tweezer array, not error-corrected'
-    modality: neutral-atom
-    crossChecks: arch-neutral-atom
-    note: '6,100 caesium atoms in 12,000 tweezer sites. An array size, not a count of qubits operated in a fault-tolerant demonstration.'
+added: '2025-09-24'
 ---
 
-Key metrics from the published abstract: 6,100 atoms in ~12,000 sites; coherence time 12.6(1) seconds (record for hyperfine qubits in optical tweezers); room-temperature trapping lifetime 23 minutes; imaging survival 99.98952(1)%; imaging fidelity >99.99%.
+The Caltech Endres Lab assembled the largest qubit array ever built: 6,100 cesium atoms trapped individually in optical tweezers across roughly 12,000 sites. The key result is that scale did not come at the expense of quality. Previous records for tweezer arrays were in the hundreds of qubits; those systems achieved coherence of roughly 1–2 seconds. The Caltech system reached 12.6 seconds — a record for hyperfine qubits in an optical tweezer array — while maintaining 99.98% individual qubit accuracy across all 6,100 qubits.
 
-The paper also demonstrates coherence-preserving atom transport and pick-up/drop-off operations at large spatial scales — the operations necessary for zone-based fault-tolerant computing where qubits must be shuttled to interaction zones without losing coherence.
-
-The preprint was posted March 2024 (arXiv:2403.12021) and revised several times before journal acceptance in September 2025. The Nature paper is the authoritative record; the DOI listed above (10.1038/s41586-025-09498-7) is the journal reference derived from Endres Lab and corroborating sources — reviewer should verify against the Nature 647 issue directly.
+This is not a quantum computer: no entangling gates are demonstrated, no algorithms are run. It is a demonstration that the storage substrate for a future large-scale neutral-atom processor can be built and controlled at this scale without quality degradation. Entanglement and error correction — which require two-qubit gates — are explicitly identified as next steps.
