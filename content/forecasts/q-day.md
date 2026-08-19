@@ -17,10 +17,16 @@ note: 'Outer bounds set by hand. Inner values are provisional until the expert s
 log:
   - date: '2026-08-07'
     from: 'unset'
-    to: '2036-2041'
+    to: '2034-2041'
     by: human
     evidence: 'Baseline set at the start of the agent programme.'
     assumption: 'None changed — this is the starting position.'
+  - date: '2026-08-19'
+    from: '2034-2041'
+    to: '2034-2041'
+    by: human
+    evidence: 'No estimate moved. The log entry above recorded the baseline as 2036-2041 while the estimates block has always read earliest 2034 — the outermost axis was omitted from the record rather than changed after it. Corrected so the log and the estimates agree; this became visible when the Q-Day Observatory began rendering the change history beside the countdown.'
+    assumption: 'None. A metadata correction, not a movement — the numbers a reader sees are unchanged.'
 ---
 
 The date everything else is measured against. Not a countdown: a countdown with

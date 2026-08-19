@@ -18,6 +18,14 @@ export interface Source {
   publisher?: string
   date?: string
   identifier?: string
+  /* `doi`, `note` and `accessed` are in frontier.schema.json and in the
+   * content, and were missing here — the same schema/type drift that had
+   * `review` optional when the schema marks it required. The derivation dates
+   * a metric by matching the identifier in its note against these sources, so
+   * a field the type does not admit is a source it cannot match. */
+  doi?: string
+  note?: string
+  accessed?: string
 }
 
 export interface Evidence {

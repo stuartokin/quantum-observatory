@@ -492,3 +492,186 @@
 @media (prefers-reduced-motion: reduce) {
   .qday-surface * { transition: none !important; animation: none !important; }
 }
+
+/* ============================================================
+   TRENDS
+
+   Chart marks use their own two colours rather than the
+   surface's amber and teal, and that is deliberate.
+
+   The UI accents (#ff9e3d, #3DE0C0) sit at OKLCH lightness
+   0.78 and 0.80 — fine for a pill or a heading, outside the
+   0.48–0.67 band a categorical mark wants against a dark
+   surface. The pair below was stepped down until it passed all
+   five checks against this ground: lightness band, chroma
+   floor, CVD separation (ΔE 28.1 protan, 16.7 tritan),
+   normal-vision separation (28.0) and contrast. Marks get the
+   validated pair; text keeps the ink tokens; chrome keeps the
+   bright accents.
+
+   REQUIRED is the amber family because a falling requirement
+   is the threat closing, not a defence improving.
+   ============================================================ */
+
+.qday-surface {
+  --qd-chart-required: #d07a2c;
+  --qd-chart-demonstrated: #9668e3;
+}
+
+.qd-trends { display: grid; gap: var(--gap-m); }
+.qd-trends__lede,
+.qd-note {
+  font-family: var(--body);
+  font-size: var(--step--1);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  margin: 0;
+  max-width: var(--measure);
+}
+.qd-note--warn { color: var(--qd-threat); }
+.qd-note a { color: var(--qd-defence); }
+.qd-trends h3 {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 var(--gap-xs);
+}
+.qd-trends__from {
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  color: var(--ink-faint);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* The collapse is one number, so it is a stat and not a chart. */
+.qd-stat {
+  border-left: 2px solid var(--qd-chart-required);
+  padding: var(--gap-s) var(--gap-m);
+  background: color-mix(in oklab, var(--ground-raised) 70%, transparent);
+}
+.qd-stat__label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0;
+}
+.qd-stat__value {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--step-2);
+  color: var(--qd-threat);
+  margin: 0.1rem 0 0.3rem;
+}
+.qd-stat__note {
+  font-family: var(--body);
+  font-size: var(--step--1);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.qd-charts { display: grid; gap: var(--gap-m); grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+.qd-chart {
+  margin: 0;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: var(--gap-s);
+  background: color-mix(in oklab, var(--ground-panel) 60%, transparent);
+}
+.qd-chart figcaption {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--gap-xs);
+}
+.qd-chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.qd-chart__grid { stroke: var(--hairline); stroke-width: 1; }
+.qd-chart__ytick,
+.qd-chart__xtick {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--ink-faint);
+}
+.qd-chart__ytick { text-anchor: end; }
+.qd-chart__xtick { text-anchor: middle; }
+.qd-chart__label { font-family: var(--mono); font-size: 10px; fill: var(--ink); }
+
+.qd-legend { display: flex; gap: var(--gap-m); margin-top: var(--gap-xs); }
+.qd-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--ink-muted);
+}
+.qd-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.qd-legend i.qd-legend__sq { border-radius: 1px; }
+
+.qd-gaps ul, .qd-prob ul { margin: 0 0 var(--gap-xs); padding-left: 1.1rem; }
+.qd-gaps li, .qd-prob li {
+  font-family: var(--body);
+  font-size: var(--step--1);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  margin-bottom: 0.3rem;
+}
+.qd-gaps b, .qd-prob b { color: var(--ink); }
+.qd-gaps i { font-style: italic; color: var(--ink-faint); }
+
+/* Diverging: toward Q-Day is the threat hue, away from it the defence hue,
+   and the signed number is always shown so identity is never colour alone. */
+.qd-impact__list { list-style: none; margin: var(--gap-s) 0 0; padding: 0; display: grid; gap: 0.5rem; }
+.qd-impact__list li {
+  display: grid;
+  grid-template-columns: 70px 34px 1fr;
+  gap: var(--gap-s);
+  align-items: baseline;
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.45rem;
+}
+.qd-impact__bar { display: block; height: 6px; background: color-mix(in oklab, var(--ground) 70%, transparent); border-radius: 999px; overflow: hidden; align-self: center; }
+.qd-impact__bar i { display: block; height: 100%; }
+.qd-impact__bar i[data-dir='closer'] { background: var(--qd-chart-required); }
+.qd-impact__bar i[data-dir='further'] { background: var(--qd-defence); margin-left: auto; }
+.qd-impact__score { font-family: var(--mono); font-size: 0.68rem; font-variant-numeric: tabular-nums; }
+.qd-impact__score[data-dir='closer'] { color: var(--qd-threat); }
+.qd-impact__score[data-dir='further'] { color: var(--qd-defence); }
+.qd-impact__title { font-family: var(--body); font-size: var(--step--1); color: var(--ink); }
+.qd-impact__why {
+  grid-column: 3;
+  font-family: var(--body);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  margin: 0.2rem 0 0;
+}
+
+.qd-excluded ul { list-style: none; margin: var(--gap-s) 0 0; padding: 0; display: grid; gap: 0.4rem; }
+.qd-excluded li {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--ink-muted);
+  border-left: 2px solid var(--hairline);
+  padding-left: var(--gap-s);
+}
+.qd-excluded li b { color: var(--ink); }
+.qd-excluded li span { display: block; color: var(--ink-faint); margin-top: 0.15rem; }
+
+@media (max-width: 700px) {
+  .qd-impact__list li { grid-template-columns: 44px 30px 1fr; }
+}
+.qd-chart__series {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--qd-chart-required);
+  letter-spacing: 0.06em;
+}

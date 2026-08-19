@@ -54,8 +54,8 @@ export const QDAY_TABS: readonly QDayTabDef[] = [
     id: 'trends',
     label: 'Trends',
     blurb:
-      'Where demonstrated capability meets the falling requirement floor. Waiting on the derivation — the board holds nine sourced resource estimates and around forty hardware metrics, and the crossing has to be computed from those rather than extrapolated from a vendor roadmap.',
-    ready: false,
+      'Where demonstrated capability stands against the falling requirement floor, derived from the board when the page loads.',
+    ready: true,
   },
   {
     id: 'stack',

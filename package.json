@@ -1,11 +1,11 @@
 {
   "name": "horizonq",
   "private": true,
-  "version": "0.50.0",
+  "version": "0.51.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:order && npm run check:exports && npm run check:state && npm run validate && npm run validate:news && npm run validate:questions && npm run provenance && tsc --noEmit && vite build && npm run budget",
+    "build": "npm run check:order && npm run check:exports && npm run check:state && npm run validate && npm run validate:news && npm run validate:questions && npm run provenance && npm run derive && tsc --noEmit && vite build && npm run budget",
     "preview": "vite preview",
     "validate": "node scripts/validate-content.mjs",
     "budget": "node scripts/check-budget.mjs",
@@ -19,7 +19,9 @@
     "check:order": "node scripts/check-order.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "validate:questions": "node scripts/check-questions.mjs",
-    "check:state": "node scripts/check-state.mjs"
+    "check:state": "node scripts/check-state.mjs",
+    "derive": "node scripts/check-derive.mjs",
+    "test:derive": "node scripts/test-derive.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

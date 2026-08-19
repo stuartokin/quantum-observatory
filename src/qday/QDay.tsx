@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { QDAY_TABS, hrefFor, goToBoard, type QDayTab } from './route'
 import { forecastFor } from '../content/forecast'
 import { Clocks } from './tabs/Clocks'
+import { Trends } from './tabs/Trends'
 import { Pending } from './tabs/Pending'
 import './qday.css'
 
@@ -61,7 +62,13 @@ export default function QDay({ tab }: { tab: QDayTab }) {
       </header>
 
       <main className="qday-surface__main">
-        {tab === 'clocks' ? <Clocks forecast={forecast} /> : <Pending def={def} />}
+        {tab === 'clocks' ? (
+          <Clocks forecast={forecast} />
+        ) : tab === 'trends' ? (
+          <Trends forecast={forecast} />
+        ) : (
+          <Pending def={def} />
+        )}
       </main>
 
       {/*

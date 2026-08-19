@@ -11,16 +11,16 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.50.0**, built in this session but not yet dragged into
+**Version 0.51.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
-**0.49.0 and 0.50.0 are Phases 0 and 1 of the Q-Day work.** `QDAY-PLAN.md`
-carries the whole sequence; "Content is fetched now, not bundled" and "There
-is a second surface now" below carry what a session needs to know before
-touching either.
+**0.49.0, 0.50.0 and 0.51.0 are Phases 0, 1 and 2 of the Q-Day work.**
+`QDAY-PLAN.md` carries the whole sequence; "Content is fetched now, not
+bundled", "There is a second surface now" and "The Q-Day figure is derived
+now" below carry what a session needs before touching any of it.
 
 **Live at** stuartokin.github.io, deployed from `main` via GitHub Pages.
 
@@ -57,6 +57,77 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## The Q-Day figure is derived now
+
+**0.51.0.** `src/qday/derive/` computes the board's Q-Day position from its
+own items. The Trends page renders it; `npm run derive` runs the same code at
+build time and is in the build chain.
+
+**The result: the derivation reproduces the asserted range exactly.** Derived
+window 2036–2041 against an asserted 2036–2041. The number a human set is
+confirmed by the evidence rather than replaced by it, which is a better
+outcome than a correction and was not guaranteed.
+
+### It does not compute a crossing point, and that is deliberate
+
+The plan for this phase described two curves meeting. That was written before
+the content was surveyed, and it cannot be built honestly:
+
+1. **There is no capability time series.** Every qubit-count metric on the
+   architecture and error-correction items is dated within a fortnight of
+   August 2026 — that is `evidence.verified`, when the board last *checked*
+   the figure. The board records each item's current best value and never its
+   history. A trend fitted to points sharing one x is not a trend.
+2. **The only source of a forward capability curve is a vendor roadmap**, and
+   `agents/_decisions.md` has always scored those zero. The research
+   prototype's one genuinely computed number extrapolates IBM's roadmap.
+
+The missing data and the standing rule point the same way, so the derivation
+reasons from what is evidenced: the falling requirement (a real dated series),
+the present gap (a snapshot, not a trajectory), expert elicitation (the only
+thing on the board that maps to calendar years, and therefore what sets the
+window), and the `qdayImpact` ledger.
+
+### Things that will bite whoever touches this
+
+- **A metric is dated by the paper its note names**, matched against
+  `evidence.sources` by identifier — never by `evidence.verified`. Dating from
+  the item would collapse every figure onto the week an agent last ran and
+  destroy the entire signal. If the requirement trend ever goes flat, look at
+  that join in `src/qday/derive/parse.ts` before believing the board changed.
+- **Requirement and capability are dated differently, and that asymmetry is in
+  the content.** Cryptanalysis items cite a paper per metric; hardware items
+  cite one paper for the whole item. So capability points are dated by the
+  item's most recent source — weaker provenance, labelled as such rather than
+  dropped. Applying the requirement rule to capability would empty the gap.
+- **Classification is by `cluster` and `constellation`, never by parsing
+  names.** `cluster: cryptanalysis` is the requirement side; `architectures`
+  and `error-correction` are the capability side. An early version tested the
+  metric's prose and threw away "Logical qubits in demonstration
+  (error-corrected)" — the single most relevant capability figure on the board
+  — because the name contained "error", while admitting "Logical vs physical
+  qubit lifetime = 2.4 times" as a count of qubits.
+- **Annealers are excluded.** `arch-annealing` reports more qubits than any
+  gate-model device on the board and cannot run Shor at any size.
+- **`npm run test:derive` is sixteen cases over fixtures, not live content.**
+  A test whose answer changes when an agent runs is not a test. Every case is
+  a mistake this made on the way to working.
+- **A divergence never fails the build.** It writes
+  `.agent-run/qday-proposal.md` for the weekly issue. Making new evidence
+  break the deploy would teach everyone to stop adding it.
+
+### Chart colour is computed, not chosen
+
+The interface amber and teal sit at OKLCH lightness 0.78 and 0.80 — fine for a
+pill, outside the 0.48–0.67 band a categorical mark wants against this ground.
+Chart marks use a stepped-down pair (`--qd-chart-required`,
+`--qd-chart-demonstrated`) validated against the real surface for lightness,
+chroma, colour-blind separation and contrast. If you add a third series,
+validate it against the same surface rather than picking something that looks
+right.
 
 ---
 

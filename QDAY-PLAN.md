@@ -3,8 +3,8 @@
 Written 19 August 2026, against HorizonQ 0.48.11 and the current
 `stuartokin/Qday-Research` `index.html` (2,563 lines, one file).
 
-**Status: Phase 0 shipped as 0.49.0. Phase 1 shipped as 0.50.0.** Phases 2–5
-are still a plan. See `HANDOVER.md` → "Content is fetched now, not bundled"
+**Status: Phase 0 shipped as 0.49.0, Phase 1 as 0.50.0, Phase 2 as 0.51.0.**
+Phases 3–5 are still a plan. See `HANDOVER.md` → "Content is fetched now, not bundled"
 and "There is a second surface now" for what each actually changed.
 
 ---
@@ -225,10 +225,23 @@ unevidenced scoring heuristic and belongs with the Readiness work in Phase 4,
 labelled as a heuristic; and scenario choice is not yet in the URL, so a
 shared link opens on the default rather than the sender's scenario.
 
-**Phase 2 — The derivation.**
-The two-curve model in `src/qday/derive/`, pure and unit-tested against real
-content. Trends rebuilt on it. The proposal flow into the weekly issue. The
-`q-day.md` log inconsistency fixed.
+**Phase 2 — The derivation. ✅ Done, 0.51.0.**
+`src/qday/derive/`, pure and tested over fixtures; Trends built on it; the
+proposal flow writing to the weekly issue; the `q-day.md` log inconsistency
+fixed.
+
+**Built differently from what this plan specified, on evidence.** There is no
+two-curve crossing, because there is no capability time series to fit and the
+only forward capability curve available is a vendor roadmap, which the board
+scores zero. The derivation reasons from the falling requirement, the present
+gap, expert elicitation and the impact ledger instead — and reproduces the
+asserted 2036–2041 range exactly. See `HANDOVER.md` → "The Q-Day figure is
+derived now".
+
+**Still open from Phase 2:** a `content/capability/` collection would give the
+board a real dated capability series and make the two-curve model possible
+honestly. That was offered and deferred in favour of shipping. It remains the
+structurally right answer whenever the trend matters more than the gap.
 
 **Phase 3 — Stack, Plan, Learn.**
 The three tabs HorizonQ can already evidence. NCSC UK dates captured as

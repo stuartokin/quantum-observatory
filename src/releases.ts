@@ -24,6 +24,27 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.51.0',
+    date: '2026-08-19',
+    headline: 'The Q-Day estimate stops being asserted and starts being derived.',
+    ui: [
+      'Trends is live, and everything on it is computed from the board\u2019s own items when the page loads \u2014 no figure is typed into the source. It reports what it refuses as well as what it uses: a model that quietly drops the data it cannot read looks more complete than it is.',
+      'The headline finding is one the board already held and nobody had drawn: the requirement is falling faster than any hardware is rising toward it. Physical qubits to factor RSA-2048 went from under a million to under a hundred thousand in eight months \u2014 a full order of magnitude, from algorithmic improvement alone.',
+      'Two charts, one per kind of qubit, never both on one axis: physical and logical are three orders of magnitude apart and putting them on one scale would invite a comparison that is not valid. Each cryptographic target gets its own line, because successive estimates of RSA-2048 are a trend and an RSA figure joined to an ECC figure is not.',
+      'Capability is drawn as dated marks and never as a line. The board records today\u2019s best figures, not their history, so a capability trend would be a line through points that share one date. The vertical distance from a mark to the requirement is the gap, and that gap is quoted from the most favourable reading on both sides and labelled as such.',
+      'Chart colours were validated rather than chosen. The interface amber and teal sit outside the lightness band a categorical mark wants against this ground, so the marks use a stepped-down pair that passes lightness, chroma, colour-blind separation and contrast against the actual surface. Chrome keeps the bright accents.',
+      'The impact ledger shows what has been pushing the estimate and which way, from the Q-Day impact score each item already carries. The net is a direction, not a number of years \u2014 it answers the question a countdown cannot: what would have to change for this to move.',
+    ],
+    agents: [
+      'The derivation reproduces the asserted range exactly. Anchored on the expert survey the board holds, the evidence-derived window is 2036\u20132041 against an asserted 2036\u20132041 \u2014 so the number a human set is confirmed by the only evidence that maps to calendar years, rather than replaced by it.',
+      'It does not compute a crossing point, and that is the finding rather than a shortfall. There is no capability time series to fit, and the only way to get a forward capability curve is a vendor roadmap \u2014 which the board\u2019s own precedent has always scored zero. The missing data and the standing rule point the same way.',
+      'Where the derived window and the asserted forecast disagree, the build writes a proposal for the weekly issue and changes nothing. Moving the forecast stays a human decision: one axis at a time, a two-year cap, evidence required.',
+      'A metric is dated by the paper its note names, not by when the board last checked it. Dating from evidence.verified would collapse every figure onto the week an agent last ran and destroy the whole signal. A figure whose note names no source the item carries is refused rather than dated from the item.',
+      'Sixteen self-tests over fixtures, each one a mistake this made on the way to working: 2.4 times read as a count of qubits; the single most relevant capability figure on the board thrown away because its name contained the word error; an annealer\u2019s five thousand qubits counted as progress toward breaking RSA.',
+      'The forecast\u2019s change log recorded a baseline of 2036-2041 while its estimates have always read earliest 2034. The outermost axis was omitted from the record rather than changed after it. Corrected \u2014 a metadata fix, no number a reader sees has moved. It became visible because the Observatory started rendering the log beside the countdown.',
+    ],
+  },
+  {
     version: '0.50.0',
     date: '2026-08-19',
     headline: 'Q-Day becomes a place you can go, and a link you can send.',
@@ -149,16 +170,6 @@ export const RELEASES: Release[] = [
       'The header statistics show when the site was last built. Front matter records dates but not times, so a change is dated to the day and the build time answers the other half of the freshness question.',
       'A new topic now appears in Journals. It only recorded an item once evidence was attached, so Scout adding three topics produced nothing at all — and the first anyone knew of them was seeing unfamiliar bodies on the board.',
       'The toolbar can no longer be dragged into a shape that is not a toolbar, and Reset puts it back where it started along with the frames.',
-    ],
-  },
-  {
-    version: '0.40.0',
-    date: '2026-08-11',
-    headline: 'The key explains both halves of the grammar, in both views.',
-    ui: [
-      'The key is available on the galaxy as well as the timeline, behind the same button. It had been drawn only on the timeline, so shape — what kind of organisation is behind a result — went undocumented on the view most people look at first.',
-      'Hover a body and the key names the organisation in brackets beside its type. This existed but only inside the timeline key, which was closed by default and therefore invisible.',
-      'A filter for the kind of organisation: university, national laboratory, standards body, company, consortium. An item with no actor recorded is never hidden by it — the filter asks who did the work, and silence is not an answer to disagree with.',
     ],
   },
 ]
