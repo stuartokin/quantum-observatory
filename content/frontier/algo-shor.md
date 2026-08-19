@@ -140,12 +140,12 @@ status: published
 origin: agent
 added: '2026-08-09'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
   agent: sourcer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-18'
-  note: Focus run 2026-08-19. Added Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433, 2021) as RSA-2048 physical qubit baseline metric and source. Added Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) as ECC-256 logical qubit baseline metric and source. Both were referenced in prose/metric notes but absent from evidence.sources; the Trends derivation requires source records. evidence.claim updated to name both identifiers explicitly.
+  reviewedOn: '2026-08-19'
+  note: 'Focus run 2026-08-19. Confirmed: Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) present as first-class metric and corroborating source; Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metric and corroborating source. Both identifiers confirmed in metric notes in form the Trends derivation matches. Prior sourcer run (same date) added these; this pass verifies them against primary sources. No other changes.'
 ---
 
 Shor's algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.
