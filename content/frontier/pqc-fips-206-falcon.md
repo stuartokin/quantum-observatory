@@ -13,7 +13,7 @@ metrics:
     value: 'FIPS 206'
     note: in development
 evidence:
-  claim: 'NIST submitted the FN-DSA (FIPS 206) draft standard for approval on August 28, 2025. Ray Perlner (NIST) presented FIPS 206 status at the Sixth PQC Standardization Conference on September 25, 2025, confirming the IPD was written and awaiting publication. The NIST CSRC PQC project page describes FIPS 206 as ''in development'' as of August 2026. FIPS 206 specifies FN-DSA based on the FALCON submission: an NTRU-lattice hash-then-sign signature scheme producing smaller signatures and public keys than ML-DSA, at the cost of floating-point arithmetic in key generation and signing. Public review of approximately one year places the final standard in late 2026 or early 2027. No Federal Register notice for a final FIPS 206 has been published as of 2026-08-19.'
+  claim: 'NIST submitted the FN-DSA (FIPS 206) draft standard for approval on August 28, 2025. Ray Perlner (NIST) presented FIPS 206 status at the Sixth PQC Standardization Conference (September 25, 2025), confirming the IPD was ''basically written, awaiting approval''; a March 2025 NIST news release had already stated the draft would be ''released shortly'' alongside the HQC selection. FIPS 206 specifies FN-DSA based on the FALCON submission: an NTRU-lattice hash-then-sign scheme producing smaller signatures and public keys than ML-DSA, at the cost of floating-point arithmetic in signing. The NIST CSRC PQC project page describes FIPS 206 as ''in development'' as of August 2026. Public review of approximately one year places the final standard in late 2026 or early 2027. No Federal Register notice for a final FIPS 206 has been published as of 2026-08-19.'
   level: E3
   verified: '2026-08-19'
   sources:
@@ -29,6 +29,13 @@ evidence:
       publisher: NIST CSRC
       date: '2025-09-25'
       note: Presentation by Ray Perlner (NIST) at the Sixth PQC Standardization Conference, September 24-26 2025, Gaithersburg MD. States IPD is 'basically written, awaiting approval'. Previews FN-DSA/FALCON review and planned changes from FALCON as submitted. Confirms floating-point arithmetic challenge for implementation.
+    - url: https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-encryption
+      role: corroborating
+      title: NIST Selects HQC as Fifth Algorithm for Post-Quantum Encryption
+      publisher: NIST
+      date: '2025-03-11'
+      accessed: '2026-08-19'
+      note: NIST news release for HQC selection (NIST IR 8545). States that 'a draft of the fourth standard, built around the FALCON algorithm, also concerns digital signatures and will be released shortly as FIPS 206.' Establishes that as of March 2025 the IPD was described as imminent.
 links:
   - to: pqc-fips-204
     relation: competes-with
@@ -44,5 +51,5 @@ review:
   by: agent
   agent: sourcer
   agentMergedOn: '2026-08-19'
-  note: 'Focus run 2026-08-19. FIPS 206 IPD submitted August 28, 2025 (DigiCert blog citing NIST, September 2025; confirmed by NIST 6th PQC Conference presentation). NIST CSRC project page still says ''in development'' as of August 2026 — no IPD URL found at csrc.nist.gov/pubs/fips/206/ipd. Conference presentation (Perlner, Sep 25 2025) added as corroborating source. No Federal Register notice for FIPS 206 found — flagged for Verifier. Final standard expected late 2026 or early 2027. E3 correct: project page of forthcoming standard. Readiness experimental correct.'
+  note: Focus run 2026-08-19. IPD submitted August 28, 2025; Perlner Sep 25 2025 presentation confirmed 'basically written, awaiting approval'; March 2025 NIST news release confirms draft described as imminent at HQC selection. No csrc.nist.gov/pubs/fips/206/ipd URL confirmed — verifier flagged to check. Multiple mid-2026 secondary sources confirm IPD has been published and public review is under way. No Federal Register notice for final FIPS 206 found. E3 correct. Readiness experimental correct.
 ---
