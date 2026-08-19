@@ -40,7 +40,7 @@ evidence:
       title: Experimental demonstration of logical magic state distillation
       publisher: Nature
       date: '2025-07-14'
-      identifier: Nature 645, 620-625 (2025)
+      identifier: 'Nature 645, 620-625 (2025)'
       doi: 10.1038/s41586-025-09367-3
       accessed: '2026-08-19'
       note: QuEra / Harvard / MIT. First demonstration of magic state distillation entirely on logical qubits. 5-to-1 protocol on d=3 and d=5 colour-code qubits on QuEra Gemini neutral-atom platform.
@@ -80,18 +80,19 @@ links:
     relation: depends-on
 moved:
   from: emerging
-  'on': '2026-07-14'
+  on: '2026-07-14'
 priority: P1
 horizon: 2
 qdayImpact: 1
 qdayReasoning: 'Completes the logical gate set, removing one of the remaining unknowns in fault-tolerant operation.'
 country: [US]
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
-  note: 'Focus run 2026-08-19. Added metric for magic state production fraction: Gidney 2025 (arXiv:2505.15917) explicitly states cultivation reduces the space allocated to magic state production, with longer runtime from fewer factories, confirming factories were the dominant overhead in 2019. Cultivation in-patch overhead (~10x fewer qubit-rounds, arXiv:2409.17595) and experimental result (40x error reduction, 0.9999(1) fidelity, 8% retained, arXiv:2512.13908) retained. E4 on Nature 645 primary.'
+  reviewedOn: '2026-08-19'
+  note: 'Steward review 2026-08-19. Nature 645, 620-625 confirmed as E4 primary (peer-reviewed). Cultivation metrics from arXiv:2409.17595 (Gidney et al.) and arXiv:2505.15917 (Gidney 2025 RSA estimate) correctly attributed. Experimental cultivation result from arXiv:2512.13908 (Rosenfeld et al.) is a preprint, E3 individually — correctly noted in source note. Magic state production fraction metric correctly framed as reduced vs 2019 baseline with RSA-2048 sourcing. No corrections needed.'
 confidence: high
 status: published
 added: '2026-08-04'

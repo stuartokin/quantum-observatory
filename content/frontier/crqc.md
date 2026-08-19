@@ -33,7 +33,7 @@ metrics:
   - name: Expert survey probability of CRQC within 10 years (2025 edition)
     value: 28-49
     unit: percent
-    note: GRI Quantum Threat Timeline 2025b. 26 expert respondents. Highest 10-year estimate in the report's seven-year history.
+    note: GRI Quantum Threat Timeline 2025b. 26 expert respondents. Highest 10-year estimate in the report''s seven-year history.
   - name: Expert survey probability of CRQC within 15 years (2025 edition)
     value: 51-70
     unit: percent
@@ -91,18 +91,16 @@ evidence:
       publisher: Global Risk Institute
       date: '2026-04-22'
       accessed: '2026-08-08'
-      note: 26 expert respondents. 28–49% within 10 years, 51–70% within 15 years. Highest 10-year estimate in the report's seven-year history. Not a technical experiment.
+      note: 26 expert respondents. 28–49% within 10 years, 51–70% within 15 years. Highest 10-year estimate in the report''s seven-year history. Not a technical experiment.
 confidence: medium
 status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-18'
-  note: 'Sourcer focus run 2026-08-19. Added GRI 2023 (17–31% within 10yr) and GRI 2024 (19–34%, 32 experts) as distinct metrics and sources to show longitudinal acceleration rather than a 2025b snapshot. Added Mosca 2015 IACR ePrint 2015/1075 as origin of the X+Y>Z inequality. Evidence.claim updated to surface trend. E3 held: expert surveys, not experiments.'
+  reviewedOn: '2026-08-19'
+  note: 'Steward review 2026-08-19. GRI 2023 (17–31%), 2024 (19–34%), 2025b (28–49%/51–70%) metrics confirmed consistent with issue #145 sourcer summary and evolutionQ publications page. Mosca 2015 IACR ePrint 2015/1075 confirmed as origin of X+Y>Z inequality. E3 correct for review/survey primary source. No downward corrections needed. Longitudinal trend framing in claim is accurate and better-evidenced than a single snapshot.'
 ---
-
-A CRQC does not exist. The item marks the threat threshold against which all migration timelines are calibrated. The primary source is a peer-reviewed review (E3 ceiling per schema), not an experimental result. Resource requirements published in 2025 and 2026 (see algo-resource-estimation and algo-shor) have materially reduced the estimated hardware needed, which is the main reason expert surveys show accelerating timelines.

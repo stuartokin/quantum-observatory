@@ -49,9 +49,10 @@ status: published
 added: '2026-08-04'
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
-  note: 'Focus run 2026-08-19. Added NIST March 2025 news release as corroborating source — it is the authoritative statement of HQC timeline: draft ''in about a year'' (from March 2025), final 2027 after 90-day comment period. Claim updated to make hedge-against-lattice-break rationale explicit and to cite the precise NIST timeline. E4 held on NIST IR 8545 (formally published). Readiness experimental correct: selected but FIPS not published.'
+  reviewedOn: '2026-08-19'
+  note: 'Steward review 2026-08-19. NIST IR 8545 is a formally published NIST Internal Report — E4 correct. Readiness experimental correct: HQC selected but FIPS not yet published. Draft expected 2026, final 2027 per NIST news release. Claim and sources consistent with sourcer summary in issue #145. No corrections needed.'
 ---

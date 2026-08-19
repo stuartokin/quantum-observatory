@@ -47,9 +47,10 @@ status: published
 added: '2026-08-04'
 origin: human
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
-  note: Focus run 2026-08-19. IPD submitted August 28, 2025; Perlner Sep 25 2025 presentation confirmed 'basically written, awaiting approval'; March 2025 NIST news release confirms draft described as imminent at HQC selection. No csrc.nist.gov/pubs/fips/206/ipd URL confirmed — verifier flagged to check. Multiple mid-2026 secondary sources confirm IPD has been published and public review is under way. No Federal Register notice for final FIPS 206 found. E3 correct. Readiness experimental correct.
+  reviewedOn: '2026-08-19'
+  note: 'Steward review 2026-08-19. Sources checked against board data and issue #145 sourcer summary. IPD submitted Aug 28 2025 per sourcer; Perlner Sep 25 2025 presentation confirms ''basically written, awaiting approval''; March 2025 NIST news release corroborates imminent release. CSRC project page describes as ''in development'' as of Aug 2026. No Federal Register final notice found. E3 correct for draft-standard-in-development. Readiness experimental correct. Verifier queued to confirm whether csrc.nist.gov/pubs/fips/206/ipd resolves — that is a factual URL check, not a level change.'
 ---

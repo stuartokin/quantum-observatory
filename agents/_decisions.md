@@ -413,3 +413,14 @@ into the sections above once you have read them — or delete them if wrong.
 Re-queuing a sourcer or scout run to attach a source already in the file wastes a run and teaches agents the queue does not track completed work.
 
 *Proposed 2026-08-18, after The Tindall et al. Science 392 lead in issue #129 was flagged and re-flagged across multiple steward passes after both arch-annealing and algo-quantum-simulation already cited it as Science 392, 6800: 868 (2026), DOI 10.1126/science.adx2728. Multiple near-identical versions of this rule were proposed in the decisions file; this is the consolidated confirmed version.. Not yet confirmed by a person.*
+
+## Proposed by the steward, 2026-08-19
+
+Added by an agent applying existing precedent to a new case. Move these up
+into the sections above once you have read them — or delete them if wrong.
+
+**A sourcer run that fires a date-guard ('do not run before [date]'), writes no files, and self-queues a repeat instruction does not get re-queued by the steward in the same pass. The agent's own output is already in the queue; adding it again creates a duplicate that will run twice.**
+
+Prevents the steward from turning one queued instruction into two, which costs a run and teaches the queue that it does not track what is already there.
+
+*Proposed 2026-08-19, after SEQC IEEE Xplore sourcer ran 2026-08-18, fired the not-before-late-September guard, wrote no files, self-queued a repeat, and the prior steward pass was about to queue it again.. Not yet confirmed by a person.*

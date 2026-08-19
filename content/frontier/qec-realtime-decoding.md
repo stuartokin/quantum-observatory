@@ -41,7 +41,7 @@ evidence:
       title: 'Sparse Blossom: correcting a million errors per core second with minimum-weight matching'
       publisher: Quantum
       date: '2025-01-20'
-      identifier: Quantum 9, 1600 (2025)
+      identifier: 'Quantum 9, 1600 (2025)'
       doi: 10.22331/q-2025-01-20-1600
       accessed: '2026-08-19'
       note: Higgott and Gidney (Google Quantum AI). Peer-reviewed. Mean 0.62 µs/round for d-17 surface code at 0.1% noise; 97.4% of shots decoded below 1 µs on a single CPU core. Open-source PyMatching v2.
@@ -50,7 +50,7 @@ evidence:
       title: A real-time, scalable, fast and resource-efficient decoder for a quantum computer
       publisher: Nature Electronics
       date: '2025-01-07'
-      identifier: Nat. Electron. 8, 84-91 (2025)
+      identifier: 'Nat. Electron. 8, 84-91 (2025)'
       doi: 10.1038/s41928-024-01319-5
       accessed: '2026-08-19'
       note: 'Barber et al. (Quantinuum/Riverlane). Peer-reviewed. Collision Clustering decoder: FPGA decodes 881-qubit surface code in 810 ns (>1 MHz) at 4.5% LUT usage; ASIC decodes 1,057-qubit surface code in 240 ns at 0.06 mm² and 8 mW. Preprint arXiv:2309.05558.'
@@ -59,7 +59,7 @@ evidence:
       title: Quantum error correction below the surface code threshold
       publisher: Nature
       date: '2025-01-01'
-      identifier: Nature 638, 920-926 (2025)
+      identifier: 'Nature 638, 920-926 (2025)'
       doi: 10.1038/s41586-024-08449-y
       accessed: '2026-08-11'
       note: 'Google Willow. Real-time decoding at distance-5: 63 µs average latency across one million cycles. Confirms real-time operation in a functioning below-threshold experiment.'
@@ -86,11 +86,12 @@ country:
   - US
   - UK
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
-  note: Focus run 2026-08-19. Added Sparse Blossom mean latency (0.62 µs/round, 97.4% below 1 µs) and Collision Clustering FPGA (810 ns, 881 qubits) and ASIC (240 ns, 1057 qubits) latency metrics from primary sources. Google Willow 63 µs at d=5 retained. Claim rewritten to include these specific figures. E4 held on peer-reviewed primary sources.
+  reviewedOn: '2026-08-19'
+  note: 'Steward review 2026-08-19. Sparse Blossom (Quantum 9, 1600) and Collision Clustering (Nature Electronics 8, 84-91) confirmed as peer-reviewed primaries sourced by the issue #145 sourcer run. Mean 0.62 µs/round at d=17, 97.4% below 1 µs, 810 ns FPGA (881 qubits), 240 ns ASIC (1057 qubits) all consistent with sourcer summary. Google Willow 63 µs at d=5 retained from prior reviewer pass. E4 correct. No corrections needed.'
 confidence: high
 status: published
 added: '2026-08-04'

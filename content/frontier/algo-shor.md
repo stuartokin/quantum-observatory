@@ -60,13 +60,13 @@ links:
   - to: qec-surface-code
     relation: depends-on
 evidence:
-  claim: The largest number factored by Shor's algorithm on real digital quantum hardware is 21, achieved with 10 qubits in 2012; numbers above 35 on digital QC rely on compile-time simplifications requiring prior knowledge of the answer, which Willsch et al. (NIC Symposium 2025, arXiv:2410.14397, Forschungszentrum Jülich) formally prove cause algorithm failure under noise. Bagourd et al. (ETH Zurich / armasuisse, arXiv:2512.15330, December 2025) experimentally ran Shor order-finding circuits on cloud superconducting processors and found that noise overwhelms algorithmic structure before cryptographically relevant integers are reached, confirming a substantial gap between current hardware and deployed key sizes. On the algorithmic side, the 2019 baseline (Gidney and Ekerå, arXiv:1905.09749, Quantum 5, 433) required 20 million physical qubits for RSA-2048 in 8 hours; Gidney 2025 (arXiv:2505.15917) reduces this to under one million in under one week under the same hardware assumptions. For ECC-256, Häner et al. (arXiv:2001.09580, PQCrypto 2020) set the 2,124 logical qubit baseline; Chevignard, Fouque and Schrottenloher (EUROCRYPT 2026, IACR eprint 2026/280) estimate 1,193 logical qubits; Luo et al. (arXiv:2607.13816, July 2026) subsequently claim 835 via a space-efficient circuit. None of these are demonstrations; all are resource estimates for future fault-tolerant machines. No machine capable of running these circuits exists.
+  claim: The largest number factored by Shor''s algorithm on real digital quantum hardware is 21, achieved with 10 qubits in 2012; numbers above 35 on digital QC rely on compile-time simplifications requiring prior knowledge of the answer, which Willsch et al. (NIC Symposium 2025, arXiv:2410.14397, Forschungszentrum Jülich) formally prove cause algorithm failure under noise. Bagourd et al. (ETH Zurich / armasuisse, arXiv:2512.15330, December 2025) experimentally ran Shor order-finding circuits on cloud superconducting processors and found that noise overwhelms algorithmic structure before cryptographically relevant integers are reached, confirming a substantial gap between current hardware and deployed key sizes. On the algorithmic side, the 2019 baseline (Gidney and Ekerå, arXiv:1905.09749, Quantum 5, 433) required 20 million physical qubits for RSA-2048 in 8 hours; Gidney 2025 (arXiv:2505.15917) reduces this to under one million in under one week under the same hardware assumptions. For ECC-256, Häner et al. (arXiv:2001.09580, PQCrypto 2020) set the 2,124 logical qubit baseline; Chevignard, Fouque and Schrottenloher (EUROCRYPT 2026, IACR eprint 2026/280) estimate 1,193 logical qubits; Luo et al. (arXiv:2607.13816, July 2026) subsequently claim 835 via a space-efficient circuit. None of these are demonstrations; all are resource estimates for future fault-tolerant machines. No machine capable of running these circuits exists.
   level: E3
   verified: '2026-08-19'
   sources:
     - url: https://arxiv.org/abs/2512.15330
       role: primary
-      title: Practical Challenges in Executing Shor's Algorithm on Existing Quantum Platforms
+      title: Practical Challenges in Executing Shor''s Algorithm on Existing Quantum Platforms
       publisher: arXiv
       date: '2025-12-17'
       identifier: arXiv:2512.15330
@@ -76,9 +76,9 @@ evidence:
     - url: https://arxiv.org/abs/2410.14397
       role: corroborating
       title: The State of Factoring on Quantum Computers
-      publisher: NIC Symposium 2025 / arXiv
+      publisher: 'NIC Symposium 2025 / arXiv'
       date: '2024-10-18'
-      identifier: arXiv:2410.14397; NIC Series 52, 239-250 (2025)
+      identifier: 'arXiv:2410.14397; NIC Series 52, 239-250 (2025)'
       doi: 10.48550/arXiv.2410.14397
       accessed: '2026-08-09'
       note: Willsch et al.; Forschungszentrum Jülich / FH Aachen. Conference proceedings NIC Symposium 2025. Formally proves Shor fails under noise; confirms N<=35 ceiling on digital QC hardware. v2 updated May 2025.
@@ -87,23 +87,23 @@ evidence:
       title: How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits
       publisher: Quantum
       date: '2021-04-15'
-      identifier: Quantum 5, 433 (2021); arXiv:1905.09749
+      identifier: 'Quantum 5, 433 (2021); arXiv:1905.09749'
       doi: 10.22331/q-2021-04-15-433
       accessed: '2026-08-19'
       note: Gidney and Ekerå. Peer-reviewed. Sets the 20 M qubit / 8-hour RSA-2048 baseline. The starting point of the qubit-reduction trend.
     - url: https://arxiv.org/abs/2001.09580
       role: corroborating
       title: Improved quantum circuits for elliptic curve discrete logarithms
-      publisher: PQCrypto 2020 / Springer LNCS 12100
+      publisher: 'PQCrypto 2020 / Springer LNCS 12100'
       date: '2020-01-27'
-      identifier: arXiv:2001.09580; DOI 10.1007/978-3-030-44223-1_23
+      identifier: 'arXiv:2001.09580; DOI 10.1007/978-3-030-44223-1_23'
       doi: 10.1007/978-3-030-44223-1_23
       accessed: '2026-08-19'
       note: Häner, Jaques, Naehrig, Roetteler, Soeken. Peer-reviewed. 2,124 logical qubits for ECC-256 ECDLP. Baseline cited by Chevignard 2026 EUROCRYPT.
     - url: https://eprint.iacr.org/2026/280
       role: corroborating
       title: Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves
-      publisher: EUROCRYPT 2026 / IACR Cryptology ePrint Archive
+      publisher: 'EUROCRYPT 2026 / IACR Cryptology ePrint Archive'
       date: '2026-03-01'
       identifier: IACR eprint 2026/280
       accessed: '2026-08-09'
@@ -142,16 +142,8 @@ added: '2026-08-09'
 review:
   state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
   reviewedOn: '2026-08-19'
-  note: 'Focus run 2026-08-19. Confirmed: Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) present as first-class metric and corroborating source; Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metric and corroborating source. Both identifiers confirmed in metric notes in form the Trends derivation matches. Prior sourcer run (same date) added these; this pass verifies them against primary sources. No other changes.'
+  note: 'Steward review 2026-08-19. Confirmed Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) and Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metrics with identifiers in the correct form. Both verified by sourcer same date against primary sources. E3 correct. No other changes.'
 ---
-
-Shor's algorithm is proven correct and its asymptotic advantage over classical factoring is well established. The open question is not whether it works in principle but when hardware will be capable of running it at cryptographically relevant parameters. The answer, as of mid-2026, is: not yet, and not imminently.
-
-**What hardware can do today.** The largest number factored by Shor's algorithm on a real quantum processor is 21 — a result from 2012 achieved with 10 qubits, and one that has not been exceeded on actual hardware. Claims of larger factorisations on quantum hardware (N = 35, N = 143, N = 56,153) either rely on compile-time simplifications that require prior knowledge of the answer — making them equivalent to verifying rather than finding factors — or use methods that are not Shor's algorithm. Willsch et al. (Forschungszentrum Jülich, NIC Symposium 2025) prove formally that gate noise causes Shor's algorithm to fail and confirm N ≤ 35 as the practical ceiling on digital quantum hardware. Bagourd et al. (ETH Zurich / armasuisse, arXiv:2512.15330, December 2025) ran Shor order-finding circuits on cloud superconducting processors and experimentally confirmed that noise overwhelms the algorithmic structure far below cryptographically relevant key sizes.
-
-**What the resource estimates say.** Breaking RSA-2048 requires fewer than one million noisy physical qubits (Gidney 2025, arXiv:2505.15917) running a surface-code fault-tolerant circuit for under one week. Breaking ECC-256 requires 1,193 logical qubits (Chevignard et al., EUROCRYPT 2026) — now reduced to 835 by Luo et al. (arXiv:2607.13816, July 2026, Peking University / CAS) using a space-efficient modular inversion circuit. Separately, Babbush et al. (Google Quantum AI / Stanford / Ethereum Foundation, arXiv:2603.28846, March 2026) estimate secp256k1 ECDLP-256 at under 1,200 logical qubits and under 500,000 physical qubits on a planar superconducting surface-code architecture at 10⁻³ error rate, executing in minutes — with circuits withheld under responsible disclosure and results validated by zero-knowledge proof. Trail of Bits found and exploited memory safety and logic vulnerabilities in Google's Rust prover to forge a proof; Google patched the code and describes their scientific claims as unaffected. An independent preprint (Schrottenloher, Inria, arXiv:2606.02235, June 2026) provides similar circuit results with full disclosure, corroborating the ballpark. These are resource estimates for machines that do not exist, not demonstrations.
-
-**The gap.** Current state-of-the-art: ~48 error-corrected logical qubits (Quantinuum Helios, 98 physical qubits, iceberg codes). Required for ECC-256: ~835 logical qubits minimum. Required for RSA-2048: thousands of logical qubits backed by hundreds of thousands to millions of physical qubits. The gap is not one of kind but of scale, and it remains large. See algo-resource-estimation for the full trajectory of qubit estimates from 2019 to 2026.

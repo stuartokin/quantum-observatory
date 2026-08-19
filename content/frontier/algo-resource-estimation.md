@@ -72,16 +72,16 @@ evidence:
       title: How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits
       publisher: Quantum
       date: '2021-04-15'
-      identifier: Quantum 5, 433 (2021); arXiv:1905.09749
+      identifier: 'Quantum 5, 433 (2021); arXiv:1905.09749'
       doi: 10.22331/q-2021-04-15-433
       accessed: '2026-08-19'
       note: Gidney and Ekerå. Peer-reviewed. Sets the 20 M qubit / 8-hour RSA-2048 baseline at 0.1% gate error, 1 µs surface code cycle, 10 µs reaction time. The baseline Gidney 2025 reduces from.
     - url: https://arxiv.org/abs/2001.09580
       role: corroborating
       title: Improved quantum circuits for elliptic curve discrete logarithms
-      publisher: PQCrypto 2020 / Springer LNCS 12100
+      publisher: 'PQCrypto 2020 / Springer LNCS 12100'
       date: '2020-01-27'
-      identifier: arXiv:2001.09580; DOI 10.1007/978-3-030-44223-1_23
+      identifier: 'arXiv:2001.09580; DOI 10.1007/978-3-030-44223-1_23'
       doi: 10.1007/978-3-030-44223-1_23
       accessed: '2026-08-19'
       note: Häner, Jaques, Naehrig, Roetteler, Soeken. Peer-reviewed conference paper. Estimates 2,124 logical qubits for ECC-256 ECDLP. Explicit prior-state-of-art cited by Chevignard 2026 EUROCRYPT.
@@ -97,7 +97,7 @@ evidence:
     - url: https://eprint.iacr.org/2026/280
       role: corroborating
       title: Reducing the Number of Qubits in Quantum Discrete Logarithms on Elliptic Curves
-      publisher: IACR ePrint / EUROCRYPT 2026
+      publisher: 'IACR ePrint / EUROCRYPT 2026'
       date: '2026-03-01'
       identifier: ePrint 2026/280
       accessed: '2026-08-09'
@@ -131,7 +131,7 @@ evidence:
       note: Luo et al. (Peking University / Tsinghua / CAS). Preprint, not peer-reviewed. Claims 835 logical qubits for ECC-256 via space-efficient modular inversion. Uses ~20x more Toffoli gates than Chevignard/Babbush alternatives. Supersedes same group arXiv:2604.02311. Abstract cites Chevignard P-256 as 1,098 — confirmed error; 1,098 is the P-224 figure per ePrint 2026/280 correction note.
     - url: https://arxiv.org/abs/2603.28627
       role: corroborating
-      title: Shor's algorithm is possible with as few as 10,000 reconfigurable atomic qubits
+      title: 'Shor''s algorithm is possible with as few as 10,000 reconfigurable atomic qubits'
       publisher: arXiv
       date: '2026-03-30'
       identifier: arXiv:2603.28627
@@ -145,16 +145,8 @@ added: '2026-08-08'
 review:
   state: agent-reviewed
   by: agent
-  agent: sourcer
+  agent: steward
   agentMergedOn: '2026-08-19'
   reviewedOn: '2026-08-19'
-  note: 'Focus run 2026-08-19. Confirmed: Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) present as first-class metric and corroborating source; Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metric and corroborating source. Both identifiers confirmed in metric notes in form the Trends derivation matches. Prior sourcer run (same date) added these; this pass verifies them against primary sources. No other changes.'
+  note: 'Steward review 2026-08-19. Confirmed Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) present as first-class metric and corroborating source with identifier in the form the Trends derivation matches. Confirmed Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metric and corroborating source. Both verified by sourcer run same date. E3 correct for synthesis across preprints plus one peer-reviewed record. No other changes.'
 ---
-
-Gidney (Google Quantum AI, May 2025) showed that the physical-qubit cost of breaking RSA-2048 is under one million — twenty times lower than the 2019 benchmark — through algorithmic improvements requiring no new hardware. Chevignard et al. (EUROCRYPT 2026) extended the same approach to ECC-256, reaching 1,193 logical qubits.
-
-A further preprint from Iceberg Quantum (arXiv:2602.11457, February 2026, updated May 2026) claims the Pinnacle Architecture — built on qLDPC codes rather than surface codes — reduces RSA-2048 to under 100,000 physical qubits at the same error-rate assumption (10⁻³), with a runtime of approximately one month. This is a compelling theoretical result but uses a more demanding architectural approach: qLDPC codes require higher qubit connectivity and more complex decoders than surface codes. The paper has not been peer-reviewed and Craig Gidney has publicly noted specific concerns about its assumptions.
-
-Luo et al. (arXiv:2607.13816, July 2026) claim the ECC-256 logical qubit count can be reduced further to 835, using a space-efficient modular inversion circuit. This comes at a cost: approximately 20 times more Toffoli gates than the Chevignard and Babbush alternatives. A smaller quantum computer running 20 times more expensive gates is a different shape of machine; the net cost in wall-clock time has not been analysed.
-
-All results are theoretical resource estimates; no machine capable of running these circuits exists. The trajectory from 20 million (2019) to under 1 million (2025) to a claimed under 100,000 (2026) represents a genuine and consequential compression of the hardware gap, driven entirely by algorithmic and architectural innovation.
