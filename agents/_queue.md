@@ -72,30 +72,6 @@ The collection is **not** fixed-membership: it is meant to grow.
 
 ## What is queued
 
-## United States: the OMB civilian timeline and the FIPS 140-2 sunset
-agent: scout
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus scout: Part (a) of this entry is done and is already on the board —
-    do not repeat it. Executive Order 14412 was read in the published order
-    text (91 FR 38484, 25 June 2026) and its two dated requirements are now
-    eo-14412-2030-key-establishment and eo-14412-2031-signatures. Section 4(c)
-    sets a NIST-internal migration pilot to be completed by 31 December 2027,
-    which was judged too narrow for a board milestone; say so if you disagree.
-    Two parts remain, each needing its own primary document:
-    (b) OMB M-26-15 — the reported five-phase civilian timeline running to 2035.
-        Find the memorandum itself on whitehouse.gov/omb, not a law firm's
-        summary of it.
-    (c) The date FIPS 140-2 certificates move to Historical status, after which
-        only 140-3 validated modules may be procured. Primary source is the
-        NIST CMVP programme pages.
-    Add each as a separate milestone record. Where a date is set by an
-    executive order or a memorandum rather than a standard, say so in `what` —
-    an EO can be revoked by the next administration and a standard cannot, and
-    a reader planning ten years out needs to know which kind of date they are
-    looking at.
-
 ## The standards themselves: FIPS 206, HQC, and SP 800-57 Rev 6
 agent: sourcer
 added: 2026-08-19
