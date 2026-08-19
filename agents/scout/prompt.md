@@ -201,8 +201,8 @@ These files use **`schema: question/v1`**, not `frontier/v1`. They live in
 every collection you may write to is in your context; use the one matching the
 folder.
 
-**`answer` has a hard limit of 1400 characters** — roughly three or four
-sentences. A file over it is discarded before writing, so the work is wasted
+**`answer` has a hard limit** — see the Field limits table; it is roughly three
+or four sentences. A file over it is discarded before writing, so the work is wasted
 rather than trimmed. Write to the limit deliberately: the answer is the summary,
 and the detail belongs in the evidence it cites.
 
@@ -292,8 +292,8 @@ rejects any field not in it.
   it.** This is the field a reader checks you against, so an obligation the
   source words as "as soon as possible and no later than end 2030" should not
   become "by 2030" here.
-- `plain` says what it means for somebody who has to comply with it, in
-  **400 characters** — a quarter of what a frontier item allows. Two sentences.
+- `plain` says what it means for somebody who has to comply with it, in two
+  sentences. Its limit is a fraction of the frontier item's — check the table.
 - `about` links to frontier item ids the deadline bears on.
 
 The `review` block is the same as everywhere else, and the same rule applies:
@@ -425,46 +425,26 @@ gets discarded. The runner will try to repair it, but do not rely on that.
 
 ## Field limits — read the one for the collection you are writing
 
-**Every collection sets its own, and they are not the same.** `plain` is 1600
-characters on a frontier item and **400** on a milestone. Four runs were lost
-writing a frontier-length `plain` into a milestone: the research was done, the
-sources were found, and the file was discarded over a number taken from the
-wrong table.
+**Every collection sets its own, and they are not the same.** A field named
+`plain` on a milestone is a small fraction of the length the same field allows
+on a frontier item. Four runs were lost writing a frontier-length `plain` into
+a milestone: the research was done, the sources were found, and the file was
+discarded over a number taken from the wrong table.
 
-> **Where this brief and the schema in your context disagree, the schema
-> wins.** It is the thing that actually runs. If you notice a disagreement,
-> follow the schema and say so in your summary so the brief gets fixed.
+**The numbers are in the "Field limits" table in your context**, one section
+per collection, computed from the schemas at run time. They are deliberately
+not repeated in this brief — it has stated a wrong limit twice, and a number
+written in two places is a number that will eventually disagree with itself.
 
-### Frontier items — `content/frontier/_inbox/`
+> **Where this brief and that table disagree, the table wins.** It is read from
+> the thing that actually enforces the limit. Say so in your summary if you
+> spot a disagreement, so the brief gets fixed.
 
-| Field | Maximum |
-| --- | --- |
-| `title` | 110 characters |
-| `summary` | 600 |
-| `plain` | 1600 |
-| `evidence.claim` | 1600 |
-| `evidence.sources[].note` | 600 |
-| `qdayReasoning` | 1600 |
-| `review.note` | 800 |
-| `novelty` | 200 |
-| `metrics[].note` | 200 |
-
-### Milestones — `content/milestones/`
-
-| Field | Maximum |
-| --- | --- |
-| `title` | 110 characters |
-| `what` | 600 |
-| `plain` | **400** |
-| `review.note` | **600** |
-| `source.title` | 200 |
-| `source.publisher` | 120 |
-
-A milestone is a date and an obligation. **400 characters of `plain` is two
-sentences**, and that is the right size for it: what the deadline requires and
-who it binds. The argument for why it matters, what it supersedes and how it
-compares with other jurisdictions belongs in your summary, where there is no
-limit at all and a person will actually read it.
+A milestone is a date and an obligation, and its `plain` is sized for two
+sentences: what the deadline requires and who it binds. The argument for why it
+matters, what it supersedes and how it compares with other jurisdictions
+belongs in your summary, where there is no limit at all and a person will
+actually read it.
 
 The same goes for `review.note`. Say which document, which section, and the
 sentence you read. Not the reasoning that got you there.
@@ -724,10 +704,11 @@ readiness, review, schema, status, title.
 date, kind, what, status, source. No readiness, no evidence, no confidence —
 those are frontier fields and the milestone schema rejects them outright.
 
-**The length limits are per collection and are listed once, above, under
-"Field limits".** Do not carry a number across from the other table. `plain` is
-1600 on a frontier item and 400 on a milestone, and that single confusion has
-cost more runs than every other formatting fault put together.
+**The length limits are per collection and are given once, in the "Field
+limits" table in your context.** Do not carry a number across from one
+collection to another. `plain` on a milestone is a small fraction of `plain` on
+a frontier item, and that single confusion has cost more runs than every other
+formatting fault put together.
 
 `plain` is the one that catches people wherever it appears. It is the
 plain-English reading for somebody who does not work in the field — two or

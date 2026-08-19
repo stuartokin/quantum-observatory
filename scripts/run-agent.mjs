@@ -24,6 +24,8 @@ import {
   schemaForPath,
   schemaConstFor,
   collectionsFor,
+  limitsFor,
+  limitsTable,
   applyFields,
   collectionDirFor,
 } from './agent-io.mjs'
@@ -200,16 +202,20 @@ function fullItems() {
  * write to.
  */
 function tightFields() {
-  const LIMITS = {
-    title: 110,
-    summary: 600,
-    plain: 1600,
-    qdayReasoning: 1600,
-    novelty: 200,
-    'evidence.claim': 1600,
-    'review.note': 800,
-    'sources[].note': 600,
-  }
+  /**
+   * Read from the frontier schema, not typed here.
+   *
+   * This map was the fourth hand-written copy of limits that the schemas
+   * already state, and the other three each destroyed a run when they drifted.
+   * A copy that only feeds a warning is the most dangerous kind: it goes wrong
+   * silently, and the warning it stops giving is the one that would have
+   * caught the drift.
+   */
+  const LIMITS = Object.fromEntries(
+    limitsFor('content/schema/frontier.schema.json')
+      .filter(([, lim]) => lim.endsWith('characters'))
+      .map(([field, lim]) => [field, Number.parseInt(lim, 10)]),
+  )
   const HEADROOM = 150
 
   const rows = []
@@ -228,17 +234,18 @@ function tightFields() {
       scalar(k, LIMITS[k])
     }
 
-    const claim = raw.match(/^  claim: '((?:[^']|'')*)'/m)
-    if (claim && 1600 - claim[1].length < HEADROOM) {
-      tight.push(`evidence.claim ${claim[1].length}/1600`)
+    const nested = (re, field, label = field) => {
+      const limit = LIMITS[field]
+      if (!limit) return
+      for (const [i, m] of [...raw.matchAll(re)].entries()) {
+        if (limit - m[1].length < HEADROOM) {
+          tight.push(`${label.replace('[]', `[${i}]`)} ${m[1].length}/${limit}`)
+        }
+      }
     }
-    const note = raw.match(/^  note: '((?:[^']|'')*)'/m)
-    if (note && 800 - note[1].length < HEADROOM) {
-      tight.push(`review.note ${note[1].length}/800`)
-    }
-    for (const [i, n] of [...raw.matchAll(/^      note: '((?:[^']|'')*)'/gm)].entries()) {
-      if (600 - n[1].length < HEADROOM) tight.push(`sources[${i}].note ${n[1].length}/600`)
-    }
+    nested(/^  claim: '((?:[^']|'')*)'/gm, 'evidence.claim')
+    nested(/^  note: '((?:[^']|'')*)'/gm, 'review.note')
+    nested(/^      note: '((?:[^']|'')*)'/gm, 'evidence.sources[].note', 'sources[].note')
 
     if (tight.length) rows.push(`${id} — ${tight.join(', ')}`)
   }
@@ -376,6 +383,20 @@ const writesNews = writable.some((c) => c.name === 'news')
 const schema = schemas
   .map((c) => `## ${c.name} — for files under content/${c.name}/\n\n\`\`\`json\n${readFileSync(c.schema, 'utf8')}\n\`\`\``)
   .join('\n\n')
+/**
+ * The limits, pulled out of those schemas and shown as a table.
+ *
+ * They are already in the JSON above, and being in the JSON above has not been
+ * enough: they sit on the fifth line of the third nested object, and an agent
+ * reading a brief that states a number believes the brief. Three runs died
+ * that way — a milestone `plain` written to the frontier's 1600, and a
+ * measurement `qualifier` written to 94 against a limit of 60 that no prompt
+ * mentioned.
+ *
+ * So they are computed, never typed. A prompt that restates one of these
+ * numbers is a prompt that will eventually contradict the thing enforcing it.
+ */
+const limits = limitsTable(schemas)
 const priorNews = writesNews ? existingNews() : []
 const scales = readFileSync('content/frontier/_scales.json', 'utf8')
 // Shared across every agent, so changing it changes all four at once.
@@ -463,6 +484,20 @@ ${items.map((i) => `- ${i.id} | ${i.constellation} | ${i.readiness} | ${i.level}
 \`\`\`json
 ${schema}
 \`\`\`
+
+# Field limits — these exact numbers, read from the schemas above
+
+**A file that exceeds one of these is discarded before it is written, and the
+whole run can be lost with it.** These are computed from the schemas at run
+time, so they are correct even where your brief is not: **if your brief states
+a different number, this table wins and the brief is wrong.** Say so in your
+summary if you spot one.
+
+They differ by collection. \`plain\` is not the same length everywhere. Count
+your two or three longest fields before you return — including fields inside
+arrays, which is where every overrun so far has happened.
+
+${limits}
 
 # Readiness definitions
 

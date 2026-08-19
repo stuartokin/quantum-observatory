@@ -293,6 +293,44 @@ slip from a misunderstanding — and it was a misunderstanding every time.
 
 ---
 
+## Limits are computed now. Never type one into a prompt.
+
+**0.54.4.** Three runs were destroyed by an agent being told a length limit
+that the schema did not agree with, and each time the fix was to hand-edit a
+table in a prompt — which is the same mistake with a longer fuse.
+
+The runner now derives a **Field limits** table from the schemas an agent may
+write against, walks nested objects and array items, and puts it in the prompt
+next to the schemas themselves. `limitsFor()` and `limitsTable()` are in
+`agent-io.mjs`. `tightFields()` — the fourth hand-written copy, feeding the
+"which items are nearly full" warning — reads from the same place.
+
+**No prompt may restate one of these numbers.** Scout's brief had two tables in
+it as of 0.54.2; both are gone, replaced by a pointer and a line saying the
+computed table wins. The counts that caused this:
+
+- `plain` is 1600 on a frontier item and 400 on a milestone. Scout was shown
+  one table headed by nothing. Four files lost.
+- `measurements[].qualifier` is 60. The newsroom prompt had **no section on
+  measurements at all** — the field was added to the schema in 0.52.0 and the
+  brief never gained a word about it — so the agent worked from raw JSON and
+  wrote 94. Two files lost.
+
+The general rule this leaves: **a schema change is not finished until every
+agent that writes that collection has been told what changed.** The write
+scope, the runner's stamping, the growth rule and the brief are four separate
+things, and 0.54.0–0.54.4 is what it costs to learn that one at a time.
+
+### While you are here: `qualifier` is a grouping key
+
+It is short because measurements group only when qualifiers match exactly,
+character for character. A 94-character qualifier describing the apparatus is
+unique to one record and therefore groups with nothing, which defeats the only
+reason the field exists. The apparatus goes in `note`. The newsroom brief now
+has a section saying so with examples of both.
+
+---
+
 ## The JSON repair, and the line it will not cross
 
 **0.54.3.** `extractJson` repairs exactly two things and refuses to repair a

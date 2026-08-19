@@ -216,6 +216,65 @@ headlines from 2025" is a mood.
 Twelve runs of a month each will find several times what one run of a year does,
 and each is cheap.
 
+## Measurements — the board's only memory
+
+A news item may carry `measurements[]`: the figures the event reported,
+structured so they can be plotted. **This is the only accumulating record on
+the board.** A frontier item holds the *current best* value and overwrites its
+own history when an agent patches it; a news item is dated by when the thing
+happened and is never revised. So a hundred dated news items are a hundred
+points on a curve, and the frontier is a snapshot.
+
+Record only a figure the item's own sources state. **This is transcription, not
+inference.** Do not convert, scale, combine or estimate. If the paper gives a
+fidelity and you would have to compute an error rate from it, record the
+fidelity.
+
+### `qualifier` is a grouping key, not a description
+
+This is the field that fails runs, and always for the same reason: it reads
+like a place to explain the measurement, and it is not.
+
+Two measurements are only ever compared when their qualifiers match **exactly,
+character for character**. That is what makes it possible to say that Caltech's
+6,100 atoms *trapped in a tweezer array* and QuEra's 448 *operated below
+threshold* are not points on one line — grouped naively they show capability
+falling by an order of magnitude.
+
+So write the shortest phrase that names the condition, and reuse a phrase
+already on the board wherever the condition is the same:
+
+```yaml
+qualifier: 'error-corrected'
+qualifier: 'error-detected'
+qualifier: 'trapped in tweezer array, not error-corrected'
+qualifier: 'operated below threshold'
+```
+
+Not:
+
+```yaml
+# too long, and unique to this one record — it will group with nothing
+qualifier: 'measured on a 105-qubit device after the calibration routine described in the supplement'
+```
+
+**A qualifier that no other measurement will ever match is a qualifier that
+does no work.** If the detail matters, it goes in `note`, which is five times
+longer and which nothing groups on.
+
+### The rest of the block
+
+- `kind` and `modality` are closed lists. If what you have does not fit one,
+  the measurement does not belong here — say so in your summary.
+- `modality` is required for anything to be plotted: counts on different
+  platforms are not points on one curve.
+- `crossChecks` is the id of a frontier item whose verified metrics carry the
+  same figure, where one does. A measurement that agrees with something the
+  board has already checked is stronger than one standing alone.
+- Every length limit for these fields is in the **Field limits** table in your
+  context, computed from the schema. Check the ones inside `measurements[]`
+  before you return — that is where every overrun so far has happened.
+
 ## Volume
 
 **Twelve items maximum per run, and twelve is the target for a backfill month,

@@ -11,6 +11,8 @@ import {
   normaliseFile,
   extractJson,
   explainJsonFailure,
+  limitsFor,
+  limitsTable,
   balancedObjects,
   schemaForPath,
   schemaConstFor,
@@ -250,6 +252,30 @@ t('an overflowing field is rejected by the same schema a full file always used',
 
 const unknownCheck = checkFile(applyFields(doc2, { notARealField: 'nope' }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
 t('a field name outside the schema is rejected before anything is written', unknownCheck.ok === false)
+
+/**
+ * The limits an agent is shown are the limits that are enforced.
+ *
+ * Three runs died to a hand-written table that disagreed with a schema, and
+ * the fix each time was to edit the table — which is the same mistake with a
+ * longer fuse. These assert the table is derived, and in particular that it
+ * reaches inside arrays, where every overrun so far has actually happened.
+ */
+const newsLimits = Object.fromEntries(limitsFor('content/schema/news.schema.json'))
+t('a nested array-item limit is found', newsLimits['measurements[].qualifier'] === '60 characters')
+t('  and its siblings', newsLimits['measurements[].note'] === '300 characters')
+t('an array cap is found too', newsLimits['measurements'] === '8 items')
+t('a limit inside a nested object is found', Object.fromEntries(limitsFor('content/schema/milestone.schema.json'))['source.publisher'] === '120 characters')
+
+// The one that actually caused it: same field name, different limit, and the
+// agent was shown a table headed by nothing.
+const plainOn = (s) => Object.fromEntries(limitsFor(`content/schema/${s}.schema.json`)).plain
+t('`plain` differs by collection, which is the whole reason for this', plainOn('frontier') !== plainOn('milestone'))
+
+for (const c of COLLECTIONS) {
+  const table = limitsTable([c])
+  t(`${c.name} renders a limits table with its own heading`, table.includes(`## ${c.name}`))
+}
 
 /**
  * The JSON a model actually writes, rather than the JSON a spec describes.

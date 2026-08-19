@@ -24,6 +24,17 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.54.4',
+    date: '2026-08-19',
+    headline: 'The limits an agent is told are now the limits that are enforced.',
+    agents: [
+      'Three runs have been destroyed by an agent being given a field limit its schema did not agree with, and each time the fix was to hand-edit a table in a brief — the same mistake with a longer fuse. The limits are now computed from the schemas at run time, walked into nested objects and array items, and put in front of every agent next to the schema itself. No brief restates one; the two that did have had them removed.',
+      'The newsroom had never been told about measurements at all. The field was added to the schema eight releases ago and its brief never gained a word about it, so the agent worked from raw JSON and wrote a 94-character qualifier against a limit of 60. It now has a section on what the block is for and, more usefully, why the one field that keeps failing is short.',
+      'That field, `qualifier`, is a grouping key rather than a description. Two measurements are only compared when their qualifiers match exactly, so a long one describing the apparatus is unique to its own record and groups with nothing — which defeats the only reason it exists. Caltech’s 6,100 atoms trapped in a tweezer array and QuEra’s 448 operated below threshold are not the same measurement, and saying so is the whole job.',
+      'The rule left behind: a schema change is not finished until every agent that writes that collection has been told what changed. The write scope, the stamping, the growth rule and the brief are four separate things.',
+    ],
+  },
+  {
     version: '0.54.3',
     date: '2026-08-19',
     headline: 'A character that could not be spelled stops costing a whole run.',
@@ -178,24 +189,6 @@ export const RELEASES: Release[] = [
     agents: [
       'Nothing about how an agent writes content changed. The same markdown, the same schemas, the same gates — only where the parsed result is delivered.',
       'The performance budget now measures what a visitor actually waits for, split into code, documents, board data and headlines, and it reports the before-first-paint total as one figure. The new ceilings were measured from this build rather than estimated, and they are deliberately tight enough to fail when the Q-Day datasets arrive: that failure is the point, and the first answer to it is deferring headlines out of the initial fetch rather than moving a number.',
-    ],
-  },
-  {
-    version: '0.48.11',
-    date: '2026-08-18',
-    headline: 'A full review of the codebase, and the zoom floor finally means what it says.',
-    ui: [
-      'Zooming out on the galaxy hit a hardcoded floor of 0.5 rather than the fit-to-frame value the board already computes for exactly this purpose. On a fully spread board that value can sit well under 0.5, so part of it could end up permanently off-screen with nothing to reach it — the wheel and pinch handlers now clamp to the real floor.',
-      "A headline's position on the timeline was computed to the month and then thrown away: yearFraction took a fractional year but built its date with `new Date(year, 0, 1)`, which truncates a non-integer year argument to 1 January. Every headline in the same calendar year rendered stacked at the same point regardless of which month it happened. Fixed by interpolating between the year's start and the next year's start.",
-      'Draft items could render live in two places: the news loader excluded archived and rejected items but never checked for `published`, and the "most changed constellation" panel queried every status rather than the published-only set the rest of the board reads from.',
-      'An unrecognised readiness value silently drew as "emerging" with nothing to say so happened. Now warns once rather than misplacing an item quietly.',
-    ],
-    agents: [
-      'A patch touching one field of a block that also held an unquoted date could silently rewrite that date as an ISO timestamp instead of leaving it as the plain string the schema expects — applyFields never normalised the types YAML hands back, unlike every other parser in this pipeline. Fixed, and covered by a regression test.',
-      'Patch output was still being run through the whole-file colon-quoting repair pass built for a model\'s from-scratch text, which could requote a scalar in a block the patch never touched — undermining, one layer up, the "untouched bytes survive" guarantee the patch mechanism exists to provide. Patch output now skips that pass.',
-      "content/forecasts/ had no schema and no validation gate anywhere, and the loader destructured `estimates` with no guard — a malformed hand-edit to the Q-Day file would have crashed the whole app to the error screen. Added content/schema/forecast.schema.json, wired it into validate-content.mjs, and the loader now skips a malformed forecast rather than crashing.",
-      'A dotted path addressing into an array — `evidence.sources.role`, which was never supported — silently overwrote the whole array with `{}` while building the path. Refused now, with a clear reason, instead of destroying it.',
-      "The review field's TypeScript type had drifted from the schema (optional in code, required by the schema) and isSourced read evidence.claim with no guard. Both fixed so a bypassed gate fails safe rather than surprising.",
     ],
   },
 ]

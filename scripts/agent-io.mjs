@@ -315,6 +315,57 @@ export function schemaForPath(path) {
 }
 
 /**
+ * EVERY LENGTH LIMIT IN A SCHEMA, AS A TABLE, COMPUTED.
+ *
+ * Three runs were destroyed by a limit an agent had been told wrongly, and
+ * each time the fix was to hand-edit a table in a prompt — which is the same
+ * mistake with a longer fuse, because the next schema change makes the new
+ * table wrong too. The counts are:
+ *
+ *   - `plain` is 1600 on a frontier item and 400 on a milestone. Scout was
+ *     shown one table headed by nothing and wrote the frontier length into a
+ *     milestone, four times.
+ *   - `measurements[].qualifier` is 60. The newsroom was shown no number at
+ *     all and wrote 94.
+ *
+ * The schema is the only thing that actually enforces these, so it is the only
+ * honest place to read them from. Nested objects and array items are walked,
+ * because that is exactly where the ones that bite are — nobody overruns
+ * `title`; they overrun the fifth field of the third element of an array.
+ *
+ * Prompts must not restate these numbers. Point at this table instead.
+ */
+export function limitsFor(schemaPath) {
+  const rows = []
+  const walk = (node, path) => {
+    if (!node || typeof node !== 'object') return
+    if (typeof node.maxLength === 'number') rows.push([path, `${node.maxLength} characters`])
+    if (typeof node.maxItems === 'number') rows.push([path, `${node.maxItems} items`])
+    if (node.properties) for (const [k, v] of Object.entries(node.properties)) walk(v, path ? `${path}.${k}` : k)
+    if (node.items) walk(node.items, `${path}[]`)
+  }
+  walk(JSON.parse(readFileSync(schemaPath, 'utf8')), '')
+  return rows
+}
+
+/** The same, rendered for a prompt: one markdown table per collection. */
+export function limitsTable(collections) {
+  return collections
+    .map((c) => {
+      const rows = limitsFor(c.schema)
+      if (!rows.length) return `## ${c.name} — no length limits`
+      return [
+        `## ${c.name} — for files under content/${c.name}/`,
+        '',
+        '| Field | Maximum |',
+        '| --- | --- |',
+        ...rows.map(([f, lim]) => `| \`${f}\` | ${lim} |`),
+      ].join('\n')
+    })
+    .join('\n\n')
+}
+
+/**
  * The value a file's own `schema:` field must carry, for the collection its
  * path puts it in — `milestone/v1`, `question/v1`, and so on.
  *
