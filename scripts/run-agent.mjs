@@ -19,6 +19,7 @@ import { execSync } from 'node:child_process'
 import {
   extractJson,
   explainJsonFailure,
+  trimReply,
   normaliseFile,
   checkFile,
   schemaForPath,
@@ -803,6 +804,41 @@ async function callModel(attempt = 1) {
   return { blocks, stopReason, searches }
 }
 
+/**
+ * One short, tool-less call. Used by the trim pass and nothing else.
+ *
+ * Deliberately not `callModel`: there is no research to do here, no search
+ * budget to spend, and a streamed response would be more machinery than a
+ * two-line answer needs. Returns null rather than exiting on failure — a trim
+ * that cannot happen leaves the original rejection standing, which is the
+ * behaviour that existed before this and is a safe floor.
+ */
+async function callOnce(text, tokens = 2000) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: cfg.model,
+        max_tokens: tokens,
+        messages: [{ role: 'user', content: text }],
+      }),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return (data.content ?? [])
+      .filter((b) => b.type === 'text')
+      .map((b) => b.text)
+      .join('')
+  } catch {
+    return null
+  }
+}
+
 const { blocks, stopReason, searches } = await callModel()
 console.log(`\n  ${searches} search(es), ${blocks.length} text block(s)`)
 
@@ -1074,13 +1110,101 @@ for (const f of files) {
   }
 
   if (!check.ok) {
-    rejected.push({ path: f.path, reason: check.reason, head: content.slice(0, 240) })
+    rejected.push({
+      path: f.path,
+      reason: check.reason,
+      head: content.slice(0, 240),
+      // Kept so the trim pass below has something to work on.
+      content,
+      overflows: check.overflows ?? [],
+    })
     continue
   }
 
   mkdirSync(dirname(f.path), { recursive: true })
   writeFileSync(f.path, content)
   written.push(f.path)
+}
+
+/**
+ * THE TRIM PASS.
+ *
+ * An agent cannot count characters, and after three attempts to teach it the
+ * numbers — a table per collection, then the numbers computed from the schemas
+ * and put in front of it — it still wrote 713 characters into a 600-character
+ * field. That is not a comprehension failure and no further wording will fix
+ * it. Counting is the machine's job.
+ *
+ * So: where a file failed **only** on length, the model is asked once to
+ * shorten exactly those fields to fit, and nothing else. It is given the
+ * field, its limit, and its own text.
+ *
+ * Three things keep this honest.
+ *
+ * 1. **It only ever removes.** The instruction is to cut words, never to add
+ *    a fact, and the result is validated by the same schema as everything
+ *    else. A shortened claim that no longer matches its source is a real risk
+ *    and the reason the quoted wording is protected explicitly below.
+ * 2. **It runs only on a pure length failure.** A file with a bad enum, a
+ *    missing field or an unknown key is rejected as before; those need
+ *    judgement about meaning, and meaning is what an automatic edit must not
+ *    touch.
+ * 3. **It says it happened.** A trimmed field is reported in the run log and
+ *    in the pull request body, so a reviewer knows which prose is the agent's
+ *    and which is the agent's, cut down.
+ *
+ * Fields inside arrays are excluded: `applyFields` has no per-element merge
+ * verb, deliberately, and inventing one here to save a trim would be a much
+ * larger change than the problem deserves.
+ */
+const trimmed = []
+const trimmable = rejected.filter(
+  (r) => r.overflows?.length && r.overflows.every((o) => !/(^|\.)\d+(\.|$)/.test(o.field)),
+)
+if (trimmable.length) {
+  console.log(`\n  ${trimmable.length} file(s) failed only on length. Asking for a shorter version.`)
+  for (const r of trimmable) {
+    const asks = r.overflows
+      .map((o) => `- \`${o.field}\`: currently ${o.actual} characters, must be ${o.limit} or fewer`)
+      .join('\n')
+    const reply = await callOnce(
+      `You wrote this file and it was rejected for length alone. Nothing else about it is wrong.\n\n` +
+        `Shorten these fields so each fits its limit:\n\n${asks}\n\n` +
+        `Rules:\n` +
+        `- Remove words. Never add a fact, a number, a date or a source that is not already in the text.\n` +
+        `- Keep any wording quoted from a source exactly as it is. Cut your own explanation first.\n` +
+        `- Keep the meaning. A field that no longer says what the source says is worse than a rejected file.\n` +
+        `- Do not touch any other field.\n\n` +
+        `Reply with one JSON object and nothing else, mapping each field above to its new value:\n` +
+        `{"${r.overflows[0].field}": "…"}\n\n` +
+        `The file:\n\n${r.content}`,
+    )
+    const fields = reply && trimReply(reply, r.overflows)
+    if (!fields) {
+      r.reason += ' — a shorter version was requested and did not come back usable'
+      continue
+    }
+    let next
+    try {
+      next = applyFields(r.content, fields)
+    } catch (e) {
+      r.reason += ` — could not apply the shortened fields: ${e.message}`
+      continue
+    }
+    const recheck = checkFile(next, schemaForPath(r.path))
+    if (!recheck.ok) {
+      r.reason += ` — the shortened version was still rejected: ${recheck.reason}`
+      continue
+    }
+    mkdirSync(dirname(r.path), { recursive: true })
+    writeFileSync(r.path, next)
+    written.push(r.path)
+    trimmed.push(`${r.path} — ${r.overflows.map((o) => `${o.field} ${o.actual}→${o.limit}`).join(', ')}`)
+    rejected.splice(rejected.indexOf(r), 1)
+  }
+  if (trimmed.length) {
+    console.log(`  trimmed to fit and written:\n${trimmed.map((x) => `    ${x}`).join('\n')}`)
+  }
 }
 
 if (rejected.length) {
@@ -1216,6 +1340,17 @@ const pr = [
   '',
   `## Files (${written.length})`,
   ...written.map((p) => `- \`${p}\``),
+  // A trimmed field is still the agent's words, but not the words it first
+  // chose, and a reviewer reading the file has no way to tell. Say so here.
+  ...(trimmed.length
+    ? ['', `## Shortened to fit before writing (${trimmed.length})`,
+       '',
+       'These failed on length alone and were shortened by a second pass, which',
+       'may only remove words. Worth a glance: check the field still says what',
+       'its source says.',
+       '',
+       ...trimmed.map((t) => `- \`${t}\``)]
+    : []),
   ...(rejected.length
     ? ['', `## Discarded before writing (${rejected.length})`,
        ...rejected.map((r) => `- \`${r.path}\` — ${r.reason}`)]

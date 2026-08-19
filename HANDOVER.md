@@ -293,6 +293,48 @@ slip from a misunderstanding — and it was a misunderstanding every time.
 
 ---
 
+## The trim pass, and why instruction was never going to work
+
+**0.54.5.** An agent cannot count characters. That sounds obvious written
+down; it took three releases of trying to teach it otherwise to accept.
+
+The sequence: a table per collection, then the numbers computed from the
+schemas and placed in front of the agent beside the schema itself, then a line
+saying the computed table wins. The next run wrote **713 characters into a
+600-character field**. Not a comprehension failure and not something better
+wording fixes — counting is the machine's job and had been assigned to the
+model.
+
+So the runner now does it. Where a file fails **only** on length, the model is
+asked once, in a short tool-less call, to shorten exactly those fields and
+nothing else. The result goes through the same `checkFile` as everything else.
+
+Three things keep it honest, and all three matter:
+
+1. **It only ever removes.** The instruction is to cut words and never add a
+   fact, a number, a date or a source; quoted wording from the source is
+   protected explicitly and the agent's own explanation is what gets cut. A
+   shortened claim that no longer matches its source is the real risk here.
+2. **It runs only on a pure length failure.** `checkFile` returns `overflows`
+   only when *every* Ajv error is `maxLength`. A bad enum, a missing field or
+   an unknown key is rejected exactly as before — those need judgement about
+   meaning, and an automatic edit must not touch meaning. There is a test for
+   the mixed case, because that is the one that would quietly widen this.
+3. **It says it happened.** Trimmed fields are listed in the run log and under
+   their own heading in the pull request body, so a reviewer knows which prose
+   is the agent's first choice and which is the agent's, cut down.
+
+`trimReply()` reads the answer and **refuses more than it accepts**: a key
+nobody complained about is dropped rather than applied, a value still over its
+limit is dropped, and a file with two overrunning fields and one shortened is
+still rejected. Half-trimmed never reaches the board.
+
+Fields inside arrays are excluded, because `applyFields` has no per-element
+merge verb — deliberately — and inventing one to save a trim would be a much
+larger change than the problem deserves. Those still fail as before.
+
+---
+
 ## Limits are computed now. Never type one into a prompt.
 
 **0.54.4.** Three runs were destroyed by an agent being told a length limit

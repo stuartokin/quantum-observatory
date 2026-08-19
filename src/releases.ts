@@ -24,6 +24,18 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.54.5',
+    date: '2026-08-19',
+    headline: 'Counting characters becomes the machine’s job, where it always belonged.',
+    agents: [
+      'An agent cannot count characters. Three releases were spent trying to teach it the limits — a table per collection, then the numbers computed from the schemas and put directly in front of it, then a line saying the computed table wins — and the next run wrote 713 characters into a 600-character field. That is not a comprehension failure and no better wording fixes it.',
+      'So where a file fails on length and nothing else, the model is now asked once to shorten exactly those fields, and the result is validated by the same schema as everything else. The research survives instead of being thrown away over a sentence that ran long.',
+      'It may only remove. The instruction is to cut words and never add a fact, a number, a date or a source; wording quoted from the source is protected and the agent’s own explanation is what gets cut. A shortened claim that no longer matches its source would be worse than a rejected file, and that is the risk this is built around.',
+      'It runs only on a pure length failure. A bad value, a missing field or an unknown key is rejected exactly as before — those need judgement about what something means, and an automatic edit must not touch meaning.',
+      'Anything it shortens is declared: named in the run log and under its own heading in the pull request, so a reviewer knows which prose is the agent’s first choice and which is the agent’s, cut down. The reply is also refused more often than accepted — a field nobody complained about is never carried through, and a file half-shortened is still rejected.',
+    ],
+  },
+  {
     version: '0.54.4',
     date: '2026-08-19',
     headline: 'The limits an agent is told are now the limits that are enforced.',
@@ -173,22 +185,6 @@ export const RELEASES: Release[] = [
     agents: [
       'Nothing changed about how an agent writes content. The Q-Day surface reads the same forecast file the header always did.',
       'The performance budget learned that a lazily-loaded section brings its own stylesheet, and that stylesheet is not fetched at first paint. Counting it as entry CSS made the before-first-paint figure pessimistic the moment Q-Day arrived — the same misfiled-bucket mistake this script has now made three times, and the third one it has been taught to stop making.',
-    ],
-  },
-  {
-    version: '0.49.0',
-    date: '2026-08-19',
-    headline: 'The board is fetched, not bundled — 110 KB less before anything appears.',
-    ui: [
-      'Content no longer arrives as part of the application. Every visitor used to download the whole board as JavaScript before a single body could be drawn: 188.8 KB gzipped of frontier items and 106.1 KB of headlines, parsed and executed as code. They are now emitted as JSON and fetched, which is what AGENT-PLAN.md and DESIGN-LOG.md both said to do when content outgrew bundling — and specifically said to do instead of raising the ceiling.',
-      'Before first paint: 374.8 KB gzipped became 264.6 KB. Of what remains, 183.2 KB is data rather than code, so the engine never has to treat it as a program.',
-      'The project’s own documents — the design log, the operating notes, the agent plan, the source register — were being downloaded by everyone, because they shared a chunk with the board and a chunk containing anything statically imported is fetched eagerly. That is 50 KB now charged only to readers who open Help, which is the only place they are ever shown.',
-      'Markdown bodies stopped being shipped. Nothing on the site renders one — the changelog has recorded "article bodies not rendered, titles and summaries only" since the first release — but they were bundled anyway, because a bundler cannot discard a property nobody reads off an object it has to build. When bodies are wanted, the answer is to fetch one when a reader opens that item, not to put ninety in front of first paint.',
-      'Code and content are now cached separately. A Monday agent run no longer invalidates the application for every reader, and a code deploy no longer re-sends unchanged research. Previously any change to either re-hashed both.',
-    ],
-    agents: [
-      'Nothing about how an agent writes content changed. The same markdown, the same schemas, the same gates — only where the parsed result is delivered.',
-      'The performance budget now measures what a visitor actually waits for, split into code, documents, board data and headlines, and it reports the before-first-paint total as one figure. The new ceilings were measured from this build rather than estimated, and they are deliberately tight enough to fail when the Q-Day datasets arrive: that failure is the point, and the first answer to it is deferring headlines out of the initial fetch rather than moving a number.',
     ],
   },
 ]

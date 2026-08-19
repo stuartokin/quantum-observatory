@@ -136,6 +136,49 @@ export function repairJson(text) {
 }
 
 /**
+ * READ A TRIM REPLY, AND REFUSE ANYTHING THAT IS NOT WHAT WAS ASKED FOR.
+ *
+ * The runner asks the model to shorten the fields that overran, and this reads
+ * the answer. It trusts the reply to be *shorter*. It does not trust it to be
+ * right about which fields exist.
+ *
+ * - A key that was not one of the overflowing fields is **dropped, not
+ *   applied.** The one thing this pass must never do is edit a field nobody
+ *   complained about — that would be an automatic edit to content no check had
+ *   objected to.
+ * - A value still over its limit is dropped too. Applying it fails validation
+ *   again, with the model's second guess standing in for its first, and the
+ *   original is the better thing to report.
+ * - All or nothing. A file with two overrunning fields and one shortened is
+ *   still rejected, so a half-trimmed file never reaches the board.
+ */
+export function trimReply(reply, overflows) {
+  const text = String(reply ?? '').replace(/```(?:json)?/g, '')
+  const raw = (() => {
+    for (const obj of balancedObjects(text).reverse()) {
+      for (const candidate of [obj, repairJson(obj)]) {
+        try {
+          const parsed = JSON.parse(candidate)
+          if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed
+        } catch {
+          /* not this one */
+        }
+      }
+    }
+    return null
+  })()
+  if (!raw) return null
+
+  const out = {}
+  for (const o of overflows) {
+    const v = raw[o.field]
+    if (typeof v !== 'string' || !v.length || v.length > o.limit) continue
+    out[o.field] = v
+  }
+  return Object.keys(out).length === overflows.length ? out : null
+}
+
+/**
  * Why no JSON came out, in one line a person can act on.
  *
  * "No parseable JSON object found" is true and useless: it does not say
@@ -613,12 +656,16 @@ export function checkStructure(text) {
  * were lost to exactly this before anyone realised the agent had been given
  * the wrong limits rather than ignored the right ones.
  */
-function overBy(data, err) {
-  if (err.keyword !== 'maxLength') return ''
-  const value = err.instancePath
+function valueAt(data, instancePath) {
+  return instancePath
     .split('/')
     .slice(1)
     .reduce((cur, k) => (cur == null ? cur : cur[k.replace(/~1/g, '/').replace(/~0/g, '~')]), data)
+}
+
+function overBy(data, err) {
+  if (err.keyword !== 'maxLength') return ''
+  const value = valueAt(data, err.instancePath)
   if (typeof value !== 'string') return ''
   return ` (it is ${value.length}, so ${value.length - err.params.limit} over)`
 }
@@ -635,7 +682,22 @@ export function checkFile(text, schemaPath = 'content/schema/frontier.schema.jso
       .slice(0, 3)
       .map((e) => `${e.instancePath || '/'} ${e.message}${overBy(data, e)}`)
       .join('; ')
-    return { ok: false, reason: `schema: ${first}` }
+    /**
+     * Say, structurally, whether this file failed *only* on length.
+     *
+     * That is the one failure a machine can put right without inventing
+     * anything — the text exists and is merely too long — and it is the
+     * failure that has cost this project more runs than every other kind
+     * together. Everything else stays a flat rejection.
+     */
+    const overflows = validate.errors.every((e) => e.keyword === 'maxLength')
+      ? validate.errors.map((e) => ({
+          field: e.instancePath.slice(1).split('/').join('.'),
+          limit: e.params.limit,
+          actual: valueAt(data, e.instancePath)?.length ?? 0,
+        }))
+      : []
+    return { ok: false, reason: `schema: ${first}`, overflows }
   }
   return { ok: true, id: data.id }
 }

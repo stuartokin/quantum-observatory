@@ -11,6 +11,7 @@ import {
   normaliseFile,
   extractJson,
   explainJsonFailure,
+  trimReply,
   limitsFor,
   limitsTable,
   balancedObjects,
@@ -252,6 +253,69 @@ t('an overflowing field is rejected by the same schema a full file always used',
 
 const unknownCheck = checkFile(applyFields(doc2, { notARealField: 'nope' }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
 t('a field name outside the schema is rejected before anything is written', unknownCheck.ok === false)
+
+/**
+ * A pure length failure is reported structurally, so it can be repaired.
+ *
+ * The runner asks the model to shorten exactly the fields named here. That
+ * pass must never run on a file whose problem is anything else — a bad enum or
+ * an unknown field needs judgement about meaning, and an automatic edit must
+ * not touch meaning.
+ */
+const milestone = (over) => [
+  '---',
+  'schema: milestone/v1',
+  'id: test-thing',
+  "title: 'Test'",
+  'jurisdiction: AU',
+  'authority: ASD',
+  "date: '2030-12-31'",
+  'kind: deadline',
+  `status: ${over.status ?? 'upcoming'}`,
+  `what: '${'x'.repeat(over.what ?? 10)}'`,
+  'source:',
+  '  url: https://example.com/doc',
+  'review:',
+  '  state: agent-merged',
+  '  by: agent',
+  '---',
+  '',
+  'Body.',
+  '',
+].join('\n')
+
+const tooLong = checkFile(milestone({ what: 713 }), 'content/schema/milestone.schema.json')
+t('a length failure names the field, its limit and its actual size', tooLong.overflows?.[0]?.field === 'what' && tooLong.overflows[0].limit === 600 && tooLong.overflows[0].actual === 713)
+
+const badEnum = checkFile(milestone({ status: 'pending' }), 'content/schema/milestone.schema.json')
+t('a failure that is not about length offers nothing to trim', badEnum.ok === false && badEnum.overflows.length === 0)
+
+const bothWrong = checkFile(milestone({ what: 713, status: 'pending' }), 'content/schema/milestone.schema.json')
+t('  and neither does a mixed failure, even though one part is length', bothWrong.overflows.length === 0)
+
+t('a valid file reports no overflows', checkFile(milestone({}), 'content/schema/milestone.schema.json').ok === true)
+
+/**
+ * Reading the trim reply. The refusals matter more than the successes here:
+ * this pass edits a file automatically, so everything it is not certain about
+ * must fall back to leaving the rejection standing.
+ */
+const twoOver = [
+  { field: 'what', limit: 600, actual: 713 },
+  { field: 'review.note', limit: 600, actual: 615 },
+]
+const goodReply = '{"what":"Short enough.","review.note":"Also short."}'
+t('a well-formed trim reply is applied', trimReply(goodReply, twoOver)?.['review.note'] === 'Also short.')
+t('  wrapped in prose and a code fence', trimReply('Here you go:\n```json\n' + goodReply + '\n```', twoOver)?.what === 'Short enough.')
+t('a reply that shortens only one of two fields is refused', trimReply('{"what":"Short."}', twoOver) === null)
+t('a value still over its limit is refused', trimReply(`{"what":"${'x'.repeat(700)}","review.note":"ok"}`, twoOver) === null)
+t('an empty value is refused', trimReply('{"what":"","review.note":"ok"}', twoOver) === null)
+t('prose with no object is refused', trimReply('I could not shorten it.', twoOver) === null)
+t('a field nobody complained about is never carried through', (() => {
+  const one = [{ field: 'what', limit: 600, actual: 713 }]
+  const got = trimReply('{"what":"Short.","status":"met"}', one)
+  return got && Object.keys(got).length === 1 && got.what === 'Short.'
+})())
 
 /**
  * The limits an agent is shown are the limits that are enforced.
