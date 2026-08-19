@@ -18,6 +18,7 @@ import { join, dirname } from 'node:path'
 import { execSync } from 'node:child_process'
 import {
   extractJson,
+  explainJsonFailure,
   normaliseFile,
   checkFile,
   schemaForPath,
@@ -867,6 +868,7 @@ if (!out) {
   writeFileSync('.agent-run/count.txt', '0')
 
   console.error('No parseable JSON object found in the response.')
+  console.error(`  why: ${explainJsonFailure(blocks)}`)
   console.error('The tail of the reasoning has been written to .agent-run/pr-body.md')
   console.error('so it reaches the issue rather than only this log.\n')
   console.error('Last 3000 characters:\n')

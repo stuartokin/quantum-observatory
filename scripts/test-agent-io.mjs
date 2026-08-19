@@ -10,6 +10,7 @@
 import {
   normaliseFile,
   extractJson,
+  explainJsonFailure,
   balancedObjects,
   schemaForPath,
   schemaConstFor,
@@ -249,6 +250,35 @@ t('an overflowing field is rejected by the same schema a full file always used',
 
 const unknownCheck = checkFile(applyFields(doc2, { notARealField: 'nope' }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
 t('a field name outside the schema is rejected before anything is written', unknownCheck.ok === false)
+
+/**
+ * The JSON a model actually writes, rather than the JSON a spec describes.
+ *
+ * A sourcer run with three searches, seven sourced metrics and two finished
+ * patches was discarded whole for one of these. The object was complete and
+ * balanced; a character inside a note could not be spelled.
+ */
+const withRawNewline = '{"summary":"s","files":[{"path":"a.md","content":"line one\nline two"}]}'
+t('a raw newline inside a string is repaired, not discarded', extractJson([withRawNewline])?.files?.[0]?.content === 'line one\nline two')
+
+const withBadEscape = String.raw`{"summary":"Shor\'s algorithm","files":[]}`
+t('an escape JSON does not define is treated as a literal backslash', extractJson([withBadEscape])?.summary === String.raw`Shor\'s algorithm`)
+
+const withTab = '{"summary":"a\tb","files":[]}'
+t('a raw tab is repaired too', extractJson([withTab])?.summary === 'a\tb')
+
+t('a valid escape still survives the repair', extractJson(['{"summary":"a \\"quoted\\" word","files":[]}'])?.summary === 'a "quoted" word')
+t('  and so does a unicode escape', extractJson(['{"summary":"\\u00e9","files":[]}'])?.summary === 'é')
+
+/**
+ * The repair never invents structure. A truncated object stays rejected: what
+ * the missing half said is not recoverable, and guessing writes something
+ * nobody wrote.
+ */
+t('a truncated object is still refused', extractJson(['{"summary":"s","files":[{"path":"a.md"']) === null)
+t('  and says so, rather than "no JSON found"', /cut off mid-JSON/.test(explainJsonFailure(['{"summary":"s","files":[{"path":"a.md"'])))
+t('prose with no object is named as prose', /answered in prose/.test(explainJsonFailure(['I could not find the paper.'])))
+t('an object with no files array names its keys', /no "files" array/.test(explainJsonFailure(['{"summary":"s","items":[]}'])))
 
 /**
  * Every collection can stamp its own files.

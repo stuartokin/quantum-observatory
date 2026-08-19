@@ -55,16 +55,10 @@ export function extractJson(chunks) {
    * This cost a full run: sixteen searches and a finished answer, discarded
    * because of a separator.
    */
-  const candidates = [
-    ...[...chunks].reverse(),
-    chunks.join(''),
-    chunks.join('\n'),
-  ]
-  for (const chunk of candidates) {
-    const cleaned = chunk.replace(/```(?:json)?/g, '')
-    for (const obj of balancedObjects(cleaned).reverse()) {
+  for (const obj of jsonCandidates(chunks)) {
+    for (const text of [obj, repairJson(obj)]) {
       try {
-        const parsed = JSON.parse(obj)
+        const parsed = JSON.parse(text)
         if (parsed && typeof parsed === 'object' && Array.isArray(parsed.files)) return parsed
       } catch {
         /* not this one */
@@ -72,6 +66,105 @@ export function extractJson(chunks) {
     }
   }
   return null
+}
+
+/** Every balanced object worth trying, in the order worth trying them. */
+function* jsonCandidates(chunks) {
+  const candidates = [
+    ...[...chunks].reverse(),
+    chunks.join(''),
+    chunks.join('\n'),
+  ]
+  for (const chunk of candidates) {
+    const cleaned = chunk.replace(/```(?:json)?/g, '')
+    yield* balancedObjects(cleaned).reverse()
+  }
+}
+
+/**
+ * REPAIR THE TWO WAYS A MODEL'S JSON IS INVALID BUT UNAMBIGUOUS.
+ *
+ * A raw newline inside a string, and a backslash that begins an escape JSON
+ * does not define. Both are rejected outright by `JSON.parse`, and in both
+ * cases what was meant is not in doubt — a note that wrapped across a line
+ * meant a line break, and `\'` meant an apostrophe.
+ *
+ * This is deliberately the *only* repair. Nothing here guesses at structure:
+ * no closing of unbalanced braces, no stripping of trailing commas, no
+ * salvaging of a half-written array. A malformed shape might mean several
+ * things and picking one silently writes something nobody said. A control
+ * character inside a string can only mean itself.
+ *
+ * The alternative is what happened without it: a sourcer run with three
+ * searches, seven fully-sourced metrics and two finished patches, thrown away
+ * whole because a character in a note could not be spelled.
+ */
+export function repairJson(text) {
+  let out = ''
+  let inStr = false
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]
+    if (!inStr) {
+      if (c === '"') inStr = true
+      out += c
+      continue
+    }
+    if (c === '\\') {
+      const next = text[i + 1]
+      // A valid escape passes through untouched; anything else was a literal
+      // backslash the model failed to double.
+      if (next !== undefined && '"\\/bfnrtu'.includes(next)) {
+        out += c + next
+        i++
+      } else {
+        out += '\\\\'
+      }
+      continue
+    }
+    if (c === '"') {
+      inStr = false
+      out += c
+      continue
+    }
+    if (c === '\n') out += '\\n'
+    else if (c === '\r') out += '\\r'
+    else if (c === '\t') out += '\\t'
+    else if (c < ' ') out += `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`
+    else out += c
+  }
+  return out
+}
+
+/**
+ * Why no JSON came out, in one line a person can act on.
+ *
+ * "No parseable JSON object found" is true and useless: it does not say
+ * whether the model wrote no object, wrote a truncated one, or wrote a
+ * complete one with a bad character in it — three problems with three
+ * different answers. Called only on the failure path, so its cost is nothing.
+ */
+export function explainJsonFailure(chunks) {
+  const objects = [...jsonCandidates(chunks)]
+  if (objects.length === 0) {
+    const joined = chunks.join('')
+    return joined.includes('{')
+      ? 'an object opens but never closes — the response was cut off mid-JSON'
+      : 'no JSON object at all — the model answered in prose'
+  }
+  const biggest = objects.reduce((a, b) => (b.length > a.length ? b : a))
+  try {
+    const parsed = JSON.parse(repairJson(biggest))
+    return Array.isArray(parsed?.files)
+      ? 'parsed, but something else rejected it'
+      : `parsed, but has no "files" array — top-level keys: ${Object.keys(parsed ?? {}).join(', ') || 'none'}`
+  } catch (e) {
+    const at = Number(String(e.message).match(/position (\d+)/)?.[1] ?? -1)
+    const where =
+      at >= 0
+        ? `\n  around: ${JSON.stringify(biggest.slice(Math.max(0, at - 60), at + 60))}`
+        : ''
+    return `${objects.length} object(s) found, largest ${biggest.length} chars; JSON.parse: ${String(e.message).split('\n')[0]}${where}`
+  }
 }
 
 /**

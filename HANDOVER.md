@@ -291,6 +291,42 @@ Ajv's message is also now told to say how far over: "must NOT have more than
 twice the limit read identically otherwise, so the log could not distinguish a
 slip from a misunderstanding — and it was a misunderstanding every time.
 
+---
+
+## The JSON repair, and the line it will not cross
+
+**0.54.3.** `extractJson` repairs exactly two things and refuses to repair a
+third. Know which is which before extending it.
+
+**Repaired, because the intent is not in doubt:**
+
+- A raw newline, tab or other control character inside a string. `JSON.parse`
+  rejects it; a note that wrapped across a line meant a line break.
+- A backslash beginning an escape JSON does not define — `\'` and the like.
+  That was a literal backslash the model failed to double.
+
+**Not repaired, deliberately:** anything structural. No closing of unbalanced
+braces, no stripping of trailing commas, no salvaging half of a written array.
+**A malformed shape can mean several things, and picking one silently writes a
+claim nobody made.** A control character inside a string can only mean itself.
+That distinction is the whole rule; if a future session is tempted to "just
+close the object", this paragraph is the argument against it.
+
+A sourcer run — three searches, seven sourced metrics, two finished patches —
+was discarded whole before this existed.
+
+`explainJsonFailure()` runs only on the failure path and says which of four
+things happened: no object at all, an object that never closes, one that parses
+but has no `files` array, or one that fails to parse with the error and the
+sixty characters either side of it. **"No parseable JSON object found" is true
+and useless** — it cannot distinguish a model that answered in prose from one
+that wrote a perfect object with a bad character in it, and those have
+different answers.
+
+**A run that fails this way does not spend its queue entry**, because
+`writeQueue` sits inside `if (out && …)`. Re-running is free. That is already
+correct; do not "fix" it.
+
 **Fault two — `fixedCollections` said milestones could not grow.** That flag
 exists because the twelve questions are twelve; scout once wrote six more
 alongside them. Milestones were added to it by reflex in 0.54.0, which meant

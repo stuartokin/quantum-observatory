@@ -24,6 +24,17 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.54.3',
+    date: '2026-08-19',
+    headline: 'A character that could not be spelled stops costing a whole run.',
+    agents: [
+      'An agent’s reply is JSON, and two things it writes constantly are not valid JSON: a line break inside a quoted note, and a backslash beginning an escape the format does not define. Both are now repaired on the way in. A sourcer run with three searches, seven sourced metrics and two finished patches was thrown away whole for one of them.',
+      'It repairs those two and nothing else. No closing of unbalanced braces, no stripping of trailing commas, no salvaging half an array — a malformed shape can mean several things, and picking one silently puts a claim on the board that nobody made. A line break inside a string can only mean itself. That line is where the repair stops, on purpose.',
+      'When it still fails, the log now says which of four things happened: no object at all, an object that never closes, one that parses but carries no files, or one that fails to parse — with the error and the sixty characters either side of it. "No parseable JSON object found" was true and told you nothing; a model that answered in prose and a model that wrote a perfect object with a bad character in it need different answers.',
+      'A run that fails this way keeps its queue entry, as it always has. Re-running it costs nothing.',
+    ],
+  },
+  {
     version: '0.54.2',
     date: '2026-08-19',
     headline: 'A failed run stops eating the job that would have fixed it.',
@@ -185,21 +196,6 @@ export const RELEASES: Release[] = [
       "content/forecasts/ had no schema and no validation gate anywhere, and the loader destructured `estimates` with no guard — a malformed hand-edit to the Q-Day file would have crashed the whole app to the error screen. Added content/schema/forecast.schema.json, wired it into validate-content.mjs, and the loader now skips a malformed forecast rather than crashing.",
       'A dotted path addressing into an array — `evidence.sources.role`, which was never supported — silently overwrote the whole array with `{}` while building the path. Refused now, with a clear reason, instead of destroying it.',
       "The review field's TypeScript type had drifted from the schema (optional in code, required by the schema) and isSourced read evidence.claim with no guard. Both fixed so a bypassed gate fails safe rather than surprising.",
-    ],
-  },
-  {
-    version: '0.48.0',
-    date: '2026-08-18',
-    headline: 'Click a label to hone, and the board settles rather than appears.',
-    ui: [
-      'Clicking a supergroup name, a readiness band or a year on the axis shows only that. Clicking again clears it. It means "only this" rather than "hide this" — one gesture instead of unticking eight boxes — and the Filters panel carries the same controls, so the panel and the board never describe different states.',
-      'Honing narrows what the checkbox filters already allow and never reveals something they have hidden. Honing on a year excludes undated items, unlike the year checkboxes which keep them: there the reader is trimming a range, here they are asking for one year specifically.',
-      'Items that moved readiness in the last four months now travel from the band they left, slowly enough to follow. Items added in the last six weeks fade up in place — no travel, because they did not come from anywhere and inventing a journey would misdescribe what happened. Everything else is simply drawn where it belongs.',
-      'A demotion drags a faint trail back to where the item was. The axis runs emerging at the top to mainstream at the bottom, so progress descends and a rising body has been corrected downward — the board saying it was wrong, which should not look like an advance.',
-      'Five nebula columns drift behind the starfield, one per supergroup, tracking their own lanes. They survived two invisible versions: the first keyed colour to the wrong index, the second created its gradient outside the transform it drew in, so the gradient centre landed at twice the offset and every fill drew the transparent end.',
-      'The provenance banner is a badge you can open. Four lines of caveat above a two-line title buried the thing a reader came for; the badge carries the state and clicking it carries the reasoning. It closes again when a different item is opened.',
-      'Dates read as 27 July 2026 rather than 2026-07-27, and an estimate says "about" rather than carrying a tilde. ISO stays in the front matter, where machines sort by it.',
-      'Help opens with what the board is and what it is not — including the two caveats: it is a derivative of the literature rather than a replacement, and its coverage is a judgement made by agents against rules a person wrote.',
     ],
   },
 ]
