@@ -98,29 +98,6 @@ source: Q-Day Observatory comparison, Phase 3 review
       appears there as a verified metric.
     Twelve to fifteen items in one run is plenty. Report how many you left.
 
-## The expert survey has earlier editions than the one on the board
-agent: sourcer
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus sourcer: crqc carries the Global Risk Institute Quantum Threat
-    Timeline 2025 figures — 28-49% within ten years, 51-70% within fifteen.
-    That single survey currently sets the entire derived Q-Day window, because
-    it is the only evidence on this board that maps to calendar years.
-    The GRI survey is annual and longitudinal. Earlier editions reportedly put
-    the ten-year figure at 17-31% (2023) and 19-34% (2024). If those hold up,
-    the board can show expert opinion *accelerating* rather than a single
-    snapshot — which is a materially different and better-evidenced claim, and
-    the acceleration is itself the finding.
-    Add each edition as its own metric with its own publication date, named so
-    the year is unambiguous ("Expert survey probability of CRQC within 10 years
-    (2024 edition)"). Do not merge them into one figure.
-    Also worth attaching: Michele Mosca's own 2015 estimate of a 1-in-2 chance
-    of RSA-2048 falling by 2031 (eprint.iacr.org/2015/1075), which is the
-    origin of the X+Y>Z inequality this site's Mosca test uses. A named forecast
-    from a decade ago that can now be checked against reality is worth more
-    than most current commentary.
-
 ## Stack: the two components with no numbers
 agent: sourcer
 added: 2026-08-19

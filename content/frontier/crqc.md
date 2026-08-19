@@ -22,14 +22,26 @@ country:
 horizon: 3
 novelty: 'Threshold concept; no CRQC demonstrated. Resource requirements have fallen sharply in 2025.'
 metrics:
-  - name: Expert survey probability of CRQC within 10 years
-    value: '28-49'
+  - name: Expert survey probability of CRQC within 10 years (2023 edition)
+    value: 17-31
     unit: percent
-    note: 'GRI Quantum Threat Timeline 2025, 26 expert respondents. Up from 19-34% in the 2024 survey.'
-  - name: Expert survey probability of CRQC within 15 years
-    value: '51-70'
+    note: GRI Quantum Threat Timeline 2023. Mosca, Piani, GRI. Lowest point in the longitudinal series; 2025b authors attribute the 2022–2023 dip to post-pandemic recalibration of expectations.
+  - name: Expert survey probability of CRQC within 10 years (2024 edition)
+    value: 19-34
     unit: percent
-    note: 'GRI Quantum Threat Timeline 2025. Reflects acceleration attributed to error correction advances and algorithmic qubit-count reductions.'
+    note: GRI Quantum Threat Timeline 2024. 32 expert respondents. Up from 17–31% in 2023. Sixth annual edition.
+  - name: Expert survey probability of CRQC within 10 years (2025 edition)
+    value: 28-49
+    unit: percent
+    note: GRI Quantum Threat Timeline 2025b. 26 expert respondents. Highest 10-year estimate in the report's seven-year history.
+  - name: Expert survey probability of CRQC within 15 years (2025 edition)
+    value: 51-70
+    unit: percent
+    note: GRI Quantum Threat Timeline 2025b. 26 respondents. Reflects acceleration attributed to error correction advances and algorithmic qubit-count reductions.
+  - name: 'Mosca 2015 personal estimate: probability RSA-2048 broken by 2031'
+    value: '50'
+    unit: percent
+    note: Michele Mosca, IACR ePrint 2015/1075. Origin of the X+Y>Z migration inequality. Personal estimate, not a survey; a named 2015 forecast now checkable against 2026 reality.
 links:
   - to: algo-resource-estimation
     relation: depends-on
@@ -38,37 +50,59 @@ links:
   - to: qec-logical-qubit-scaling
     relation: depends-on
 evidence:
-  claim: 'Scholten et al. (2024, IEEE Security & Privacy, multi-institution including IBM and NIST) review the benefits and risks of quantum computers, concluding that fault-tolerant algorithms pose the primary cryptographic threat and that quantum computers may provide economic benefits before threatening cryptography. The GRI Quantum Threat Timeline 2025 (26 expert respondents) estimates a 28–49% probability of a CRQC within 10 years and 51–70% within 15 years, accelerated from prior surveys. No CRQC has been demonstrated; the item records the threat threshold and the expert consensus on timing.'
-  verified: '2026-08-08'
+  claim: 'Scholten et al. (2024, IEEE Security & Privacy, IBM/NIST) review benefits and risks of quantum computers, concluding fault-tolerant algorithms pose the primary cryptographic threat. The GRI Quantum Threat Timeline series shows accelerating expert opinion: 17–31% CRQC within 10 years (2023 edition); 19–34% (2024 edition, 32 experts); 28–49% (2025b edition, 26 experts); 51–70% within 15 years (2025b). Mosca (IACR ePrint 2015/1075) estimated a 1/2 chance of breaking RSA-2048 by 2031 — the origin of the X+Y>Z inequality used in quantum migration planning. No CRQC has been demonstrated; the item records the threat threshold and the expert consensus on timing, now evidenced as a longitudinal trend rather than a point estimate.'
   level: E3
+  verified: '2026-08-19'
   sources:
     - url: https://arxiv.org/abs/2401.16317
       role: primary
-      title: 'Assessing the Benefits and Risks of Quantum Computers'
-      publisher: 'IEEE Security & Privacy'
+      title: Assessing the Benefits and Risks of Quantum Computers
+      publisher: IEEE Security & Privacy
       date: '2024-07-17'
-      identifier: 'arXiv:2401.16317'
+      identifier: arXiv:2401.16317
       doi: 10.48550/arXiv.2401.16317
       accessed: '2026-08-08'
-      note: 'Scholten, Williams, Moody, Mosca, Hurley, Zeng, Troyer, Gambetta. Multi-institution (IBM, NIST, UWaterloo, Microsoft). Review paper; evidence level E3 per schema rules for reviews.'
+      note: Scholten, Williams, Moody, Mosca, Hurley, Zeng, Troyer, Gambetta. Multi-institution (IBM, NIST, UWaterloo, Microsoft). Review paper; E3 per schema rules for reviews.
+    - url: https://eprint.iacr.org/2015/1075
+      role: corroborating
+      title: 'Cybersecurity in an era with quantum computers: will we be ready?'
+      publisher: IACR Cryptology ePrint Archive
+      date: '2015-11-05'
+      identifier: IACR ePrint 2015/1075
+      accessed: '2026-08-19'
+      note: 'Michele Mosca, University of Waterloo. Origin of the X+Y>Z migration inequality. States: 1/2 chance of breaking RSA-2048 by 2031. Personal estimate, not a survey. Preprint; CC BY.'
+    - url: https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2023/
+      role: corroborating
+      title: Quantum Threat Timeline Report 2023
+      publisher: Global Risk Institute
+      date: '2023-12-01'
+      accessed: '2026-08-19'
+      note: GRI/evolutionQ annual survey. 17–31% CRQC within 10 years. Figures confirmed from evolutionQ (co-author) page, which reports the 2024 edition rose to 19–34% from 17–31% in 2023. Date approximate; exact month not verified.
+    - url: https://globalriskinstitute.org/publication/2024-quantum-threat-timeline-report/
+      role: corroborating
+      title: Quantum Threat Timeline Report 2024
+      publisher: Global Risk Institute
+      date: '2024-12-01'
+      accessed: '2026-08-19'
+      note: GRI/evolutionQ annual survey. 32 expert respondents. 19–34% CRQC within 10 years, up from 17–31% in 2023. Sixth annual edition. URL confirmed via GRI publication page.
     - url: https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
       role: corroborating
-      title: 'Quantum Threat Timeline Report 2025'
-      publisher: 'Global Risk Institute'
+      title: Quantum Threat Timeline Report 2025
+      publisher: Global Risk Institute
       date: '2026-04-22'
       accessed: '2026-08-08'
-      note: '26 expert respondents. Annual longitudinal survey; 2025b edition. Not a technical experiment — corroborating expert consensus on timeline only.'
+      note: 26 expert respondents. 28–49% within 10 years, 51–70% within 15 years. Highest 10-year estimate in the report's seven-year history. Not a technical experiment.
 confidence: medium
 status: published
 origin: agent
 added: '2026-08-08'
 review:
-  state: agent-reviewed
+  state: agent-merged
   by: agent
-  agent: reviewer
-  agentMergedOn: '2026-08-08'
+  agent: sourcer
+  agentMergedOn: '2026-08-19'
   reviewedOn: '2026-08-18'
-  note: 'GRI 2025b confirmed via globalriskinstitute.org: 28-49% CRQC within 10 years, 51-70% within 15 years, 26 respondents confirmed. Multiple independent sources corroborate these figures. E3 correct for review + expert survey. No changes.'
+  note: 'Sourcer focus run 2026-08-19. Added GRI 2023 (17–31% within 10yr) and GRI 2024 (19–34%, 32 experts) as distinct metrics and sources to show longitudinal acceleration rather than a 2025b snapshot. Added Mosca 2015 IACR ePrint 2015/1075 as origin of the X+Y>Z inequality. Evidence.claim updated to surface trend. E3 held: expert surveys, not experiments.'
 ---
 
 A CRQC does not exist. The item marks the threat threshold against which all migration timelines are calibrated. The primary source is a peer-reviewed review (E3 ceiling per schema), not an experimental result. Resource requirements published in 2025 and 2026 (see algo-resource-estimation and algo-shor) have materially reduced the estimated hardware needed, which is the main reason expert surveys show accelerating timelines.
