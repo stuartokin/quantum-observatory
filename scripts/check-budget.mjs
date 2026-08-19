@@ -128,17 +128,33 @@ const assets = existsSync(ASSETS) ? readdirSync(ASSETS) : []
 const dataFiles = existsSync(DATA) ? readdirSync(DATA).filter((f) => f.endsWith('.json')) : []
 
 const js = assets.filter((f) => f.endsWith('.js'))
+const css = assets.filter((f) => f.endsWith('.css'))
 const isEntry = (f) => f.startsWith('index-')
 const isDocs = (f) => f.startsWith('docs-')
+
+/**
+ * A lazy component brings its own stylesheet, and that stylesheet is fetched
+ * with the chunk rather than at first paint.
+ *
+ * Counting every `.css` file as entry CSS made the before-first-paint total
+ * 2.4 KB pessimistic the moment Q-Day arrived with its own — which is the same
+ * misfiled-bucket mistake this script has already made twice, once with the
+ * news chunk and once by counting every chunk as `app`. Async CSS belongs with
+ * the deferred bytes it travels with.
+ */
+const isEntryCss = (f) => f.startsWith('index-')
 
 /** Path-resolved so the two directories can be measured together. */
 const groups = {
   app: js.filter(isEntry).map((f) => join(ASSETS, f)),
-  deferred: js.filter((f) => !isEntry(f) && !isDocs(f)).map((f) => join(ASSETS, f)),
+  deferred: [
+    ...js.filter((f) => !isEntry(f) && !isDocs(f)),
+    ...css.filter((f) => !isEntryCss(f)),
+  ].map((f) => join(ASSETS, f)),
   docs: js.filter(isDocs).map((f) => join(ASSETS, f)),
   data: dataFiles.filter((f) => f !== 'news.json').map((f) => join(DATA, f)),
   news: dataFiles.filter((f) => f === 'news.json').map((f) => join(DATA, f)),
-  css: assets.filter((f) => f.endsWith('.css')).map((f) => join(ASSETS, f)),
+  css: css.filter(isEntryCss).map((f) => join(ASSETS, f)),
 }
 
 const fail = []

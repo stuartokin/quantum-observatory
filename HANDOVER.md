@@ -11,16 +11,16 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.49.0**, built in this session but not yet dragged into
+**Version 0.50.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
-**0.49.0 is Phase 0 of the Q-Day work** — the content architecture change
-that everything else waits on. See `QDAY-PLAN.md` for the whole sequence and
-"Content is fetched now, not bundled" below for what changed and the one
-invariant that will break it quietly.
+**0.49.0 and 0.50.0 are Phases 0 and 1 of the Q-Day work.** `QDAY-PLAN.md`
+carries the whole sequence; "Content is fetched now, not bundled" and "There
+is a second surface now" below carry what a session needs to know before
+touching either.
 
 **Live at** stuartokin.github.io, deployed from `main` via GitHub Pages.
 
@@ -57,6 +57,72 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## There is a second surface now
+
+**0.50.0.** The board is no longer the only thing the application renders.
+`src/App.tsx` switches on a hash route: no hash is the board, `#/q-day/*`
+mounts the Q-Day Observatory from `src/qday/`, lazily, so the board's first
+paint is untouched.
+
+**Hash routing, not the History API, and not by accident.** GitHub Pages
+serves static files with no rewrite rules, so `/q-day/trends` would 404 on a
+refresh. The usual workaround — a `404.html` that re-serves `index.html` —
+turns every genuinely mistyped URL into a silent success, which is a worse
+failure than the one it fixes. A hash never leaves the client.
+
+### What moved, and what to know before touching it
+
+- **The board's Q-Day window is gone.** `QDayPanel`, its frame, its entry in
+  `defaultLayout`, its slot in the z-order array and its styles in
+  `workspace.css` were all removed. The header bar and the toolbar button
+  both now navigate to the Observatory. Two places showing the same forecast
+  would have meant two places to update when the derivation lands.
+- **The scenarios come from `content/forecasts/q-day.md`**, not from source.
+  `src/qday/scenarios.ts` maps `aggressive` / `central` / `conservative` onto
+  the three pills. An axis the forecast leaves unset is left out rather than
+  filled from a neighbour.
+- **`src/qday/deadlines.ts` is a deliberate, temporary exception.** It holds
+  the UK NCSC 2028/2031/2035 checkpoints, which exist on the board today only
+  as a URL hanging off `mig-supply-chain` — cited, not held as data, and you
+  cannot render a countdown from a hyperlink. The surface shows the citation
+  beside the clock and says it is not board data. **Phase 3 should empty and
+  delete that file, not extend it.**
+- **Everything on the surface is styled by `src/qday/qday.css`**, which ships
+  with the lazy chunk. `.qday-boot` is the exception and lives in
+  `global.css` — a loading fallback styled by the stylesheet it is waiting
+  for is unstyled exactly when it is on screen.
+
+### The forecast's own inconsistency is now visible
+
+`content/forecasts/q-day.md` logs a single move to "2036-2041", but its
+`estimates` block reads 2034–2041: the `earliest` axis moved at some point
+without a log entry. That was noted in the code review and is now rendered
+on the site under "Why this date?", where a reader can see it. Worth fixing
+in the content — it is a one-line addition to the log, and this file is now
+load-bearing for a whole surface.
+
+### The palette question turned out to be subtler than the plan said
+
+`QDAY-PLAN.md` said to fix `src/palette.ts` and `src/styles/tokens.css`
+disagreeing about quantum and cyber before building. On inspection **it is
+not a straightforward bug and it was deliberately left alone.**
+
+The two files do disagree — `PILLAR_SPECTRUM` gives quantum the violet Hg
+line and cyber the teal O III; the CSS tokens give those hexes to the
+opposite pillars, and the violets are not even the same hex (`#A77BFF` vs
+`#A97BFF`). But they are used for different jobs: `PILLAR_SPECTRUM` drives
+the galaxy accent, while `--line-quantum` and `--line-cyber` are used as
+generic UI accents — focus rings, provenance badges, "moved" markers — that
+have nothing to do with pillars. Correcting either direction would swap the
+colour of a dozen unrelated pieces of chrome. **That is a design decision
+with a visible outcome, not a defect to fix quietly.**
+
+Q-Day did not need it resolved: it uses threat-amber and defence-teal, and
+binds defence to `--line-quantum` as an existing value rather than caring
+which pillar owns the name.
 
 ---
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { NewsEntry, NewsWeek } from '../renderers/board/news'
 import type { Forecast } from '../content/forecast'
 
@@ -196,54 +196,12 @@ export function QDayBar({
   )
 }
 
-export function QDayPanel({ forecast, colour }: { forecast?: Forecast; colour: string }) {
-  const log = useMemo(() => [...(forecast?.log ?? [])].reverse(), [forecast])
-  if (!forecast) return <p className="label">No forecast recorded.</p>
-
-  const e = forecast.estimates
-  const rows: [string, number | undefined][] = [
-    ['Earliest plausible', e.earliest],
-    ['Aggressive', e.aggressive],
-    ['Central', e.central],
-    ['Conservative', e.conservative],
-  ]
-
-  return (
-    <div className="qday-panel">
-      <p className="qday-panel__q">{forecast.question}</p>
-
-      <dl className="metrics">
-        {rows.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd style={label === 'Central' ? { color: colour } : undefined}>{value ?? '—'}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <p className={forecast.state === 'agent-estimate' ? 'prov prov--agent' : 'prov'}>
-        <span className="prov__dot" />
-        {forecast.state === 'agent-estimate' ? 'Agent estimate, not yet reviewed' : 'Human-set'}
-      </p>
-      <p className="label" style={{ marginTop: 8 }}>
-        Last human review {ago(forecast.lastHumanReview)}
-      </p>
-
-      {forecast.note && <p className="prov-note">{forecast.note}</p>}
-
-      <span className="label" style={{ display: 'block', marginTop: 16 }}>
-        Change history
-      </span>
-      <ul className="qday-log">
-        {log.map((l) => (
-          <li key={l.date + l.to}>
-            <strong>{l.date}</strong> {l.from} → {l.to}
-            <em>{l.by === 'agent' ? ` (${l.agent ?? 'agent'})` : ' (human)'}</em>
-            <span>{l.evidence}</span>
-            {l.assumption && <span className="qday-log__assumption">{l.assumption}</span>}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
+/*
+ * `QDayPanel` used to live here — the forecast's estimates, provenance and
+ * change history in a board window.
+ *
+ * It moved to the Q-Day Observatory in 0.50.0, where the same material sits
+ * under "Why this date?" alongside the countdowns it explains. Keeping a
+ * second, smaller copy on the board would have meant two places showing the
+ * same figure and two places to update when the derivation lands.
+ */

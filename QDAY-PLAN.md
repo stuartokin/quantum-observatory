@@ -3,9 +3,9 @@
 Written 19 August 2026, against HorizonQ 0.48.11 and the current
 `stuartokin/Qday-Research` `index.html` (2,563 lines, one file).
 
-**Status: Phase 0 is done and shipped as 0.49.0.** Everything below Phase 0
-is still a plan. See `HANDOVER.md` → "Content is fetched now, not bundled"
-for what Phase 0 actually changed.
+**Status: Phase 0 shipped as 0.49.0. Phase 1 shipped as 0.50.0.** Phases 2–5
+are still a plan. See `HANDOVER.md` → "Content is fetched now, not bundled"
+and "There is a second surface now" for what each actually changed.
 
 ---
 
@@ -208,10 +208,22 @@ and will reach for the quantum accent; it should reach for one colour.
 **Phase 0 — Unblock. ✅ Done, 0.49.0.**
 Runtime-JSON content migration, budget rebuilt, 110 KB off first paint.
 
-**Phase 1 — The surface.**
-Hash routing, the takeover shell, the tab dock, the design-token merge, the
-palette fix. Clocks built on the existing forecast — countdowns, scenario
-pills, the Mosca test, headroom. Six empty tabs behind it.
+**Phase 1 — The surface. ✅ Done, 0.50.0.**
+Hash routing, the takeover shell, the tab dock, the design merge. Clocks
+built on the forecast — countdowns, scenario pills, the Mosca test,
+headroom, and the provenance saying the figure is asserted rather than
+derived. Six sections visible and honest about being empty.
+
+The palette fix was **not** done, deliberately: on inspection the two files
+are used for different jobs and correcting either direction would recolour a
+dozen pieces of unrelated chrome. That is a design decision, not a defect —
+see `HANDOVER.md`. Q-Day did not need it resolved.
+
+Deferred from Phase 1, with reasons: the readiness questionnaire that
+suggests Mosca's X and Y (21 questions across three personas) is an
+unevidenced scoring heuristic and belongs with the Readiness work in Phase 4,
+labelled as a heuristic; and scenario choice is not yet in the URL, so a
+shared link opens on the default rather than the sender's scenario.
 
 **Phase 2 — The derivation.**
 The two-curve model in `src/qday/derive/`, pure and unit-tested against real

@@ -1,0 +1,494 @@
+/* ============================================================
+   Q-DAY OBSERVATORY
+
+   HorizonQ's shell, Qday-Research's semantics.
+
+   The ground, the type, the hairlines, the uppercase monospace
+   micro-labels and the 2px radius all come from the board, so the
+   two surfaces read as one product. What comes across from
+   Qday-Research is the thing that made it legible at a glance:
+   AMBER IS THE THREAT, TEAL IS THE DEFENCE. That opposition is
+   the actual subject of this section — a capability date racing a
+   migration deadline — and no amount of palette unity is worth
+   losing it.
+
+   Defence is bound to --line-quantum (#3DE0C0), the board's
+   existing O III emission line, rather than introducing
+   Qday-Research's near-identical #46D4C4 as a second teal. One
+   fewer colour in the system, and the tie to the board is real
+   rather than approximate. Threat has no equivalent already in
+   the palette, so it is declared here and scoped to this surface.
+   ============================================================ */
+
+.qday-surface {
+  --qd-threat: #ff9e3d;
+  --qd-threat-dim: color-mix(in oklab, var(--qd-threat) 55%, var(--ground));
+  --qd-defence: var(--line-quantum);
+  --qd-defence-dim: color-mix(in oklab, var(--line-quantum) 55%, var(--ground));
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: var(--ground);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* The board's own atmosphere, so the takeover is the same sky.
+   Two fixed layers: a threat/defence glow, and the grid mesh. */
+.qday-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 18% 8%, color-mix(in oklab, var(--qd-threat) 12%, transparent), transparent 70%),
+    radial-gradient(55% 45% at 84% 12%, color-mix(in oklab, var(--qd-defence) 12%, transparent), transparent 70%);
+}
+.qday-surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.28;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 75%);
+}
+
+/* ---------------------------------------------------------- head */
+
+.qday-surface__head {
+  position: relative;
+  padding: var(--gap-m) var(--gap-m) var(--gap-s);
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.qday-surface__back {
+  position: absolute;
+  left: var(--gap-m);
+  top: var(--gap-m);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: none;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+.qday-surface__back:hover { color: var(--ink); border-color: var(--ink-faint); }
+
+.qday-surface__title {
+  font-family: var(--display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.qday-surface__title span {
+  font-family: var(--mono);
+  font-size: 0.5em;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.qday-surface__sub {
+  font-family: var(--body);
+  color: var(--ink-muted);
+  max-width: 62ch;
+  margin: var(--gap-xs) auto 0;
+  font-size: var(--step--1);
+}
+.qday-surface__sub b { color: var(--ink); }
+
+/* ---------------------------------------------------------- main */
+
+.qday-surface__main {
+  position: relative;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--gap-s) var(--gap-m) 6rem;
+}
+.qd-clocks, .qd-pending { max-width: 1180px; margin: 0 auto; }
+
+/* ---------------------------------------------------------- clocks */
+
+.qd-clocks__row {
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 0.7fr) 1fr;
+  gap: var(--gap-s);
+  align-items: stretch;
+}
+@media (max-width: 900px) {
+  .qd-clocks__row { grid-template-columns: 1fr; }
+}
+
+.qd-clock {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--ground-panel) 82%, transparent);
+  padding: var(--gap-s);
+}
+.qd-clock--threat { border-color: color-mix(in oklab, var(--qd-threat) 30%, var(--hairline)); }
+.qd-clock--defence { border-color: color-mix(in oklab, var(--qd-defence) 30%, var(--hairline)); }
+
+.qd-clock__kind,
+.qd-headroom__label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 var(--gap-xs);
+}
+.qd-clock--threat .qd-clock__kind { color: var(--qd-threat); }
+.qd-clock--defence .qd-clock__kind { color: var(--qd-defence); }
+
+.qd-clock__scenario { font-family: var(--body); color: var(--ink-muted); margin: 0; font-size: var(--step--1); }
+.qd-clock__date {
+  font-family: var(--display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  margin: 0.1rem 0 var(--gap-s);
+}
+.qd-clock--threat .qd-clock__date { color: var(--qd-threat); }
+.qd-clock--defence .qd-clock__date { color: var(--qd-defence); }
+
+.qd-clock__units { display: flex; gap: var(--gap-xs); }
+.qd-unit {
+  flex: 1;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.2rem;
+  text-align: center;
+  background: color-mix(in oklab, var(--ground) 60%, transparent);
+}
+.qd-unit__v {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 0.7rem + 1.5vw, 1.9rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.qd-unit__l {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 0.2rem;
+}
+.qd-clock__passed { font-family: var(--body); color: var(--ink-muted); margin: 0; }
+
+.qd-clock__src {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--ink-faint);
+  margin: var(--gap-xs) 0 0;
+}
+.qd-clock__src a { color: var(--qd-defence); text-decoration: none; }
+.qd-clock__src a:hover { text-decoration: underline; }
+
+/* Headroom sits between the two clocks because it is the relationship
+   between them, not a third fact. */
+.qd-headroom {
+  border: 1px dashed var(--hairline);
+  border-radius: var(--radius);
+  padding: var(--gap-s);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.qd-headroom__label { color: var(--ink-faint); }
+.qd-headroom__value {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--step-2);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+.qd-headroom--pos .qd-headroom__value { color: var(--qd-defence); }
+.qd-headroom--neg .qd-headroom__value { color: var(--line-energy); }
+.qd-headroom--neg { border-color: color-mix(in oklab, var(--line-energy) 45%, var(--hairline)); }
+/* No margin is not the same as a negative one, and it is not good news
+   either — amber rather than red or teal. */
+.qd-headroom--none .qd-headroom__value { color: var(--qd-threat); font-size: var(--step-1); }
+.qd-headroom--none { border-color: color-mix(in oklab, var(--qd-threat) 45%, var(--hairline)); }
+.qd-headroom__note {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  margin: var(--gap-xs) 0 0;
+}
+
+/* ---------------------------------------------------------- scenarios */
+
+.qd-scen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-s);
+  align-items: center;
+  justify-content: center;
+  margin: var(--gap-m) 0 0;
+}
+.qd-scen__pills { display: flex; gap: var(--gap-xs); flex-wrap: wrap; }
+
+.qd-pill {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px dashed var(--hairline);
+  background: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.qd-pill:hover { color: var(--ink); border-color: var(--ink-faint); }
+.qd-pill[aria-pressed='true'] {
+  background: var(--qd-threat);
+  border-style: solid;
+  border-color: var(--qd-threat);
+  color: #0a0e10;
+  font-weight: 500;
+}
+
+.qd-scen__z {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+  margin: 0;
+}
+.qd-scen__z b { color: var(--ink); }
+
+.qd-disc {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+.qd-disc:hover { color: var(--ink); border-color: var(--ink-faint); }
+
+/* ---------------------------------------------------------- why */
+
+.qd-why {
+  margin: var(--gap-s) auto 0;
+  max-width: var(--measure);
+  border-left: 2px solid var(--qd-defence);
+  padding: var(--gap-s) var(--gap-s) var(--gap-s) var(--gap-m);
+  background: color-mix(in oklab, var(--ground-raised) 70%, transparent);
+}
+.qd-why p { font-family: var(--body); font-size: var(--step--1); line-height: 1.6; }
+.qd-why__desc { margin-top: 0; color: var(--ink); }
+.qd-why__note { color: var(--ink-muted); font-style: italic; }
+.qd-why__derivation {
+  color: var(--ink-muted);
+  border-top: 1px solid var(--hairline);
+  padding-top: var(--gap-s);
+}
+.qd-why__derivation b { color: var(--qd-threat); font-style: normal; }
+
+.qd-why__prov { display: grid; gap: var(--gap-xs); margin: var(--gap-s) 0; }
+.qd-why__prov > div { display: flex; gap: var(--gap-s); align-items: baseline; }
+.qd-why__prov dt {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  min-width: 12ch;
+}
+.qd-why__prov dd { font-family: var(--mono); font-size: 0.68rem; margin: 0; color: var(--ink); }
+
+.qd-why__log { list-style: none; padding: 0; margin: var(--gap-s) 0 0; }
+.qd-why__log li { border-top: 1px solid var(--hairline); padding: var(--gap-xs) 0; }
+.qd-why__log span {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin-right: var(--gap-s);
+}
+.qd-why__logmove { color: var(--qd-threat) !important; }
+.qd-why__log p { margin: 0.2rem 0 0; color: var(--ink-muted); font-size: var(--step--1); }
+
+/* ---------------------------------------------------------- mosca */
+
+.qd-mosca {
+  margin: var(--gap-m) auto 0;
+  max-width: 820px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: var(--gap-m);
+  background: color-mix(in oklab, var(--ground-panel) 70%, transparent);
+}
+.qd-mosca h2 {
+  font-family: var(--display);
+  font-size: var(--step-1);
+  margin: 0 0 var(--gap-xs);
+}
+.qd-mosca__intro {
+  font-family: var(--body);
+  color: var(--ink-muted);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  margin: 0 0 var(--gap-m);
+}
+
+.qd-mosca__inputs { display: grid; gap: var(--gap-s); }
+.qd-slider { display: block; }
+.qd-slider__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--gap-s);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-bottom: 0.3rem;
+}
+.qd-slider__head b { color: var(--qd-threat); }
+.qd-slider__head output { color: var(--ink); font-variant-numeric: tabular-nums; }
+.qd-slider input[type='range'] { width: 100%; accent-color: var(--qd-threat); }
+
+.qd-bar {
+  position: relative;
+  display: flex;
+  height: 14px;
+  margin: var(--gap-m) 0 var(--gap-s);
+  background: color-mix(in oklab, var(--ground) 70%, transparent);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.qd-bar__x { background: var(--qd-threat); }
+.qd-bar__y { background: var(--qd-threat-dim); }
+.qd-bar__z {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--qd-defence);
+  overflow: visible;
+}
+.qd-bar__z span {
+  position: absolute;
+  top: -1.15rem;
+  left: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--qd-defence);
+}
+
+.qd-verdict { border-left: 2px solid; padding: var(--gap-s) var(--gap-s) var(--gap-s) var(--gap-m); }
+.qd-verdict--exposed { border-color: var(--line-energy); background: color-mix(in oklab, var(--line-energy) 7%, transparent); }
+.qd-verdict--ok { border-color: var(--qd-defence); background: color-mix(in oklab, var(--qd-defence) 7%, transparent); }
+.qd-verdict__head {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.3rem;
+}
+.qd-verdict--exposed .qd-verdict__head { color: var(--line-energy); }
+.qd-verdict--ok .qd-verdict__head { color: var(--qd-defence); }
+.qd-verdict__detail {
+  font-family: var(--body);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------- pending */
+
+.qd-pending {
+  max-width: var(--measure);
+  margin: var(--gap-l) auto;
+  text-align: center;
+}
+.qd-pending__flag {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--qd-threat);
+  margin: 0 0 var(--gap-xs);
+}
+.qd-pending h2 { font-family: var(--display); font-size: var(--step-2); margin: 0 0 var(--gap-s); }
+.qd-pending__blurb { font-family: var(--body); color: var(--ink-muted); line-height: 1.7; }
+.qd-pending__where { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint); }
+.qd-pending code { font-family: var(--mono); color: var(--ink-muted); }
+
+/* ---------------------------------------------------------- dock
+
+   The board's dock idiom — a pill-shaped bar floating bottom-centre
+   with the same blur and hairline. There it lists what is put away;
+   here it lists where you can go, because on this surface the set of
+   sections is the map of the subject. */
+
+.qday-dock {
+  position: absolute;
+  bottom: var(--gap-s);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.15rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: color-mix(in oklab, var(--ground-panel) 88%, transparent);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 40px rgb(0 0 0 / 0.55);
+  max-width: calc(100vw - 2rem);
+  overflow-x: auto;
+}
+.qday-dock__tab {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  color: var(--ink-faint);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.qday-dock__tab:hover { color: var(--ink); }
+.qday-dock__tab[aria-current='page'] {
+  background: color-mix(in oklab, var(--qd-defence) 16%, transparent);
+  color: var(--qd-defence);
+}
+/* A tab with nothing behind it is dimmer but never hidden — the same
+   argument as a demoted body staying on the board as a small dim dot. */
+.qday-dock__tab[data-pending] { opacity: 0.55; }
+.qday-dock__tab[data-pending]::after {
+  content: '·';
+  margin-left: 0.35rem;
+  color: var(--qd-threat);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qday-surface * { transition: none !important; animation: none !important; }
+}

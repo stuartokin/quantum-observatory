@@ -24,6 +24,25 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.50.0',
+    date: '2026-08-19',
+    headline: 'Q-Day becomes a place you can go, and a link you can send.',
+    ui: [
+      'Clicking Q-Day in the header now opens the Q-Day Observatory — a full-screen surface with its own sections — rather than a small window on the board. The board unmounts while it is open, which costs the window layout but avoids running a canvas animation loop behind an opaque overlay for as long as somebody reads.',
+      'The first route this site has ever had. Each section has an address (#/q-day/trends), so a page can be reloaded, bookmarked or sent to somebody. Hash routing rather than real paths, because GitHub Pages serves static files: /q-day/trends would 404 on a refresh, and the usual workaround turns every genuinely mistyped URL into a silent success. Escape, or the Board button, returns you.',
+      'Two designs, one product. The observatory keeps the board’s ground, type, hairlines and monospace labels; what carries over from the research prototype is the thing that made it legible at a glance — amber is the threat, teal is the defence. That opposition is the actual subject of the section. Defence is bound to the board’s existing O III emission line rather than introducing a second, near-identical teal.',
+      'Clocks: a countdown to the estimated Q-Day, a countdown to the NCSC 2035 deadline, and the headroom between them. Where the two effectively coincide it says "none" rather than rounding to "+0.0 yr" beside a note claiming Q-Day falls after the deadline — true by one second, and reading as a rendering fault rather than as the finding it is.',
+      'The Mosca test: if the time your data must stay secret plus the time migration takes exceeds the time before Q-Day, you are already exposed. Both inputs are the reader’s to assert — the board has no way to know either, and defaulting them from evidence would be inventing a number.',
+      'The three scenarios are read from content/forecasts/q-day.md rather than written into the source. Moving the estimate is now a content change an agent can propose and a person can veto, and the site cannot show a number the repo disagrees with.',
+      '"Why this date?" carries the provenance: whether a human set the figure, when one last looked, the full change history, and — stated plainly — that the number is asserted rather than derived. The headline figure of the whole section cannot be the one number on this board that does not say where it came from.',
+      'The six sections not yet built are visible and say what they are waiting on, rather than being hidden. A reader who can see that Threats is coming, and that the board holds no CVE records to fill it, knows more than one shown a tab bar with a single item.',
+    ],
+    agents: [
+      'Nothing changed about how an agent writes content. The Q-Day surface reads the same forecast file the header always did.',
+      'The performance budget learned that a lazily-loaded section brings its own stylesheet, and that stylesheet is not fetched at first paint. Counting it as entry CSS made the before-first-paint figure pessimistic the moment Q-Day arrived — the same misfiled-bucket mistake this script has now made three times, and the third one it has been taught to stop making.',
+    ],
+  },
+  {
     version: '0.49.0',
     date: '2026-08-19',
     headline: 'The board is fetched, not bundled — 110 KB less before anything appears.',
@@ -140,19 +159,6 @@ export const RELEASES: Release[] = [
       'The key is available on the galaxy as well as the timeline, behind the same button. It had been drawn only on the timeline, so shape — what kind of organisation is behind a result — went undocumented on the view most people look at first.',
       'Hover a body and the key names the organisation in brackets beside its type. This existed but only inside the timeline key, which was closed by default and therefore invisible.',
       'A filter for the kind of organisation: university, national laboratory, standards body, company, consortium. An item with no actor recorded is never hidden by it — the filter asks who did the work, and silence is not an answer to disagree with.',
-    ],
-  },
-  {
-    version: '0.39.0',
-    date: '2026-08-10',
-    headline: 'Shape says what kind of organisation, not which one.',
-    ui: [
-      'Glyphs now carry organisation type — university, national laboratory, standards body, company, consortium — rather than a hash of the name. Eight shapes derived from spelling told a reader nothing; the kind of organisation behind a result is what actually bears on its weight, and the evidence rules already say so.',
-      'Hover a body and the timeline key names the organisation in brackets beside its type, so the specific identity is still one glance away.',
-      'The detail panel scrolls back to the top when you open a different item. Reading halfway down one entry and clicking another used to open the new one in the middle of itself.',
-      'A comment written in the wrong form inside a JSX tag would have failed the build; found by a scan that now runs over every component.',
-      'The board had been importing glyphFor from two different modules, and using the older one — so the new rules changed nothing on screen. tower.ts had a complete parallel glyph vocabulary: its own shape list, its own type, its own lookup. All three now come from one place.',
-      'Two new build gates for faults type checking cannot see: no symbol exported from two modules, and no const used above its declaration. Both were written after making the mistake rather than before, which is the honest order.',
     ],
   },
 ]

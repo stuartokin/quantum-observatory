@@ -48,7 +48,8 @@ import {
 import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
 import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
-import { News, Teaser, QDayBar, QDayPanel } from '../../components/Panels'
+import { News, Teaser, QDayBar } from '../../components/Panels'
+import { goToQDay } from '../../qday/route'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
 import { Ticker } from '../../components/Ticker'
 import { questionsFor } from '../../content/questions'
@@ -208,14 +209,10 @@ export function Board() {
     setFrames((f) => ({ ...f, newsitem: { ...f.newsitem, docked: false } }))
     setOrder((o) => [...o.filter((x) => x !== 'newsitem'), 'newsitem'])
   }
-  const openQDay = () => {
-    setFrames((f) => ({ ...f, qday: { ...f.qday, docked: false } }))
-    setOrder((o) => [...o.filter((x) => x !== 'qday'), 'qday'])
-  }
   const dock = (k: string) => () => setFrames((f) => ({ ...f, [k]: { ...f[k], docked: true } }))
   const [order, setOrder] = useState<string[]>([
     'galaxy', 'constellation', 'timeline', 'questions', 'key', 'teaser', 'news', 'headlines', 'newsitem',
-    'filters', 'help', 'qday', 'detail',
+    'filters', 'help', 'detail',
   ])
   const raise = (k: string) => () => setOrder((o) => [...o.filter((x) => x !== k), k])
   const zOf = (k: string) => 30 + order.indexOf(k)
@@ -542,10 +539,10 @@ export function Board() {
       isWindow: true, onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked,
       isWindow: true, onClick: toggle('help') },
-    // Q-Day opens from the title too, but a window with only one way in is one
-    // a reader can lose.
-    { key: 'qday', icon: 'Q', label: 'Q-Day', active: !frames.qday.docked,
-      isWindow: true, onClick: toggle('qday') },
+    // Q-Day leaves the board rather than opening over it. Not a window, so no
+    // `isWindow` and no docked state — the dock lists what is put away, and
+    // this is somewhere you go.
+    { key: 'qday', icon: 'Q', label: 'Q-Day', onClick: () => goToQDay() },
     {
       key: 'reset',
       icon: '⟲',
@@ -633,7 +630,7 @@ export function Board() {
           className="board-right"
           style={{ display: 'flex', alignItems: 'center', gap: 12, flex: '0 0 auto', position: 'relative' }}
         >
-          <QDayBar forecast={forecast} colour={colour} onOpen={openQDay} />
+          <QDayBar forecast={forecast} colour={colour} onOpen={() => goToQDay()} />
 
           {(
             <button
@@ -1078,18 +1075,6 @@ export function Board() {
           </Suspense>
         </Frame>
       )}
-
-      <Frame
-        title="Q-Day forecast"
-        state={frames.qday}
-        onChange={setFrame('qday')}
-        onDock={dock('qday')}
-        accent={colour}
-        z={zOf('qday')}
-        onFocus={raise('qday')}
-      >
-        <QDayPanel forecast={forecast} colour={colour} />
-      </Frame>
 
       <Frame
         title="Filters"
