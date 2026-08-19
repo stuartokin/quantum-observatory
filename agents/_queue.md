@@ -72,29 +72,6 @@ The collection is **not** fixed-membership: it is meant to grow.
 
 ## What is queued
 
-## The standards themselves: FIPS 206, HQC, and SP 800-57 Rev 6
-agent: sourcer
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus sourcer: Three standards items on the board are thin or stale where
-    the Plan page needs them.
-    pqc-fips-206-falcon: establish the current status of FIPS 206 (FN-DSA,
-    from Falcon) — whether the draft has been published, when, and what the
-    expected final date is. Cite the NIST PQC project page and any Federal
-    Register notice.
-    pqc-hqc: HQC was selected in March 2025 as the backup KEM on different
-    mathematics. Establish the expected final standard date and the draft
-    status. The distinction that matters for a reader is that HQC is a hedge
-    against lattices being broken, not a second choice for general use — make
-    sure the claim says that.
-    Also: NIST SP 800-57 Part 1 Revision 6 (initial public draft, December
-    2025) is reported to fold the post-quantum algorithms into NIST's
-    key-management guidance for the first time. If that is right it belongs on
-    the board, because SP 800-57 is what most organisations' key-management
-    policy actually cites. Attach it to whichever existing item fits or flag it
-    for scout in your summary.
-
 ## Capability history: backfill the measurements the newsroom already has
 agent: newsroom
 added: 2026-08-19
