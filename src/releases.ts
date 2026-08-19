@@ -24,6 +24,22 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.49.0',
+    date: '2026-08-19',
+    headline: 'The board is fetched, not bundled — 110 KB less before anything appears.',
+    ui: [
+      'Content no longer arrives as part of the application. Every visitor used to download the whole board as JavaScript before a single body could be drawn: 188.8 KB gzipped of frontier items and 106.1 KB of headlines, parsed and executed as code. They are now emitted as JSON and fetched, which is what AGENT-PLAN.md and DESIGN-LOG.md both said to do when content outgrew bundling — and specifically said to do instead of raising the ceiling.',
+      'Before first paint: 374.8 KB gzipped became 264.6 KB. Of what remains, 183.2 KB is data rather than code, so the engine never has to treat it as a program.',
+      'The project’s own documents — the design log, the operating notes, the agent plan, the source register — were being downloaded by everyone, because they shared a chunk with the board and a chunk containing anything statically imported is fetched eagerly. That is 50 KB now charged only to readers who open Help, which is the only place they are ever shown.',
+      'Markdown bodies stopped being shipped. Nothing on the site renders one — the changelog has recorded "article bodies not rendered, titles and summaries only" since the first release — but they were bundled anyway, because a bundler cannot discard a property nobody reads off an object it has to build. When bodies are wanted, the answer is to fetch one when a reader opens that item, not to put ninety in front of first paint.',
+      'Code and content are now cached separately. A Monday agent run no longer invalidates the application for every reader, and a code deploy no longer re-sends unchanged research. Previously any change to either re-hashed both.',
+    ],
+    agents: [
+      'Nothing about how an agent writes content changed. The same markdown, the same schemas, the same gates — only where the parsed result is delivered.',
+      'The performance budget now measures what a visitor actually waits for, split into code, documents, board data and headlines, and it reports the before-first-paint total as one figure. The new ceilings were measured from this build rather than estimated, and they are deliberately tight enough to fail when the Q-Day datasets arrive: that failure is the point, and the first answer to it is deferring headlines out of the initial fetch rather than moving a number.',
+    ],
+  },
+  {
     version: '0.48.11',
     date: '2026-08-18',
     headline: 'A full review of the codebase, and the zoom floor finally means what it says.',
@@ -137,16 +153,6 @@ export const RELEASES: Release[] = [
       'A comment written in the wrong form inside a JSX tag would have failed the build; found by a scan that now runs over every component.',
       'The board had been importing glyphFor from two different modules, and using the older one — so the new rules changed nothing on screen. tower.ts had a complete parallel glyph vocabulary: its own shape list, its own type, its own lookup. All three now come from one place.',
       'Two new build gates for faults type checking cannot see: no symbol exported from two modules, and no const used above its declaration. Both were written after making the mistake rather than before, which is the honest order.',
-    ],
-  },
-  {
-    version: '0.38.0',
-    date: '2026-08-10',
-    headline: 'Headlines on the timeline, and one organisation gets one shape.',
-    ui: [
-      'Headline satellites appear on the timeline at their own date, not beside the item they bear on — so several announcements about one development read as a sequence rather than a stack. A faint thread links each back to its item once there is room to draw one.',
-      'The timeline key now documents the shapes as well as the colours. Half the visual grammar had gone unexplained.',
-      'ETH Zürich, ETH Zurich and ETHZ were three organisations wearing three shapes. Actor names are normalised — diacritics, punctuation, legal suffixes and common aliases — before the shape is chosen.',
     ],
   },
 ]

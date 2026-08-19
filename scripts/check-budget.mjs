@@ -4,124 +4,141 @@
  *
  * Measured GZIPPED, because that is what a visitor on a train downloads.
  *
- * Two budgets, deliberately:
+ * The buckets answer different questions, and keeping them apart is the whole
+ * point: one combined number would show the application appearing to bloat
+ * every time a research agent did its job, which is the wrong signal entirely.
  *
- *   app     — React plus the canvas board. Should stay roughly flat no matter
- *             how large the board gets. If this grows, someone added code.
- *   content — the frontier items themselves. Grows as agents fill the board,
- *             which is the whole point, so it gets a generous ceiling.
+ *   app       the entry chunk — downloaded and executed before anything can
+ *             appear. If this grows, someone added code.
+ *   deferred  chunks loaded on demand. Real bytes, charged only to the readers
+ *             who open the thing.
+ *   docs      the project's own documents, imported as ?raw strings and
+ *             rendered by Help. They grow with the project rather than the
+ *             application. Help is lazy, so nobody pays for these unless they
+ *             open it.
+ *   data      the board itself, fetched as JSON. Grows as agents fill the
+ *             board, which is the point.
+ *   news      headlines, fetched as JSON. Grows fastest of anything here — a
+ *             backfill month adds dozens — and is the least needed at first
+ *             paint. Its own bucket, so the newsroom doing its job does not
+ *             quietly slow the board for everyone.
+ *   css       stylesheets.
  *
- * One combined number would show the application appearing to bloat every time
- * a research agent did its job, which is the wrong signal entirely.
+ * ---------------------------------------------------------------------------
+ * HISTORY, KEPT BECAUSE EVERY ONE OF THESE WAS LEARNED THE EXPENSIVE WAY
+ * ---------------------------------------------------------------------------
+ *
+ * `app` was raised 80 → 92 on 8 Aug 2026, accounted for line by line, because
+ * "it grew a bit" is how a budget becomes decoration. Then REDUCED to 88 on
+ * 10 Aug when front-matter and js-yaml left the browser: a measured 13.8 KB
+ * saving, 97.5 → 83.7. The ceiling had first been set to 80 from an estimate
+ * of "about 30 KB", which was wrong by more than twice, and the build then
+ * failed on a number nobody had measured.
+ *
+ *   A ceiling that only ever moves upward is a record of surrender.
+ *   A ceiling set from an estimate is not a measurement either.
+ *
+ * Help was then lazy-loaded and the figure went UP — because this script
+ * counted every chunk as "app". Splitting code cannot reduce a total; it
+ * reduces what is fetched before first paint. The buckets were rewritten to
+ * measure that instead, which is what a performance budget was always for.
+ *
+ * Then the app grew again and the cause was not the application at all:
+ * /content/news/ and /content/forecasts/ were missing from the chunk matcher,
+ * so every headline the newsroom wrote was landing in the entry chunk. The
+ * tell was the content chunk staying byte-identical between builds while the
+ * app climbed. If a figure rises after an agent run rather than after a code
+ * change, look at the matcher before looking at the code.
+ *
+ * ---------------------------------------------------------------------------
+ * 0.49.0 — CONTENT IS FETCHED, SO THIS MEASURES SOMETHING ELSE NOW
+ * ---------------------------------------------------------------------------
+ *
+ * The `content` and `news` JavaScript chunks are gone. Content is emitted as
+ * JSON assets by plugins/contentJson.ts and fetched at runtime, which is what
+ * AGENT-PLAN.md §11a and DESIGN-LOG.md both said to do when content outgrew
+ * bundling — and specifically said to do *instead of* raising the ceiling.
+ *
+ * **The new ceilings are not the old ones relaxed.** They are measured from
+ * the 0.49.0 build, and they measure a different thing: bytes fetched as data
+ * after the shell is up, rather than bytes parsed and executed as code before
+ * anything can render. That distinction is the entire justification for the
+ * numbers being different, and it is the same distinction drawn in 0.1.4 when
+ * the budget moved from raw to gzipped — the limit was not raised to make a
+ * failure go away, the measurement changed to a truer one.
+ *
+ * Measured by this script at 0.49.0 — not read off Vite's build output, which
+ * gzips at a different level and reports slightly smaller numbers. The ceiling
+ * has to be set from the same measurement that enforces it.
+ *
+ *   app        75.1  ceiling 88   (unchanged; +1.5 on 0.48.11 because
+ *                                  _scales.json moved into the entry chunk
+ *                                  when the content chunk stopped existing)
+ *   deferred   18.3  ceiling 60   (unchanged)
+ *   docs       50.0  ceiling 65   (new bucket; was inside content's 220)
+ *   data      109.9  ceiling 150  (new bucket)
+ *   news       73.4  ceiling 100  (new bucket)
+ *   css         6.3  ceiling 20   (unchanged)
+ *
+ * Before first paint, which is the comparison that matters:
+ *
+ *   0.48.11   374.8 KB gzipped, all of it JavaScript to parse and execute
+ *             (app 73.6 + content 188.8 + news 106.1 + css 6.3). The project
+ *             documents were inside that content chunk, and a manual chunk
+ *             containing anything statically imported is fetched eagerly — so
+ *             every visitor downloaded DESIGN-LOG.md whether or not they ever
+ *             opened Help.
+ *   0.49.0    264.6 KB gzipped (75.1 code + 183.2 data + 6.3 css), with the
+ *             50.0 KB of documents moved behind Help where they belong.
+ *
+ * **110.2 KB less before anything renders**, and 183.2 KB of the remainder is
+ * now JSON rather than JavaScript — fetched in parallel, cached independently
+ * of code, and parsed without the engine treating it as a program. A Monday
+ * agent run no longer invalidates the application bundle for every reader.
+ *
+ * **These ceilings are deliberately tight enough to fail when the Q-Day
+ * datasets land** (see QDAY-PLAN.md — roughly 75–90 KB gzipped of vendor,
+ * organisation and threat records). That failure is wanted: it forces the
+ * question rather than letting the number drift. The first lever when it
+ * happens is not this file — it is deferring `news`, which is 40% of the
+ * fetched bytes and is shown a fortnight at a time. `store.ts` is shaped to
+ * make that a change to one function.
  */
-import { readdirSync, readFileSync } from 'node:fs'
+import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { gzipSync } from 'node:zlib'
 
-const ASSETS = 'dist/assets'
+const DIST = 'dist'
+const ASSETS = join(DIST, 'assets')
+const DATA = join(DIST, 'content-data')
 const KB = 1024
 
-/**
- * app     Raised from 80 to 92 KB on 8 Aug 2026, for v0.19–v0.20.
- *
- *         Accounted for, because "it grew a bit" is how a budget becomes
- *         decoration. No dependency was added. The growth is five new modules
- *         and a much larger board component:
- *
- *           Panels.tsx           news, teaser, Q-Day bar and panel
- *           MiniOrbit.tsx        the live rotating constellation
- *           news.ts              weekly change history derived from the board
- *           forecast.ts          the Q-Day object and its loader
- *           constellationPalette per-constellation hues
- *           Board.tsx            filters, year filter, timeline legend,
- *                                scrollbar, zoom-to-fit, provenance rendering
- *
- *         REDUCED to 88 KB on 10 Aug 2026, from 106.
- *
- *         front-matter and js-yaml are gone from the browser. Content is
- *         parsed at build time by plugins/frontmatter.ts, which is where it
- *         always belonged — the files cannot change once the site is built, so
- *         neither can the result of parsing them. Every visitor had been
- *         downloading a YAML parser to read them anyway.
- *
- *         Measured saving: 13.8 KB gzipped, 97.5 to 83.7. The ceiling was first
- *         set to 80 on an estimate of "about 30 KB", which was wrong by more
- *         than twice, and the build then failed on a number nobody had
- *         measured. 88 is the measured figure plus a little room.
- *
- *         Two lessons, both cheap to forget:
- *         a ceiling that only ever moves upward is a record of surrender;
- *         a ceiling set from an estimate is not a measurement either.
- *
- *         Help was then lazy-loaded, and the figure went UP — because this
- *         script counted every chunk as "app". Splitting code cannot reduce a
- *         total; it reduces what is fetched before first paint. The buckets
- *         below were rewritten to measure that instead, which is what a
- *         performance budget was always for.
- *
- *         Then the app grew again, and the cause was not the application at
- *         all: /content/news/ and /content/forecasts/ were missing from the
- *         chunk matcher in vite.config.ts, so every headline the newsroom wrote
- *         was landing in the entry chunk. The tell was the content chunk
- *         staying byte-identical between builds while the app climbed.
- *
- *         If this figure rises after an agent run rather than after a code
- *         change, look at the chunk matcher before looking at the code.
- *
- *         The news archive and the headline detail view were split out too:
- *         the ticker is on screen from the first paint, those two are not shown
- *         until a reader asks. Splitting them was worth more than raising this
- *         number by the 0.2 KB it was over.
- *
- * deferred Chunks loaded on demand. Real bytes, charged only to the readers who
- *         open the thing. Generous, but not unbounded: everything deferred is
- *         still a download for somebody.
- *
- * news    Headlines. Grows fastest of anything here — a backfill month adds
- *         dozens — and is barely needed at first paint. Its own chunk, so the
- *         newsroom doing its job does not slow the board for everyone.
- *
- * content The frontier items. Grows as agents fill the board, which is the
- *         point, so the ceiling is generous. At ~200 items it should move to a
- *         JSON file fetched at runtime rather than bundled.
- */
 const BUDGET = {
   app: 88 * KB,
   deferred: 60 * KB,
-  content: 220 * KB,
-  news: 120 * KB,
+  docs: 65 * KB,
+  data: 150 * KB,
+  news: 100 * KB,
   css: 20 * KB,
 }
 
-const gz = (file) => gzipSync(readFileSync(join(ASSETS, file)), { level: 9 }).length
+const gz = (path) => gzipSync(readFileSync(path), { level: 9 }).length
 
-const files = readdirSync(ASSETS)
-const js = files.filter((f) => f.endsWith('.js'))
-/**
- * Three buckets, because they answer different questions.
- *
- *   app       the entry chunk — what every visitor downloads before seeing
- *             anything. This is the number that matters.
- *   deferred  chunks loaded on demand. Real bytes, but only for the readers
- *             who ask for them.
- *   content   the board itself, which grows as agents do their job.
- *
- * The old script measured all JavaScript as "app", so splitting Help into its
- * own chunk made the figure go UP — the same bytes plus the overhead of the
- * split. A budget that punishes code-splitting is measuring the wrong thing:
- * the point of a performance budget is time to first paint, not total bytes on
- * the server.
- */
-const isContent = (f) => f.startsWith('content-')
-const isNews = (f) => f.startsWith('news-')
+const assets = existsSync(ASSETS) ? readdirSync(ASSETS) : []
+const dataFiles = existsSync(DATA) ? readdirSync(DATA).filter((f) => f.endsWith('.json')) : []
+
+const js = assets.filter((f) => f.endsWith('.js'))
 const isEntry = (f) => f.startsWith('index-')
+const isDocs = (f) => f.startsWith('docs-')
 
+/** Path-resolved so the two directories can be measured together. */
 const groups = {
-  app: js.filter((f) => isEntry(f)),
-  deferred: js.filter((f) => !isEntry(f) && !isContent(f) && !isNews(f)),
-  content: js.filter(isContent),
-  news: js.filter(isNews),
-  css: files.filter((f) => f.endsWith('.css')),
+  app: js.filter(isEntry).map((f) => join(ASSETS, f)),
+  deferred: js.filter((f) => !isEntry(f) && !isDocs(f)).map((f) => join(ASSETS, f)),
+  docs: js.filter(isDocs).map((f) => join(ASSETS, f)),
+  data: dataFiles.filter((f) => f !== 'news.json').map((f) => join(DATA, f)),
+  news: dataFiles.filter((f) => f === 'news.json').map((f) => join(DATA, f)),
+  css: assets.filter((f) => f.endsWith('.css')).map((f) => join(ASSETS, f)),
 }
 
 const fail = []
@@ -136,14 +153,14 @@ console.log('Performance budget (gzipped):')
  * makes a misfiled chunk obvious.
  */
 for (const [name, list] of Object.entries(groups)) {
-  if (list.length) {
-    console.log(`  ${name}: ${list.join(', ')}`)
-  }
+  if (list.length) console.log(`  ${name}: ${list.map((p) => p.split('/').pop()).join(', ')}`)
 }
 console.log()
 
+const measured = {}
 for (const [name, list] of Object.entries(groups)) {
-  const bytes = list.reduce((t, f) => t + gz(f), 0)
+  const bytes = list.reduce((t, p) => t + gz(p), 0)
+  measured[name] = bytes
   const limit = BUDGET[name]
   const pct = Math.round((bytes / limit) * 100)
   const flag = bytes > limit ? 'FAIL' : 'ok'
@@ -153,59 +170,53 @@ for (const [name, list] of Object.entries(groups)) {
   if (bytes > limit) fail.push(`${name} over by ${((bytes - limit) / KB).toFixed(1)} KB gzipped`)
 }
 
-if (groups.content.length === 0) {
-  console.log('\n  Note: no separate content chunk. Check manualChunks in vite.config.ts.')
+/**
+ * The number that actually matters, stated plainly.
+ *
+ * Every bucket above answers "is this part growing". None of them answers
+ * "how long before a reader sees the board", which is the question the budget
+ * exists for. Docs and deferred chunks are excluded because nobody downloads
+ * them until they ask for something.
+ */
+const firstPaint = measured.app + measured.css + measured.data + measured.news
+console.log(
+  `\n  Before first paint: ${(firstPaint / KB).toFixed(1)} KB gzipped ` +
+    `(${(measured.app / KB).toFixed(1)} code, ${((measured.data + measured.news) / KB).toFixed(1)} data, ` +
+    `${(measured.css / KB).toFixed(1)} css)`,
+)
+
+if (groups.data.length === 0) {
+  console.log(
+    '\n  Note: no content-data/*.json emitted. Check plugins/contentJson.ts is\n' +
+      '  registered in vite.config.ts — the board will fetch nothing and show the\n' +
+      '  load-failure screen.',
+  )
 }
 
 /**
- * When content fails, say what is in it.
+ * When data fails, say what is in it.
  *
- * "Content is too big" is not actionable; "news is two thirds of it and only a
- * fortnight is shown at load" tells you what to do. The counts come from the
- * source tree rather than the bundle, so they are approximate — but the ratio
- * is what matters for deciding where to cut.
+ * "Content is too big" is not actionable; "news is two fifths of it and only a
+ * fortnight is shown" tells you what to do. Measured from the emitted JSON, so
+ * these are the real served bytes rather than a proxy for them.
  */
-if (fail.some((f) => f.startsWith('content'))) {
-  const { readdirSync, statSync } = await import('node:fs')
-  const { join } = await import('node:path')
-  const raw = (dir) => {
-    try {
-      return readdirSync(dir)
-        .filter((f) => f.endsWith('.md'))
-        .reduce((t, f) => t + statSync(join(dir, f)).size, 0)
-    } catch {
-      return 0
-    }
-  }
-  const parts = {
-    frontier: raw('content/frontier'),
-    news: raw('content/news'),
-    articles: raw('content/items'),
-  }
-  const total = Object.values(parts).reduce((a, b) => a + b, 0) || 1
-  console.error('\nWhat is in the content chunk, by source size:')
-  for (const [name, bytes] of Object.entries(parts).sort((a, b) => b[1] - a[1])) {
-    if (!bytes) continue
-    console.error(
-      `  ${name.padEnd(9)} ${(bytes / KB).toFixed(0).padStart(4)} KB raw  ` +
-        `${String(Math.round((bytes / total) * 100)).padStart(3)}%`,
-    )
+if (fail.some((f) => f.startsWith('data') || f.startsWith('news'))) {
+  console.error('\nWhat is in the fetched data:')
+  for (const f of dataFiles
+    .map((f) => ({ f, b: gz(join(DATA, f)) }))
+    .sort((a, b) => b.b - a.b)) {
+    console.error(`  ${f.f.replace('.json', '').padEnd(10)} ${(f.b / KB).toFixed(1).padStart(6)} KB gzipped`)
   }
   console.error(
-    '\nBefore raising the ceiling: is all of this needed at first paint? News is\n' +
-      'shown a fortnight at a time and the archive is opened rarely, so it is the\n' +
-      'first candidate for loading on demand rather than up front.',
+    '\nBefore raising a ceiling: is all of this needed at first paint? News is\n' +
+      'shown a fortnight at a time and the archive is opened rarely, so deferring\n' +
+      'it out of the initial load is the first lever — see loadContent() in\n' +
+      'src/content/store.ts, which is shaped to make that a one-function change.',
   )
 }
 
 if (fail.length) {
   console.error('\nBudget exceeded:\n' + fail.map((f) => '  - ' + f).join('\n'))
-  if (fail.some((f) => f.startsWith('content'))) {
-    console.error(
-      '\nContent has outgrown build-time bundling. The fix is to emit it as a\n' +
-        'JSON file fetched at runtime, not to raise the ceiling. See AGENT-PLAN.md.',
-    )
-  }
   if (fail.some((f) => f.startsWith('app'))) {
     console.error(
       '\nApplication code grew. Something was added — a dependency, or a large\n' +

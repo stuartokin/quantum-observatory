@@ -11,15 +11,20 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.48.11**, built in this session but not yet dragged into
+**Version 0.49.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
-before assuming otherwise. Board at roughly 88 frontier items across nine
-constellations, ~97 headlines, twelve standing questions, five agents plus a
+before assuming otherwise. Board at 93 frontier items across nine
+constellations, 97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
+
+**0.49.0 is Phase 0 of the Q-Day work** — the content architecture change
+that everything else waits on. See `QDAY-PLAN.md` for the whole sequence and
+"Content is fetched now, not bundled" below for what changed and the one
+invariant that will break it quietly.
 
 **Live at** stuartokin.github.io, deployed from `main` via GitHub Pages.
 
-**This session (0.48.11) fixed everything a full-repo code review turned
+**0.48.11 fixed everything a full-repo code review turned
 up**, on request, after the review itself was written up and delivered
 first. Three real bugs a reader would notice — the zoom-out floor was
 computed and never wired to the actual zoom clamp, so a spread-out board
@@ -52,6 +57,85 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## Content is fetched now, not bundled
+
+**0.49.0.** The `content` and `news` JavaScript chunks no longer exist.
+`plugins/contentJson.ts` emits each collection as `dist/content-data/<name>.json`
+and `src/content/store.ts` fetches them. This is what `AGENT-PLAN.md §11a` and
+`DESIGN-LOG.md` both said to do when content outgrew bundling, and specifically
+said to do *instead of* raising the ceiling — which is why the ceiling was never
+raised.
+
+Before first paint went from **374.8 KB gzipped to 264.6 KB**, and 183.2 KB of
+what remains is now data rather than code.
+
+### The one invariant that will break this silently
+
+**Never derive from a content export at module scope.**
+
+```ts
+// FINE — evaluated when the component renders, after content has loaded
+function Panel() { const sourced = frontier.filter(isSourced) }
+
+// BROKEN — evaluated at import time, captures the empty array, renders nothing
+const SOURCED = frontier.filter(isSourced)
+```
+
+The loaders export `let`, not `const`, and reassign once during
+`loadContent()`. ES modules export live *bindings*, so every importer sees the
+hydrated value — which is why `Board.tsx` did not have to change at all. But a
+module-scope `const` snapshots the empty array before hydration and there is no
+error, no warning, and no crash. It just renders nothing, which is exactly the
+"correct code somewhere nobody could reach it" failure this project keeps
+recording. Every consumer was checked for this before the change; keep it that
+way.
+
+`main.tsx` awaits `loadContent()` before mounting, so no component needs a
+loading branch. A failed fetch renders an explicit message rather than a white
+screen — the ErrorBoundary cannot catch it, because it happens before there is
+anything to render.
+
+### Other things that changed with it
+
+- **Markdown bodies are no longer shipped.** Nothing renders one — `Markdown`
+  is used in six places, all of them Help rendering the project's own `?raw`
+  documents, and `CHANGELOG.md` has recorded the gap since 0.1.0. They were
+  bundled anyway for the whole life of the project. `INCLUDE_BODIES` in
+  `plugins/contentJson.ts` flips it back in one line if that ever changes; the
+  better answer is fetching one body when a reader opens that item.
+- **`plugins/frontmatter.ts` was deleted.** Nothing imported `?parsed` any
+  more. Its parser lives on in `plugins/parseFrontMatter.ts`.
+- **The project's documents got their own `docs` chunk.** They were sharing
+  the content chunk, and a manual chunk containing anything statically
+  imported is fetched eagerly — so everyone downloaded `DESIGN-LOG.md` whether
+  or not they opened Help. That is 50 KB now charged only to readers who do.
+- **Adding a collection now also means adding a line to
+  `src/content/collections.ts`** — the one list both the build plugin and the
+  store read. That is on top of the existing checklist (directory, schema,
+  `validate-content.mjs`, `agent-io.mjs`, loader, gate, agent `write_scope`).
+- **The budget buckets changed** to `app / deferred / docs / data / news / css`,
+  and the script now prints the before-first-paint total, which is the figure
+  the budget always existed to protect.
+
+### Known and deliberate, for whoever picks this up
+
+- **The budget will fail when the Q-Day datasets land** (~75–90 KB gzipped,
+  per `QDAY-PLAN.md`). That is intended — the ceilings were set from this
+  build's measurements, not padded to accommodate a future phase. **The first
+  lever is not the ceiling: it is deferring `news` out of the initial fetch.**
+  It is 40% of the fetched bytes, the ticker shows a fortnight of it, and the
+  archive is opened rarely. `loadContent()` is shaped to make that a change to
+  one function.
+- **`plugins/` is still not typechecked.** It never was. Adding it to
+  `tsconfig.json` needs `@types/node` and a node-targeted config, since the
+  existing one is browser-targeted — a small job, deliberately not smuggled
+  into this change alongside a new dependency.
+- Content is served with `?v=<package version>` as the cache key. Bump the
+  version when content changes or readers will hold a stale copy for GitHub
+  Pages' ten-minute max-age.
 
 ---
 

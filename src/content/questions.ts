@@ -1,15 +1,18 @@
 import type { StandingQuestion } from './questionTypes'
+import type { ContentRecord } from './collections'
 
-const files = import.meta.glob('/content/questions/*.md', {
-  query: '?parsed',
-  import: 'default',
-  eager: true,
-}) as Record<string, { attributes: Record<string, unknown>; body: string }>
+/**
+ * `let`, not `const` — content is fetched and hydrated once before React
+ * mounts. See `store.ts`. Never derive from these at module scope.
+ */
+export let allQuestions: StandingQuestion[] = []
 
-export const allQuestions: StandingQuestion[] = Object.values(files)
-  .map(({ attributes, body }) => ({ ...(attributes as unknown as StandingQuestion), body }))
-  .filter((q) => q.schema === 'question/v1' && q.status !== 'archived')
-  .sort((a, b) => a.number - b.number)
+export function hydrateQuestions(records: ContentRecord[]): void {
+  allQuestions = records
+    .map(({ attributes }) => attributes as unknown as StandingQuestion)
+    .filter((q) => q.schema === 'question/v1' && q.status !== 'archived')
+    .sort((a, b) => a.number - b.number)
+}
 
 export const questionsFor = (pillar: string): StandingQuestion[] =>
   allQuestions.filter((q) => q.pillar === pillar)

@@ -1,22 +1,23 @@
 import type { NewsItem } from './newsTypes'
+import type { ContentRecord } from './collections'
 
-const files = import.meta.glob('/content/news/*.md', {
-  query: '?parsed',
-  import: 'default',
-  eager: true,
-}) as Record<string, { attributes: Record<string, unknown>; body: string }>
+/**
+ * `let`, not `const` — content is fetched and hydrated once before React
+ * mounts. See `store.ts`. Never derive from these at module scope.
+ */
+export let allNews: NewsItem[] = []
 
-
-export const allNews: NewsItem[] = Object.entries(files)
-  .filter(([path]) => !path.endsWith('README.md'))
-  .map(([, { attributes, body }]) => ({ ...(attributes as unknown as NewsItem), body }))
-  .filter((n) => n.schema === 'news/v1')
-  // 'draft' is a real status a file can carry mid-edit; it never enforced
-  // published-only the way frontier.ts and loader.ts do for their own
-  // collections, so a draft news file rendered live indistinguishably from
-  // a published one.
-  .filter((n) => n.status === 'published' && n.validation?.status !== 'rejected')
-  .sort((a, b) => b.date.localeCompare(a.date))
+export function hydrateNews(records: ContentRecord[]): void {
+  allNews = records
+    .map(({ attributes }) => attributes as unknown as NewsItem)
+    .filter((n) => n.schema === 'news/v1')
+    // 'draft' is a real status a file can carry mid-edit; this never enforced
+    // published-only the way frontier.ts and loader.ts do for their own
+    // collections, so a draft news file rendered live indistinguishably from
+    // a published one.
+    .filter((n) => n.status === 'published' && n.validation?.status !== 'rejected')
+    .sort((a, b) => b.date.localeCompare(a.date))
+}
 
 export const newsFor = (pillar: string): NewsItem[] =>
   allNews.filter((n) => n.pillar === pillar)

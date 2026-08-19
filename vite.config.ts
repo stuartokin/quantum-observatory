@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { frontmatter } from './plugins/frontmatter'
+import { contentJson } from './plugins/contentJson'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
 
@@ -12,7 +12,7 @@ export default defineConfig({
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
-  plugins: [frontmatter(), react()],
+  plugins: [contentJson(), react()],
   // Content lives outside /src so agents have one obvious place to write.
   resolve: {
     alias: {
@@ -25,11 +25,6 @@ export default defineConfig({
     },
   },
   build: {
-    // Content is bundled at build time, so the entry chunk grows with every
-    // item the agents add. Splitting it out keeps two honest measurements:
-    // application code, which should stay flat, and data, which is meant to
-    // grow. One combined number makes the app look like it bloats every time a
-    // research agent does its job.
     rollupOptions: {
       output: {
         /**
@@ -42,39 +37,37 @@ export default defineConfig({
          */
         chunkFileNames: 'assets/[name]-[hash].js',
         manualChunks(id) {
-          // import.meta.glob with ?raw yields ids like
-          // "/content/frontier/x.md?raw", so match on the path, not the
-          // extension. That suffix is why the first attempt caught nothing.
           const norm = id.split('?')[0]
-          // Documents and content share a chunk. They grow with the project,
-          // not with the application, and measuring them together with React
-          // would make the app look like it bloats whenever anyone writes
-          // anything down.
-          //
-          // Match the whole content tree rather than naming collections.
-          // /content/news/ was missed when it was added, so every headline the
-          // newsroom wrote went into the entry chunk — downloaded before
-          // anything appeared on screen, and growing with each run. The content
-          // chunk stayed byte-identical across builds while the app grew, which
-          // is the tell.
-          //
-          // Naming collections has now failed twice: once here, once in the
-          // workflow that stages files for commit. Match the tree.
-          // News is its own chunk. It grows fastest — a backfill adds a
-          // hundred headlines in a week — and almost none of it is needed at
-          // first paint: the ticker shows a fortnight and the archive is opened
-          // rarely. Keeping it separate stops the newsroom's productivity
-          // showing up as a slower first load for everyone.
-          if (norm.includes('/content/news/')) return 'news'
 
+          /**
+           * Content is no longer chunked, because it is no longer JavaScript.
+           *
+           * `plugins/contentJson.ts` emits each collection as a fetched JSON
+           * asset instead. The `content` and `news` chunks that used to be
+           * matched here — 188.8 KB and 106.1 KB gzipped at 0.48.11, both
+           * downloaded and executed before anything appeared on screen — do
+           * not exist any more.
+           *
+           * `content/frontier/_scales.json` is the one exception and is
+           * deliberately left in the entry chunk: it is a few hundred bytes,
+           * it defines what each readiness level *means* per pillar, and the
+           * axis cannot be labelled without it. Splitting it out would be a
+           * network round trip to save nothing.
+           *
+           * The project's own documents still are JavaScript — they are
+           * `?raw` string imports rendered by Help — so they keep a chunk.
+           * They grow with the project rather than with the application, and
+           * measuring them alongside React would make the app look like it
+           * bloats whenever anyone writes anything down. Help is lazy, so
+           * nobody downloads these until they open it.
+           */
           if (
-            norm.includes('/content/') ||
             norm.includes('/agents/') ||
             norm.endsWith('/DESIGN-LOG.md') ||
             norm.endsWith('/OPERATING.md') ||
             norm.endsWith('/AGENT-PLAN.md')
           ) {
-            return 'content'
+            return 'docs'
           }
           return undefined
         },
