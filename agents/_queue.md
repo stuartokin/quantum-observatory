@@ -72,32 +72,6 @@ The collection is **not** fixed-membership: it is meant to grow.
 
 ## What is queued
 
-## Australia: the ASD transition deadline
-agent: scout
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus scout: The board holds no Australian milestone. The Australian
-    Signals Directorate's Information Security Manual is understood to set a
-    2030 date for ceasing approval of traditional asymmetric cryptography (RSA,
-    ECDH, ECDSA, DH) for Australian government systems, which would make it the
-    earliest national hard deadline anywhere and worth having.
-    Start from cyber.gov.au: "Planning for post-quantum cryptography" and the
-    ISM "Guidelines for cryptography" chapter. Note that cyber.gov.au refuses
-    automated fetching, so this needs a real read rather than a scrape.
-    Record for each date you find: the exact year, what ceases or is required,
-    whether it binds government systems only or industry as well, the ISM
-    revision that sets it, and its publication date. Add them to
-    content/milestones/ with jurisdiction AU and authority "ASD". If there are
-    intermediate milestones before 2030, record those too — a single end date
-    with nothing before it is usually a summary rather than the plan.
-    This has already been researched successfully twice and lost twice, both
-    times on field lengths rather than on the finding. You reached the sources
-    and wrote asd-ism-pqc-cessation-2030 and asd-ism-pqc-plan-2026; both were
-    discarded because `plain` and `review.note` were written to frontier-item
-    limits. **On a milestone, `plain` is 400 characters and `review.note` is
-    600.** Count them before returning. The rest of the work was right.
-
 ## United States: the OMB civilian timeline and the FIPS 140-2 sunset
 agent: scout
 added: 2026-08-19
