@@ -1,38 +1,32 @@
 ---
 schema: milestone/v1
 id: asd-ism-pqc-plan-2026
-title: 'ASD ISM: PQC transition plan refined by end of 2026'
+title: 'ASD ISM: PQC transition plan required by end of 2026'
 jurisdiction: AU
 authority: ASD
 date: '2026-12-31'
 kind: deadline
-what: 'Organisations should have a refined plan for their transition to post-quantum cryptography by the end of 2026. The transition plan should account for organisations'' security goals, risk tolerances, dependencies and the value of their data.'
-plain: Australian government agencies (and others applying the ISM) must have a documented, refined plan for moving away from RSA, DH, ECDH and ECDSA by end of 2026. This is the first of three ASD milestones toward the 2030 completion deadline.
+what: 'ISM control ISM-2073 (Rev 0, Sep-25) requires a PQC transition plan to be developed, implemented and maintained. ASD guidance sets end of 2026 as the date by which organisations must have a refined plan reflecting security priorities, data sensitivity and system complexity. Applies to Commonwealth entities across all classification levels.'
+plain: 'Australian government organisations must have a detailed post-quantum cryptography transition plan in place by end of 2026. The plan should reflect security priorities, data sensitivity and system complexity.'
 status: upcoming
 about:
   - pqc-fips-203
   - pqc-fips-204
-  - pqc-fips-205
-  - cnsa-2-timeline
+  - mig-crypto-agility
+  - crypto-bill-of-materials
 source:
-  url: https://www.cyber.gov.au/sites/default/files/2025-09/Planning%20for%20post-quantum%20cryptography%20(September%202025).pdf
-  title: 'Planning for post-quantum cryptography'
-  publisher: Australian Signals Directorate (ASD / ACSC)
-  date: '2025-09-01'
+  url: https://www.cyber.gov.au/business-government/secure-design/quantum/planning-for-post-quantum-cryptography
+  title: Planning for post-quantum cryptography
+  publisher: Australian Signals Directorate (ASD) / cyber.gov.au
+  date: '2025-09-22'
 added: '2026-08-19'
 review:
   state: agent-merged
   by: agent
   agent: scout
-  note: 'Date and wording taken from the September 2025 ASD planning PDF (cyber.gov.au), page covering the three high-level milestones. ISM control ISM-2073 (Updated Sep-25, Applicable NC/OS/P/S/TS) mandates a PQC transition plan for all Australian government classification levels. The planning guidance applies to ISM-compliant organisations; industry is encouraged but not formally bound. Status set upcoming — the deadline is 2026-12-31 and has not been confirmed met or missed as of 2026-08-19.'
+  note: 'Checked against cyber.gov.au Planning for PQC (Sep 2025) which explicitly names end-2026 as the planning milestone. ISM-2073 (Rev 0, Sep-25) visible on the live ISM Guidelines for Cryptography page requires a PQC transition plan to be developed, implemented and maintained. December 2024 ISM Cryptography PDF corroborates the milestone structure.'
 ---
 
-## ASD ISM: Refined PQC transition plan due end-2026
+The ASD 'Planning for Post-Quantum Cryptography' guidance sets end of 2026 as the first of three milestone dates by which Commonwealth entities should have a refined PQC transition plan. This plan should cover security priorities, data sensitivity, system complexity and vendor dependencies. ISM control ISM-2073 (introduced September 2025) makes maintaining such a plan an explicit ISM control.
 
-The Australian Signals Directorate's *Planning for post-quantum cryptography* guidance (first published July 2022, updated September 2025) sets three high-level milestones toward the 2030 PQC completion deadline. The first is that organisations should have a **refined transition plan by end of 2026**.
-
-The ISM itself (ISM-2073, added September 2025, applicable across all classification levels NC through TS) makes maintaining a PQC transition plan a mandatory control for entities that must comply with the ISM — primarily Australian government agencies under the Protective Security Policy Framework. The planning guidance encourages industry to adopt the same milestones.
-
-**Why it matters:** The end-2026 plan deadline is now imminent. Organisations that have not yet conducted a cryptographic inventory and set a migration roadmap are already behind the ASD timeline. This is the prerequisite step before the end-2028 commencement and end-2030 completion milestones.
-
-**Scope:** The ISM applies to Australian government systems. Industry compliance is encouraged but not mandated by the ISM. The guidance explicitly notes that not all organisations are required to apply the ISM.
+As of August 2026 this deadline is four months away. It is the earliest of the three milestones in the ASD timeline, followed by commencement of critical-systems transition by end 2028 and full cessation of traditional asymmetric cryptography by end 2030 (asd-ism-pqc-cessation-2030).
