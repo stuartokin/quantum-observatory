@@ -15,20 +15,24 @@ metrics:
   - name: Sparse Blossom throughput (distance-17 surface code, single CPU core)
     value: <1
     unit: µs per syndrome round
-    note: Higgott and Gidney, Quantum 9, 1600 (2025). Matches 1 µs QEC cycle rate of superconducting hardware at 0.1% circuit-level noise. Processes both X and Z bases.
-  - name: Collision Clustering decoder speed (FPGA, up to 881-qubit surface code)
-    value: MHz
-    unit: decoding speed
-    note: Barber et al., Nature Electronics 8, 84-91 (2025). Matches superconducting qubit cycle rate up to 881-qubit surface code on FPGA; 1,057-qubit on ASIC.
-  - name: Collision Clustering ASIC power and area
-    value: 8 mW / 0.06 mm²
-    unit: ''
-    note: Barber et al., Nature Electronics 8, 84-91 (2025). Enables cryogenic-compatible decoder integration.
+    note: Higgott and Gidney, Quantum 9, 1600 (2025). Mean 0.62 µs/round; 97.4% of shots decoded below 1 µs at 0.1% circuit-level noise. Matches 1 µs QEC cycle rate of superconducting hardware at d=17. Processes both X and Z bases.
+  - name: Collision Clustering FPGA latency (881-qubit surface code)
+    value: '810'
+    unit: ns per shot
+    note: Barber et al., Nature Electronics 8, 84-91 (2025). Xilinx Ultrascale+ XCVU3P FPGA; uses 4.5% of available logic LUTs and 10 KB memory. Decoding frequency above 1 MHz.
+  - name: Collision Clustering ASIC latency (1057-qubit surface code)
+    value: '240'
+    unit: ns per shot
+    note: Barber et al., Nature Electronics 8, 84-91 (2025). 12 nm FinFET ASIC process node; 0.06 mm² area, 8 mW power consumption. Designed for cryogenic integration.
+  - name: Google Willow real-time decoder latency (distance-5)
+    value: '63'
+    unit: µs average
+    note: Nature 638, 920-926 (2025). Averaged over one million cycles of a d=5 surface code below-threshold experiment. Sparse Blossom variant with parallelisation.
   - name: Requirement
     value: within one QEC cycle
     note: slower decoding means corrections arrive too late
 evidence:
-  claim: Higgott and Gidney (Quantum 9, 1600, Jan 2025) demonstrate Sparse Blossom, a variant of the minimum-weight perfect matching decoder that processes syndrome data for both X and Z bases of a distance-17 surface code in under 1 µs per syndrome round on a single CPU core — matching the syndrome generation rate of superconducting quantum processors at 0.1% circuit-level noise. Barber et al. (Nature Electronics 8, 84-91, Jan 2025) demonstrate the Collision Clustering decoder on FPGA and ASIC hardware, achieving MHz decoding speed matching superconducting qubit cycle rates up to 881-qubit surface codes on FPGA and 1,057-qubit surface codes on ASIC; the ASIC occupies 0.06 mm² and consumes 8 mW. IBM's Relay-BP preprint (arXiv:2506.01779) argues improved belief propagation is sufficient for real-time decoding of bivariate-bicycle qLDPC quantum memory. Together these results establish that real-time decoding is tractable for surface codes and high-rate qLDPC codes at scales up to ~1,000 physical qubits; scaling to millions of physical qubits required for a CRQC remains an open engineering challenge.
+  claim: 'Higgott and Gidney (Quantum 9, 1600, Jan 2025) demonstrate Sparse Blossom, a variant of the minimum-weight perfect matching decoder that processes syndrome data for both X and Z bases of a distance-17 surface code in mean 0.62 µs per round on a single CPU core at 0.1% circuit-level depolarising noise — 97.4% of shots decoded below the 1 µs syndrome generation rate of superconducting hardware. Barber et al. (Nature Electronics 8, 84-91, Jan 2025) demonstrate the Collision Clustering decoder on FPGA and ASIC: FPGA decodes an 881-qubit surface code in 810 ns (above 1 MHz) using 4.5% of available logic LUTs; a 12 nm FinFET ASIC decodes a 1,057-qubit surface code in 240 ns at 0.06 mm² and 8 mW — within cryogenic power budgets. The Google Willow below-threshold experiment (Nature 638, 920-926, 2025) confirmed real-time decoding in a functioning system at 63 µs average latency at distance-5 over one million cycles. IBM''s Relay-BP preprint (arXiv:2506.01779) argues improved belief propagation is sufficient for real-time decoding of bivariate-bicycle qLDPC quantum memory. Together these results establish that real-time decoding is tractable for surface codes and high-rate qLDPC codes at scales up to ~1,000 physical qubits; scaling to millions of physical qubits required for a CRQC remains an open engineering challenge.'
   verified: '2026-08-19'
   level: E4
   sources:
@@ -40,7 +44,7 @@ evidence:
       identifier: Quantum 9, 1600 (2025)
       doi: 10.22331/q-2025-01-20-1600
       accessed: '2026-08-19'
-      note: Higgott and Gidney (Google Quantum AI). Peer-reviewed. Distance-17 surface code decoded in under 1 µs per round on a single CPU core, matching 1 µs superconducting QEC cycle at 0.1% noise. Open-source PyMatching v2.
+      note: Higgott and Gidney (Google Quantum AI). Peer-reviewed. Mean 0.62 µs/round for d-17 surface code at 0.1% noise; 97.4% of shots decoded below 1 µs on a single CPU core. Open-source PyMatching v2.
     - url: https://www.nature.com/articles/s41928-024-01319-5
       role: corroborating
       title: A real-time, scalable, fast and resource-efficient decoder for a quantum computer
@@ -49,7 +53,7 @@ evidence:
       identifier: Nat. Electron. 8, 84-91 (2025)
       doi: 10.1038/s41928-024-01319-5
       accessed: '2026-08-19'
-      note: 'Barber et al. (Quantinuum). Peer-reviewed. Collision Clustering decoder on FPGA and ASIC: MHz decoding speed up to 881-qubit (FPGA) and 1,057-qubit (ASIC) surface codes. ASIC: 0.06 mm², 8 mW. Preprint arXiv:2309.05558.'
+      note: 'Barber et al. (Quantinuum/Riverlane). Peer-reviewed. Collision Clustering decoder: FPGA decodes 881-qubit surface code in 810 ns (>1 MHz) at 4.5% LUT usage; ASIC decodes 1,057-qubit surface code in 240 ns at 0.06 mm² and 8 mW. Preprint arXiv:2309.05558.'
     - url: https://www.nature.com/articles/s41586-024-08449-y
       role: corroborating
       title: Quantum error correction below the surface code threshold
@@ -86,7 +90,7 @@ review:
   by: agent
   agent: sourcer
   agentMergedOn: '2026-08-19'
-  note: Focus run 2026-08-19. Added Sparse Blossom (Quantum 9, 1600, 2025; E4) and Collision Clustering (Nature Electronics 8, 84-91, 2025; E4) as primary and corroborating sources with quantitative throughput and latency figures. Evidence level raised from prior state to E4 on strength of two peer-reviewed experimental papers. Metrics added. Google Willow and IBM Relay-BP preprint retained. Actors and country updated.
+  note: Focus run 2026-08-19. Added Sparse Blossom mean latency (0.62 µs/round, 97.4% below 1 µs) and Collision Clustering FPGA (810 ns, 881 qubits) and ASIC (240 ns, 1057 qubits) latency metrics from primary sources. Google Willow 63 µs at d=5 retained. Claim rewritten to include these specific figures. E4 held on peer-reviewed primary sources.
 confidence: high
 status: published
 added: '2026-08-04'

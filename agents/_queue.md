@@ -72,24 +72,4 @@ The collection is **not** fixed-membership: it is meant to grow.
 
 ## What is queued
 
-## Stack: the two components with no numbers
-agent: sourcer
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus sourcer: Two components on the Stack page carry a readiness level
-    and no measurement, so the page can say they matter and not how far along
-    they are.
-    qec-realtime-decoding: find the current state of the art in decoder
-    throughput and latency — decoding bandwidth, whether a decoder keeps up
-    with the syndrome rate for a given code distance, and on what hardware.
-    This is the component most likely to be the real bottleneck and the least
-    covered, because it is engineering rather than physics.
-    qec-magic-state-distillation: find current figures for the cost of magic
-    state production — states per second, the physical qubit overhead of a
-    factory, or the fraction of a full RSA-2048 estimate that distillation
-    accounts for. That last figure is the one a reader needs, because most of
-    the qubits in every published estimate go here rather than into the
-    algorithm.
-    Prefer a peer-reviewed experiment over a preprint over a vendor statement,
-    and say plainly in the claim which one you found.
+_Nothing queued._
