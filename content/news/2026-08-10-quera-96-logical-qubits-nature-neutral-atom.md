@@ -46,6 +46,18 @@ review:
   agentMergedOn: '2026-08-10'
 status: published
 added: '2026-08-10'
+measurements:
+  - kind: logical-qubits
+    value: 96
+    qualifier: error-corrected
+    modality: neutral-atom
+    crossChecks: qec-logical-qubit-scaling
+    note: 'Encoded from 448 physical atoms using [[16,6,4]] codes; 4.7-to-1 physical-to-logical ratio.'
+  - kind: physical-qubits
+    value: 448
+    qualifier: 'operated below threshold'
+    modality: neutral-atom
+    crossChecks: arch-neutral-atom
 ---
 
 The result uses [[16,6,4]] high-rate codes, encoding six logical qubits per 16 physical atoms. The architecture is reconfigurable: atoms are rearranged between operations, enabling the long-range connectivity that the code requires without additional wiring. The paper demonstrates below-threshold error suppression, meaning logical error rates fall as code distance increases — the essential property for fault-tolerant scaling. At the time of publication this was the highest verified logical qubit count on any quantum hardware platform. Quantinuum's Helios system, running 48 logical qubits, held the prior record.

@@ -3,6 +3,9 @@ import { QDAY_TABS, hrefFor, goToBoard, type QDayTab } from './route'
 import { forecastFor } from '../content/forecast'
 import { Clocks } from './tabs/Clocks'
 import { Trends } from './tabs/Trends'
+import { Plan } from './tabs/Plan'
+import { Stack } from './tabs/Stack'
+import { Learn } from './tabs/Learn'
 import { Pending } from './tabs/Pending'
 import './qday.css'
 
@@ -66,6 +69,12 @@ export default function QDay({ tab }: { tab: QDayTab }) {
           <Clocks forecast={forecast} />
         ) : tab === 'trends' ? (
           <Trends forecast={forecast} />
+        ) : tab === 'plan' ? (
+          <Plan />
+        ) : tab === 'stack' ? (
+          <Stack forecast={forecast} />
+        ) : tab === 'learn' ? (
+          <Learn />
         ) : (
           <Pending def={def} />
         )}

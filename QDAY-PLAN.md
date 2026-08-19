@@ -3,8 +3,8 @@
 Written 19 August 2026, against HorizonQ 0.48.11 and the current
 `stuartokin/Qday-Research` `index.html` (2,563 lines, one file).
 
-**Status: Phase 0 shipped as 0.49.0, Phase 1 as 0.50.0, Phase 2 as 0.51.0.**
-Phases 3–5 are still a plan. See `HANDOVER.md` → "Content is fetched now, not bundled"
+**Status: Phases 0–3 shipped as 0.49.0 → 0.52.0.** Phases 4 and 5 are still
+a plan. Five of the seven Observatory sections are live. See `HANDOVER.md` → "Content is fetched now, not bundled"
 and "There is a second surface now" for what each actually changed.
 
 ---
@@ -238,14 +238,25 @@ gap, expert elicitation and the impact ledger instead — and reproduces the
 asserted 2036–2041 range exactly. See `HANDOVER.md` → "The Q-Day figure is
 derived now".
 
-**Still open from Phase 2:** a `content/capability/` collection would give the
-board a real dated capability series and make the two-curve model possible
-honestly. That was offered and deferred in favour of shipping. It remains the
-structurally right answer whenever the trend matters more than the gap.
+**Resolved in Phase 3.** The dated capability series was built — but as
+`measurements[]` on news rather than as a `content/capability/` collection.
+The newsroom already produces dated, validated, item-linked records; they only
+lacked structured numbers. No new collection, no new agent, and backfill
+becomes "add a block to items that already exist".
 
-**Phase 3 — Stack, Plan, Learn.**
-The three tabs HorizonQ can already evidence. NCSC UK dates captured as
-data. Stack's `pct` values re-derived from real metrics or dropped.
+**Phase 3 — Stack, Plan, Learn. ✅ Done, 0.52.0.**
+All three built. NCSC and CNSA-2 dates captured as `content/milestones/` with
+sources, and `src/qday/deadlines.ts` deleted. Stack's percentages were
+**dropped rather than re-derived** — the remaining work is not linear in qubit
+count, so the page shows multiples (8.9× logical, 58× physical) computed from
+the derivation instead.
+
+**Also folded in, on request:** `measurements[]` on the news schema — the
+board's first accumulating record, and the thing that makes a real capability
+series possible. Seven seeded from figures the board had already verified;
+the newsroom fills the rest. See `HANDOVER.md` → "The board has a memory now"
+for the two fields that stop it lying, and why no doubling time is computed
+yet.
 
 **Phase 4 — The quarantined data.**
 `content/readiness/` and `content/threats/` schemas, gates, loaders; 106

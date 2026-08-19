@@ -61,15 +61,15 @@ export const QDAY_TABS: readonly QDayTabDef[] = [
     id: 'stack',
     label: 'Stack',
     blurb:
-      'What a cryptographically relevant machine still needs, component by component. The board already carries the figures on its architecture and error-correction items; what it does not yet have is a defensible way to turn each into a percentage.',
-    ready: false,
+      'What a cryptographically relevant machine still needs, component by component — as multiples, never as invented percentages.',
+    ready: true,
   },
   {
     id: 'plan',
     label: 'Plan',
     blurb:
-      'Regulatory deadlines and the migration timeline. Partly evidenced already — CNSA-2, FIPS 203/204/205 and harvest-now-decrypt-later are on the board. The UK NCSC dates are cited but not yet held as data.',
-    ready: false,
+      'Regulatory deadlines and the migration timeline, each held as content with the source that set it.',
+    ready: true,
   },
   {
     id: 'threats',
@@ -89,8 +89,8 @@ export const QDAY_TABS: readonly QDayTabDef[] = [
     id: 'learn',
     label: 'Learn',
     blurb:
-      'How the cryptography works and why it breaks — the glossary and the explainers. Presentational rather than evidential, so it is the least risky to bring across and deliberately not the first.',
-    ready: false,
+      'The vocabulary this subject runs on, and the questions the board is holding open.',
+    ready: true,
   },
 ]
 

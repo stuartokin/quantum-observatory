@@ -55,6 +55,13 @@ review:
   agentMergedOn: '2026-08-10'
 status: published
 added: '2026-08-10'
+measurements:
+  - kind: physical-qubits
+    value: 107
+    qualifier: 'processor size'
+    modality: superconducting
+    crossChecks: arch-superconducting
+    note: 'Zuchongzhi 3.2, below-threshold surface code by all-microwave leakage suppression.'
 ---
 
 Google's Willow below-threshold demonstration (December 2024, Nature) was the first experimental proof that a surface-code quantum error correction system could operate in the regime where adding more qubits to the code reduces logical error rates. For twelve months, no other group had published a peer-reviewed result reaching the same threshold on a superconducting processor.

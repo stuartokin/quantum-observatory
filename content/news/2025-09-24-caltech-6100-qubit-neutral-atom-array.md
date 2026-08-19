@@ -46,6 +46,13 @@ review:
   agentMergedOn: '2026-08-10'
 status: published
 added: '2026-08-10'
+measurements:
+  - kind: physical-qubits
+    value: 6100
+    qualifier: 'trapped in tweezer array, not error-corrected'
+    modality: neutral-atom
+    crossChecks: arch-neutral-atom
+    note: '6,100 caesium atoms in 12,000 tweezer sites. An array size, not a count of qubits operated in a fault-tolerant demonstration.'
 ---
 
 Key metrics from the published abstract: 6,100 atoms in ~12,000 sites; coherence time 12.6(1) seconds (record for hyperfine qubits in optical tweezers); room-temperature trapping lifetime 23 minutes; imaging survival 99.98952(1)%; imaging fidelity >99.99%.

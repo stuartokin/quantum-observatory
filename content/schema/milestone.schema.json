@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://horizonqltd.com/schema/milestone/v1",
+  "title": "Regulatory or standards milestone",
+  "description": "A dated obligation or publication in the post-quantum migration — an NCSC checkpoint, a CNSA-2 deadline, a FIPS publication. Deliberately not a frontier item: a frontier item maps how close a development is to being real, and a deadline is not a development. It is a date somebody has to meet, and it does not have a readiness level.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "title",
+    "jurisdiction",
+    "authority",
+    "date",
+    "kind",
+    "what",
+    "status",
+    "source"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "milestone/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 110
+    },
+    "jurisdiction": {
+      "enum": [
+        "UK",
+        "US",
+        "EU",
+        "AU",
+        "CA",
+        "NZ",
+        "international"
+      ]
+    },
+    "authority": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "The body that set it — NCSC, NSA, NIST."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "When it falls due, or when it was published."
+    },
+    "kind": {
+      "enum": [
+        "deadline",
+        "published",
+        "selected"
+      ]
+    },
+    "what": {
+      "type": "string",
+      "maxLength": 600
+    },
+    "plain": {
+      "type": "string",
+      "maxLength": 400,
+      "description": "The same thing in terms a reader who does not do this for a living can act on."
+    },
+    "status": {
+      "enum": [
+        "upcoming",
+        "met",
+        "missed",
+        "superseded"
+      ],
+      "description": "Never computed from the date alone. A deadline in the past is not automatically met."
+    },
+    "about": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "string"
+      },
+      "description": "Frontier item ids this bears on."
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "publisher": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "date": {
+          "type": "string"
+        }
+      }
+    },
+    "added": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

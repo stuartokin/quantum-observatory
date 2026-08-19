@@ -1,4 +1,5 @@
 import type { FrontierItem } from '../../content/frontierTypes'
+import type { NewsItem } from '../../content/newsTypes'
 import type { Forecast } from '../../content/forecast'
 import { parseNumeric, dateForMetric, decimalYear, yearOf, type Numeric } from './parse'
 
@@ -144,6 +145,29 @@ export interface Excluded {
   reason: string
 }
 
+export interface SeriesPoint {
+  date: string
+  year: number
+  value: number
+  qualifier?: string
+  newsId: string
+  headline: string
+  crossChecks?: string
+}
+
+export interface Series {
+  kind: 'physical-qubits' | 'logical-qubits'
+  modality: string
+  points: SeriesPoint[]
+  /**
+   * Months to double, or null. Null is the normal answer and not a failure —
+   * see `capabilitySeries()` for the three conditions it has to clear.
+   */
+  doublingMonths: number | null
+  /** Why there is no rate, when there is none. */
+  rateWithheld?: string
+}
+
 export interface DerivedWindow {
   from: number
   to: number
@@ -161,7 +185,9 @@ export interface Comparison {
 
 export interface Derivation {
   requirement: { points: RequirementPoint[]; collapses: Collapse[] }
-  capability: { points: CapabilityPoint[]; gaps: Gap[] }
+  /** `points` and `gaps` are the snapshot, from frontier items. `series` is
+   *  the dated history, from news measurements. Different questions. */
+  capability: { points: CapabilityPoint[]; gaps: Gap[]; series: Series[] }
   probability: Probability | null
   impact: ImpactLedger
   window: DerivedWindow | null
@@ -457,6 +483,83 @@ function probability(items: FrontierItem[]): Probability | null {
   }
 }
 
+/* ------------------------------------------------------- capability series */
+
+/**
+ * THE DATED CAPABILITY SERIES, FROM NEWS RATHER THAN FROM ITEMS.
+ *
+ * A frontier item holds the current best figure and overwrites its own
+ * history — when a device ships more qubits the old number is gone. A news
+ * item is dated by when the thing happened and is never revised. So a hundred
+ * dated news items with structured `measurements` are a hundred points, and
+ * the items are a snapshot. This reads the points.
+ *
+ * **A rate is only computed when three conditions hold**, and on today's
+ * content none of them do for long, which is the honest state of the board
+ * rather than a bug:
+ *
+ *   1. at least three points, because two points are a line through anything;
+ *   2. all sharing one `qualifier`, because Caltech's 6,100 atoms *trapped in
+ *      a tweezer array* and QuEra's 448 *operated below threshold* are not the
+ *      same measurement — grouped naively they show capability falling by an
+ *      order of magnitude, which is nonsense;
+ *   3. growth, because a doubling time fitted to a decline is meaningless.
+ *
+ * Modality separates the groups for the same reason. Counts on different
+ * platforms are not points on one curve.
+ */
+function capabilitySeries(news: NewsItem[]): Series[] {
+  const groups = new Map<string, Series>()
+
+  for (const n of news) {
+    if (!n.date) continue
+    for (const m of n.measurements ?? []) {
+      if (m.kind !== 'physical-qubits' && m.kind !== 'logical-qubits') continue
+      if (!m.modality) continue // refused by check-news, belt and braces
+      const year = decimalYear(n.date)
+      if (year === null || !Number.isFinite(m.value)) continue
+      const key = `${m.kind}|${m.modality}`
+      const g = groups.get(key) ?? { kind: m.kind, modality: m.modality, points: [], doublingMonths: null }
+      g.points.push({
+        date: n.date,
+        year,
+        value: m.value,
+        qualifier: m.qualifier,
+        newsId: n.id,
+        headline: n.headline,
+        crossChecks: m.crossChecks,
+      })
+      groups.set(key, g)
+    }
+  }
+
+  for (const g of groups.values()) {
+    g.points.sort((a, b) => a.year - b.year)
+    const quals = new Set(g.points.map((p) => p.qualifier ?? ''))
+    if (g.points.length < 3) {
+      g.rateWithheld = `${g.points.length} point${g.points.length === 1 ? '' : 's'} — a rate needs at least three.`
+      continue
+    }
+    if (quals.size > 1) {
+      g.rateWithheld = `points measure different things (${[...quals].join('; ')}), which cannot share a trend line.`
+      continue
+    }
+    const first = g.points[0]
+    const last = g.points[g.points.length - 1]
+    const years = last.year - first.year
+    const doublings = Math.log2(last.value / first.value)
+    if (!(years > 0) || !(doublings > 0)) {
+      g.rateWithheld = 'the series does not grow over its span, so a doubling time would be meaningless.'
+      continue
+    }
+    g.doublingMonths = (years / doublings) * 12
+  }
+
+  return [...groups.values()].sort(
+    (a, b) => a.kind.localeCompare(b.kind) || b.points.length - a.points.length,
+  )
+}
+
 /* ------------------------------------------------------------------ impact */
 
 /**
@@ -487,7 +590,11 @@ function impact(items: FrontierItem[]): ImpactLedger {
 
 /* ------------------------------------------------------------------ derive */
 
-export function derive(items: FrontierItem[], forecast?: Forecast): Derivation {
+export function derive(
+  items: FrontierItem[],
+  forecast?: Forecast,
+  news: NewsItem[] = [],
+): Derivation {
   const excluded: Excluded[] = []
   const req = requirement(items, excluded)
   const capPoints = capability(items, excluded)
@@ -544,7 +651,7 @@ export function derive(items: FrontierItem[], forecast?: Forecast): Derivation {
 
   return {
     requirement: req,
-    capability: { points: capPoints, gaps: gaps(capPoints, req.points) },
+    capability: { points: capPoints, gaps: gaps(capPoints, req.points), series: capabilitySeries(news) },
     probability: prob,
     impact: impact(items),
     window,

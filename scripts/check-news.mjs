@@ -53,6 +53,8 @@ function normalise(v) {
 
 const files = readdirSync(DIR).filter((f) => f.endsWith('.md') && f !== 'README.md')
 const errors = []
+const warnings = []
+let measured = 0
 /** Kept for the duplicate pass below. */
 const published = []
 const counts = { verified: 0, 'single-source': 0, contested: 0, rejected: 0 }
@@ -173,6 +175,35 @@ for (const f of files) {
     }
   }
 
+  /**
+   * A measurement that will be plotted has to say which platform it came from.
+   *
+   * Counts on different modalities are not points on one curve — 448 neutral
+   * atoms against 98 trapped ions against 120 superconducting qubits are three
+   * different machines doing three different things. A count with no modality
+   * would silently join a trend it does not belong to, so it is refused here
+   * rather than quietly mis-plotted later.
+   */
+  for (const m of data.measurements ?? []) {
+    measured++
+    const plotted = m.kind === 'physical-qubits' || m.kind === 'logical-qubits'
+    if (plotted && !m.modality) {
+      errors.push(
+        `${path}: measurement "${m.kind} = ${m.value}" has no modality. Counts on ` +
+          `different platforms are not comparable, so a plotted one must name its own.`,
+      )
+    }
+    if (m.crossChecks && !frontierIds.has(m.crossChecks)) {
+      errors.push(`${path}: measurement crossChecks -> "${m.crossChecks}" is not an item on the board`)
+    }
+    if (m.kind === 'logical-qubits' && !m.qualifier) {
+      warnings.push(
+        `${path}: logical-qubits with no qualifier. Error-corrected and ` +
+          `error-detected counts differ by a factor of two on the same device.`,
+      )
+    }
+  }
+
   if (data.establishedBy?.length) linked++
   published.push({
     id: data.id,
@@ -184,7 +215,6 @@ for (const f of files) {
 }
 
 
-const warnings = []
 for (let i = 0; i < published.length; i++) {
   for (let j = i + 1; j < published.length; j++) {
     const a = published[i], b = published[j]
@@ -220,6 +250,11 @@ if (files.length) {
         .join(' · '),
   )
   console.log(`  ${linked} of ${files.length} traced to the research behind them`)
+  console.log(
+    measured
+      ? `  ${measured} structured measurement(s) — the board's only dated capability series`
+      : '  no structured measurements yet; the capability series has nothing to plot',
+  )
 }
 
 if (warnings.length) {

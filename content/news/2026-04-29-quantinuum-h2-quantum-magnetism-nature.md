@@ -43,6 +43,13 @@ review:
   agentMergedOn: '2026-08-10'
 status: published
 added: '2026-08-10'
+measurements:
+  - kind: physical-qubits
+    value: 56
+    qualifier: 'processor size'
+    modality: trapped-ion
+    crossChecks: arch-trapped-ion
+    note: 'Quantinuum H2.'
 ---
 
 The experiment simulated digitised time evolution of the quantum Ising model on Quantinuum's H2 system. The key result was observing Floquet prethermalization — a long-lived approximately energy-conserving regime — on timescales where accurate classical simulation is extremely challenging or infeasible. The team also measured diffusion constants associated with an emergent hydrodynamic description of the dynamics, providing an internal consistency check.

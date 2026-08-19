@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { frontier } from '../../content/frontier'
+import { allNews } from '../../content/newsroom'
 import type { Forecast } from '../../content/forecast'
-import { derive, type Derivation, type RequirementPoint, type CapabilityPoint } from '../derive'
+import { derive, type Derivation, type RequirementPoint, type SeriesPoint } from '../derive'
 
 /**
  * TRENDS — what the board's own evidence says about Q-Day.
@@ -13,9 +14,11 @@ import { derive, type Derivation, type RequirementPoint, type CapabilityPoint } 
  *   - The requirement line is not fixed. It has fallen an order of magnitude
  *     in eight months, and that is the strongest, least-known thing on the
  *     board.
- *   - There is no capability line, because the board holds today's figures and
- *     not their history. Capability is drawn as dated marks — where things
- *     actually are — and the vertical distance to the requirement is the gap.
+ *   - Capability is drawn as dated marks and never joined into a line. The
+ *     dates are real now — news items carry structured measurements, and a
+ *     news item records when the thing happened — but a line through them
+ *     would still be wrong until a group of points shares one platform and one
+ *     qualifier. The vertical distance to the requirement is the gap.
  *   - Nothing is extrapolated forward. The only evidence here that maps to
  *     calendar years is an expert survey, and it is shown as what it is.
  */
@@ -31,7 +34,15 @@ const fmtNum = (n: number) =>
 interface Plot {
   kind: 'physical' | 'logical'
   required: RequirementPoint[]
-  demonstrated: CapabilityPoint[]
+  /**
+   * Dated measurements from news, not the frontier snapshot.
+   *
+   * The snapshot used to be plotted here and it was misleading: every mark sat
+   * at its item's most recent source date, so five figures from five years of
+   * work bunched into a few weeks of 2026. These carry the date the result
+   * actually happened.
+   */
+  demonstrated: SeriesPoint[]
 }
 
 /**
@@ -48,9 +59,7 @@ function GapChart({ plot }: { plot: Plot }) {
 
   const all = [
     ...plot.required.map((p) => ({ x: p.year, y: p.value.n })),
-    ...plot.demonstrated.flatMap((p) =>
-      p.date ? [{ x: Number(p.date.slice(0, 4)), y: p.value.n }] : [],
-    ),
+    ...plot.demonstrated.map((p) => ({ x: p.year, y: p.value })),
   ]
   if (all.length < 2) return null
 
@@ -160,32 +169,32 @@ function GapChart({ plot }: { plot: Plot }) {
           )
         })}
 
-        {/* Demonstrated. Marks, never a line — the board holds no history for
-            these, and joining them would draw a trend that does not exist. */}
-        {plot.demonstrated.map((p) =>
-          p.date ? (
-            <g key={`${p.itemId}-${p.metricName}`}>
-              <rect
-                x={X(Number(p.date.slice(0, 4))) - 5}
-                y={Y(p.value.n) - 5}
-                width={10}
-                height={10}
-                fill={DEMONSTRATED}
-                stroke="var(--ground)"
-                strokeWidth={2}
-              >
-                <title>{`${p.value.raw} — ${p.metricName}\n${p.title} (${p.date})`}</title>
-              </rect>
-              <text
-                x={X(Number(p.date.slice(0, 4))) + 10}
-                y={Y(p.value.n) + 4}
-                className="qd-chart__label"
-              >
-                {p.value.raw}
-              </text>
-            </g>
-          ) : null,
-        )}
+        {/* Demonstrated. Marks, never a line: these points are dated properly
+            but they are not all the same measurement — an array of trapped
+            atoms and a processor operated below threshold sit on this axis
+            together. `capabilitySeries()` decides where a rate is defensible;
+            the chart never implies one. */}
+        {plot.demonstrated.map((p) => (
+          <g key={`${p.newsId}-${p.value}`}>
+            <rect
+              x={X(p.year) - 5}
+              y={Y(p.value) - 5}
+              width={10}
+              height={10}
+              fill={DEMONSTRATED}
+              stroke="var(--ground)"
+              strokeWidth={2}
+            >
+              <title>{`${p.value} — ${p.qualifier ?? 'demonstrated'}, ${p.date}\n${p.headline}`}</title>
+            </rect>
+            {/* Beside the mark, not above or below it. Centred labels were
+                being clipped by neighbouring marks where two results land at
+                a similar count a few weeks apart — 448 rendered as "148". */}
+            <text x={X(p.year) + 9} y={Y(p.value) + 4} className="qd-chart__label">
+              {p.value.toLocaleString('en-GB')}
+            </text>
+          </g>
+        ))}
       </svg>
       <div className="qd-legend">
         <span>
@@ -202,13 +211,15 @@ function GapChart({ plot }: { plot: Plot }) {
 /* ------------------------------------------------------------------- panel */
 
 export function Trends({ forecast }: { forecast?: Forecast }) {
-  const d: Derivation = useMemo(() => derive(frontier, forecast), [forecast])
+  const d: Derivation = useMemo(() => derive(frontier, forecast, allNews), [forecast])
 
   const plots: Plot[] = (['physical', 'logical'] as const)
     .map((kind) => ({
       kind,
       required: d.requirement.points.filter((p) => p.kind === kind),
-      demonstrated: d.capability.points.filter((p) => p.kind === kind),
+      demonstrated: d.capability.series
+        .filter((sr) => sr.kind === `${kind}-qubits`)
+        .flatMap((sr) => sr.points),
     }))
     .filter((p) => p.required.length > 0)
 
@@ -242,6 +253,50 @@ export function Trends({ forecast }: { forecast?: Forecast }) {
           <GapChart key={p.kind} plot={p} />
         ))}
       </div>
+
+      {d.capability.series.length > 0 && (
+        <section className="qd-series">
+          <h3>Capability over time, by platform</h3>
+          <p className="qd-note">
+            Dated from news, where an event records the figure it reported — the only place
+            on the board that can carry a history, because an item holds the current best
+            value and overwrites its own. Platforms are kept apart: counts on different
+            hardware are not points on one curve.
+          </p>
+          <ul className="qd-series__list">
+            {d.capability.series.map((sr) => (
+              <li key={`${sr.kind}-${sr.modality}`}>
+                <p className="qd-series__head">
+                  <b>{sr.modality.replace('-', ' ')}</b> · {sr.kind.replace('-', ' ')} ·{' '}
+                  {sr.points.length} point{sr.points.length === 1 ? '' : 's'}
+                  {sr.doublingMonths !== null && (
+                    <span className="qd-series__rate">
+                      doubling every ~{sr.doublingMonths.toFixed(0)} months
+                    </span>
+                  )}
+                </p>
+                {sr.rateWithheld && <p className="qd-series__withheld">No rate — {sr.rateWithheld}</p>}
+                <ol className="qd-series__points">
+                  {sr.points.map((p) => (
+                    <li key={`${p.newsId}-${p.value}`}>
+                      <span>{p.date}</span>
+                      <b>{p.value.toLocaleString('en-GB')}</b>
+                      <i>{p.qualifier ?? '—'}</i>
+                    </li>
+                  ))}
+                </ol>
+              </li>
+            ))}
+          </ul>
+          <p className="qd-note">
+            Seven measurements so far, on six events. Every one is a figure the board had
+            already verified elsewhere, so this is transcription rather than new research —
+            the newsroom fills the rest as it works. A rate needs three points sharing one
+            qualifier and showing growth; nothing clears that yet, and the page says so
+            rather than drawing a line through whatever is there.
+          </p>
+        </section>
+      )}
 
       {d.capability.gaps.length > 0 && (
         <section className="qd-gaps">

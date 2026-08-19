@@ -24,6 +24,25 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.52.0',
+    date: '2026-08-19',
+    headline: 'Five of the seven sections are live, and the board grew a memory.',
+    ui: [
+      'Plan: every regulatory deadline is now a content file with the source that set it \u2014 NCSC 2028/2031/2035, the CNSA 2.0 timetable, the US federal target, and the day the first three standards were published. They were application constants for one release; a deadline the board asserts and cannot cite is the same failure as an unsourced item.',
+      'A deadline in the past is never marked met by arithmetic. The board records whether it was actually discharged, because a date passing and an obligation being met are different facts.',
+      'Stack: what a cryptographically relevant machine still needs, component by component \u2014 and deliberately without percentages. The prototype scored each part and summed them to "15% of the way there". Those numbers were editorial: the remaining work is not linear in qubit count, and 96 logical qubits against 835 is not 11% of anything defensible. What the board can say honestly is the multiple \u2014 8.9\u00d7 more logical qubits, 58\u00d7 more physical \u2014 and where the literature publishes no target, the row says so.',
+      'Learn: the vocabulary, each term linked to the item that carries the actual evidence, alongside the twelve standing questions with the state an agent last recorded. Four of them read unknown, which is a real answer and more use than a confident guess.',
+      'The definitions stay in code rather than becoming content. They make no claim that could be right or wrong against evidence, and giving them a schema would put definitions in the same place as claims.',
+    ],
+    agents: [
+      'News items can now carry structured measurements \u2014 the figure an event reported, with the platform and the qualifier that make it comparable. This is the board\u2019s first memory: a frontier item holds the current best value and overwrites its own history, but a news item is dated by when the thing happened and is never revised.',
+      'Seven measurements seeded across six events, every one a figure the board had already verified elsewhere, so it is transcription rather than new research. The newsroom fills the rest as it works.',
+      'Modality and qualifier are mandatory for anything plotted, and the gate refuses a count without them. Caltech\u2019s 6,100 trapped atoms and QuEra\u2019s 448 operated below threshold are not the same measurement \u2014 grouped naively they show capability falling by an order of magnitude.',
+      'A doubling time is only computed from three points sharing one qualifier and showing growth. Nothing clears that yet, and each series says which condition it failed rather than drawing a line through whatever is there.',
+      'Twenty-one derivation self-tests, up from sixteen. The new ones cover the traps this design invites: mixed qualifiers, mixed platforms, and a declining series that would otherwise produce a negative doubling time.',
+    ],
+  },
+  {
     version: '0.51.0',
     date: '2026-08-19',
     headline: 'The Q-Day estimate stops being asserted and starts being derived.',
@@ -159,17 +178,6 @@ export const RELEASES: Release[] = [
       'Nothing is hidden at any level. A demoted item is a small dim dot — still there, still hoverable, still clickable, still counted. A reader who cannot see something is told it does not exist; one who sees it small is told it is there and quiet.',
       'Links appear only when zoomed in and only between prominent bodies. Sixty hairlines behind sixty dots is texture rather than information.',
       'Zoom never changes what is on the board, only how much of it is emphasised. Bringing back something a reader filtered out would be lying about what they asked for.',
-    ],
-  },
-  {
-    version: '0.41.0',
-    date: '2026-08-11',
-    headline: 'A record of what changed in the content, not just the code.',
-    ui: [
-      'Help gains "What changed in the data": every addition, sourcing, readiness move, machine check, confirmation and veto, grouped by day, most recent ten days. Derived from the content itself, so it cannot drift from what the board holds.',
-      'The header statistics show when the site was last built. Front matter records dates but not times, so a change is dated to the day and the build time answers the other half of the freshness question.',
-      'A new topic now appears in Journals. It only recorded an item once evidence was attached, so Scout adding three topics produced nothing at all — and the first anyone knew of them was seeing unfamiliar bodies on the board.',
-      'The toolbar can no longer be dragged into a shape that is not a toolbar, and Reset puts it back where it started along with the frames.',
     ],
   },
 ]

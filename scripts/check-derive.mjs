@@ -59,7 +59,8 @@ const { derive } = await import(
 
 const items = load('content/frontier')
 const forecast = load('content/forecasts').find((f) => f.id === 'q-day')
-const d = derive(items, forecast)
+const news = load('content/news')
+const d = derive(items, forecast, news)
 
 const n = (x, dp = 2) => Number(x).toFixed(dp)
 
@@ -89,6 +90,15 @@ console.log('    all counts, most favourable first:')
 d.capability.points.forEach((p) =>
   console.log(`      ${String(p.value.raw).padStart(7)} ${p.kind.padEnd(8)} ${String(p.date).padEnd(11)} ${p.itemId.padEnd(30)} ${p.metricName}`),
 )
+
+console.log(`\n  Capability series — ${d.capability.series.length} group(s) from dated news measurements`)
+for (const g of d.capability.series) {
+  console.log(
+    `    ${g.kind.padEnd(15)} ${g.modality.padEnd(15)} ${g.points.length} pt(s)  ` +
+      (g.doublingMonths ? `doubling ~${g.doublingMonths.toFixed(0)} months` : `no rate: ${g.rateWithheld}`),
+  )
+  g.points.forEach((p) => console.log(`      ${p.date}  ${String(p.value).padStart(6)}  ${p.qualifier ?? ''}`))
+}
 
 if (d.probability) {
   console.log(`\n  Probability — ${d.probability.itemId}, anchored ${d.probability.anchorDate}`)

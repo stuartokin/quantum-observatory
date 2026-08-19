@@ -182,6 +182,48 @@ const d5 = derive(
 t('the impact ledger counts published items with a non-zero score, and no others',
   d5.impact.entries.length === 2 && d5.impact.net === 2 && d5.impact.up === 3 && d5.impact.down === -1)
 
+/* ------------------------------------------------- capability series (news) */
+
+const newsItem = (over) => ({
+  schema: 'news/v1', pillar: 'quantum', status: 'published',
+  validation: { status: 'verified', checks: ['x'] },
+  source: { url: 'u', kind: 'paper' }, plain: 'p', ...over,
+})
+
+const mixedQualifier = derive([], undefined, [
+  newsItem({ id: 'a', date: '2025-09-24', headline: 'A', measurements: [{ kind: 'physical-qubits', value: 6100, modality: 'neutral-atom', qualifier: 'trapped in tweezer array' }] }),
+  newsItem({ id: 'b', date: '2025-11-10', headline: 'B', measurements: [{ kind: 'physical-qubits', value: 448, modality: 'neutral-atom', qualifier: 'operated below threshold' }] }),
+  newsItem({ id: 'c', date: '2026-01-19', headline: 'C', measurements: [{ kind: 'physical-qubits', value: 448, modality: 'neutral-atom', qualifier: 'operated below threshold' }] }),
+])
+const na = mixedQualifier.capability.series.find((x) => x.modality === 'neutral-atom')
+t('a series is dated from the news event, not from when the board looked',
+  na.points.length === 3 && na.points[0].date === '2025-09-24')
+t('  no doubling time when the points measure different things',
+  na.doublingMonths === null && /different things/.test(na.rateWithheld))
+
+const sameQualifier = derive([], undefined, [
+  newsItem({ id: 'a', date: '2024-01-01', headline: 'A', measurements: [{ kind: 'logical-qubits', value: 12, modality: 'trapped-ion', qualifier: 'error-corrected' }] }),
+  newsItem({ id: 'b', date: '2025-01-01', headline: 'B', measurements: [{ kind: 'logical-qubits', value: 24, modality: 'trapped-ion', qualifier: 'error-corrected' }] }),
+  newsItem({ id: 'c', date: '2026-01-01', headline: 'C', measurements: [{ kind: 'logical-qubits', value: 48, modality: 'trapped-ion', qualifier: 'error-corrected' }] }),
+])
+const ti = sameQualifier.capability.series[0]
+t('  a doubling time is computed when three points share a qualifier and grow',
+  ti.doublingMonths !== null && Math.abs(ti.doublingMonths - 12) < 0.5)
+
+const twoPlatforms = derive([], undefined, [
+  newsItem({ id: 'a', date: '2025-01-01', headline: 'A', measurements: [{ kind: 'physical-qubits', value: 100, modality: 'superconducting' }] }),
+  newsItem({ id: 'b', date: '2026-01-01', headline: 'B', measurements: [{ kind: 'physical-qubits', value: 400, modality: 'neutral-atom' }] }),
+])
+t('  platforms are never mixed into one series', twoPlatforms.capability.series.length === 2)
+
+const shrinking = derive([], undefined, [
+  newsItem({ id: 'a', date: '2024-01-01', headline: 'A', measurements: [{ kind: 'physical-qubits', value: 400, modality: 'photonic', qualifier: 'q' }] }),
+  newsItem({ id: 'b', date: '2025-01-01', headline: 'B', measurements: [{ kind: 'physical-qubits', value: 200, modality: 'photonic', qualifier: 'q' }] }),
+  newsItem({ id: 'c', date: '2026-01-01', headline: 'C', measurements: [{ kind: 'physical-qubits', value: 100, modality: 'photonic', qualifier: 'q' }] }),
+])
+t('  a declining series gets no doubling time rather than a negative one',
+  shrinking.capability.series[0].doublingMonths === null)
+
 /* ------------------------------------------------------------------ empty */
 
 const d6 = derive([], undefined)

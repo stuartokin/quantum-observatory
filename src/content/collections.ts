@@ -24,6 +24,7 @@ export const COLLECTIONS: readonly Collection[] = [
   { name: 'questions', dir: 'content/questions' },
   { name: 'forecasts', dir: 'content/forecasts' },
   { name: 'items', dir: 'content/items' },
+  { name: 'milestones', dir: 'content/milestones' },
 ]
 
 /**

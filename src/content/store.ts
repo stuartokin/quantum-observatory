@@ -5,6 +5,7 @@ import { hydrateNews } from './newsroom'
 import { hydrateQuestions } from './questions'
 import { hydrateForecasts } from './forecast'
 import { hydrateItems } from './loader'
+import { hydrateMilestones } from './milestones'
 
 /**
  * FETCH THE BOARD, THEN LET IT RENDER.
@@ -40,6 +41,7 @@ const HYDRATORS: Record<string, (records: ContentRecord[]) => void> = {
   questions: hydrateQuestions,
   forecasts: hydrateForecasts,
   items: hydrateItems,
+  milestones: hydrateMilestones,
 }
 
 /**

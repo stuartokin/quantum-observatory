@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { Forecast } from '../../content/forecast'
 import { scenariosFrom, yearsTo, type ScenarioId } from '../scenarios'
-import { NCSC_DEADLINE } from '../deadlines'
+import { milestones } from '../../content/milestones'
 import { parts, useNow } from '../countdown'
 
 const dateFmt = (d: Date) =>
@@ -52,23 +52,35 @@ export function Clocks({ forecast }: { forecast?: Forecast }) {
   const [x, setX] = useState(10)
   const [y, setY] = useState(5)
 
+  /**
+   * The defence clock is the last UK deadline the board holds, read from
+   * content rather than from a constant. `src/qday/deadlines.ts` carried these
+   * for one release with a note at the top saying it should not; it is gone.
+   */
+  const ncsc = useMemo(() => {
+    const uk = milestones.filter((m) => m.jurisdiction === 'UK' && m.kind === 'deadline')
+    return uk[uk.length - 1]
+  }, [])
+
   const scenario = scenarios.find((s) => s.id === chosen) ?? scenarios[0]
 
-  if (!forecast || !scenario) {
+  if (!forecast || !scenario || !ncsc) {
     return (
       <div className="qd-pending">
         <p className="qd-pending__flag">No forecast on the board</p>
         <h2>Clocks</h2>
         <p className="qd-pending__blurb">
-          These countdowns are read from <code>content/forecasts/q-day.md</code>. That
-          file is missing or has no estimates, so there is nothing honest to count to.
+          These countdowns are read from <code>content/forecasts/q-day.md</code> and
+          <code>content/milestones/</code>. One of those is missing what this needs, so
+          there is nothing honest to count to.
         </p>
       </div>
     )
   }
 
-  const ncsc = NCSC_DEADLINE
-  const gapDays = Math.round((scenario.date.getTime() - ncsc.date.getTime()) / 864e5)
+  const ncscDate = new Date(`${ncsc.date}T23:59:59Z`)
+  const ncscYear = Number(ncsc.date.slice(0, 4))
+  const gapDays = Math.round((scenario.date.getTime() - ncscDate.getTime()) / 864e5)
   const gapYears = gapDays / 365
   const headroom = gapDays >= 0
 
@@ -118,23 +130,23 @@ export function Clocks({ forecast }: { forecast?: Forecast }) {
           </p>
           <p className="qd-headroom__note">
             {coincide
-              ? `Q-Day and the ${ncsc.year} deadline effectively coincide. There is no margin in this scenario — finishing on time is the best case.`
+              ? `Q-Day and the ${ncscYear} deadline effectively coincide. There is no margin in this scenario — finishing on time is the best case.`
               : headroom
-                ? `Q-Day falls after the ${ncsc.year} deadline — if that deadline is met.`
+                ? `Q-Day falls after the ${ncscYear} deadline — if that deadline is met.`
                 : `Q-Day falls BEFORE migration is due to complete.`}
           </p>
         </article>
 
         <article className="qd-clock qd-clock--defence">
-          <p className="qd-clock__kind">Defence · NCSC {ncsc.year}</p>
+          <p className="qd-clock__kind">Defence · {ncsc.authority} {ncscYear}</p>
           <p className="qd-clock__scenario">{ncsc.title}</p>
-          <p className="qd-clock__date">{dateFmt(ncsc.date)}</p>
-          <Countdown to={ncsc.date} now={now} tone="defence" />
+          <p className="qd-clock__date">{dateFmt(ncscDate)}</p>
+          <Countdown to={ncscDate} now={now} tone="defence" />
           <p className="qd-clock__src">
-            <a href={ncsc.href} target="_blank" rel="noreferrer">
-              {ncsc.srcLabel} ↗
+            <a href={ncsc.source.url} target="_blank" rel="noreferrer">
+              {ncsc.source.publisher ?? 'source'} ↗
             </a>{' '}
-            · not yet held as data on the board
+            · held as data on the board
           </p>
         </article>
       </section>

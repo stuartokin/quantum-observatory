@@ -53,7 +53,7 @@
         "notable",
         "routine"
       ],
-      "description": "headline = would change what someone plans around \u00b7 notable = worth knowing \u00b7 routine = the record. Only headline items are prominent."
+      "description": "headline = would change what someone plans around · notable = worth knowing · routine = the record. Only headline items are prominent."
     },
     "source": {
       "type": "object",
@@ -252,6 +252,68 @@
     "added": {
       "type": "string",
       "format": "date"
+    },
+    "measurements": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Figures this event reported, structured so they can be plotted. A news item is dated by WHEN THE THING HAPPENED, which makes it the only place on the board that can carry a capability series — a frontier item holds the current best value and overwrites its own history. Only record a figure the item's own sources state; this is transcription, not inference.",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "physical-qubits",
+              "logical-qubits",
+              "two-qubit-fidelity",
+              "single-qubit-fidelity",
+              "code-distance",
+              "logical-error-per-cycle",
+              "error-suppression-factor",
+              "coherence-time"
+            ],
+            "description": "What was measured. A closed list on purpose: an open one becomes a second, informal metric name field and nothing can be compared."
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "qualifier": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "The distinction that stops two numbers being confused — 'error-corrected' against 'error-detected' on the same device, or 'physical' against 'algorithmic'. Without it 48 and 94 look like the same measurement."
+          },
+          "modality": {
+            "enum": [
+              "superconducting",
+              "trapped-ion",
+              "neutral-atom",
+              "photonic",
+              "silicon-spin",
+              "topological",
+              "annealing",
+              "other"
+            ],
+            "description": "Which physical platform. Required for anything plotted over time: qubit counts on different platforms are not points on one curve, and a trend drawn across them would be the apples-to-oranges the board's own precedent forbids."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "crossChecks": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "Frontier item id whose verified metrics carry this same figure, where one does. A measurement that agrees with something the board already checked is stronger than one that stands alone."
+          }
+        }
+      }
     }
   }
 }

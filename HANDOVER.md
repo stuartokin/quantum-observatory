@@ -11,16 +11,16 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.51.0**, built in this session but not yet dragged into
+**Version 0.52.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
-**0.49.0, 0.50.0 and 0.51.0 are Phases 0, 1 and 2 of the Q-Day work.**
-`QDAY-PLAN.md` carries the whole sequence; "Content is fetched now, not
-bundled", "There is a second surface now" and "The Q-Day figure is derived
-now" below carry what a session needs before touching any of it.
+**0.49.0 through 0.52.0 are Phases 0–3 of the Q-Day work.** Five of the seven
+Observatory sections are live; Threats and Readiness wait on Phase 4.
+`QDAY-PLAN.md` carries the sequence; the four sections below carry what a
+session needs before touching any of it.
 
 **Live at** stuartokin.github.io, deployed from `main` via GitHub Pages.
 
@@ -57,6 +57,86 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## The board has a memory now
+
+**0.52.0.** News items can carry `measurements[]` — the figure an event
+reported, structured. This is the first thing on the board that accumulates
+rather than overwrites.
+
+**Why it had to go on news and not on items.** A frontier item holds the
+*current best* value: when a device ships more qubits an agent patches the
+field and the old number is gone. A news item is dated by when the thing
+happened and is never revised. So a hundred dated news items are a hundred
+points and the items are a snapshot. That asymmetry is the whole design.
+
+### The two fields that stop it lying
+
+`modality` and `qualifier` are mandatory for anything plotted, and
+`check-news.mjs` refuses a count without a modality.
+
+- **Modality**: counts on different platforms are not points on one curve.
+- **Qualifier**: Caltech's 6,100 atoms *trapped in a tweezer array* and
+  QuEra's 448 *operated below threshold* are not the same measurement.
+  Grouped naively they show capability **falling** by an order of magnitude.
+
+`capabilitySeries()` computes a doubling time only when three points share one
+qualifier and the series grows. **Nothing clears that yet**, and each group
+says which condition it failed. That is the honest state of the board, not a
+bug — do not be tempted to relax it to make a line appear.
+
+### Seeding rule, if you add more
+
+Only transcribe a figure that already exists as a verified metric on a
+frontier item, and set `crossChecks` to that item. Seven measurements across
+six events were added that way. Anything else is a newsroom campaign, not a
+build task.
+
+**One inconsistency found and left alone:**
+`content/news/2026-08-10-quera-96-logical-qubits-nature-neutral-atom.md` has
+`date: 2026-01-19`. The id is date-prefixed by convention, so the filename and
+the field disagree. The `date` field is the one that counts and is correct;
+renaming would change the id. Worth a tidy, not worth a silent rename.
+
+---
+
+## Regulatory deadlines are content
+
+**0.52.0.** `content/milestones/` holds dated obligations — NCSC 2028/2031/2035,
+the CNSA 2.0 timetable, the US federal target, the FIPS publication. Each has
+its own source. `src/qday/deadlines.ts` is **deleted**, as its own header said
+it should be.
+
+- A milestone is not a frontier item and deliberately does not live with them:
+  a frontier item maps how close a development is to being real, and a
+  deadline is not a development. It has no readiness level and nobody
+  demonstrates it.
+- **`status` is never computed from the date.** A deadline in the past is not
+  automatically met. The board records what actually happened.
+- Adding the collection touched five places, which is the checklist working:
+  `content/schema/milestone.schema.json`, `validate-content.mjs`,
+  `agent-io.mjs`, `src/content/collections.ts`, and a loader with a `hydrate`
+  registered in `store.ts`.
+
+---
+
+## Stack has no percentages, on purpose
+
+The research prototype scored each component of a cryptographically relevant
+machine and summed them to "15% of the way there". Those figures were
+editorial. The remaining work is not linear in qubit count, so 96 logical
+qubits against 835 is not 11% of anything anyone could defend.
+
+The page shows **multiples** instead — 8.9× more logical qubits, 58× more
+physical — computed from the derivation, with the requirement's own source
+date beside it. Where the literature publishes no target (nobody says what
+gate fidelity a break needs, because it depends on the code) the row says so
+rather than inventing one.
+
+If a future session is asked to "add a progress bar to Stack", this is the
+argument against it.
 
 ---
 

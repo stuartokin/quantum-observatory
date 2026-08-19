@@ -45,6 +45,13 @@ review:
   agentMergedOn: '2026-08-10'
 status: published
 added: '2026-08-10'
+measurements:
+  - kind: physical-qubits
+    value: 105
+    qualifier: 'processor size'
+    modality: superconducting
+    crossChecks: arch-superconducting
+    note: 'Zuchongzhi 3.0. 83 of the 105 were used in the random-circuit-sampling run.'
 ---
 
 Zuchongzhi 3.0 is a 105-qubit superconducting processor arranged in a 15×7 array with 182 qubit couplers, from the Jian-Wei Pan group at USTC. The peer-reviewed PRL paper was received December 20, 2024 and published March 3, 2025.

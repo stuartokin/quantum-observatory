@@ -51,6 +51,13 @@ review:
   agentMergedOn: '2026-08-10'
 status: published
 added: '2026-08-10'
+measurements:
+  - kind: physical-qubits
+    value: 448
+    qualifier: 'operated below threshold'
+    modality: neutral-atom
+    crossChecks: arch-neutral-atom
+    note: 'All fault-tolerance ingredients run together on one array.'
 ---
 
 The experiment ran on 448 rubidium atoms in reconfigurable optical tweezers, integrating physical entanglement, logical entanglement, transversal logical gates, teleportation-based magic-state injection, and continuous entropy removal — all on one device. Previous demonstrations had implemented these elements separately. Crossing below the error threshold means the architecture enters a scaling regime where more physical qubits produce lower logical error rates, which is the precondition for building arbitrarily large fault-tolerant computers.

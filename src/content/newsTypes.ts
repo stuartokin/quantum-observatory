@@ -27,6 +27,52 @@ export interface EstablishedBy {
   relation?: 'reports' | 'builds-on' | 'applies' | 'contradicts'
 }
 
+export type MeasurementKind =
+  | 'physical-qubits'
+  | 'logical-qubits'
+  | 'two-qubit-fidelity'
+  | 'single-qubit-fidelity'
+  | 'code-distance'
+  | 'logical-error-per-cycle'
+  | 'error-suppression-factor'
+  | 'coherence-time'
+
+export type Modality =
+  | 'superconducting'
+  | 'trapped-ion'
+  | 'neutral-atom'
+  | 'photonic'
+  | 'silicon-spin'
+  | 'topological'
+  | 'annealing'
+  | 'other'
+
+/**
+ * A figure this event reported, structured so it can be plotted.
+ *
+ * This is the only place on the board that can carry a capability *series*.
+ * A frontier item holds the current best value and overwrites its own history
+ * — when a device ships more qubits the old number is gone. A news item is
+ * dated by when the thing happened and is never revised, so a hundred of them
+ * are a hundred dated points.
+ *
+ * `modality` and `qualifier` are not decoration. Qubit counts on different
+ * platforms are not points on one curve, and 48 error-corrected logical qubits
+ * is not the same measurement as 94 error-detected ones on the same device.
+ * Without those two fields this collection would produce a confident, wrong
+ * chart.
+ */
+export interface Measurement {
+  kind: MeasurementKind
+  value: number
+  unit?: string
+  qualifier?: string
+  modality?: Modality
+  note?: string
+  /** A frontier item whose verified metrics carry the same figure. */
+  crossChecks?: string
+}
+
 /**
  * A dated event, deliberately not a frontier item.
  *
@@ -49,6 +95,8 @@ export interface NewsItem {
   about?: string[]
   /** The research behind it — the link that makes an announcement traceable. */
   establishedBy?: EstablishedBy[]
+  /** Figures this event reported. See `Measurement`. */
+  measurements?: Measurement[]
   actors?: string[]
   country?: string[]
   review?: {

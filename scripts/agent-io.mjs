@@ -211,6 +211,7 @@ export const COLLECTIONS = [
   { dir: 'content/news/', schema: 'content/schema/news.schema.json', name: 'news' },
   { dir: 'content/questions/', schema: 'content/schema/question.schema.json', name: 'questions' },
   { dir: 'content/forecasts/', schema: 'content/schema/forecast.schema.json', name: 'forecasts' },
+  { dir: 'content/milestones/', schema: 'content/schema/milestone.schema.json', name: 'milestones' },
   { dir: 'content/frontier/', schema: 'content/schema/frontier.schema.json', name: 'frontier' },
 ]
 
