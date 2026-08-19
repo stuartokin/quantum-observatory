@@ -221,6 +221,33 @@ export function schemaForPath(path) {
   return hit ? hit.schema : 'content/schema/frontier.schema.json'
 }
 
+/**
+ * The value a file's own `schema:` field must carry, for the collection its
+ * path puts it in — `milestone/v1`, `question/v1`, and so on.
+ *
+ * **Read out of the schema file, never listed here.** The comment above
+ * COLLECTIONS says adding a collection means adding one line in one place, and
+ * that was untrue for two releases: the runner kept a fourth copy of this
+ * mapping as a hand-written ternary that knew news, questions and forecasts
+ * and silently defaulted everything else to `frontier/v1`. So when scout's
+ * write scope gained `content/milestones/`, every milestone it wrote was
+ * stamped `frontier/v1` on the way past and then rejected for it — four runs,
+ * all of the research done, none of it written.
+ *
+ * A JSON Schema already states this as `properties.schema.const`. Asking it is
+ * the only version that cannot fall behind.
+ */
+const schemaConsts = new Map()
+export function schemaConstFor(path) {
+  const file = schemaForPath(path)
+  const hit = schemaConsts.get(file)
+  if (hit) return hit
+  const konst = JSON.parse(readFileSync(file, 'utf8'))?.properties?.schema?.const
+  if (!konst) throw new Error(`${file} declares no properties.schema.const, so no file can be stamped for it`)
+  schemaConsts.set(file, konst)
+  return konst
+}
+
 /** Which collections an agent may write to, from its write_scope. */
 export function collectionsFor(writeScope = []) {
   return COLLECTIONS.filter((c) => writeScope.some((p) => p.includes(c.name)))

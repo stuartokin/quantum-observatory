@@ -24,6 +24,21 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.54.1',
+    date: '2026-08-19',
+    headline: 'The scout was right about the EU, and the runner was quietly rejecting its work.',
+    content: [
+      'The EU does have a 2035 deadline, and the board now carries it. Section 4.1 of the coordinated implementation roadmap: "By 31.12.2035: The PQC transition for medium-risk use cases has been completed." The previous release said no such date existed — that was read off the Commission’s announcement page rather than the roadmap, and was wrong.',
+      'Both existing EU records were rewritten to quote the roadmap rather than the press release, and all three now cite the document itself. The 2030 milestone is high-risk use cases, not "critical infrastructure"; the 2026 one is first steps implemented and national roadmaps established, not "start transitioning". The announcement’s paraphrases were close enough to look right and loose enough to be wrong.',
+      'The rule this cost is now written down: an announcement page is not the document, even on a government domain. The board already applied that to trade publications. It had not applied it to regulators.',
+    ],
+    agents: [
+      'Four scout runs failed before any of that was found, and both causes were in the machinery rather than the agent. The runner kept its own private list of which collections use which schema — a list that knew three of them and silently stamped everything else "frontier/v1", so every milestone the scout wrote was failed by a check the runner had caused it to fail. It now reads the constant out of the schema that governs the file, and a test asserts it for every collection.',
+      'Milestones were also marked as a collection that may not grow, which is true of the twelve standing questions and was never true of regulatory deadlines. A new deadline — the entire reason the scout was given the scope — would have been rejected as not one of the existing ones.',
+      'The scout’s brief now describes what a milestone record actually is: the required fields, the closed lists for jurisdiction, kind and status, that its source is one document rather than a list, and that a date in the past is never marked met by arithmetic. Its file-format example had shown "frontier/v1" three times as though it were universal.',
+    ],
+  },
+  {
     version: '0.54.0',
     date: '2026-08-19',
     headline: 'Every reference is clickable, the Mosca test is back, and Plan learns who else has a deadline.',
@@ -32,7 +47,7 @@ export const RELEASES: Release[] = [
       'The Mosca readiness test is on the Clocks tab, and it is content rather than code. Three questionnaires — executive, technical, auditor — put x (how long migration takes), y (how long data stays sensitive) and z (how long until Q-Day) on the same axis as the derived Q-Day band, and the verdict follows from x + y against z. The z axis is the board’s own derivation, so the test moves when the evidence does.',
       'Each questionnaire states its own weighting in the open. The options score to years, and the mapping from an answer to a number is editorial judgement rather than measurement — so it is printed on the page next to the questions rather than buried in a function.',
       'Plan now shows the EU and NIST alongside NCSC, CNSA 2.0 and the US federal target, as jurisdiction cards with their own sources. Four milestones added: the EU roadmap’s end-2026 start and end-2030 high-risk deadline, and NIST’s 2030 deprecation and 2035 disallowal of RSA and ECC.',
-      'The EU "2035 full transition" figure the research prototype asserted was checked and is not on this board. The Commission’s own roadmap sets end-2026 and end-2030 and does not set 2035. It is queued as a question for an agent to settle rather than imported because it looked plausible.',
+      'The EU "2035 full transition" figure the research prototype asserted was queued as a question rather than imported, because the Commission’s announcement of its roadmap sets only end-2026 and end-2030. See 0.54.1 — the announcement was the wrong document to have read.',
       'Australia is missing on purpose, not by oversight. The ASD deadline is real and cyber.gov.au refuses automated fetching, so it is first in the queue for a human-assisted pass rather than transcribed from memory.',
       'Escape inside a source panel closes the panel, not the whole Q-Day surface. Both listen on the document and the later listener wins, which is exactly backwards from what a reader expects.',
     ],
@@ -183,19 +198,6 @@ export const RELEASES: Release[] = [
       'An entry that fails twice is dropped; one older than 21 days is dropped rather than run. Duplicates are matched on the arXiv id or DOI they name, not on their titles, after the same job was queued twice under three different phrasings.',
       'Agents are told which jobs they can actually do. Scout sees the board index and not item contents, so it cannot edit an existing item — asked to attach a source it will confirm the source, decline to invent a file it cannot read, and escalate. Six runs were spent that way before the routing was written down.',
       'A run that reaches a conclusion but not its JSON now has the tail of its reasoning, and any identifiers it mentioned, written to the issue. The queue entry is spent either way; the finding should not be.',
-    ],
-  },
-  {
-    version: '0.46.0',
-    date: '2026-08-13',
-    headline: 'Undated is now a last resort, and the questions have an overview.',
-    ui: [
-      'An item whose source carries no date is no longer dumped in the undated gutter. The board falls back through what it knows — the readiness change, then when the evidence was checked, then when the item arrived — and marks the position as estimated with a dashed whisker and a note saying which rung it used. FN-DSA sat undated while its own claim said the draft was submitted in August 2025.',
-      'The detail panel shows the resolved date with a tilde and a dashed border when it is an estimate. An estimate labelled as one is more useful than a blank; an estimate presented as fact is worse than either.',
-      'Every build now reports how many items have sources but no source date, because that is a real gap in the data rather than a cosmetic one.',
-      'The twelve questions gain an Overview: all twelve as cells, showing state and when each answer last changed, with the derived ones marked as counted. Click through to read one properly.',
-      'What Changed says why it picked that constellation. A panel a reader cannot account for is one they stop trusting.',
-      'The two-year timeline view is gone, and Headlines opens narrower and left-aligned instead of full width beneath everything else.',
     ],
   },
 ]

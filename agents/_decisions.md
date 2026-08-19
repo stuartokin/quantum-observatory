@@ -234,6 +234,20 @@ different false picture.
 *Decided 16 Aug 2026, after app-quantum-chemistry-catalyst cited
 arXiv:2204.11890 as a preprint when Phys. Rev. A 106, 032428 (2022) exists.*
 
+**An announcement page is not the document, even on a government domain.** A
+press release, news item or library landing page summarising a regulator's own
+roadmap, standard or recommendation is a summary, and this board's rule about
+following a summary to the artefact applies to it exactly as it applies to a
+trade publication. Cite the document; read the document; quote the document.
+
+Where the document is a PDF behind a landing page, cite the PDF and say in the
+review note which section the wording came from.
+*Decided 19 Aug 2026, after this board recorded that the EU roadmap set no 2035
+date. Its announcement page sets only end-2026 and end-2030; section 4.1 of the
+roadmap itself sets "By 31.12.2035: The PQC transition for medium-risk use
+cases has been completed." Scout found it by going to the document. Two
+milestone records had to be rewritten, and the claim had already shipped.*
+
 ---
 
 ## Proposed, awaiting a person

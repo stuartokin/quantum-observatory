@@ -216,18 +216,71 @@ are in — each read from the primary document and marked `agent-reviewed` with 
 note saying what was checked. Milestones gained a `review` block for exactly
 this, using the same enum as every other collection.
 
-**The one that was refused matters more than the four.** The research prototype
-asserts an EU "2035 full transition" milestone. The Commission's own
-announcement sets end-2026 and end-2030 and sets no 2035 date. It was not
-imported. It is entry 1 in `agents/_queue.md` so an agent settles it against a
-source rather than the board inheriting a figure because a previous site was
-confident about it. **Australia's ASD deadline is real and also not here** —
-cyber.gov.au refuses automated fetching, so it is queued rather than typed from
-memory.
+**The one that was refused matters more than the four, and not for the reason
+originally given.** The research prototype asserts an EU "2035 full transition"
+milestone. It was not imported, because the Commission's *announcement* of the
+roadmap sets end-2026 and end-2030 and no 2035 date, and it was queued as entry
+1 for an agent to settle.
+
+Scout settled it in 0.54.1 by reading the roadmap document rather than the
+announcement, and **the date is real**: section 4.1, "By 31.12.2035: The PQC
+transition for medium-risk use cases has been completed." It is now
+`eu-2035-medium-risk`, and both existing EU records were rewritten to quote the
+roadmap instead of the press release.
+
+> **An announcement page is not the document.** A government news item
+> summarising its own roadmap is closer to an aggregator than to a source,
+> however official the domain. This board's rule about following a summary to
+> the artefact applies to the European Commission exactly as it applies to
+> Quantum Zeitgeist, and this is the first time it was broken from the inside
+> rather than by an agent.
+
+**Australia's ASD deadline is real and still not here** — cyber.gov.au refuses
+automated fetching, so it stays queued rather than typed from memory.
 
 `agents/scout/agent.json` now includes `content/milestones/**` and
 `content/questions/**` in its write scope. A regulatory deadline is a scouting
 result; routing it through a human retype was the only reason it wasn't.
+
+---
+
+## Widening a write scope is three changes, not one
+
+**0.54.1.** 0.54.0 added `content/milestones/**` to scout's write scope and
+nothing else. **All four runs that followed failed**, on two separate faults,
+after the research was done and the sources found. Both are fixed, and the
+shape of the mistake is the part worth keeping.
+
+**Fault one — a fourth copy of the collection table.** `agent-io.mjs` carries
+`COLLECTIONS`, and the comment above it says adding a collection means adding
+one line in one place. That was untrue: `run-agent.mjs` kept its own
+hand-written ternary inside `withIdentity` that knew news, questions and
+forecasts and **silently defaulted everything else to `frontier/v1`**. So every
+milestone scout wrote was stamped `frontier/v1` on the way past and then
+rejected by the milestone schema for it — a file failing a check that the
+runner itself had caused it to fail.
+
+It now asks `schemaConstFor(path)`, which reads `properties.schema.const` out
+of the governing schema file. **A JSON Schema already states this; asking it is
+the only version that cannot fall behind.** `test-agent-io.mjs` asserts the
+property for every entry in `COLLECTIONS`, so a new collection cannot be added
+without it holding.
+
+If you ever find a fifth copy of that mapping, delete it the same way.
+
+**Fault two — `fixedCollections` said milestones could not grow.** That flag
+exists because the twelve questions are twelve; scout once wrote six more
+alongside them. Milestones were added to it by reflex in 0.54.0, which meant
+that even with the schema stamped correctly, a *new* deadline — the entire
+point of giving scout the scope — would have been rejected as "not one of the
+existing milestones". Only `questions` is fixed.
+
+**The check before widening a scope:** does the agent's prompt describe the
+shape of what it may now write, does the runner know how to stamp it, and is
+the collection allowed to grow? The prompt was the one that looked sufficient
+and was not — it documented `question/v1` at length and never mentioned
+milestones, while its file-format example showed `schema: frontier/v1` three
+times as though it were universal.
 
 ---
 

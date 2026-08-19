@@ -16,7 +16,6 @@
   },
   "maxTokens": 32000,
   "fixedCollections": [
-    "questions",
-    "milestones"
+    "questions"
   ]
 }

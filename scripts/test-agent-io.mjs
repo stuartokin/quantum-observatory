@@ -12,10 +12,13 @@ import {
   extractJson,
   balancedObjects,
   schemaForPath,
+  schemaConstFor,
   applyFields,
   checkFile,
   FRONT_MATTER,
+  COLLECTIONS,
 } from './agent-io.mjs'
+import { readFileSync } from 'node:fs'
 let pass = 0
 let fail = 0
 const t = (name, cond) => {
@@ -246,6 +249,25 @@ t('an overflowing field is rejected by the same schema a full file always used',
 
 const unknownCheck = checkFile(applyFields(doc2, { notARealField: 'nope' }), schemaForPath('content/frontier/_inbox/algo-shor.md'))
 t('a field name outside the schema is rejected before anything is written', unknownCheck.ok === false)
+
+/**
+ * Every collection can stamp its own files.
+ *
+ * The runner used to decide this with a hand-written ternary that knew three
+ * collections and quietly defaulted the rest to `frontier/v1`. Scout's write
+ * scope gained `content/milestones/`, every milestone it wrote was stamped
+ * `frontier/v1` on the way past, and all four runs were rejected on
+ * `/schema must be equal to constant` after the research was done.
+ *
+ * So this asserts the property that failure violated: for every collection,
+ * the constant a file is stamped with is the constant that collection's own
+ * schema demands. A new collection cannot be added without this passing.
+ */
+for (const c of COLLECTIONS) {
+  const konst = JSON.parse(readFileSync(c.schema, 'utf8')).properties.schema.const
+  t(`${c.name} files are stamped ${konst}, not the frontier default`, schemaConstFor(`${c.dir}x.md`) === konst)
+}
+t('an _inbox path is stamped for its collection, not its staging folder', schemaConstFor('content/frontier/_inbox/x.md') === 'frontier/v1')
 
 console.log(`\n  ${pass} passed, ${fail} failed`)
 process.exit(fail ? 1 : 0)

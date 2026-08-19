@@ -43,45 +43,34 @@ evidence, and this board only shows what it can stand behind. But the prototype
 had genuinely found material this board does not hold, and these entries are the
 gaps that turned up when the two were compared section by section.
 
-**Four dates were verified while writing this and are already on the board**, so
-do not re-research them: the EU roadmap's end-2026 and end-2030 milestones
-(Commission Recommendation, 23 June 2025) and NIST IR 8547's "deprecated after
-2030 / disallowed after 2035" (initial public draft, 12 November 2024).
+**Five dates were verified and are already on the board**, so do not re-research
+them: the EU roadmap's 31.12.2026, 31.12.2030 and 31.12.2035 milestones (NIS
+Cooperation Group roadmap, 23 June 2025, section 4.1) and NIST IR 8547's
+"deprecated after 2030 / disallowed after 2035" (initial public draft,
+12 November 2024).
 
-**One claim was checked and did not survive.** The prototype shows an EU "2035
-full transition" milestone. The Commission's own announcement of the roadmap
-sets only end-2026 and end-2030 and mentions no 2035 date. Entry 1 exists to
-settle that rather than to import it.
+**The entry that used to stand first here has been settled, and it was settled
+against the person who wrote it.** This queue originally said the prototype's EU
+"2035 full transition" milestone had been checked and did not survive, because
+the Commission's *announcement page* sets only end-2026 and end-2030. Scout went
+to the roadmap document instead and found section 4.1: "By 31.12.2035: The PQC
+transition for medium-risk use cases has been completed." The date is real, it
+is now on the board as `eu-2035-medium-risk`, and the two existing EU records
+have been rewritten to quote the roadmap rather than the press release.
+
+Worth keeping in mind for everything else queued below: **an announcement page
+is not the document.** A Commission news item summarising a roadmap is closer to
+an aggregator than to a source, however official the domain, and this board's
+own rule about following a summary to the artefact applies to governments as
+much as to Quantum Zeitgeist.
 
 `scout` gained `content/milestones/**` in its write scope for this batch — it is
 the only agent permitted to add records, and a regulatory deadline is a record.
+The collection is **not** fixed-membership: it is meant to grow.
 
 ---
 
 ## What is queued
-
-## EU roadmap: is there a 2035 milestone, or not?
-agent: scout
-added: 2026-08-19
-source: Q-Day Observatory comparison, Phase 3 review
-
-    /focus scout: The board holds two EU milestones (eu-2026-start,
-    eu-2030-critical) taken from the European Commission's Recommendation on a
-    Coordinated Implementation Roadmap for the Transition to Post-Quantum
-    Cryptography, published 23 June 2025. The Commission's own announcement
-    sets only "start transitioning by the end of 2026" and critical
-    infrastructure "no later than by the end of 2030".
-
-    A widely-copied summary of that roadmap also asserts a 2035 "full
-    transition" deadline for the EU. Find whether that date exists in the
-    Recommendation itself, in the annexed roadmap PDF, or in any Commission or
-    ENISA document — or whether it has been imported from the UK and US 2035
-    deadlines by people writing about the roadmap rather than reading it.
-
-    Return one of: a milestone record for content/milestones/ with the exact
-    document, article or page that sets it; or, in your summary, a statement
-    that no EU 2035 date could be found and where you looked. Do NOT create the
-    record on the strength of a secondary source that merely repeats it.
 
 ## Australia: the ASD transition deadline
 agent: scout

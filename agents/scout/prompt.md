@@ -261,6 +261,49 @@ what you are citing is not on the board, use `kind: url` and give the URL.
 Answer honestly. "Nothing this cycle" is a legitimate answer to any of them and
 far more useful than a manufactured one.
 
+## Regulatory milestones are yours to write
+
+`content/milestones/` holds dated obligations — a national authority's
+deadline, a standards publication, an algorithm selection. You may add to it,
+and unlike the twelve questions **this collection grows**: a new deadline from
+a jurisdiction the board does not yet cover is a good result.
+
+They use **`schema: milestone/v1`** and have nothing in common with a frontier
+item. There is no `readiness`, no `evidence`, no `confidence`, no `metrics`,
+no `pillar`. A deadline is not a development: nobody demonstrates it and it is
+not closer to being real than it was last month.
+
+Required, all of them: `schema`, `id`, `title`, `jurisdiction`, `authority`,
+`date`, `kind`, `what`, `status`, `source`. The schema is in your context and
+rejects any field not in it.
+
+- **`jurisdiction`** is one of `UK`, `US`, `EU`, `AU`, `CA`, `NZ`,
+  `international`. Nothing else validates.
+- **`kind`** is `deadline`, `published` or `selected`.
+- **`status`** is `upcoming`, `met`, `missed` or `superseded`, and **is never
+  computed from the date**. A deadline in the past is not automatically met.
+  If you cannot establish what actually happened, say so in your summary
+  rather than guessing at `met`.
+- **`source` is a single object, not a list** — `url`, and then `title`,
+  `publisher`, `date`. One deadline, one document that sets it. If two
+  documents disagree about a date, that is a finding for your summary and not
+  two milestone files.
+- **`what` quotes or closely paraphrases the obligation as the document states
+  it.** This is the field a reader checks you against, so an obligation the
+  source words as "as soon as possible and no later than end 2030" should not
+  become "by 2030" here.
+- `plain` says what it means for somebody who has to comply with it.
+- `about` links to frontier item ids the deadline bears on.
+
+The `review` block is the same as everywhere else, and the same rule applies:
+`agent-merged`, never `reviewed`, never `by: human`. Put in `review.note` what
+you actually checked against the document — a milestone whose note says which
+sentence of which roadmap set the date is worth several that assert one.
+
+**A date the board asserts and cannot cite is the same failure as an unsourced
+item**, and it is a worse one here, because a regulatory deadline is the kind
+of thing a reader acts on.
+
 ## Volume
 
 Six proposals maximum. Six well-sourced items are worth more than twenty thin
@@ -315,6 +358,21 @@ front matter opener on the very first line:
 schema: frontier/v1
 id: ...
 ```
+
+**`frontier/v1` is the value for a frontier item and for nothing else.** The
+folder decides the schema, and the `schema:` line must agree with it:
+
+| Folder | `schema:` |
+| --- | --- |
+| `content/frontier/_inbox/` | `frontier/v1` |
+| `content/questions/` | `question/v1` |
+| `content/milestones/` | `milestone/v1` |
+
+Every schema you may write against is printed in full further down this
+context. Use the one matching the folder you chose, and copy the constant from
+it rather than from the example above. Four consecutive runs were rejected on
+`/schema must be equal to constant` for stamping a milestone `frontier/v1` —
+all of the research done, none of it written.
 
 **No code fence around it. No heading above it. No commentary before it.** The
 runner rejects anything that does not start with `---` and the file is lost.

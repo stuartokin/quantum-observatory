@@ -21,6 +21,7 @@ import {
   normaliseFile,
   checkFile,
   schemaForPath,
+  schemaConstFor,
   collectionsFor,
   applyFields,
   collectionDirFor,
@@ -957,13 +958,11 @@ for (const f of files) {
    */
   const withIdentity = (text, path) => {
     const base = path.split('/').pop().replace(/\.md$/, '')
-    const collection = path.includes('/news/')
-      ? 'news/v1'
-      : path.includes('/questions/')
-        ? 'question/v1'
-        : path.includes('/forecasts/')
-          ? 'forecast/v1'
-          : 'frontier/v1'
+    // Asked of the schema that governs this path, not listed here. A hand-
+    // written list of collections lived at this line for two releases and
+    // defaulted anything it did not recognise to frontier/v1 — which is how
+    // four scout runs researched four milestones and wrote none of them.
+    const collection = schemaConstFor(path)
     const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
     if (!fm) return text
     let head = fm[1]
