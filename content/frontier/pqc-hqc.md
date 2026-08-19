@@ -15,19 +15,19 @@ metrics:
     value: 'error-correcting codes'
     note: independent of lattices
 evidence:
-  claim: NIST selected HQC for standardisation on 11 March 2025, as reported in NIST IR 8545 (Status Report on the Fourth Round of the NIST Post-Quantum Cryptography Standardisation Process). NIST will draft a standard based on HQC and release it for public comment; the final version is expected approximately two years after selection. HQC is not yet a published FIPS standard.
-  verified: '2026-08-10'
+  claim: 'NIST selected HQC for standardisation on 11 March 2025, as reported in NIST IR 8545. HQC is a code-based KEM whose security rests on the quasi-cyclic moderate-density parity-check (QC-MDPC) decoding problem — a different mathematical foundation from ML-KEM''s module-lattice problem. NIST selected it specifically as a portfolio hedge: if a structural attack against lattice-based key encapsulation is discovered, organisations need a code-based alternative unaffected by the same weakness. NIST announced a draft HQC standard for public comment in approximately 2026, with the final FIPS expected in 2027. HQC is not yet a published FIPS standard as of 2026-08-19.'
   level: E4
+  verified: '2026-08-19'
   sources:
     - url: https://csrc.nist.gov/pubs/ir/8545/final
       role: standard
-      title: 'Status Report on the Fourth Round of the NIST Post-Quantum Cryptography Standardization Process'
+      title: Status Report on the Fourth Round of the NIST Post-Quantum Cryptography Standardization Process
       publisher: NIST
       date: '2025-03-11'
-      identifier: 'NIST IR 8545'
+      identifier: NIST IR 8545
       doi: 10.6028/NIST.IR.8545
-      accessed: '2026-08-10'
-      note: 'Formally published NIST Interagency/Internal Report. Announces HQC selection; explains why HQC was chosen over BIKE and why Classic McEliece was not selected. Authoritative source for the selection fact. Draft FIPS standard for HQC expected c.2027. Confirmed via nvlpubs.nist.gov PDF and csrc.nist.gov announcement page.'
+      accessed: '2026-08-19'
+      note: Formally published NIST IR. Selects HQC; explains rationale (code-based, different hardness from ML-KEM lattices). NIST's own announcement states a draft standard will be published for public comment in approximately 2026 with final in 2027.
 links:
   - to: pqc-fips-203
     relation: competes-with
@@ -42,10 +42,9 @@ status: published
 added: '2026-08-04'
 origin: human
 review:
-  state: agent-reviewed
+  state: agent-merged
   by: agent
-  agent: reviewer
-  agentMergedOn: '2026-08-04'
-  reviewedOn: '2026-08-10'
-  note: 'NIST IR 8545 confirmed as formally published at csrc.nist.gov/pubs/ir/8545/final (DOI 10.6028/NIST.IR.8545) and via nvlpubs.nist.gov PDF. NIST.gov announcement page and NIST CSRC news page both confirm HQC selection on 11 March 2025. E4 defensible: NIST IR 8545 is a formally published NIST Interagency Report — not a draft or project page. Draft FIPS standard expected ~2027 per NIST announcement. Readiness experimental is correct (selected but FIPS not published). No changes made.'
+  agent: sourcer
+  agentMergedOn: '2026-08-19'
+  note: 'Focus run 2026-08-19. Evidence claim updated to surface portfolio-insurance rationale (code-based hedge against lattice break) as requested. Draft 2026 / final 2027 timeline confirmed from NIST IR 8545 announcement language. E4 correct for formally published NIST IR. Readiness experimental correct: selected but FIPS not published.'
 ---
