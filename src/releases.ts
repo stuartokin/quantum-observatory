@@ -24,6 +24,25 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.55.0',
+    date: '2026-08-19',
+    headline: 'Two surfaces stop pretending to be two sites.',
+    ui: [
+      'The board and the Observatory now share a header. Wordmark on the left, what you are looking at beside it, three dots on the right — the same element in the same position on both. What differs between them is only what sits in the middle: the board has its galaxy picker and statistics, the Observatory has its standfirst. Those are context. Everything else was furniture that moved, and furniture that moves is the loudest way two pages say "different site".',
+      'One dock, on both. The Observatory’s tab bar was a fixed strip; it is now the board’s dock, which means it drags, collapses when you click its grip, resizes from the corner, and drops its labels for icons when the window is narrow. It had none of that.',
+      'The leading slot is always the other surface, with a rule after it. "Q-Day" opens the board’s dock and "← Board" opens the Observatory’s, in the same place, so wherever you are the way out is where you left it. The floating back button in the corner is gone.',
+      'The two docks hold different kinds of thing and do not need a legend for it. A board item shows presence — open a window and it leaves the dock, because a window on screen is already its own control. An Observatory item shows selection — always there, one lit. Both read as "bring this forward", which is one idea.',
+      'Sections are real links now rather than buttons, so middle-click, open-in-new-tab and copy-link-address work. Two sections side by side in two browser tabs is a thing this board is for.',
+      'Help, statistics and reset the layout live behind the three dots on both surfaces. On the board Help still opens the window you already had — moveable, resizable, parked beside the galaxy while you read — rather than a second panel that would have to be kept in step with it. The menu is an entry point, not an owner.',
+      'Chrome is teal on both surfaces now instead of following the galaxy’s colour. The per-constellation accent still drives every mark on the canvas, so colour on a chart continues to mean something while nothing about the furniture shifts when you change galaxy.',
+    ],
+    content: [
+      'The Mosca test’s weights are dials rather than printed numbers. The board states a default and why, and the honest answer to "why 1.4 and not 1.2?" is that nothing here evidences either — it is editorial ordering with a decimal place on top. Defending that would have been worse than handing it over, and the result moves as you move it.',
+      'A weight you have changed is marked, and gets a reset back to the board’s figure. Nothing is written back: the file is the board’s position, the session is yours.',
+      'Each executive question carries what the national guidance actually says about it, folded shut, with links out — NCSC’s timelines, the CISA/NSA/NIST factsheet, the NCCoE practice guide, the EU roadmap, NIST IR 8547. Stated as their position rather than this board’s advice: the board maps how close things are to being real and does not tell anyone how to run a migration. The technical and auditor sets are next.',
+    ],
+  },
+  {
     version: '0.54.5',
     date: '2026-08-19',
     headline: 'Counting characters becomes the machine’s job, where it always belonged.',
@@ -166,25 +185,6 @@ export const RELEASES: Release[] = [
       'A metric is dated by the paper its note names, not by when the board last checked it. Dating from evidence.verified would collapse every figure onto the week an agent last ran and destroy the whole signal. A figure whose note names no source the item carries is refused rather than dated from the item.',
       'Sixteen self-tests over fixtures, each one a mistake this made on the way to working: 2.4 times read as a count of qubits; the single most relevant capability figure on the board thrown away because its name contained the word error; an annealer\u2019s five thousand qubits counted as progress toward breaking RSA.',
       'The forecast\u2019s change log recorded a baseline of 2036-2041 while its estimates have always read earliest 2034. The outermost axis was omitted from the record rather than changed after it. Corrected \u2014 a metadata fix, no number a reader sees has moved. It became visible because the Observatory started rendering the log beside the countdown.',
-    ],
-  },
-  {
-    version: '0.50.0',
-    date: '2026-08-19',
-    headline: 'Q-Day becomes a place you can go, and a link you can send.',
-    ui: [
-      'Clicking Q-Day in the header now opens the Q-Day Observatory — a full-screen surface with its own sections — rather than a small window on the board. The board unmounts while it is open, which costs the window layout but avoids running a canvas animation loop behind an opaque overlay for as long as somebody reads.',
-      'The first route this site has ever had. Each section has an address (#/q-day/trends), so a page can be reloaded, bookmarked or sent to somebody. Hash routing rather than real paths, because GitHub Pages serves static files: /q-day/trends would 404 on a refresh, and the usual workaround turns every genuinely mistyped URL into a silent success. Escape, or the Board button, returns you.',
-      'Two designs, one product. The observatory keeps the board’s ground, type, hairlines and monospace labels; what carries over from the research prototype is the thing that made it legible at a glance — amber is the threat, teal is the defence. That opposition is the actual subject of the section. Defence is bound to the board’s existing O III emission line rather than introducing a second, near-identical teal.',
-      'Clocks: a countdown to the estimated Q-Day, a countdown to the NCSC 2035 deadline, and the headroom between them. Where the two effectively coincide it says "none" rather than rounding to "+0.0 yr" beside a note claiming Q-Day falls after the deadline — true by one second, and reading as a rendering fault rather than as the finding it is.',
-      'The Mosca test: if the time your data must stay secret plus the time migration takes exceeds the time before Q-Day, you are already exposed. Both inputs are the reader’s to assert — the board has no way to know either, and defaulting them from evidence would be inventing a number.',
-      'The three scenarios are read from content/forecasts/q-day.md rather than written into the source. Moving the estimate is now a content change an agent can propose and a person can veto, and the site cannot show a number the repo disagrees with.',
-      '"Why this date?" carries the provenance: whether a human set the figure, when one last looked, the full change history, and — stated plainly — that the number is asserted rather than derived. The headline figure of the whole section cannot be the one number on this board that does not say where it came from.',
-      'The six sections not yet built are visible and say what they are waiting on, rather than being hidden. A reader who can see that Threats is coming, and that the board holds no CVE records to fill it, knows more than one shown a tab bar with a single item.',
-    ],
-    agents: [
-      'Nothing changed about how an agent writes content. The Q-Day surface reads the same forecast file the header always did.',
-      'The performance budget learned that a lazily-loaded section brings its own stylesheet, and that stylesheet is not fetched at first paint. Counting it as entry CSS made the before-first-paint figure pessimistic the moment Q-Day arrived — the same misfiled-bucket mistake this script has now made three times, and the third one it has been taught to stop making.',
     ],
   },
 ]

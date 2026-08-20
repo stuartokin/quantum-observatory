@@ -11,14 +11,14 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.53.0**, built in this session but not yet dragged into
+**Version 0.55.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 97 headlines, twelve standing questions, five agents plus a
 steward, and a queue.
 
-**0.49.0 through 0.53.0 are Phases 0–3 of the Q-Day work, plus a
-presentation pass.** Five of the seven
+**0.49.0 through 0.53.0 are Phases 0–3 of the Q-Day work; 0.54.x is a run of
+agent-machinery fixes and 0.55.0 unifies the two surfaces' chrome.** Five of the seven
 Observatory sections are live; Threats and Readiness wait on Phase 4.
 `QDAY-PLAN.md` carries the sequence; the four sections below carry what a
 session needs before touching any of it.
@@ -58,6 +58,76 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## One shell, two surfaces
+
+**0.55.0.** The board and the Observatory shared a product and almost no
+furniture. They now share a header, a dock and a palette, and the difference
+between them lives in the items rather than in the bar.
+
+**`AppMenu`** — the three dots, top right, on both. Everything *about* the
+product rather than *in* it: help, statistics, reset the layout. It is an
+**entry point, not an owner**: on the board "Help" opens the help *window* that
+already exists, because a second help panel would be two surfaces to keep in
+step and the board would be worse for it. Escape closes the menu in the capture
+phase and stops there — the Observatory also listens for Escape to leave, and a
+bubbling listener would do both.
+
+**`Toolbar`** is now one dock with four kinds of item:
+
+- **`window`** — hides itself while its window is open. Shows presence.
+- **`section`** — never hides, exactly one lit, rendered as a **real anchor**
+  so middle-click and open-in-new-tab work. Shows selection.
+- **`nav`** — the other surface. **Always the leading item, with a divider
+  after it, on both.** That fixed position is the single thing doing most of
+  the work: wherever you are, the way out is where you left it.
+- **`action`** — Reset and the like.
+
+Two selection models in one bar need no legend because they show different
+things and both are visible: a window item is something you can put away, a
+section item is something you are looking at.
+
+### Things worth not re-learning here
+
+- **The dock accent is `--qd-defence`, not the galaxy colour.** Chrome that
+  changes hue with context is how one product starts reading as three. The
+  per-constellation accent still drives every mark on the canvas, so colour on
+  a chart still means something.
+- `--qd-threat` and `--qd-defence` moved from `.qday-surface` to `:root`. The
+  dimmed pair stayed surface-local.
+- `.qday-surface__head`, `__back`, `__title`, `__sub` and `.qday-dock` are
+  **deleted**, not orphaned. `.qday-surface__main` is still live.
+- Returning to the board with Help open uses a module flag in `route.ts`
+  (`requestHelpOnBoard` / `takeHelpRequest`), read once and cleared. Not a
+  query parameter: a shared link should not carry somebody else's open panel.
+
+---
+
+## The Mosca weights are dials
+
+**0.55.0.** The content states a default weight and a reason for it. The
+surface lets a reader move it, and the result moves with it.
+
+That is not a feature so much as the only honest position. Nothing on this
+board evidences that discovery predicts migration time by a factor of 1.4
+rather than 1.2 — the *ordering* is defensible and the decimal is not — so the
+heuristic line has always said the weights are editorial judgement. Printing
+the number and defending it made that line read as an apology. Handing over the
+dial makes it true.
+
+- **Never written back.** The file is the board's position; the session is the
+  reader's. Weights live in component state keyed by question and clear when
+  the persona changes.
+- A moved weight is marked and gains a reset to the board's figure. A reset on
+  something already at its default is a control that does nothing, so it only
+  appears once moved.
+- `guidance` on a question is **what the authorities say, with their links** —
+  NCSC, the CISA/NSA/NIST factsheet, the NCCoE guide, the EU roadmap, IR 8547.
+  Stated as their position, not as advice from this board, which maps how close
+  things are to being real and does not tell anyone how to run a migration.
+  Executive is written; technical and auditor are not.
 
 ---
 

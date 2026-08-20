@@ -953,3 +953,28 @@
 
 /* The explanation is now optional, so it can afford to be quieter. */
 .prov-note { margin-top: 6px; }
+
+/* ---------- The dock, shared ---------- */
+
+/* The rule after the leading item. It separates "the other surface" from
+   "things on this surface", which is the whole reason the leading slot can
+   hold a different kind of item without a legend. */
+.dock__rule {
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 6px;
+  background: var(--hairline);
+  flex: 0 0 auto;
+}
+
+.dock__item { text-decoration: none; }
+
+/* A section is a place you are, so it is lit rather than merely outlined —
+   a window item can only ever be "put away", and the two should not look the
+   same. */
+.dock__item[data-kind='section'][aria-current='page'] {
+  background: color-mix(in oklab, var(--qd-defence) 16%, transparent);
+  border-color: color-mix(in oklab, var(--qd-defence) 30%, transparent);
+}
+.dock__item[data-kind='nav'] { color: var(--ink-muted); }
+.dock__item[data-kind='nav']:hover { color: var(--qd-defence); }

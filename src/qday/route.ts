@@ -115,6 +115,29 @@ export function goToQDay(tab: QDayTab = DEFAULT_TAB): void {
   window.location.hash = hrefFor(tab)
 }
 
+/**
+ * Ask the board to open Help as it mounts.
+ *
+ * The Observatory's menu offers Help, and Help is a board *window* — moveable,
+ * resizable, parked beside the galaxy while you read. Rebuilding it as an
+ * Observatory panel would have given two help surfaces to keep in step, so the
+ * menu goes to the one that exists instead.
+ *
+ * A module flag rather than a query parameter: the board mounts fresh on every
+ * return, so it reads this once and clears it, and no state leaks into a URL
+ * somebody might share.
+ */
+let pendingHelp = false
+export function requestHelpOnBoard(): void {
+  pendingHelp = true
+  goToBoard()
+}
+export function takeHelpRequest(): boolean {
+  const want = pendingHelp
+  pendingHelp = false
+  return want
+}
+
 export function goToBoard(): void {
   // `pushState` rather than clearing the hash: setting `location.hash = ''`
   // leaves a bare '#' in the address bar and, in some browsers, scrolls to the

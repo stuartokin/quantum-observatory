@@ -49,7 +49,7 @@ import scales from '../../../content/frontier/_scales.json'
 import { VERSION } from '../../version'
 import { Frame, defaultLayout, type FrameState } from '../../components/Frame'
 import { News, Teaser, QDayBar } from '../../components/Panels'
-import { goToQDay } from '../../qday/route'
+import { goToQDay, hrefFor, takeHelpRequest } from '../../qday/route'
 import { MiniOrbit, mostChanged } from '../../components/MiniOrbit'
 import { Ticker } from '../../components/Ticker'
 import { questionsFor } from '../../content/questions'
@@ -70,7 +70,8 @@ import { recentNews, newsFor, newsAbout, allNews } from '../../content/newsroom'
 import type { NewsItem } from '../../content/newsTypes'
 import { buildNews, headlines } from './news'
 import { forecastFor, type Forecast } from '../../content/forecast'
-import { Toolbar } from '../../components/Toolbar'
+import { Toolbar, type ToolbarButton } from '../../components/Toolbar'
+import { AppMenu } from '../../components/AppMenu'
 
 /** Galaxies. Only quantum has data; the rest are declared so the switch exists
  *  and the shape of the eventual map is honest. */
@@ -464,6 +465,18 @@ export function Board() {
     return { unreviewed, unchecked, checked, last, weeks }
   }, [pool])
 
+  /**
+   * Arriving from the Observatory's menu, with Help asked for.
+   *
+   * The flag is read once and cleared, so a later return to the board does not
+   * reopen it. Nothing about this reaches the URL — a shared link should not
+   * carry somebody else's open help panel.
+   */
+  useEffect(() => {
+    if (!takeHelpRequest()) return
+    setFrames((f) => ({ ...f, help: { ...f.help, docked: false } }))
+  }, [])
+
   useEffect(() => {
     if (item) {
       raise('detail')()
@@ -501,18 +514,32 @@ export function Board() {
     setView({ k: 1, tx: 0, ty: 0 })
   }
 
-  const buttons = [
+  const buttons: ToolbarButton[] = [
+    /**
+     * The other surface, first, with a rule after it.
+     *
+     * The Observatory's dock opens with "Board" in exactly this slot. That
+     * fixed leading position is the thing that makes two surfaces read as one
+     * product: wherever you are, the way out is in the same place, and the
+     * divider says the rest of the bar is about where you already are.
+     *
+     * It is `nav`, not a window — it has no docked state because it is not a
+     * panel, it is somewhere you go. The href is real so it can be opened in
+     * a second tab.
+     */
+    { key: 'qday', kind: 'nav', icon: 'Q', label: 'Q-Day', href: hrefFor('clocks') },
+    { key: 'rule', divider: true, label: '' },
     ...(mode === 'orbit'
-      ? [{ key: 'back', icon: '←', label: '← Galaxy', onClick: leaveOrbit }]
+      ? [{ key: 'back', kind: 'nav' as const, icon: '←', label: '← Galaxy', onClick: leaveOrbit }]
       : []),
     { key: 'galaxy', icon: '✦', label: 'Galaxy', active: !frames.galaxy.docked,
-      isWindow: true, onClick: toggle('galaxy') },
+      kind: 'window', onClick: toggle('galaxy') },
     {
       key: 'timeline',
       icon: '◷',
       label: 'Timeline',
       active: !frames.timeline.docked,
-      isWindow: true,
+      kind: 'window',
       onClick: toggle('timeline'),
     },
     {
@@ -520,29 +547,25 @@ export function Board() {
       icon: '⁇',
       label: 'Questions',
       active: !frames.questions.docked,
-      isWindow: true,
+      kind: 'window',
       onClick: toggle('questions'),
     },
     { key: 'filters', icon: '⌗', label: 'Filters', active: !frames.filters.docked,
-      isWindow: true, onClick: toggle('filters') },
+      kind: 'window', onClick: toggle('filters') },
     { key: 'news', icon: '◰', label: 'Journals', active: !frames.news.docked,
-      isWindow: true, onClick: toggle('news') },
+      kind: 'window', onClick: toggle('news') },
     {
       key: 'headlines',
       icon: '⌁',
       label: 'Headlines',
       active: !frames.headlines.docked,
-      isWindow: true,
+      kind: 'window',
       onClick: toggle('headlines'),
     },
     { key: 'teaser', icon: '△', label: 'Changed', active: !frames.teaser.docked,
-      isWindow: true, onClick: toggle('teaser') },
+      kind: 'window', onClick: toggle('teaser') },
     { key: 'help', icon: '?', label: 'Help', active: !frames.help.docked,
-      isWindow: true, onClick: toggle('help') },
-    // Q-Day leaves the board rather than opening over it. Not a window, so no
-    // `isWindow` and no docked state — the dock lists what is put away, and
-    // this is somewhere you go.
-    { key: 'qday', icon: 'Q', label: 'Q-Day', onClick: () => goToQDay() },
+      kind: 'window', onClick: toggle('help') },
     {
       key: 'reset',
       icon: '⟲',
@@ -568,7 +591,7 @@ export function Board() {
         override them.
       */}
       <header
-        className="board-head"
+        className="board-head app-head"
         style={{
           display: 'flex',
           flexWrap: 'nowrap',
@@ -631,6 +654,41 @@ export function Board() {
           style={{ display: 'flex', alignItems: 'center', gap: 12, flex: '0 0 auto', position: 'relative' }}
         >
           <QDayBar forecast={forecast} colour={colour} onOpen={() => goToQDay()} />
+
+          {/*
+            The same three dots the Observatory has, in the same corner. It is
+            an entry point rather than an owner: "Help" opens the help *window*
+            that already exists here — moveable, resizable, parked beside the
+            galaxy while you read — instead of a second panel that would have
+            to be kept in step with it.
+          */}
+          <AppMenu
+            items={[
+              {
+                key: 'help',
+                label: 'Help & documentation',
+                hint: 'Opens as a window you can move and keep open',
+                onClick: () => setFrames((f) => ({ ...f, help: { ...f.help, docked: false } })),
+              },
+              {
+                key: 'stats',
+                label: 'Board statistics',
+                hint: `v${VERSION} · what is sourced, what nobody has read`,
+                onClick: () => setStatsOpen((v) => !v),
+              },
+              {
+                key: 'reset',
+                label: 'Reset the layout',
+                hint: 'Every window back where it started, and the view re-centred',
+                onClick: () => {
+                  setView({ k: 1, tx: 0, ty: 0 })
+                  setFrames(defaultLayout(window.innerWidth, window.innerHeight))
+                  setResetTick((n) => n + 1)
+                  bump()
+                },
+              },
+            ]}
+          />
 
           {(
             <button
@@ -1277,7 +1335,10 @@ export function Board() {
         </Frame>
       )}
 
-      <Toolbar buttons={buttons} accent={colour} resetSignal={resetTick} />
+      {/* Teal, not the galaxy's colour. The dock is chrome, and chrome that
+          changes hue with context is how one product starts reading as three.
+          The galaxy accent still drives every mark on the canvas. */}
+      <Toolbar buttons={buttons} accent="var(--qd-defence)" resetSignal={resetTick} />
     </main>
   )
 }

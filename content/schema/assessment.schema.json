@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://horizonqltd.com/schema/assessment/v1",
   "title": "Self-assessment questionnaire",
-  "description": "A questionnaire that helps a reader arrive at their own X and Y for the Mosca test. THIS IS NOT EVIDENCE. It is a structured prompt whose weights are editorial judgement, and every record has to say so — it is held as content so the questions can be argued with and revised, not so they can borrow the authority of the sourced material beside them.",
+  "description": "A questionnaire that helps a reader arrive at their own X and Y for the Mosca test. THIS IS NOT EVIDENCE. It is a structured prompt whose weights are editorial judgement, and every record has to say so \u2014 it is held as content so the questions can be argued with and revised, not so they can borrow the authority of the sourced material beside them.",
   "type": "object",
   "required": [
     "schema",
@@ -89,6 +89,43 @@
                 },
                 "score": {
                   "type": "number"
+                }
+              }
+            }
+          },
+          "guidance": {
+            "type": "object",
+            "description": "What the national guidance actually says about this question, and where to read it. A questionnaire that only scores you is a quiz; the value is in what to do next, and that has sources.",
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "maxLength": 900,
+                "description": "Plain prose. What the authorities agree on for this question, stated as their position rather than the board's."
+              },
+              "links": {
+                "type": "array",
+                "maxItems": 5,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "label",
+                    "url"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "maxLength": 60
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
                 }
               }
             }

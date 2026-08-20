@@ -1,30 +1,53 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * THE DOCK.
+ * THE DOCK — ONE COMPONENT, BOTH SURFACES.
  *
- * It lists what is put away, not everything that exists. A window on screen is
- * its own control — you can see it, move it, close it — so repeating it here
- * said the same thing twice and left the reader to work out which of the two
- * was authoritative.
+ * The board and the Q-Day Observatory used to have separate bars, on the
+ * reasoning that one manages windows and the other navigates pages. That is a
+ * real difference and it was the wrong conclusion: both are *a list of panels,
+ * click one to bring it forward*, and a reader moving between the two surfaces
+ * should not have to learn a second set of manners to do the same thing.
  *
- * So an open window disappears from the dock, and docking one brings it back.
- * The dock shrinks as you open things and grows as you put them away, which is
- * what a dock is for.
+ * So there is one dock, and the difference lives in the item rather than in
+ * the bar. Four kinds:
  *
- * Actions that are not windows — Reset, and the headline overlay — stay
- * permanently, since there is nowhere else for them to live.
+ * - **`window`** — the board's frames. Shows *presence*: an open window
+ *   disappears from the dock, because a window on screen is already its own
+ *   control and listing it twice leaves the reader deciding which is
+ *   authoritative. The dock shrinks as you open things and grows as you put
+ *   them away, which is what a dock is for.
+ * - **`section`** — the Observatory's pages. Shows *selection*: always
+ *   present, exactly one lit. Rendered as a real link, so a section can be
+ *   opened in a new tab, bookmarked and shared.
+ * - **`nav`** — the other surface. **Always the leading item, on both**, with
+ *   a divider after it. That single fixed position is what makes two surfaces
+ *   read as one product: wherever you are, the way out is in the same place.
+ * - **`action`** — Reset and the like. Neither a place nor a panel.
+ *
+ * The two selection models coexist without a legend because they show
+ * different things and both are visible at once: a `window` item is a thing
+ * you can put away, a `section` item is a thing you are looking at.
  */
 
 export interface ToolbarButton {
   key: string
   label: string
   icon?: string
-  /** True when the thing this opens is currently on screen. */
+  /** True when the thing this opens is currently on screen, or is the
+   *  section being read. */
   active?: boolean
-  /** A window control: hidden from the dock while its window is open. */
-  isWindow?: boolean
-  onClick: () => void
+  /**
+   * `window` hides itself while its window is open. `section` never hides and
+   * is a link. `nav` leaves for the other surface. `action` does neither.
+   * Defaults to `action`.
+   */
+  kind?: 'window' | 'section' | 'nav' | 'action'
+  /** Makes the item a real anchor. Sections and nav should have one. */
+  href?: string
+  onClick?: () => void
+  /** A rule in the bar rather than a control. Nothing else on it is read. */
+  divider?: boolean
 }
 
 const FALLBACK_ICON = (label: string) =>
@@ -147,8 +170,14 @@ export function Toolbar({
     size.current = { ox: e.clientX, w: r.width }
   }
 
-  // A window that is open is not in the dock. Everything else is.
-  const shown = buttons.filter((b) => !(b.isWindow && b.active))
+  // A window that is open is not in the dock. Everything else is — a section
+  // in particular, since the set of sections is the map of the subject and
+  // hiding the one you are reading would make that map change as you read it.
+  const withoutOpenWindows = buttons.filter((b) => !(b.kind === 'window' && b.active))
+  // A divider with nothing after it is a rule against the edge of the bar.
+  const shown = withoutOpenWindows.filter(
+    (b, i) => !b.divider || withoutOpenWindows.slice(i + 1).some((x) => !x.divider),
+  )
 
   const style: React.CSSProperties = {
     ...(pos ? { left: pos.x, top: pos.y, transform: 'none' } : {}),
@@ -172,21 +201,50 @@ export function Toolbar({
       />
 
       {!collapsed &&
-        shown.map((b) => (
-          <button
-            key={b.key}
-            className="dock__item"
-            onClick={b.onClick}
-            aria-pressed={b.active}
-            title={b.label}
-            style={b.active ? { color: accent } : undefined}
-          >
-            <span className="dock__icon" aria-hidden="true">
-              {b.icon ?? FALLBACK_ICON(b.label)}
-            </span>
-            {!compact && <span className="dock__label">{b.label}</span>}
-          </button>
-        ))}
+        shown.map((b) => {
+          if (b.divider) return <span key={b.key} className="dock__rule" aria-hidden="true" />
+
+          const inner = (
+            <>
+              <span className="dock__icon" aria-hidden="true">
+                {b.icon ?? FALLBACK_ICON(b.label)}
+              </span>
+              {!compact && <span className="dock__label">{b.label}</span>}
+            </>
+          )
+          const kind = b.kind ?? 'action'
+          const common = {
+            className: 'dock__item',
+            'data-kind': kind,
+            title: b.label,
+            style: b.active ? { color: accent } : undefined,
+          }
+
+          /**
+           * A section is an anchor, not a button.
+           *
+           * It addresses a page that has a URL, so middle-click, open-in-new-
+           * tab and copy-link-address all have to work — a tab bar built from
+           * buttons quietly takes those away, and a reader who wants two
+           * sections side by side in two browser tabs is doing exactly what
+           * this board is for.
+           */
+          return b.href ? (
+            <a
+              key={b.key}
+              {...common}
+              href={b.href}
+              aria-current={kind === 'section' && b.active ? 'page' : undefined}
+              onClick={b.onClick}
+            >
+              {inner}
+            </a>
+          ) : (
+            <button key={b.key} {...common} onClick={b.onClick} aria-pressed={b.active}>
+              {inner}
+            </button>
+          )
+        })}
 
       {!collapsed && shown.length === 0 && (
         <span className="dock__empty">Everything is open</span>

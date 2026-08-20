@@ -19,6 +19,17 @@
   --ink-muted:  #8697B0;
   --ink-faint:  #55647C;
 
+  /* The Observatory's two accents, promoted out of that surface and into the
+     product. Chrome — the header, the dock, the menu — is teal on both
+     surfaces now; the board's per-constellation colour is for data marks, so
+     that every colour on a chart still means something and nothing about the
+     furniture moves when you change galaxy.
+
+     Defence is the existing quantum line colour rather than a second
+     near-identical teal. Threat had no equivalent and is declared here. */
+  --qd-threat: #ff9e3d;
+  --qd-defence: var(--line-quantum);
+
   /* Emission lines, by wavelength */
   --line-cyber:     #A97BFF;  /* Hg      435.8 nm */
   --line-materials: #5B8CFF;  /* H-beta  486.1 nm */

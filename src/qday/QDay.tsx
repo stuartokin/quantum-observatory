@@ -1,5 +1,26 @@
 import { useEffect } from 'react'
-import { QDAY_TABS, hrefFor, goToBoard, type QDayTab } from './route'
+import {
+  QDAY_TABS,
+  hrefFor,
+  goToBoard,
+  goToQDay,
+  requestHelpOnBoard,
+  type QDayTab,
+} from './route'
+import { Toolbar } from '../components/Toolbar'
+import { AppMenu } from '../components/AppMenu'
+import { VERSION } from '../version'
+
+/** One glyph per section, so the dock still reads when the labels drop off. */
+const TAB_ICON: Record<QDayTab, string> = {
+  clocks: '◷',
+  trends: '∿',
+  stack: '≡',
+  plan: '⊞',
+  threats: '⚠',
+  readiness: '◎',
+  learn: '✦',
+}
 import { forecastFor } from '../content/forecast'
 import { Clocks } from './tabs/Clocks'
 import { Trends } from './tabs/Trends'
@@ -51,24 +72,57 @@ export default function QDay({ tab }: { tab: QDayTab }) {
 
   return (
     <div className="qday-surface">
-      <header className="qday-surface__head">
-        <button className="qday-surface__back" onClick={goToBoard}>
-          ← Board
-        </button>
-        {/* The board's own wordmark first, so a reader who arrives here from a
-            shared link knows what site they are on and that there is more of
-            it. The two surfaces are one product; the header should say so. */}
-        <h1 className="qday-surface__title">
-          <a className="qday-surface__mark" href="#" onClick={(e) => { e.preventDefault(); goToBoard() }}>
+      {/*
+        The same header the board has: wordmark on the left, what you are
+        looking at beside it, and the three dots on the right. Nothing here is
+        Observatory-specific except the words — which is the point. A reader
+        crossing between the two surfaces should find the same furniture in the
+        same place, and the "← Board" button that used to float in the corner
+        has moved into the dock, where the board's own "Q-Day" already lives.
+      */}
+      <header className="app-head">
+        <div className="app-head__id">
+          <a
+            className="wordmark"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              goToBoard()
+            }}
+          >
             Horizon Q
           </a>
-          <span className="qday-surface__sep">·</span>
-          Q-Day <span>Observatory</span>
-        </h1>
-        <p className="qday-surface__sub">
+          <span className="app-head__sep">·</span>
+          <span className="app-head__where">
+            Q-Day <i>Observatory</i>
+          </span>
+        </div>
+        <p className="app-head__sub">
           Capability against the migration deadline — the gap is your headroom.
           <b> Estimates, not predictions.</b>
         </p>
+        <AppMenu
+          items={[
+            {
+              key: 'help',
+              label: 'Help & documentation',
+              hint: 'Opens on the board, where it is a window you can park',
+              onClick: requestHelpOnBoard,
+            },
+            {
+              key: 'board',
+              label: 'Back to the board',
+              hint: 'The galaxy this section is derived from · Esc',
+              onClick: goToBoard,
+            },
+            {
+              key: 'about',
+              label: 'About this surface',
+              hint: `Version ${VERSION} · seven sections, ${QDAY_TABS.filter((t) => t.ready).length} built`,
+              onClick: () => goToQDay('learn'),
+            },
+          ]}
+        />
       </header>
 
       <main className="qday-surface__main">
@@ -88,25 +142,42 @@ export default function QDay({ tab }: { tab: QDayTab }) {
       </main>
 
       {/*
-        The dock lists every tab including the six with nothing behind them.
-        The board's own dock lists what is put away rather than everything that
-        exists; this one is the opposite on purpose — here the set of tabs is
-        the map of the subject, and hiding the unbuilt ones would tell a reader
+        The board's dock, with sections in it instead of windows.
+
+        It lists every section including the two with nothing behind them yet.
+        The board hides a window while that window is open, because the window
+        is its own control; a section is not, and here the set of sections is
+        the map of the subject — hiding the one being read would make that map
+        change as you read it, and hiding the unbuilt ones would tell a reader
         the subject is smaller than it is.
+
+        Everything else comes free: drag to move, click the grip to collapse,
+        drag the corner to set the width, labels drop to icons when it is
+        narrow. The Observatory had none of that an hour ago.
       */}
-      <nav className="qday-dock" aria-label="Q-Day sections">
-        {QDAY_TABS.map((t) => (
-          <a
-            key={t.id}
-            className="qday-dock__tab"
-            href={hrefFor(t.id)}
-            aria-current={t.id === tab ? 'page' : undefined}
-            data-pending={!t.ready || undefined}
-          >
-            {t.label}
-          </a>
-        ))}
-      </nav>
+      <Toolbar
+        accent="var(--qd-defence)"
+        buttons={[
+          {
+            // No href: returning to the board is a pushState that clears the
+            // hash, and an anchor to '#' would leave one behind.
+            key: 'board',
+            kind: 'nav',
+            icon: '←',
+            label: 'Board',
+            onClick: goToBoard,
+          },
+          { key: 'rule', divider: true, label: '' },
+          ...QDAY_TABS.map((t) => ({
+            key: t.id,
+            kind: 'section' as const,
+            icon: TAB_ICON[t.id],
+            label: t.label,
+            href: hrefFor(t.id),
+            active: t.id === tab,
+          })),
+        ]}
+      />
     </div>
   )
 }

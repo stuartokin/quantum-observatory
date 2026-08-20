@@ -302,3 +302,125 @@ a:hover { text-decoration-color: currentColor; }
   text-transform: uppercase;
   z-index: 1000;
 }
+
+/* ============================================================
+   THE SHARED HEADER
+   ------------------------------------------------------------
+   One header, two surfaces. The board and the Observatory used
+   to carry different furniture in different places, which is
+   the single loudest way two pages say "different site" — so
+   the wordmark, the "where you are" label and the three dots
+   are now the same element in the same position on both.
+
+   What differs is only what sits between them: the board has a
+   galaxy picker and its statistics, the Observatory has a
+   standfirst. Those are context, not chrome.
+   ============================================================ */
+
+.app-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gap-m);
+  padding: var(--gap-s) var(--gap-m);
+  border-bottom: 1px solid var(--hairline);
+  flex: 0 0 auto;
+}
+.app-head__id { display: flex; align-items: baseline; gap: 0.5rem; min-width: 0; }
+.app-head__id .wordmark { text-decoration: none; white-space: nowrap; }
+.app-head__sep { color: var(--ink-faint); }
+.app-head__where {
+  font-family: var(--display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.app-head__where i {
+  font-family: var(--mono);
+  font-size: 0.5em;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-left: 0.45rem;
+  vertical-align: middle;
+}
+.app-head__sub {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-head__sub b { color: var(--ink); font-weight: 600; }
+
+/* The standfirst is the first thing to go: it is a nicety, and the wordmark
+   and the menu are not. Below this the header is a name and a way out. */
+@media (max-width: 860px) {
+  .app-head { grid-template-columns: auto auto; justify-content: space-between; }
+  .app-head__sub { display: none; }
+}
+
+/* ---------- The three dots ---------- */
+
+.appmenu { position: relative; flex: 0 0 auto; }
+.appmenu__dots {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+.appmenu__dots:hover, .appmenu__dots[aria-expanded='true'] {
+  color: var(--qd-defence);
+  border-color: color-mix(in oklab, var(--qd-defence) 40%, var(--hairline));
+}
+.appmenu__dots svg { fill: currentColor; }
+
+.appmenu__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 200;
+  min-width: 250px;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 4px;
+  background: var(--ground-panel);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 44px rgb(0 0 0 / 0.6);
+}
+.appmenu__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--ink);
+  cursor: pointer;
+}
+.appmenu__item:hover { background: color-mix(in oklab, var(--qd-defence) 10%, transparent); }
+.appmenu__label { display: block; font-size: 0.82rem; }
+.appmenu__label i {
+  font-family: var(--mono); font-style: normal; font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--qd-defence); margin-left: 0.5rem;
+}
+.appmenu__hint {
+  display: block;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}

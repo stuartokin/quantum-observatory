@@ -28,6 +28,23 @@ export function ReadinessAssessment({
   const [persona, setPersona] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Record<string, number>>({})
 
+  /**
+   * WEIGHTS THE READER CAN MOVE.
+   *
+   * The content states a default and a reason for it, and the honest answer to
+   * "why 1.4 and not 1.2?" is that nothing on this board evidences either — it
+   * is editorial ordering with false precision on top. Printing the number and
+   * defending it would be the worse response; handing over the dial is the
+   * better one, and it makes the heuristic line true rather than apologetic.
+   *
+   * Held by question key and never written back. The file is the board's
+   * position; this session is the reader's.
+   */
+  const [weights, setWeights] = useState<Record<string, number>>({})
+  const [openWhy, setOpenWhy] = useState<Record<string, boolean>>({})
+  const [openGuide, setOpenGuide] = useState<Record<string, boolean>>({})
+  const weightOf = (qn: AssessmentQuestion, key: string) => weights[key] ?? qn.weight ?? 1
+
   const form = forms.find((f) => f.id === persona)
 
   /**
@@ -42,15 +59,22 @@ export function ReadinessAssessment({
   const result = useMemo(() => {
     if (!form?.questions) return null
     const answered = form.questions
-      .map((qn, i) => ({ qn, choice: answers[`${form.id}:${i}`] }))
-      .filter((a): a is { qn: AssessmentQuestion; choice: number } => typeof a.choice === 'number')
+      .map((qn, i) => {
+        const key = `${form.id}:${i}`
+        return { qn, choice: answers[key], w: weights[key] ?? qn.weight ?? 1 }
+      })
+      .filter(
+        (a): a is { qn: AssessmentQuestion; choice: number; w: number } =>
+          typeof a.choice === 'number',
+      )
     if (answered.length < form.questions.length) return null
 
     const agg = (dim: string) => {
       const rows = answered.filter((a) => a.qn.dimension === dim)
       if (!rows.length) return null
-      const w = rows.reduce((t, r) => t + (r.qn.weight ?? 1), 0)
-      const s = rows.reduce((t, r) => t + (r.qn.options[r.choice].score * (r.qn.weight ?? 1)), 0)
+      // The reader's weight where they have set one, the content's otherwise.
+      const w = rows.reduce((t, r) => t + r.w, 0)
+      const s = rows.reduce((t, r) => t + r.qn.options[r.choice].score * r.w, 0)
       return s / w // 1..5
     }
 
@@ -83,7 +107,7 @@ export function ReadinessAssessment({
     const x = shelf === null ? null : Math.max(1, Math.min(50, Math.round(shelf)))
 
     return { level, x, y, agility, shelf }
-  }, [form, answers])
+  }, [form, answers, weights])
 
   const levels = levelsDoc?.levels ?? []
   const matched = result?.level ? levels.find((l) => l.level === result.level) : undefined
@@ -110,6 +134,7 @@ export function ReadinessAssessment({
             onClick={() => {
               setPersona(persona === f.id ? null : f.id)
               setAnswers({})
+              setWeights({})
             }}
           >
             <b>{f.title}</b>
@@ -155,10 +180,111 @@ export function ReadinessAssessment({
                       </button>
                     ))}
                   </div>
-                  {qn.weightReason && answers[key] !== undefined && (
+                  {/*
+                    The weight, as a dial rather than a printed number.
+
+                    Below the options, not above them: the question and its
+                    answers are the job, and how heavily it counts is the
+                    second thought a reader has, not the first. It shows what
+                    it drives — X, Y or the level — because a weight with no
+                    stated effect is a number to nod at.
+                  */}
+                  <div className="qd-assess__weight" data-changed={weights[key] !== undefined || undefined}>
+                    <span className="qd-assess__wlabel">
+                      Weight ·{' '}
+                      {qn.dimension === 'agility'
+                        ? 'drives Y'
+                        : qn.dimension === 'shelf-life'
+                          ? 'drives X'
+                          : 'drives the level'}
+                    </span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={2}
+                      step={0.1}
+                      value={weightOf(qn, key)}
+                      aria-label={`Weight for question ${i + 1}`}
+                      onChange={(e) =>
+                        setWeights((w) => ({ ...w, [key]: Number(e.target.value) }))
+                      }
+                    />
+                    <b className="qd-assess__wval">×{weightOf(qn, key).toFixed(1)}</b>
+                    {qn.weightReason && (
+                      <button
+                        className="qd-assess__winfo"
+                        aria-expanded={!!openWhy[key]}
+                        aria-label="Why this weight"
+                        onClick={() => setOpenWhy((o) => ({ ...o, [key]: !o[key] }))}
+                      >
+                        i
+                      </button>
+                    )}
+                    {/* Only once it has been moved. A reset for something at
+                        its default is a control that does nothing. */}
+                    {weights[key] !== undefined && (
+                      <button
+                        className="qd-assess__wreset"
+                        title={`Back to the board's ${qn.weight ?? 1}`}
+                        aria-label="Reset this weight"
+                        onClick={() =>
+                          setWeights((w) => {
+                            const next = { ...w }
+                            delete next[key]
+                            return next
+                          })
+                        }
+                      >
+                        ⟲
+                      </button>
+                    )}
+                  </div>
+
+                  {openWhy[key] && qn.weightReason && (
                     <p className="qd-assess__why">
-                      <b>Weight {qn.weight ?? 1}.</b> {qn.weightReason}
+                      <b>Default ×{qn.weight ?? 1}.</b> {qn.weightReason}
+                      {weights[key] !== undefined && (
+                        <i> You have set it to ×{weightOf(qn, key).toFixed(1)}.</i>
+                      )}
                     </p>
+                  )}
+
+                  {/*
+                    What the authorities say to do about a weak answer.
+
+                    Stated as their position with their links, not as this
+                    board's advice — the board maps how close things are to
+                    being real and does not tell anyone how to run a migration.
+                    Folded shut, because a reader working through ten questions
+                    does not want ten essays open.
+                  */}
+                  {qn.guidance && (
+                    <div className="qd-assess__guide">
+                      <button
+                        className="qd-disc"
+                        aria-expanded={!!openGuide[key]}
+                        onClick={() => setOpenGuide((o) => ({ ...o, [key]: !o[key] }))}
+                      >
+                        National &amp; international guidance
+                        <svg className="qd-chev" viewBox="0 0 24 24" aria-hidden="true" data-open={openGuide[key] || undefined}>
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </button>
+                      {openGuide[key] && (
+                        <div className="qd-assess__guidebody">
+                          <p>{qn.guidance.text}</p>
+                          {!!qn.guidance.links?.length && (
+                            <p className="qd-assess__guidelinks">
+                              {qn.guidance.links.map((l) => (
+                                <a key={l.url} href={l.url} target="_blank" rel="noreferrer">
+                                  {l.label} ↗
+                                </a>
+                              ))}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </li>
               )
