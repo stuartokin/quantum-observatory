@@ -49,8 +49,8 @@ origin: human
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-19'
-  note: 'Steward review 2026-08-19. Sources checked against board data and issue #145 sourcer summary. IPD submitted Aug 28 2025 per sourcer; Perlner Sep 25 2025 presentation confirms ''basically written, awaiting approval''; March 2025 NIST news release corroborates imminent release. CSRC project page describes as ''in development'' as of Aug 2026. No Federal Register final notice found. E3 correct for draft-standard-in-development. Readiness experimental correct. Verifier queued to confirm whether csrc.nist.gov/pubs/fips/206/ipd resolves — that is a factual URL check, not a level change.'
+  reviewedOn: '2026-08-24'
+  note: 'FIPS 206 status confirmed via NIST CSRC, DigiCert (Sep 2025), and IETF draft-ietf-cose-falcon-04 (Mar 2026): IPD submitted Aug 28 2025, public review ~1 year, final expected late 2026 or early 2027. CSRC project page describes as ''in development'' Aug 2026. E3 correct for draft standard. Readiness experimental correct. No corrections.'
 ---

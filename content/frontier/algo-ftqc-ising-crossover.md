@@ -68,10 +68,10 @@ added: '2026-08-18'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-18'
-  reviewedOn: '2026-08-18'
-  note: 'State moved from agent-merged to agent-reviewed. Source arXiv:2607.16116 confirmed as preprint from 31-author team across Queen Mary, Oxford, CAS, HKU, PKU, Tsinghua. E3 correct for preprint. Readiness emerging correct: theoretical resource estimate, no hardware experiment. qdayImpact 0 correct: physics simulation not cryptanalysis. Actors and country fields correct. No downward corrections needed.'
+  reviewedOn: '2026-08-24'
+  note: arXiv:2607.16116 HTML opened. Jinzhao Sun (Queen Mary/Oxford), Bozhen Zhou (CAS Beijing), Jue Xu (HKU), Yuan Yao (PKU), Zhenyu Du (Tsinghua) and 25 further authors confirmed. 3.7×10^5 physical qubits and ~2 hours at p=10^-3 for 100-site 1D mixed-field Ising confirmed from abstract. E3 correct for preprint. No peer-reviewed journal record found. No downward corrections.
 ---
 
 ## What happened
