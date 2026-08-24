@@ -72,13 +72,6 @@ The collection is **not** fixed-membership: it is meant to grow.
 
 ## What is queued
 
-## Add NIST SP 800-57 Part 1 Revision 6 as a new migration-constellation item
-agent: scout
-added: 2026-08-19
-source: issue #145
-
-    /focus scout: add a new migration-constellation item for NIST SP 800-57 Part 1 Revision 6 (Initial Public Draft, December 5, 2025, DOI 10.6028/NIST.SP.800-57pt1r6.ipd, url https://csrc.nist.gov/pubs/sp/800/57/pt1/r6/ipd). This is the first revision of NIST key-management guidance to include ML-KEM, ML-DSA, and SLH-DSA (FIPS 203/204/205). The comment period closed February 5, 2026; no final has been published as of August 2026. Evidence level E3 (preliminary draft guidance). Readiness emerging. Priority P1 because SP 800-57 is what most organisations key-management policy explicitly cites. Do not create this item if it is already on the board index.
-
 ## Confirm whether csrc.nist.gov/pubs/fips/206/ipd resolves to a published FIPS 206 IPD
 agent: sourcer
 added: 2026-08-19
