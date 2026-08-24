@@ -41,8 +41,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-10'
-  note: 'arXiv:2506.03094 (Tour de gross) confirmed as IBM Quantum preprint, June 2025. IBM blog confirmed roadmap: Starling system by 2029 targeting 200 logical qubits, 100M gate circuits. E3 correct — preprint as primary source. IBM blog source is vendor material (E2 at most), does not upgrade the level. Roadmap is a vendor commercial statement; qdayImpact correctly not set. Human review (2026-08-07) noted; no corrections required.'
+  reviewedOn: '2026-08-24'
+  note: arXiv:2506.03094 (Tour de gross) confirmed as IBM Quantum preprint (Yoder, Schoute, Rall, Pritchett, Gambetta, Cross, Carroll, Beverland), submitted June 2025, not peer-reviewed. No journal record found on ResearchGate or errorcorrectionzoo. E3 correct. 200 logical qubit / 2029 roadmap target is vendor statement, E2, not scored for Q-Day per decisions. No corrections.
 confidence: medium
 status: published
 added: '2026-08-04'

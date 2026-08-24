@@ -57,8 +57,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-11'
-  note: 'E4 → E1: Fowler et al. 2012 (Phys. Rev. A 86, 032324) is a peer-reviewed theoretical architecture paper — a blueprint for how to build and operate a surface code quantum computer, not an experimental result. Schema: E4 requires a peer-reviewed experimental result; E1 is proposal or theoretical work. Peer review alone does not lift theoretical work above E1. Downward correction applied under standing precedent (no permission required). Surface code experimental demonstrations since 2014 are correctly held at E4/E5 in qec-below-threshold-surface-code and qec-error-correction-threshold; E1 here does not make the architecture read as untested — unrated and E1 are distinct (settled precedent), and the experimental evidence is present in those other items.'
+  reviewedOn: '2026-08-24'
+  note: No new source check this run; confirming prior E1 downward correction by reviewer (2026-08-11) stands. Fowler et al. Phys. Rev. A 86, 032324 (2012) is a peer-reviewed theoretical architecture paper — E1 correct per decisions file (peer-reviewed theoretical paper is E1, not E4). Experimental surface-code results carried at E4/E5 in separate items. No corrections.
 ---
 
 The surface code is the workhorse of quantum error correction: a 2D lattice of data and ancilla qubits where each qubit only needs to interact with its four nearest neighbours. Error information is extracted by repeatedly measuring the ancillas; a minimum-weight matching decoder then corrects errors. The code tolerates physical gate error rates up to roughly 1% — high enough that the best superconducting and trapped-ion hardware today can operate below threshold.
