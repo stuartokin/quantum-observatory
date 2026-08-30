@@ -24,6 +24,19 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.59.0',
+    date: '2026-08-20',
+    headline: 'The build stops caring where it is served from.',
+    ui: [
+      'Nothing visible changed. This release makes the site work at any address, which is what the repository rename needs.',
+    ],
+    agents: [
+      'The build path is relative rather than absolute. Moving from a GitHub user site to a project site changes the URL from the domain root to a subdirectory, and the obvious fix — hard-coding the new subpath — is wrong at the old address and right at the new one, so the rename and the deploy could not both happen at once. Whichever went first, the site would serve its HTML and fail to find a single asset until the other caught up.',
+      'A relative path is correct at both, so the rename needs no coordination and can be undone without a second deploy. It also removes a coupling: the build no longer contains the repository’s name, so renaming again or moving to a custom domain later needs no config change. Verified by serving the same build at a root and at a subpath and checking the board, the Q-Day sections, deep links and every content fetch at each.',
+      'The setup guide was rewritten. It described a user site with a custom domain at a company address, neither of which applies, and a document that confidently describes a configuration you do not have is worse than none.',
+    ],
+  },
+  {
     version: '0.58.0',
     date: '2026-08-20',
     headline: 'The last two sections arrive — and not as the imports they were planned to be.',
@@ -164,28 +177,6 @@ export const RELEASES: Release[] = [
       'Four scout runs failed before any of that was found, and both causes were in the machinery rather than the agent. The runner kept its own private list of which collections use which schema — a list that knew three of them and silently stamped everything else "frontier/v1", so every milestone the scout wrote was failed by a check the runner had caused it to fail. It now reads the constant out of the schema that governs the file, and a test asserts it for every collection.',
       'Milestones were also marked as a collection that may not grow, which is true of the twelve standing questions and was never true of regulatory deadlines. A new deadline — the entire reason the scout was given the scope — would have been rejected as not one of the existing ones.',
       'The scout’s brief now describes what a milestone record actually is: the required fields, the closed lists for jurisdiction, kind and status, that its source is one document rather than a list, and that a date in the past is never marked met by arithmetic. Its file-format example had shown "frontier/v1" three times as though it were universal.',
-    ],
-  },
-  {
-    version: '0.54.0',
-    date: '2026-08-19',
-    headline: 'Every reference is clickable, the Mosca test is back, and Plan learns who else has a deadline.',
-    ui: [
-      'Any reference on the Q-Day surface now opens a detail panel: the title, the publisher, the identifier, the date it was accessed, the evidence level, whatever note the reviewer left, and a link out to the source itself. Previously a claim carried a source in its data and showed the reader a bare name — the citation existed and was unreachable, which is the worst of both.',
-      'The Mosca readiness test is on the Clocks tab, and it is content rather than code. Three questionnaires — executive, technical, auditor — put x (how long migration takes), y (how long data stays sensitive) and z (how long until Q-Day) on the same axis as the derived Q-Day band, and the verdict follows from x + y against z. The z axis is the board’s own derivation, so the test moves when the evidence does.',
-      'Each questionnaire states its own weighting in the open. The options score to years, and the mapping from an answer to a number is editorial judgement rather than measurement — so it is printed on the page next to the questions rather than buried in a function.',
-      'Plan now shows the EU and NIST alongside NCSC, CNSA 2.0 and the US federal target, as jurisdiction cards with their own sources. Four milestones added: the EU roadmap’s end-2026 start and end-2030 high-risk deadline, and NIST’s 2030 deprecation and 2035 disallowal of RSA and ECC.',
-      'The EU "2035 full transition" figure the research prototype asserted was queued as a question rather than imported, because the Commission’s announcement of its roadmap sets only end-2026 and end-2030. See 0.54.1 — the announcement was the wrong document to have read.',
-      'Australia is missing on purpose, not by oversight. The ASD deadline is real and cyber.gov.au refuses automated fetching, so it is first in the queue for a human-assisted pass rather than transcribed from memory.',
-      'Escape inside a source panel closes the panel, not the whole Q-Day surface. Both listen on the document and the later listener wins, which is exactly backwards from what a reader expects.',
-    ],
-    content: [
-      'A new `content/assessment/` collection holds the questionnaires and the maturity levels — four files, schema-validated like everything else. The Mosca test was the one part of the research prototype that was pure application code; putting it in content means an agent can improve a question, and the weighting can be argued with in a pull request instead of a refactor.',
-      'Milestones gained a `review` block, so an imported deadline carries the same review state as every other record and an unverified one is visibly unverified.',
-    ],
-    agents: [
-      '`agents/_queue.md` is rewritten as nine scouting jobs drawn from a pass over the research prototype: the EU 2035 claim, the ASD deadline, EO 14412 and OMB M-26-15, FIPS 206 and HQC and SP 800-57 Rev 6, a newsroom measurement backfill, the Gidney–Ekerå and Häner requirement points, earlier GRI survey editions and Mosca 2015, decoder and magic-state metrics, and a circuit-depth item.',
-      'Scout may now write to `content/questions/` and `content/milestones/` as well as the frontier inbox. A regulatory deadline is a scouting result, and routing it through a human retype was the only reason it was not.',
     ],
   },
 ]

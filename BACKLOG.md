@@ -10,7 +10,7 @@ being deleted, so nobody re-proposes it in six months. An item that is blocked
 says who on. And nothing goes here that belongs in `agents/_queue.md`: that is
 for research an agent runs, this is for work a person or a session does.
 
-Last reviewed: 20 August 2026, at 0.58.0.
+Last reviewed: 20 August 2026, at 0.59.0.
 
 ---
 
@@ -21,7 +21,7 @@ Nothing else can clear these.
 | | What | Why it needs a person |
 | --- | --- | --- |
 | **B1** | Delete three duplicate milestones: `asd-ism-pqc-complete-2030`, `cmvp-fips-140-2-historical-2026`, `omb-m-26-15-full-migration-2035` | A drag-and-drop upload adds and replaces; it cannot remove. The keeper of each pair is the better record and the OMB keeper has already absorbed the loser's one unique fact. |
-| **B2** | Confirm the repository name — `quantum-observatory` is assumed throughout the plan | It becomes part of the public URL and of `base` in `vite.config.ts`. Cheap to decide now, tedious to change after. |
+| ~~B2~~ | ~~Confirm the repository name~~ | **Confirmed:** `quantum-observatory`. No longer affects the build — `base` is relative, so the name appears nowhere in the artefact. |
 | **B3** | Name any repositories missing from the landing page | The file is written and delivered. GitHub's API refused an unauthenticated listing, so it carries the three projects known from conversation. |
 | **B4** | Decide whether to recreate a user site at `stuartokin.github.io` after the rename | Without one, the domain root serves nothing. The landing page is built for exactly this. |
 
@@ -41,15 +41,15 @@ sourced items, and the open question in this phase — how far "readiness" goes 
 answered itself: not into general cyber maturity models, and not into vendor
 scores. See HANDOVER for the reasoning, which is worth keeping.
 
-### D — Rename the repository and republish — **NEXT, and the last one**
+### D — Rename the repository and republish — **READY, waiting on Stuart**
 
-Steps are written out in the plan, including the trap: the repo is currently a
-**user site**, and renaming makes it a project site at
-`stuartokin.github.io/<name>/`. Every asset 404s until `base` is set in
-`vite.config.ts`. Content fetching already goes through
-`import.meta.env.BASE_URL`, so it is one line plus a verification pass.
+The code side is done in 0.59.0: `base` is **relative**, so the same build works
+at the domain root and at a subpath. The trap this phase was written around —
+every asset 404ing until the base matched the new URL — no longer exists, and
+the rename needs no coordinated deploy.
 
-Do it **last** — every phase above is easier to check at a URL that works.
+What remains is the GitHub steps, written out in `SETUP.md`: rename, check
+Pages, redeploy, verify, and optionally recreate a root site.
 
 ---
 
@@ -126,6 +126,7 @@ outstanding; recorded so the invitation is not forgotten.
 | **E1** | No gate checks that a lesson's `cites` ids exist | A renamed or removed item makes a Learn step show an orange "not on the board" line to readers. Caught by eye today. A ten-line addition to `check-exports` or its own script. |
 | ~~E2~~ | ~~`deferred` bucket near its ceiling~~ | **Closed 0.58.0.** The bucket was summing chunks a reader never downloads together. It now enforces on the largest single chunk — Q-Day at 29 KB of 40 — with the total still reported. |
 | **E3** | `--line-quantum` in `tokens.css` is the O III line, which `palette.ts` assigned to *cyber* | The two files have disagreed since they were written. Teal is chrome, violet is data, and both are correct in behaviour. Renaming touches every stylesheet for no functional gain. **Left deliberately; documented in HANDOVER.** |
+| **E5** | `content/items/q-day-observatory.md` points at `Qday-Research` | That portfolio entry describes the research prototype this site replaced. After the rename it should probably point at the new URL, or be rewritten to describe the Observatory as part of this site. Left alone because it is Stuart's portfolio, not board content. |
 | **E4** | `2026-08-10-quera-96-logical-qubits-nature-neutral-atom.md` has `date: 2026-01-19` | The id is date-prefixed by convention, so the filename and the field disagree. The field is the one that counts and is correct. Renaming would change the id. Worth a tidy, not worth a silent rename. |
 
 ---

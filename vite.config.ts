@@ -5,6 +5,31 @@ import { resolve } from 'node:path'
 
 export default defineConfig({
   /**
+   * RELATIVE, NOT A HARD-CODED SUBPATH.
+   *
+   * The site moved from a GitHub *user* site (served at the domain root) to a
+   * *project* site (served from `/<repo>/`), and the obvious fix was
+   * `base: '/quantum-observatory/'`. This is better for two reasons.
+   *
+   * It removes the outage. A hard-coded base is wrong at the old location and
+   * right at the new one, so renaming the repository and deploying the change
+   * cannot both happen at once — whichever goes first, the site serves its HTML
+   * and fails to find a single asset until the other catches up. A relative
+   * base is correct at *both*, so the rename needs no coordination and can be
+   * undone without a second deploy.
+   *
+   * And it removes a coupling. The build no longer contains the repository's
+   * name, so renaming again, moving to a custom domain, or serving the same
+   * artefact from two places all work without touching the config.
+   *
+   * `import.meta.env.BASE_URL` becomes './', which resolves against the page's
+   * directory — `/quantum-observatory/content-data/frontier.json` there, and
+   * `/content-data/frontier.json` at a root. The hash router is unaffected:
+   * a fragment never takes part in relative resolution.
+   */
+  base: './',
+
+  /**
    * When the site was last built, which is when content last reached a reader.
    * Front matter records dates but not times, so this is the only honest
    * timestamp available — and it is the one that answers "how fresh is this".

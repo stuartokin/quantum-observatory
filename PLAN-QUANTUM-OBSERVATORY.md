@@ -174,7 +174,7 @@ cyber galaxy does not change them:
 
 Both draw on the assessment content that already drives the Mosca test.
 
-### Phase D — Rename the repository and republish — **NEXT, and last**
+### Phase D — Rename the repository and republish — **CODE DONE 0.59.0; GitHub steps remain**
 
 See section 4. **Last**, because every phase above is easier to verify while the
 site is at a URL that already works.
@@ -208,11 +208,12 @@ Rename it and it becomes a **project site**, served from a subpath:
 
 ### The steps
 
-1. **Choose the repository name.** Lower case, hyphens: `quantum-observatory`.
-   It becomes part of the public URL.
-2. **Prepare the `base` change but do not push it yet.** In `vite.config.ts`,
-   add `base: '/quantum-observatory/'` to the config object.
-3. **Rename on GitHub.** Repository → **Settings** → **General** → the
+**The two-step dance this section described is no longer necessary.** `base` is
+relative as of 0.59.0, so the build is correct at the old address and the new
+one, and there is no window in which assets 404. The steps below are simply the
+rename. The full version lives in `SETUP.md`.
+
+1. **Rename on GitHub.** Repository → **Settings** → **General** → the
    **Repository name** field at the top → type the new name → **Rename**.
 4. **Push the `base` change immediately after.** Between the rename and this
    deploy, the site will load its HTML and fail to load its assets. That window

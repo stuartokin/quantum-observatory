@@ -20,7 +20,7 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.58.0**, built in this session but not yet dragged into
+**Version 0.59.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 98 headlines, twelve standing questions, 22 regulatory
