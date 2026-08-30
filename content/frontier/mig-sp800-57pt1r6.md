@@ -4,7 +4,7 @@ id: mig-sp800-57pt1r6
 title: 'NIST SP 800-57 Part 1 Rev. 6: key-management guidance updated for PQC algorithms'
 summary: 'First revision of NIST foundational key-management guidance to incorporate ML-KEM, ML-DSA, and SLH-DSA. IPD published December 2025; comment period closed February 2026; no final version published as of August 2026.'
 plain: 'NIST SP 800-57 Part 1 is the document most organisations use as the policy foundation for how cryptographic keys are managed — what algorithms are approved, how long keys should stay in service, and how they should be stored and protected. Revision 5, published in 2020, predates the post-quantum algorithms. Revision 6 (currently in draft) is the first edition to include ML-KEM, ML-DSA, and SLH-DSA (the three NIST-standardised post-quantum algorithms) alongside the security categories from the PQC competition. It also removes hardcoded algorithm approval timelines and points instead to SP 800-131A, which NIST keeps current. The draft closed its public comment period in February 2026; no final version has been published. Until it is final, organisations cannot update their key-management policies to formally reference the new PQC algorithms under this guidance.'
-pillar: cyber
+pillar: quantum
 constellation: migration
 cluster: standards
 readiness: emerging
