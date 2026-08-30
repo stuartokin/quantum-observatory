@@ -78,3 +78,24 @@ added: 2026-08-19
 source: issue #145
 
     /focus sourcer: confirm whether csrc.nist.gov/pubs/fips/206/ipd resolves to a published FIPS 206 Initial Public Draft document. If yes, add it as a standard-role source with the IPD publication date to pqc-fips-206-falcon. If the URL does not resolve but a different canonical NIST URL for the FIPS 206 IPD exists, use that instead. If no published IPD URL can be confirmed, leave the item unchanged and note this in the summary. Do not raise the evidence level — that requires a separate human decision.
+
+## PQC key and signature sizes, from the standards themselves
+agent: sourcer
+added: 2026-08-20
+source: Learn rebuild, Phase B
+
+    /focus sourcer: Learn's step on FIPS 203, 204 and 205 tells a reader the new
+    keys and signatures are larger without saying by how much, because the board
+    does not hold the figures. pqc-fips-203, pqc-fips-204 and pqc-fips-205 carry
+    only the standard number and its publication date.
+
+    Add metrics to each for public key size, ciphertext or signature size, and
+    private key size, in bytes, for the parameter sets the standards define.
+    Read them out of the FIPS documents themselves at csrc.nist.gov, not from a
+    summary table on a vendor page. Do the same for pqc-fips-206-falcon if its
+    draft states them.
+
+    A size quoted without its parameter set is not a figure — put the parameter
+    set in each metric's note, and say in your summary which ones you used.
+    A key-size comparison is waiting on this and will be built when the board
+    can cite it.

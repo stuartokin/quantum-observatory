@@ -24,6 +24,27 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.57.1',
+    date: '2026-08-20',
+    headline: 'Learn stops being a status report and starts teaching.',
+    ui: [
+      'Eight steps, in order: what cryptography is holding up, RSA and the multiplication trapdoor, elliptic curves and why they fall first, managing the keys you already have, the quantum problem, the replacements, who sets the dates, and why the work does not end when the migration does. A reader who knows nothing can now get from the first to the last without leaving the page.',
+      'What was here before was the twelve standing questions and a glossary. Both are useful and neither teaches: the questions are the board reporting on its own state, and a dictionary is something you consult once you already know what you are looking for. Somebody arriving to learn was handed a status report.',
+      'Factoring is a thing you do rather than a thing you read. 3,233 is two primes multiplied together; tap numbers until you find them, and the page then points out that an RSA-2048 key is a 617-digit number and nothing about the method changes — only the size of the search.',
+      'The elliptic curve bounces. Press it and watch P, 2P, 3P land nowhere near each other, which is the whole reason the reverse question is hard. It is drawn over ordinary numbers so it can be seen at all, and the page says so rather than letting the simplification pass as the real thing.',
+      'Every step names the board items its claims rest on, with the evidence level and the source, so a lesson cannot say more than the board can stand behind — and improves when an agent improves an item. A step citing something that has left the board says so in orange rather than failing quietly.',
+      'Where a step touches something genuinely unsettled it shows the board’s standing question and its current state instead of teaching past it. The quantum-problem step ends on "does anything alter the likely timing of Q-Day", which the board records as moving.',
+      'The twelve questions move to the Frontier view, where they have a window of their own. They appear on Learn only against the step that raises them.',
+    ],
+    agents: [
+      'Three near-duplicate milestones landed in one batch — the ASD 2030 cessation, the FIPS 140-2 Historical date and the OMB 2035 migration, each written twice under different ids with near-identical text. That is the retry behaviour from 0.54.2 doing exactly what it was built to do and having a side effect nobody planned: a job that failed *after* finding its answer runs again and writes the same finding under a new filename.',
+      'The runner now warns rather than refusing. A new milestone sharing a jurisdiction and date with an existing one is written, then named in the run log and under its own heading in the pull request. It does not reject, because three United States deadlines genuinely fall on 31 December 2030 — CNSA 2.0 networking, EO 14412 key establishment and NIST deprecation — and anything refusing on a date clash would be wrong more often than right. Telling one obligation from another is a judgement about meaning, and the same rule holds here as for the trim pass: an automatic decision must not touch meaning.',
+    ],
+    content: [
+      'The key-size comparison the research prototype had is deliberately absent. It is the obvious third demonstration, and the board holds the standard numbers and publication dates for FIPS 203, 204 and 205 but not the byte counts. Writing them from memory would have put unsourced figures on a page whose whole argument is that it does not do that. A sourcer job reads them out of the standards, and the demonstration gets built when the board can cite them.',
+    ],
+  },
+  {
     version: '0.56.1',
     date: '2026-08-20',
     headline: 'Horizon Q becomes the Quantum Observatory, and stops offering four domains it never had.',
@@ -166,25 +187,6 @@ export const RELEASES: Release[] = [
     agents: [
       'Nothing changed about how content is written or validated. This release is presentation \u2014 but presentation that reads more of what agents already produce: the plain field, the evidence claim, the level, the review state and the source now all appear on the surface instead of only the number.',
       'Stack still has no completion percentages. The bars are a log-scale position between one qubit and the published requirement \u2014 the axis this problem lives on, since every estimate has moved by orders of magnitude \u2014 with no figure printed on them, the multiple as the headline, and nothing summed.',
-    ],
-  },
-  {
-    version: '0.52.0',
-    date: '2026-08-19',
-    headline: 'Five of the seven sections are live, and the board grew a memory.',
-    ui: [
-      'Plan: every regulatory deadline is now a content file with the source that set it \u2014 NCSC 2028/2031/2035, the CNSA 2.0 timetable, the US federal target, and the day the first three standards were published. They were application constants for one release; a deadline the board asserts and cannot cite is the same failure as an unsourced item.',
-      'A deadline in the past is never marked met by arithmetic. The board records whether it was actually discharged, because a date passing and an obligation being met are different facts.',
-      'Stack: what a cryptographically relevant machine still needs, component by component \u2014 and deliberately without percentages. The prototype scored each part and summed them to "15% of the way there". Those numbers were editorial: the remaining work is not linear in qubit count, and 96 logical qubits against 835 is not 11% of anything defensible. What the board can say honestly is the multiple \u2014 8.9\u00d7 more logical qubits, 58\u00d7 more physical \u2014 and where the literature publishes no target, the row says so.',
-      'Learn: the vocabulary, each term linked to the item that carries the actual evidence, alongside the twelve standing questions with the state an agent last recorded. Four of them read unknown, which is a real answer and more use than a confident guess.',
-      'The definitions stay in code rather than becoming content. They make no claim that could be right or wrong against evidence, and giving them a schema would put definitions in the same place as claims.',
-    ],
-    agents: [
-      'News items can now carry structured measurements \u2014 the figure an event reported, with the platform and the qualifier that make it comparable. This is the board\u2019s first memory: a frontier item holds the current best value and overwrites its own history, but a news item is dated by when the thing happened and is never revised.',
-      'Seven measurements seeded across six events, every one a figure the board had already verified elsewhere, so it is transcription rather than new research. The newsroom fills the rest as it works.',
-      'Modality and qualifier are mandatory for anything plotted, and the gate refuses a count without them. Caltech\u2019s 6,100 trapped atoms and QuEra\u2019s 448 operated below threshold are not the same measurement \u2014 grouped naively they show capability falling by an order of magnitude.',
-      'A doubling time is only computed from three points sharing one qualifier and showing growth. Nothing clears that yet, and each series says which condition it failed rather than drawing a line through whatever is there.',
-      'Twenty-one derivation self-tests, up from sixteen. The new ones cover the traps this design invites: mixed qualifiers, mixed platforms, and a declining series that would otherwise produce a negative doubling time.',
     ],
   },
 ]

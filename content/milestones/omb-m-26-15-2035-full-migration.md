@@ -6,7 +6,7 @@ jurisdiction: US
 authority: OMB
 date: '2035-12-31'
 kind: deadline
-what: 'OMB Memorandum M-26-15, "Execution of the Migration to Post-Quantum Cryptography" (June 24, 2026), Phase 5 requires completion of migration of remaining federal civilian information systems to post-quantum cryptography by 2035, based on risk assessment and availability of commercial offerings. Phases 1-4 address strategy and discovery (2026-2027), pilots and early migration (2027-2028), key-establishment migration for high-value assets and high-impact systems (2028-2030), and digital-signature migration for those same categories (2031).'
+what: 'OMB Memorandum M-26-15, "Execution of the Migration to Post-Quantum Cryptography" (June 24, 2026), Phase 5 requires completion of migration of remaining federal civilian information systems to post-quantum cryptography by 2035, based on risk assessment and availability of commercial offerings. Phases 1-4 run from strategy and discovery in 2026 to digital-signature migration for high-value assets in 2031. The memorandum also sets an interim objective to mitigate as much quantum risk as feasible by 31 December 2030.'
 plain: 'All US federal civilian agencies must complete migration of remaining IT systems to quantum-resistant cryptography by 2035. This is the capstone of a five-phase plan set by OMB M-26-15; high-priority systems face earlier 2030 and 2031 deadlines under EO 14412. The 2035 date is in a memorandum, not a statute, and could be revised by a subsequent administration.'
 status: upcoming
 about:

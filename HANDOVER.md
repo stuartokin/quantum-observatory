@@ -11,11 +11,18 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.56.0**, built in this session but not yet dragged into
+**Version 0.57.1**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
-constellations, 97 headlines, twelve standing questions, five agents plus a
-steward, and a queue.
+constellations, 98 headlines, twelve standing questions, 22 regulatory
+milestones, five agents plus a steward, and a queue.
+
+**A session can read the live repo.** It is public: `git clone --depth=1
+https://github.com/stuartokin/stuartokin.github.io`. Do that before packaging
+anything content-shaped — the agents land work between sessions, and a stale
+local copy silently ships old files or resurrects drained queue entries. What a
+clone cannot do is delete: a drag-and-drop upload only adds and replaces, so a
+file that must go still needs a person.
 
 **0.49.0 through 0.53.0 are Phases 0–3 of the Q-Day work; 0.54.x is a run of
 agent-machinery fixes and 0.55.0 unifies the two surfaces' chrome.** Five of the seven
@@ -58,6 +65,76 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## The retry fix has a side effect: near-duplicates
+
+**0.57.1.** Returning a failed run's queue entry (0.54.2) is right and should
+stay. But a job that failed *after* finding its answer runs again, and an agent
+writes the same finding under a **different filename** — so nothing catches it.
+
+Three landed in one batch: `asd-ism-pqc-cessation-2030` beside
+`asd-ism-pqc-complete-2030`, `cmvp-fips-140-2-historical` beside
+`cmvp-fips-140-2-historical-2026`, and `omb-m-26-15-2035-full-migration` beside
+`omb-m-26-15-full-migration-2035`. Same dates, same obligations, different ids.
+
+**The runner now warns and does not refuse.** A new milestone sharing a
+jurisdiction and date with an existing record is written, then named in the log
+and under its own heading in the pull request body.
+
+**Do not make this a rejection.** Three US deadlines genuinely fall on
+31 December 2030 — CNSA 2.0 networking, EO 14412 key establishment, NIST
+deprecation — and `jurisdiction + date + kind` collides on all three. A finer
+fingerprint does not exist: authority strings vary in form ("OMB" against
+"Office of Management and Budget"), and two of the three duplicate pairs share
+a source URL while the third does not. Deciding whether two records describe one
+obligation is a judgement about meaning, and the rule from the trim pass holds:
+an automatic decision must not touch meaning. A false positive costs a glance; a
+silent duplicate costs the reader's trust in the count.
+
+---
+
+## Learn teaches now, and the questions moved
+
+**0.57.0.** Learn was the twelve standing questions plus a glossary — board
+state and a dictionary. Neither teaches, and a reader arriving to learn was
+handed a status report. It is now eight steps with two working demonstrations.
+
+**`src/qday/lessons.ts` is code, not content, and that is the same argument as
+the glossary next door.** "RSA works because multiplying two primes is easy and
+undoing it is not" is exposition, not a finding that could be right or wrong
+against a source. Giving it a schema, a gate and a write scope would put
+explanation in the same place as evidence.
+
+**But every figure a step leans on comes from the board.** A lesson declares
+`cites: [...]` of frontier item ids, and the page renders those live with their
+evidence level, review state and source. So a lesson cannot drift, it improves
+when an agent improves an item, and a step citing something that has left the
+board says so in orange rather than failing quietly. **A validated check of
+this exists nowhere — if you add a lesson, run the citation check by eye or
+write one.**
+
+Where a step touches something unsettled it names one of the twelve standing
+questions and shows its current state. The questions themselves moved to the
+Frontier view; they appear here only against the step that raises them.
+
+### The demonstration that is missing, on purpose
+
+The prototype had a key-size comparison and it would be the natural third demo
+for the FIPS step. **The board does not hold those figures** — `pqc-fips-203`,
+`204` and `205` carry the standard number and its publication date, not the
+byte counts. Writing them from memory would put unsourced numbers on a page
+whose whole argument is that it does not do that.
+
+A sourcer job is queued to read them out of the standards. Build the demo when
+the board can cite them, not before.
+
+### Budget
+
+`deferred` is at **54.3 KB of 60**. Learn's demonstrations are the largest thing
+added to that bucket in a while. Anything substantial going into the Q-Day
+chunk from here needs the budget checked first rather than after.
 
 ---
 

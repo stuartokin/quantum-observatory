@@ -1124,6 +1124,9 @@ for (const f of files) {
   mkdirSync(dirname(f.path), { recursive: true })
   writeFileSync(f.path, content)
   written.push(f.path)
+
+  const twin = nearDuplicate(f.path, content, check.id)
+  if (twin) collisions.push(`${f.path} — same jurisdiction and date as \`${twin}\``)
 }
 
 /**
@@ -1157,6 +1160,48 @@ for (const f of files) {
  * verb, deliberately, and inventing one here to save a trim would be a much
  * larger change than the problem deserves.
  */
+/**
+ * A NEW RECORD THAT LOOKS LIKE ONE ALREADY THERE.
+ *
+ * **This warns. It does not refuse.** Telling one obligation from another is a
+ * judgement about meaning, and the same rule applies here as to the trim pass:
+ * an automatic decision must not touch meaning. Three United States deadlines
+ * genuinely fall on 31 December 2030 — CNSA 2.0 networking, EO 14412 key
+ * establishment, and NIST's deprecation — so anything that rejected on a date
+ * clash would be wrong more often than right.
+ *
+ * It exists because the retry behaviour made near-duplicates likely. A run
+ * whose files were all rejected now returns its queue entry, which is right;
+ * but a job that failed *after* finding its answer runs again and writes the
+ * same finding under a different filename. That happened three times in one
+ * batch — the ASD 2030 cessation, the FIPS 140-2 Historical date and the OMB
+ * 2035 migration each landed twice with different ids and near-identical text.
+ *
+ * A false positive costs a glance. A silent duplicate costs a reader's trust in
+ * the count, so the glance is the better trade.
+ */
+function nearDuplicate(path, content, id) {
+  if (!path.includes('/milestones/')) return null
+  const field = (text, key) => {
+    const m = text.match(new RegExp(`^${key}: (.+)$`, 'm'))
+    return m ? m[1].trim().replace(/^'|'$/g, '') : ''
+  }
+  const mine = [field(content, 'jurisdiction'), field(content, 'date')].join('|')
+  if (mine === '|') return null
+
+  const dir = 'content/milestones'
+  if (!existsSync(dir)) return null
+  for (const file of readdirSync(dir).filter((x) => x.endsWith('.md'))) {
+    if (file.replace(/\.md$/, '') === id) continue
+    const other = readFileSync(join(dir, file), 'utf8')
+    if ([field(other, 'jurisdiction'), field(other, 'date')].join('|') === mine) {
+      return file.replace(/\.md$/, '')
+    }
+  }
+  return null
+}
+
+const collisions = []
 const trimmed = []
 const trimmable = rejected.filter(
   (r) => r.overflows?.length && r.overflows.every((o) => !/(^|\.)\d+(\.|$)/.test(o.field)),
@@ -1205,6 +1250,14 @@ if (trimmable.length) {
   if (trimmed.length) {
     console.log(`  trimmed to fit and written:\n${trimmed.map((x) => `    ${x}`).join('\n')}`)
   }
+}
+
+if (collisions.length) {
+  console.error(
+    `\n${collisions.length} new record(s) look like ones already on the board:\n` +
+      collisions.map((c) => `  ${c}`).join('\n') +
+      '\n  Written anyway — two obligations can share a date. Worth a look.\n',
+  )
 }
 
 if (rejected.length) {
@@ -1342,6 +1395,15 @@ const pr = [
   ...written.map((p) => `- \`${p}\``),
   // A trimmed field is still the agent's words, but not the words it first
   // chose, and a reviewer reading the file has no way to tell. Say so here.
+  ...(collisions.length
+    ? ['', `## Possible duplicates (${collisions.length})`,
+       '',
+       'These new records share a jurisdiction and a date with something already',
+       'on the board. Two obligations can genuinely fall on the same day, so they',
+       'were written — but check they are different obligations before this merges.',
+       '',
+       ...collisions.map((c) => `- ${c}`)]
+    : []),
   ...(trimmed.length
     ? ['', `## Shortened to fit before writing (${trimmed.length})`,
        '',

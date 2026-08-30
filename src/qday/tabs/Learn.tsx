@@ -1,18 +1,35 @@
 import { useMemo, useState } from 'react'
 import { GLOSSARY } from '../glossary'
+import { LESSONS } from '../lessons'
 import { frontierById } from '../../content/frontier'
 import { allQuestions } from '../../content/questions'
 import { Section } from '../ui/Section'
+import { SourceRef } from '../ui/SourceRef'
+import { FactoringDemo, CurveDemo } from '../ui/Demos'
 
 /**
- * LEARN — the vocabulary, and the questions the board is holding open.
+ * LEARN — eight steps, from why it matters to why it never finishes.
  *
- * The numbered accordion is borrowed from the research prototype, where it is
- * used for an eight-step explainer. Here the numbers are not decoration: the
- * board's twelve standing questions are *already* numbered, ordered and
- * maintained by an agent, so the pattern lands on content that was shaped for
- * it. Four of them currently read `unknown`, which is a real answer and the
- * most useful thing on the page.
+ * **What this replaced, and why.** The first version of this tab was the twelve
+ * standing questions in a numbered accordion, plus the glossary. Both are
+ * useful and neither teaches: the questions are the board reporting on its own
+ * state, and a dictionary is a reference you consult once you already know what
+ * you are looking for. A reader arriving here knowing nothing left knowing
+ * nothing, having been shown a status report.
+ *
+ * The research prototype had this right. It ran an eight-step explainer with
+ * working demonstrations, and a reader could get from "what is RSA" to "why is
+ * there a 2035 deadline" without leaving the page.
+ *
+ * **Two things this can do that the prototype could not.** Every step names the
+ * frontier items its claims rest on, and those render from live content — so a
+ * lesson cannot drift from the board, and improves when an agent improves an
+ * item. And where a step touches something genuinely unsettled it says so by
+ * naming one of the twelve standing questions, rather than teaching a
+ * confident answer the board does not have.
+ *
+ * The questions themselves moved to the Frontier view, where they have a window
+ * of their own. They appear here only against the step that raises them.
  */
 const STATE_NOTE: Record<string, string> = {
   moving: 'the answer changed recently',
@@ -22,9 +39,48 @@ const STATE_NOTE: Record<string, string> = {
   unknown: 'the board cannot answer this yet',
 }
 
+const LEVEL_LABEL: Record<string, string> = {
+  E5: 'independently replicated',
+  E4: 'peer-reviewed',
+  E3: 'preprint',
+  E2: 'vendor statement',
+  E1: 'theoretical',
+  E0: 'speculative',
+}
+
+/** One frontier item, as a citation under a lesson. */
+function Cited({ id }: { id: string }) {
+  const item = frontierById.get(id)
+  if (!item) {
+    return (
+      <li className="qd-cite qd-cite--missing">
+        <code>{id}</code> is cited by this step and is not on the board.
+      </li>
+    )
+  }
+  const source = item.evidence?.sources?.[0]
+  return (
+    <li className="qd-cite">
+      <b>{item.title}</b>
+      {item.evidence?.level && (
+        <span className="qd-cite__level" data-level={item.evidence.level}>
+          {item.evidence.level} · {LEVEL_LABEL[item.evidence.level] ?? item.evidence.level}
+        </span>
+      )}
+      {item.review?.state !== 'reviewed' && <span className="qd-cite__agent">agent, unreviewed</span>}
+      {source && (
+        <SourceRef
+          source={{ ...source, level: item.evidence?.level, accessed: item.evidence?.verified }}
+          label={source.publisher ?? 'source'}
+        />
+      )}
+    </li>
+  )
+}
+
 export function Learn() {
   const [q, setQ] = useState('')
-  const [open, setOpen] = useState<string | null>(null)
+  const [open, setOpen] = useState<string | null>(LESSONS[0].id)
 
   const terms = useMemo(() => {
     const needle = q.trim().toLowerCase()
@@ -37,46 +93,92 @@ export function Learn() {
     )
   }, [q])
 
-  const questions = allQuestions.filter((x) => x.pillar === 'quantum')
+  const questionById = useMemo(
+    () => new Map(allQuestions.map((x) => [x.id, x])),
+    [],
+  )
 
   return (
     <div className="qd-learn">
       <Section
-        title="What is still open"
+        title="From nothing to the deadline, in eight steps"
         info={
           <>
-            The board&rsquo;s twelve standing questions, with the state an agent last recorded and
-            the date it was last confirmed. These are content, not copy — they change when the
-            evidence does. An answer of <b>unknown</b> means the board cannot currently tell
-            you, which is more use than a confident guess.
+            Written for a reader who does not work in cryptography. Open them in order the
+            first time; after that, jump about.
+            <br />
+            <br />
+            The explanations are written for this page and make no claim that could be
+            checked against a source — which is why they live in the application rather
+            than in content. <b>Every figure they rest on does not.</b> Each step names the
+            board items carrying its claims, with the evidence level and the source, so a
+            lesson cannot say more than the board can stand behind.
           </>
         }
       >
-        <ol className="qd-steps">
-          {questions.map((x) => {
-            const isOpen = open === x.id
+        <p className="qd-trends__lede">
+          Eight steps: what cryptography is holding up, the two locks in use today, why a
+          quantum computer opens both, what replaces them, who sets the dates, and why the
+          work does not end when the migration does.
+        </p>
+
+        <ol className="qd-steps qd-steps--lessons">
+          {LESSONS.map((l, i) => {
+            const isOpen = open === l.id
+            const question = l.question ? questionById.get(l.question) : undefined
             return (
-              <li key={x.id} data-state={x.state}>
+              <li key={l.id}>
                 <button
                   className="qd-steps__head"
                   aria-expanded={isOpen}
-                  onClick={() => setOpen(isOpen ? null : x.id)}
+                  onClick={() => setOpen(isOpen ? null : l.id)}
                 >
-                  <span className="qd-steps__n">{x.number}</span>
-                  <span className="qd-steps__q">{x.question}</span>
-                  <span className="qd-steps__state">{x.state}</span>
+                  <span className="qd-steps__n">{i + 1}</span>
+                  <span className="qd-steps__q">
+                    {l.title}
+                    <i className="qd-steps__kicker">{l.kicker}</i>
+                  </span>
                   <svg className="qd-chev" viewBox="0 0 24 24" aria-hidden="true" data-open={isOpen || undefined}>
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </button>
+
                 {isOpen && (
                   <div className="qd-steps__body">
-                    <p className="qd-steps__answer">{x.answer}</p>
-                    <p className="qd-steps__meta">
-                      {STATE_NOTE[x.state] ?? x.state} · confirmed {x.asOf}
-                      {x.lastChanged && ` · last materially changed ${x.lastChanged}`}
-                      {x.changedBy && <> — {x.changedBy}</>}
-                    </p>
+                    {l.body.map((p, k) => (
+                      <p key={k} className="qd-steps__para">{p}</p>
+                    ))}
+
+                    {l.demo === 'factoring' && <FactoringDemo />}
+                    {l.demo === 'curve' && <CurveDemo />}
+
+                    {/*
+                      A step that touches something unsettled says so with the
+                      board's own answer rather than teaching past it. `unknown`
+                      is the most useful state this can show.
+                    */}
+                    {question && (
+                      <div className="qd-steps__open" data-state={question.state}>
+                        <p className="qd-steps__openq">
+                          <span>Still open</span> {question.question}
+                        </p>
+                        <p className="qd-steps__answer">{question.answer}</p>
+                        <p className="qd-steps__meta">
+                          {STATE_NOTE[question.state] ?? question.state} · confirmed {question.asOf}
+                        </p>
+                      </div>
+                    )}
+
+                    {!!l.cites?.length && (
+                      <>
+                        <p className="qd-steps__citeshead">What this rests on</p>
+                        <ul className="qd-cites">
+                          {l.cites.map((id) => (
+                            <Cited key={id} id={id} />
+                          ))}
+                        </ul>
+                      </>
+                    )}
                   </div>
                 )}
               </li>
@@ -87,6 +189,7 @@ export function Learn() {
 
       <Section
         title="Glossary"
+        defaultOpen={false}
         info={
           <>
             Definitions written for this page. They make no claim about the world that could be
