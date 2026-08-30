@@ -115,7 +115,8 @@ const KB = 1024
 
 const BUDGET = {
   app: 88 * KB,
-  deferred: 60 * KB,
+  // Enforced on the LARGEST deferred chunk, not their sum. See BIGGEST_WINS.
+  deferred: 40 * KB,
   docs: 65 * KB,
   data: 150 * KB,
   news: 100 * KB,
@@ -173,15 +174,40 @@ for (const [name, list] of Object.entries(groups)) {
 }
 console.log()
 
+/**
+ * THE DEFERRED BUCKET IS JUDGED ON ITS LARGEST CHUNK, NOT ITS TOTAL.
+ *
+ * Every other bucket is something a reader downloads *all of*, so a sum is the
+ * right measure. Deferred chunks are alternatives: you open Q-Day, or Help, or
+ * the news archive. Nobody fetches every one, and summing them charges a reader
+ * for bytes they will never receive.
+ *
+ * That made the ceiling punish the wrong thing. Adding a second independent
+ * lazy feature moved the number even when nothing existing grew, so the only
+ * way to stay inside it was to stop adding features — which is not what a
+ * performance budget is for.
+ *
+ * The largest chunk is what the unluckiest reader actually pays, and it still
+ * catches real bloat: if the Q-Day chunk doubles, this fails. The total is
+ * still printed, because knowing what the build weighs is worth something; it
+ * is just not the thing to fail on.
+ */
+const BIGGEST_WINS = new Set(['deferred'])
+
 const measured = {}
 for (const [name, list] of Object.entries(groups)) {
-  const bytes = list.reduce((t, p) => t + gz(p), 0)
+  const sizes = list.map((p) => gz(p))
+  const total = sizes.reduce((t, n) => t + n, 0)
+  const bytes = BIGGEST_WINS.has(name) ? Math.max(0, ...sizes) : total
   measured[name] = bytes
   const limit = BUDGET[name]
   const pct = Math.round((bytes / limit) * 100)
   const flag = bytes > limit ? 'FAIL' : 'ok'
+  const suffix = BIGGEST_WINS.has(name)
+    ? `  largest of ${list.length}; ${(total / KB).toFixed(1)} KB in total`
+    : ''
   console.log(
-    `  ${name.padEnd(8)} ${(bytes / KB).toFixed(1).padStart(7)} KB / ${(limit / KB).toFixed(0).padStart(3)} KB  ${String(pct).padStart(3)}%  ${flag}`,
+    `  ${name.padEnd(8)} ${(bytes / KB).toFixed(1).padStart(7)} KB / ${(limit / KB).toFixed(0).padStart(3)} KB  ${String(pct).padStart(3)}%  ${flag}${suffix}`,
   )
   if (bytes > limit) fail.push(`${name} over by ${((bytes - limit) / KB).toFixed(1)} KB gzipped`)
 }
@@ -192,7 +218,8 @@ for (const [name, list] of Object.entries(groups)) {
  * Every bucket above answers "is this part growing". None of them answers
  * "how long before a reader sees the board", which is the question the budget
  * exists for. Docs and deferred chunks are excluded because nobody downloads
- * them until they ask for something.
+ * them until they ask for something — which is also why deferred is judged on
+ * its largest chunk rather than its total.
  */
 const firstPaint = measured.app + measured.css + measured.data + measured.news
 console.log(

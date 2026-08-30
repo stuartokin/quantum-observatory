@@ -24,6 +24,25 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.58.0',
+    date: '2026-08-20',
+    headline: 'The last two sections arrive — and not as the imports they were planned to be.',
+    ui: [
+      'Threats answers the question the descope actually left: which cryptography a quantum computer breaks, which it merely weakens, and which it does not touch. Three tiers, because the difference between them is the most misunderstood thing in this subject. Shor does not weaken RSA and elliptic curves, it solves them, and no key length helps. Grover halves the exponent against symmetric ciphers, which is a real reduction and is answered by using longer keys — it is why CNSA 2.0 specifies AES-256 rather than abandoning symmetric cryptography.',
+      'The most useful thing that page does is say what is not threatened. A reader who leaves believing everything is doomed will make worse decisions than one who knows which half to worry about, and hash functions and adequately sized symmetric keys are in the clear.',
+      'It also states plainly that the replacements are unbroken rather than proven. A standard is a decision, not a proof; cryptanalysis of the lattice schemes is less than a decade old; and the board already holds a candidate withdrawn after a weakness was found. The third evaluation round exists as insurance and the page says so.',
+      'Readiness reads the board as a ladder. Every capability the migration depends on, weakest rung first, with its evidence level. Of thirteen, seven are still at the two weakest rungs — which is a more useful statement than any score out of ten. The algorithms being finished was never going to be the constraint; discovery, crypto-agility, hardware roots of trust and supplier readiness are where the years go, and all of them sit below the standards on that ladder.',
+      'Both sections end by saying what they do not hold. No vulnerability records, no exploitation data, no vendor readiness scores.',
+    ],
+    content: [
+      'Both were planned as quarantined imports from the research prototype, marked unverified. Neither is. That plan was written when a cyber galaxy was in scope and Threats was going to carry vulnerability data — with the project narrowed to quantum, the board turns out to answer the question already, from items that carry sources and evidence levels.',
+      'Vendor readiness scores were dropped on their merits rather than for scope. Such a score is a judgement about a company’s internal state, it goes stale within a quarter, and the published ones are largely assembled from marketing material. Putting a table of them on a board that asks every other claim to carry a checkable source would undercut the argument exactly where it matters most.',
+    ],
+    agents: [
+      'The performance budget stops charging readers for bytes they never receive. Deferred chunks are alternatives — you open Q-Day, or Help, or the news archive — so summing them was the wrong measure, and adding a second lazy feature moved the number even when nothing existing grew. It is now judged on the largest single chunk, which is what the unluckiest reader actually pays, with the total still printed. Q-Day is 29 KB of a 40 KB ceiling; the sum that used to be measured was 58 of 60.',
+    ],
+  },
+  {
     version: '0.57.1',
     date: '2026-08-20',
     headline: 'Learn stops being a status report and starts teaching.',
@@ -167,26 +186,6 @@ export const RELEASES: Release[] = [
     agents: [
       '`agents/_queue.md` is rewritten as nine scouting jobs drawn from a pass over the research prototype: the EU 2035 claim, the ASD deadline, EO 14412 and OMB M-26-15, FIPS 206 and HQC and SP 800-57 Rev 6, a newsroom measurement backfill, the Gidney–Ekerå and Häner requirement points, earlier GRI survey editions and Mosca 2015, decoder and magic-state metrics, and a circuit-depth item.',
       'Scout may now write to `content/questions/` and `content/milestones/` as well as the frontier inbox. A regulatory deadline is a scouting result, and routing it through a human retype was the only reason it was not.',
-    ],
-  },
-  {
-    version: '0.53.0',
-    date: '2026-08-19',
-    headline: 'The Observatory learns the research prototype\u2019s manners.',
-    ui: [
-      'Every figure now explains itself. A card shows the number, and one tap opens plain terms, what the evidence actually claims, its evidence level, whether a human has reviewed it, and the source \u2014 the pattern the research prototype uses on every card, which turns out to be this board\u2019s evidence model almost exactly. The difference is that the prototype hand-writes that prose and this reads it off the item, so a card cannot drift from the board and improves when an agent improves the item.',
-      'Sections fold, and each carries an (i) holding how it was worked out. On a page with six analyses, being able to shut four is the difference between a reference and a wall \u2014 and the working belongs next to the result rather than in a footnote nobody reaches.',
-      'Charts are interactive. Hovering or tabbing to any mark gives a real panel with the figure, the date and the paper behind it, positioned against the chart so it travels when the page scrolls. An SVG title tag is a tooltip only in the sense that it eventually appears, in the operating system\u2019s styling, and on a touchscreen not at all.',
-      'Plan became a chart. Every regulator\u2019s deadlines run as a track against the derived Q-Day band, with a "now" line through it \u2014 because the question a reader actually has is whether the migration finishes before the thing it defends against arrives, and that is a question about two intervals rather than a list of dates.',
-      'The Q-Day band on that chart is derived, not drawn. It comes from the same expert elicitation the Trends page uses, so when the evidence moves the band moves and the deadlines stay where their regulators put them.',
-      'Filter chips on Trends, so a reader can take one cryptographic target out and see the other on its own. Turning a series off never repaints the survivors \u2014 colour follows the entity, not its rank.',
-      'The twelve standing questions became a numbered accordion, which suits them because the board already numbers, orders and maintains them. Four still read unknown, and that remains the most useful thing on the page.',
-      'A "key takeaway" under each chart, stated as a claim you can disagree with rather than woven into the caption as though it were the data.',
-      'The header carries the Horizon Q wordmark and links back to the board. The two surfaces are one product and the header should say so.',
-    ],
-    agents: [
-      'Nothing changed about how content is written or validated. This release is presentation \u2014 but presentation that reads more of what agents already produce: the plain field, the evidence claim, the level, the review state and the source now all appear on the surface instead of only the number.',
-      'Stack still has no completion percentages. The bars are a log-scale position between one qubit and the published requirement \u2014 the axis this problem lives on, since every estimate has moved by orders of magnitude \u2014 with no figure printed on them, the multiple as the headline, and nothing summed.',
     ],
   },
 ]

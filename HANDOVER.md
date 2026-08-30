@@ -20,7 +20,7 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.57.1**, built in this session but not yet dragged into
+**Version 0.58.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 98 headlines, twelve standing questions, 22 regulatory
@@ -35,7 +35,7 @@ file that must go still needs a person.
 
 **0.49.0 through 0.53.0 are Phases 0–3 of the Q-Day work; 0.54.x is a run of
 agent-machinery fixes and 0.55.0 unifies the two surfaces' chrome.** Five of the seven
-Observatory sections are live; Threats and Readiness wait on Phase 4.
+Observatory sections are live — **all seven**, as of 0.58.0.
 `QDAY-PLAN.md` carries the sequence; the four sections below carry what a
 session needs before touching any of it.
 
@@ -74,6 +74,66 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## Threats and Readiness were not imported, and should not be
+
+**0.58.0.** Both were planned as quarantined imports from the research
+prototype. Neither is one, and the reasoning matters more than the code.
+
+That plan was written when a cyber galaxy was in scope and Threats was going to
+carry vulnerability and exploitation data the board did not hold. **With the
+project narrowed to quantum the question changed** — "what is the threat" is no
+longer a vulnerability feed but *which cryptography breaks, how completely, and
+when* — and `algo-shor`, `algo-grover`, `harvest-now-decrypt-later`, `crqc` and
+the additional-signatures round already answer it with sources and evidence
+levels. Importing unverified scores alongside them would have put the one
+unsourced thing on the site in the section about danger.
+
+**Vendor readiness scores were dropped on their merits, not for scope.** Such a
+score is a judgement about a company's internal state, goes stale within a
+quarter, and the published ones are largely assembled from marketing material.
+If they ever arrive they arrive as sourced items like everything else.
+
+Both sections end with a "what this does not hold" block. Keep those. They are
+the cheapest way to stop a reader inferring coverage that is not there.
+
+### The point Threats exists to make
+
+Three tiers, and the middle one is the whole reason: **broken outright**
+(RSA, ECC, DH — Shor solves them, no key length helps), **weakened not broken**
+(symmetric ciphers — Grover halves the exponent, longer keys answer it), and
+**not meaningfully threatened** (hash functions, adequately sized symmetric
+keys). A reader who leaves believing AES is doomed has been misinformed by a
+page that meant well.
+
+### `MigrationReadiness`, not `Readiness`
+
+`Readiness` is already the frontier item's readiness-level type, and
+`check-exports` refuses one name from two modules. The longer name is also the
+truer one — the section is about how far the migration has got.
+
+---
+
+## The deferred budget measured the wrong thing
+
+**0.58.0.** Adding these two sections took `deferred` to 58.2 KB of 60, and the
+right response was not to raise the ceiling.
+
+Every other bucket is something a reader downloads *all of*, so a sum is right.
+**Deferred chunks are alternatives** — you open Q-Day, or Help, or the news
+archive — and nobody fetches every one. Summing them charged a reader for bytes
+they would never receive, and meant adding a second independent lazy feature
+moved the number even when nothing existing grew. The only way to stay inside
+it was to stop adding features, which is not what a budget is for.
+
+It now enforces on the **largest single chunk** — what the unluckiest reader
+actually pays — with the total still printed. Q-Day is 29 KB against a 40 KB
+ceiling. It still catches real bloat: if that chunk doubles, the build fails.
+
+`BIGGEST_WINS` in `check-budget.mjs` is the switch. **Only `deferred` belongs in
+it.** Any bucket a reader downloads in full must stay a sum.
 
 ---
 

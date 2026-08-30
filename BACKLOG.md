@@ -10,7 +10,7 @@ being deleted, so nobody re-proposes it in six months. An item that is blocked
 says who on. And nothing goes here that belongs in `agents/_queue.md`: that is
 for research an agent runs, this is for work a person or a session does.
 
-Last reviewed: 20 August 2026, at 0.57.1.
+Last reviewed: 20 August 2026, at 0.58.0.
 
 ---
 
@@ -29,23 +29,19 @@ Nothing else can clear these.
 
 ## The remaining phases
 
-From `PLAN-QUANTUM-OBSERVATORY.md`. Phases A and B are done.
+From `PLAN-QUANTUM-OBSERVATORY.md`. Phases A, B and C are done; only D remains.
 
-### C — Threats and Readiness *(next)*
+### C — Threats and Readiness — **DONE, 0.58.0**
 
-The last two unbuilt Q-Day sections, and the end of the Q-Day integration.
+All seven Q-Day sections are now live, which ends the Q-Day integration.
 
-- **Threats** — vulnerabilities and attacks bearing on the migration. Imported
-  material arrives **quarantined and marked unverified**, as decided at the
-  start of the Q-Day work, and is promoted only as an agent verifies it.
-- **Readiness** — vendor and organisational post-quantum readiness, on the same
-  terms.
+**Neither arrived as the quarantined import it was planned to be.** With the
+project narrowed to quantum the board turned out to answer both questions from
+sourced items, and the open question in this phase — how far "readiness" goes —
+answered itself: not into general cyber maturity models, and not into vendor
+scores. See HANDOVER for the reasoning, which is worth keeping.
 
-Open question inside this phase: *how far does "readiness" go?* Crypto-migration
-readiness is well defined. General cyber readiness is a crowded field of vendor
-maturity models and the board should not add a sixth unless it can source one.
-
-### D — Rename the repository and republish
+### D — Rename the repository and republish — **NEXT, and the last one**
 
 Steps are written out in the plan, including the trap: the repo is currently a
 **user site**, and renaming makes it a project site at
@@ -128,7 +124,7 @@ outstanding; recorded so the invitation is not forgotten.
 | | What | Cost of leaving it |
 | --- | --- | --- |
 | **E1** | No gate checks that a lesson's `cites` ids exist | A renamed or removed item makes a Learn step show an orange "not on the board" line to readers. Caught by eye today. A ten-line addition to `check-exports` or its own script. |
-| **E2** | `deferred` bucket at **54.3 KB of 60** | Learn's demonstrations were the largest recent addition. Anything substantial going into the Q-Day chunk needs the budget checked before, not after. |
+| ~~E2~~ | ~~`deferred` bucket near its ceiling~~ | **Closed 0.58.0.** The bucket was summing chunks a reader never downloads together. It now enforces on the largest single chunk — Q-Day at 29 KB of 40 — with the total still reported. |
 | **E3** | `--line-quantum` in `tokens.css` is the O III line, which `palette.ts` assigned to *cyber* | The two files have disagreed since they were written. Teal is chrome, violet is data, and both are correct in behaviour. Renaming touches every stylesheet for no functional gain. **Left deliberately; documented in HANDOVER.** |
 | **E4** | `2026-08-10-quera-96-logical-qubits-nature-neutral-atom.md` has `date: 2026-01-19` | The id is date-prefixed by convention, so the filename and the field disagree. The field is the one that counts and is correct. Renaming would change the id. Worth a tidy, not worth a silent rename. |
 

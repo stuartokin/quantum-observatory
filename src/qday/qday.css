@@ -1466,3 +1466,94 @@
 .qd-demo__pt { fill: var(--qd-defence); }
 .qd-demo__pt[data-first] { fill: var(--qd-threat); }
 .qd-demo__lbl { fill: var(--ink); font-family: var(--mono); font-size: 8px; }
+
+/* ---------- Threats ---------- */
+
+.qd-threats__tiers { display: grid; gap: var(--gap-m); }
+.qd-tier {
+  padding: 1rem 1.1rem 1.1rem;
+  border-left: 3px solid var(--hairline);
+  background: color-mix(in oklab, var(--ground-raised) 55%, transparent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+/* Broken, weakened, safe. The colour carries the tier because that distinction
+   is the whole point of the section and should survive skim-reading. */
+.qd-tier[data-tier='broken']   { border-left-color: var(--qd-threat); }
+.qd-tier[data-tier='weakened'] { border-left-color: #FFB020; }
+.qd-tier[data-tier='safe']     { border-left-color: var(--qd-defence); }
+
+.qd-tier__head { margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--ink-muted); }
+.qd-tier__head span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.qd-tier[data-tier='broken'] .qd-tier__head span   { color: var(--qd-threat); }
+.qd-tier[data-tier='weakened'] .qd-tier__head span { color: #FFB020; }
+.qd-tier[data-tier='safe'] .qd-tier__head span     { color: var(--qd-defence); }
+
+.qd-tier__body {
+  font-family: var(--body);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  max-width: 64ch;
+  margin: 0 0 0.9rem;
+}
+.qd-tier__body b { color: var(--ink); }
+
+.qd-threats__event {
+  margin: 0.9rem 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--qd-threat) 30%, var(--hairline));
+  border-radius: var(--radius);
+}
+.qd-threats__eventhead { margin: 0 0 0.3rem; font-size: 0.8rem; color: var(--qd-threat); }
+.qd-threats__eventhead span {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  margin-right: 0.6rem;
+}
+.qd-threats__eventbody { margin: 0; font-size: 0.86rem; color: var(--ink-muted); }
+
+/* ---------- Readiness ladder ---------- */
+
+.qd-ladder { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.qd-ladder li {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr auto auto;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 0.55rem 0.7rem;
+  background: color-mix(in oklab, var(--ground-raised) 45%, transparent);
+  border-left: 3px solid var(--hairline);
+}
+/* Weakest rungs are the finding, so they are the ones that carry colour. */
+.qd-ladder li[data-readiness='emerging']     { border-left-color: var(--qd-threat); }
+.qd-ladder li[data-readiness='experimental'] { border-left-color: #FFB020; }
+.qd-ladder li[data-readiness='demonstrated'] { border-left-color: var(--ink-faint); }
+.qd-ladder li[data-readiness='adopted']      { border-left-color: var(--qd-defence); }
+
+.qd-ladder__rung {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.qd-ladder li[data-readiness='emerging'] .qd-ladder__rung     { color: var(--qd-threat); }
+.qd-ladder li[data-readiness='experimental'] .qd-ladder__rung { color: #FFB020; }
+.qd-ladder li[data-readiness='adopted'] .qd-ladder__rung      { color: var(--qd-defence); }
+
+.qd-ladder__title { font-size: 0.84rem; color: var(--ink); }
+.qd-ladder__note { font-size: 0.72rem; color: var(--ink-faint); }
+.qd-ladder__level { font-family: var(--mono); font-size: 0.58rem; color: var(--ink-faint); }
+
+@media (max-width: 720px) {
+  .qd-ladder li { grid-template-columns: 1fr auto; row-gap: 0.15rem; }
+  .qd-ladder__note { grid-column: 1 / -1; }
+}

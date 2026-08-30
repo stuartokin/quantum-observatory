@@ -158,7 +158,7 @@ obvious one for the FIPS step, and the board holds the standard numbers and
 publication dates but not the byte counts. A sourcer job is queued; the demo
 gets built when the board can cite it.
 
-### Phase C — Threats and Readiness — **NEXT** *(the original Phases 4 and 5)*
+### Phase C — Threats and Readiness — **DONE, 0.58.0** *(the original Phases 4 and 5)*
 
 The last two unbuilt sections, which finish the Q-Day integration. They were
 always cryptography sections rather than general-cyber ones, so dropping the
@@ -174,7 +174,7 @@ cyber galaxy does not change them:
 
 Both draw on the assessment content that already drives the Mosca test.
 
-### Phase D — Rename the repository and republish — **LAST**
+### Phase D — Rename the repository and republish — **NEXT, and last**
 
 See section 4. **Last**, because every phase above is easier to verify while the
 site is at a URL that already works.

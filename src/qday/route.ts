@@ -75,15 +75,15 @@ export const QDAY_TABS: readonly QDayTabDef[] = [
     id: 'threats',
     label: 'Threats',
     blurb:
-      'Vulnerabilities and attacks bearing on the migration. The board holds no CVE records at all today, so this arrives with imported material marked unverified rather than with numbers it cannot stand behind.',
-    ready: false,
+      'Which cryptography a quantum computer breaks, which it merely weakens, and which it does not touch — read from the board rather than imported.',
+    ready: true,
   },
   {
     id: 'readiness',
     label: 'Readiness',
     blurb:
-      'Vendor and organisation post-quantum readiness. Same position as Threats: the scores exist elsewhere, carry citations, and have not been checked by this board. They arrive quarantined and get promoted as an agent verifies them.',
-    ready: false,
+      'How far the migration has actually got, capability by capability, weakest rung first.',
+    ready: true,
   },
   {
     id: 'learn',

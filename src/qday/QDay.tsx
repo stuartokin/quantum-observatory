@@ -27,6 +27,8 @@ import { Trends } from './tabs/Trends'
 import { Plan } from './tabs/Plan'
 import { Stack } from './tabs/Stack'
 import { Learn } from './tabs/Learn'
+import { Threats } from './tabs/Threats'
+import { MigrationReadiness } from './tabs/Readiness'
 import { Pending } from './tabs/Pending'
 import './qday.css'
 
@@ -134,6 +136,10 @@ export default function QDay({ tab }: { tab: QDayTab }) {
           <Plan forecast={forecast} />
         ) : tab === 'stack' ? (
           <Stack forecast={forecast} />
+        ) : tab === 'threats' ? (
+          <Threats />
+        ) : tab === 'readiness' ? (
+          <MigrationReadiness />
         ) : tab === 'learn' ? (
           <Learn />
         ) : (
