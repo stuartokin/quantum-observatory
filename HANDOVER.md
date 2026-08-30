@@ -7,6 +7,15 @@ Read alongside `OPERATING.md`, `AGENT-PLAN.md`, `DESIGN-LOG.md` and
 `agents/_decisions.md`. Those are the record. This is the part that would
 otherwise be lost when a conversation ends.
 
+**Where the work lives, so a new session does not have to guess:**
+
+| File | Holds |
+| --- | --- |
+| `PLAN-QUANTUM-OBSERVATORY.md` | the four phases, their status, and the repository rename written out step by step |
+| `BACKLOG.md` | everything raised and not yet done, what is blocked on whom, and what has been **closed** so it is not re-proposed |
+| `agents/_queue.md` | research an agent runs — never work a person does |
+| this file | what a session learned that is not yet in the design |
+
 ---
 
 ## Where the project stands
