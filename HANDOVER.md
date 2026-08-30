@@ -11,7 +11,7 @@ otherwise be lost when a conversation ends.
 
 ## Where the project stands
 
-**Version 0.55.0**, built in this session but not yet dragged into
+**Version 0.56.0**, built in this session but not yet dragged into
 `main` — see "Delivery now goes through the browser, not git push" below
 before assuming otherwise. Board at 93 frontier items across nine
 constellations, 97 headlines, twelve standing questions, five agents plus a
@@ -58,6 +58,67 @@ ever hidden by zoom — demoted items become small dim dots, still clickable.
 cluster, with the classical counter-paper (arXiv:2608.13110) already recorded
 against it; Babbush et al. on ECC-256 resource estimates; DI-QKD at 100 km from
 USTC; the HRL integrated silicon QPU.
+
+---
+
+## It is the Quantum Observatory now, and there is one domain
+
+**0.56.0.** The product was renamed and the four unpopulated domains removed.
+The naming resolves a clash rather than living with it:
+
+| Thing | Called |
+| --- | --- |
+| The product | **Quantum Observatory** |
+| The galaxy view | **Frontier** |
+| The seven sections | **Q-Day** — no longer "Q-Day Observatory" |
+
+### What was removed, and what emphatically was not
+
+Five pillars were declared; **only quantum was ever populated**. Four held
+nothing. The fifth, `cyber`, held exactly one item — and it was mis-filed:
+`pqc-additional-signatures-r3` is NIST IR 8610, already sitting in the `pqc`
+constellation. Two news records had the same wrong pillar and were the same
+subject. **Three `pillar:` lines changed value. No record was deleted.**
+
+**The cryptography material never lived in the pillar**, which is why none of it
+was at risk: it is in the constellations (`pqc`, `migration`), in
+`content/milestones/`, and in the entire Q-Day surface.
+
+`Pillar` is now `'quantum'` and the schema enums match. **The field was kept
+rather than stripped from ninety-two files** — every record still states its
+domain, and a second could be added without a migration.
+
+### Two traps in this change, both hit
+
+- **`content/items/` must not be narrowed.** It describes Stuart's *other*
+  published projects — a cyber incident globe, an AI vulnerability guide, an
+  energy tracker — and their `pillars` are facts about those projects rather
+  than categories this board offers. Narrowing it made eight true records
+  invalid; `item.schema.json` keeps all five values and now says why.
+- **`enable-compilers.md` names "Horizon Quantum Computing"**, a real company
+  working on quantum compilers. A find-and-replace for "Horizon Q" renames it
+  silently. Any future sweep must be reviewed rather than run blind.
+
+### Colour, which is more confusing than it looks
+
+`palette.ts` gives quantum the **violet** mercury line (#A77BFF) and that is
+every mark on the canvas. The **teal** (#3DE0C0) is the O III line, which
+`palette.ts` had assigned to *cyber* while `tokens.css` calls it
+`--line-quantum` — the two files have disagreed since they were written. Teal is
+the product's chrome accent (header, dock, Q-Day) and violet is the data
+colour. **They are deliberately different**, so a coloured mark on a chart always
+means something about the data. Renaming the token now would touch every
+stylesheet for nothing.
+
+### Schema identifiers are urns
+
+`urn:quantum-observatory:frontier:v1`, not a URL. Nothing ever resolved them —
+each schema is compiled from its file path and none reference each other — and a
+link that will never work is the same quiet untruth as an unsourced claim.
+
+**`src/releases.ts` still says "Horizon Q" in the 0.53.0 entry.** That is
+deliberate: it records what the header said at the time. Release notes are a
+record, not copy.
 
 ---
 

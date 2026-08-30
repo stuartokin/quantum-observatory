@@ -4,7 +4,7 @@ id: pqc-additional-signatures-r3
 title: 'NIST IR 8610: nine additional PQC digital-signature candidates in third evaluation round'
 summary: 'NIST Internal Report 8610 (May 2026) selects nine post-quantum digital signature algorithms — FAEST, HAWK, MAYO, MQOM, QR-UOV, SDitH, SNOVA, SQIsign, and UOV — for a third evaluation round lasting approximately two years. The process diversifies beyond the lattice-based ML-DSA and FN-DSA already standardised, spanning four distinct mathematical families per NIST IR 8610. Any eventual selections will augment FIPS 204 and FIPS 205, not replace them.'
 plain: 'NIST has already published three post-quantum signature standards built mainly on lattice mathematics and hash functions. To guard against the possibility that a future mathematical breakthrough breaks one of those foundations, NIST launched a separate process in 2022 seeking signatures built on entirely different assumptions. After two rounds of public cryptanalysis, nine candidates survive: FAEST (AES/symmetric MPC-in-the-head), HAWK (lattice, different from ML-DSA), SQIsign (supersingular isogenies — tiny 148-byte signatures), UOV, MAYO, QR-UOV and SNOVA (multivariate polynomial families on the Unbalanced Oil and Vinegar problem), and MQOM and SDitH (multiparty-computation-in-the-head on distinct hard problems). NIST IR 8610 organises these into four families: AES-based, lattice, supersingular-isogeny, and multivariate/MPC-in-the-head. They enter a third round expected to last around two years. Five others — CROSS, LESS, Mirath, PERK, and RYDE — were eliminated in round two. None are standards yet.'
-pillar: cyber
+pillar: quantum
 readiness: experimental
 constellation: pqc
 cluster: digital-signatures

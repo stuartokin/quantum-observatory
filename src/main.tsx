@@ -39,7 +39,7 @@ loadContent().then(
    */
   (err: unknown) => {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('Horizon Q could not load its content:', err)
+    console.error('Quantum Observatory could not load its content:', err)
     root.render(
       <main className="crash">
         <h2>The board could not load its content</h2>

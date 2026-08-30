@@ -16,7 +16,7 @@ export class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     this.setState({ error, info: info.componentStack ?? '' })
-    console.error('Horizon Q crashed:', error, info)
+    console.error('Quantum Observatory crashed:', error, info)
   }
 
   render() {

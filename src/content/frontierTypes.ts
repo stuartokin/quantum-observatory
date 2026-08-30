@@ -75,7 +75,7 @@ export interface FrontierItem {
   title: string
   summary?: string
   plain?: string
-  pillar: 'ai' | 'quantum' | 'materials' | 'energy' | 'cyber'
+  pillar: 'quantum'
   readiness: Readiness
   cluster?: string
   constellation?: string

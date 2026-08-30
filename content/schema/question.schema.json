@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://horizonqltd.com/schema/question/v1",
+  "$id": "urn:quantum-observatory:question:v1",
   "title": "Standing question",
-  "description": "One of the twelve questions the board exists to answer. Unlike an item, a question is never finished \u2014 it has a current answer, a date that answer last changed, and the evidence behind it. 'No change since March' is a legitimate and useful answer; the date is what makes it so.",
+  "description": "One of the twelve questions the board exists to answer. Unlike an item, a question is never finished — it has a current answer, a date that answer last changed, and the evidence behind it. 'No change since March' is a legitimate and useful answer; the date is what makes it so.",
   "type": "object",
   "required": [
     "schema",
@@ -34,17 +34,14 @@
     },
     "pillar": {
       "enum": [
-        "ai",
-        "quantum",
-        "materials",
-        "energy",
-        "cyber"
-      ]
+        "quantum"
+      ],
+      "description": "The board covers one domain. The field is kept so a second could be added without a migration, and so every record still says which it is."
     },
     "answer": {
       "type": "string",
       "maxLength": 1400,
-      "description": "The current answer in plain English. Three or four sentences. A reader should be able to take the whole answer in at a glance \u2014 anything longer belongs in the evidence it cites, not here."
+      "description": "The current answer in plain English. Three or four sentences. A reader should be able to take the whole answer in at a glance — anything longer belongs in the evidence it cites, not here."
     },
     "state": {
       "enum": [
@@ -54,7 +51,7 @@
         "contested",
         "unknown"
       ],
-      "description": "moving = the answer changed recently \u00b7 steady = settled, nothing new \u00b7 slowing = progress has decelerated \u00b7 contested = credible parties disagree \u00b7 unknown = the board cannot answer this yet, which is itself worth showing rather than hiding"
+      "description": "moving = the answer changed recently · steady = settled, nothing new · slowing = progress has decelerated · contested = credible parties disagree · unknown = the board cannot answer this yet, which is itself worth showing rather than hiding"
     },
     "asOf": {
       "type": "string",
@@ -64,7 +61,7 @@
     "lastChanged": {
       "type": "string",
       "format": "date",
-      "description": "When the answer last MATERIALLY changed \u2014 not when it was last checked. The gap between this and asOf is the useful figure: an answer confirmed yesterday but unchanged for eight months says something."
+      "description": "When the answer last MATERIALLY changed — not when it was last checked. The gap between this and asOf is the useful figure: an answer confirmed yesterday but unchanged for eight months says something."
     },
     "changedBy": {
       "type": "string",

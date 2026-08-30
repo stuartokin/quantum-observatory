@@ -84,7 +84,7 @@ export interface NewsItem {
   schema: 'news/v1'
   id: string
   headline: string
-  pillar: 'ai' | 'quantum' | 'materials' | 'energy' | 'cyber'
+  pillar: 'quantum'
   date: string
   plain: string
   significance?: NewsSignificance

@@ -75,13 +75,6 @@ import { AppMenu } from '../../components/AppMenu'
 
 /** Galaxies. Only quantum has data; the rest are declared so the switch exists
  *  and the shape of the eventual map is honest. */
-const GALAXIES: { id: FrontierItem['pillar']; label: string }[] = [
-  { id: 'quantum', label: 'Quantum' },
-  { id: 'cyber', label: 'Cyber' },
-  { id: 'ai', label: 'AI' },
-  { id: 'materials', label: 'Materials' },
-  { id: 'energy', label: 'Energy' },
-]
 type Scale = { label: string; levels: Record<Readiness, string> }
 const SCALES = scales as unknown as Record<string, Scale | undefined>
 type Offsets = Record<string, { dx: number; dy: number }>
@@ -91,7 +84,15 @@ type Offsets = Record<string, { dx: number; dy: number }>
 type Mode = 'tower' | 'orbit'
 
 export function Board() {
-  const [galaxy, setGalaxy] = useState<FrontierItem['pillar']>('quantum')
+  /**
+   * There is one galaxy, so this is a constant rather than a selection.
+   *
+   * It stays as a named value instead of being inlined at each of its eight
+   * use sites: it is still the thing every filter, forecast and question set
+   * is scoped by, and naming it keeps that visible. If a second domain ever
+   * arrives this becomes state again and nothing else moves.
+   */
+  const galaxy: FrontierItem['pillar'] = 'quantum'
   const colour = PILLAR_SPECTRUM[galaxy].colour
 
   const [selected, setSelected] = useState<string | null>(null)
@@ -616,27 +617,20 @@ export function Board() {
             overflow: 'hidden',
           }}
         >
-          <span className="wordmark" style={{ flex: '0 0 auto' }}>Horizon Q</span>
-          <select
-            className="galaxy-picker"
-            value={galaxy}
-            onChange={(e) => {
-              setGalaxy(e.target.value as FrontierItem['pillar'])
-              leaveOrbit()
-              setSelected(null)
-            }}
-            style={{ color: colour, flex: '0 0 auto' }}
-            aria-label="Galaxy"
-          >
-            {GALAXIES.map((g) => {
-              const n = allFrontier.filter((i) => i.pillar === g.id).length
-              return (
-                <option key={g.id} value={g.id} disabled={n === 0}>
-                  {g.label}{n === 0 ? ' — empty' : ` (${n})`}
-                </option>
-              )
-            })}
-          </select>
+          <span className="wordmark" style={{ flex: '0 0 auto' }}>Quantum Observatory</span>
+          {/*
+            The galaxy picker is gone.
+
+            It offered five domains — quantum, cyber, AI, materials, energy —
+            of which four never held a single item and the fifth held one that
+            was mis-filed. A selector with one real option is furniture that
+            does nothing, and four disabled options are a promise the board was
+            never going to keep. The constellation layer below it is untouched
+            and is where the structure actually lives.
+          */}
+          <span className="app-head__where" style={{ flex: '0 0 auto' }}>
+            Frontier
+          </span>
         </div>
 
         {/*

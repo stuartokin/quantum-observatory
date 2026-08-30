@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://horizonqltd.com/schema/news/v1",
-  "title": "Horizon Q news item",
+  "$id": "urn:quantum-observatory:news:v1",
+  "title": "Quantum Observatory news item",
   "description": "A dated event, not a readiness claim. News and frontier items are kept in separate collections deliberately: the board maps how close things are to real, and a stream of announcements mixed into it would corrupt that map. News points AT the board through `about`, and at the research behind it through `establishedBy`.",
   "type": "object",
   "required": [
@@ -30,12 +30,9 @@
     },
     "pillar": {
       "enum": [
-        "ai",
-        "quantum",
-        "materials",
-        "energy",
-        "cyber"
-      ]
+        "quantum"
+      ],
+      "description": "The board covers one domain. The field is kept so a second could be added without a migration, and so every record still says which it is."
     },
     "date": {
       "type": "string",

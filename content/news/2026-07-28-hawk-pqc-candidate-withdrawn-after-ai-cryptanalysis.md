@@ -2,7 +2,7 @@
 schema: news/v1
 id: 2026-07-28-hawk-pqc-candidate-withdrawn-after-ai-cryptanalysis
 headline: 'HAWK withdrawn from NIST additional-signatures process after AI finds lattice weakness in 60 hours'
-pillar: cyber
+pillar: quantum
 date: '2026-07-28'
 plain: 'HAWK was the only lattice-based scheme among the nine candidates NIST advanced to round three of its additional post-quantum digital signature process in May 2026. On 28 July Anthropic disclosed that its Claude Mythos Preview model had found a nontrivial automorphism in HAWK''s lattice structure — a symmetry that prior theory said would enable a key-recovery attack — after roughly 60 hours of mostly autonomous work at a cost of around $100,000. The HAWK team withdrew the algorithm the following day. No deployed system is at risk: HAWK was never standardised or shipped. What changed is the cost structure of cryptanalytic review: a result that survived two years of expert human scrutiny took a frontier AI model two and a half days to find.'
 significance: headline

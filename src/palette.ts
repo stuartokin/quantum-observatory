@@ -11,15 +11,21 @@ import type { Pillar } from './content/types'
  */
 
 /**
- * Each pillar is a real emission line, and the five appear in wavelength order
- * wherever they are shown together. Quantum takes the violet line.
+ * A pillar is a real emission line. One pillar, one line: quantum takes the
+ * violet mercury line at 435.8 nm, and that is the colour of every mark on the
+ * board's canvas.
+ *
+ * The four retired lines were H-beta 486.1 (materials), O III 500.7 (cyber),
+ * Na D 589.0 (AI) and H-alpha 656.3 (energy). **O III is still in the
+ * stylesheet as `--line-quantum` and is the product's chrome accent** — the
+ * teal in the header, the dock and the Q-Day surface. The token name and the
+ * wavelength it refers to have disagreed since the two files were written, and
+ * renaming it now would touch every stylesheet for no gain. Chrome teal, data
+ * violet, and they are deliberately different so a coloured mark on a chart
+ * always means something about the data.
  */
 export const PILLAR_SPECTRUM: Record<Pillar, { nm: number; colour: string; line: string }> = {
-  quantum:   { nm: 435, colour: '#A77BFF', line: 'Hg 435.8' },
-  materials: { nm: 486, colour: '#5B8CFF', line: 'H-beta 486.1' },
-  cyber:     { nm: 501, colour: '#3DE0C0', line: 'O III 500.7' },
-  ai:        { nm: 589, colour: '#FFB020', line: 'Na D 589.0' },
-  energy:    { nm: 656, colour: '#FF5A47', line: 'H-alpha 656.3' },
+  quantum: { nm: 435, colour: '#A77BFF', line: 'Hg 435.8' },
 }
 
-export const PILLAR_ORDER: Pillar[] = ['quantum', 'materials', 'cyber', 'ai', 'energy']
+export const PILLAR_ORDER: Pillar[] = ['quantum']

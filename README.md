@@ -1,177 +1,131 @@
-# Horizon Q
+# Quantum Observatory
 
-`horizonqltd.com` — AI, quantum, materials, energy, cyber.
+How close quantum computing, sensing, communications and post-quantum
+cryptography are to being real — with every claim carrying its source, its
+date, and whether anyone has actually checked it.
 
-Phase 0 scaffold. The document renderer works today; the orbital world works
-today; the landscape world has its mapping written and a stub scene.
-
----
-
-## The one rule
-
-**Content never stores coordinates.**
-
-```
-content → abstract spatial properties → world mapping → geometry
-```
-
-Every item carries `magnitude`, `depth`, `connections`, `anchor`. Each world
-turns those into its own idiom. Content has no idea whether it is a star or a
-tower.
-
-This is what makes two worlds affordable and a third one cheap. Break this rule
-and you have two sites to maintain forever.
+Written in a personal capacity by Stuart Okin.
 
 ---
 
-## Getting it live
+## What it is
 
-### 1. Repo and Pages
+Two surfaces over one body of content.
 
-1. Create a **public** repo named exactly `stuartokin.github.io`.
-2. Upload the *contents* of this folder (not the folder itself).
-   Make hidden files visible first — `.github` and `.gitignore` start with a
-   dot and most file managers hide them. Without `.github`, nothing builds and
-   there is no error message to tell you why.
-3. Settings → Pages → Source: **GitHub Actions**.
-4. Check the **Actions** tab for a green tick, then visit
-   `https://stuartokin.github.io` before touching DNS.
+**Frontier** — a galaxy of items, each graded by how close it is to being real
+(`emerging` → `mainstream`) and by the strength of its evidence (`E0` → `E5`).
+Windows over a canvas: move them, resize them, put them away. Zoom drives three
+levels of detail and nothing is ever hidden — a demoted item becomes a small dim
+dot and stays clickable.
 
-### 2. GoDaddy DNS
+**Q-Day** — seven sections on the cryptographic question specifically. What a
+machine capable of breaking RSA-2048 still needs, where demonstrated capability
+sits against the falling requirement floor, every regulator's migration deadline
+against a derived Q-Day band, and the Mosca test.
 
-In GoDaddy → My Products → `horizonqltd.com` → DNS → Manage Zones.
+## The rules that make it worth reading
 
-Delete GoDaddy's parked-page records first, then add:
+**Nothing on the board asserts what it cannot source.** Every item names its
+evidence, and the interface shows the level rather than hiding it in a footnote.
 
-| Type  | Name  | Value                     | TTL    |
-| ----- | ----- | ------------------------- | ------ |
-| A     | `@`   | `185.199.108.153`         | 1 hour |
-| A     | `@`   | `185.199.109.153`         | 1 hour |
-| A     | `@`   | `185.199.110.153`         | 1 hour |
-| A     | `@`   | `185.199.111.153`         | 1 hour |
-| CNAME | `www` | `stuartokin.github.io.` | 1 hour |
+**`unknown` is a published answer.** Four of the twelve standing questions
+currently read that way. A board that only shows the questions it can answer is
+telling you about itself, not about the field.
 
-Then GitHub → Settings → Pages → Custom domain → `horizonqltd.com` → Save.
-Wait for the DNS check to pass, then tick **Enforce HTTPS**.
+**Agent work is visibly agent work.** Six agents research, source, verify and
+report; everything they publish is marked `agent-merged` or `agent-reviewed`
+until a human reads it. No agent may ever write `state: reviewed` or
+`by: human` — CI fails the pull request if one tries.
 
-GitHub creates the `CNAME` file in the repo automatically when you save the custom domain, so the domain survives every deploy. You do not need to create it by hand.
-Propagation is usually minutes, occasionally a few hours.
+**Derived figures show their working.** The Q-Day estimate is computed from
+board content at load time, not typed into a file. Where the board cannot
+compute something honestly it says so — the capability trend currently refuses
+to draw a line because no three measurements yet share a qualifier.
 
-### 3. Local development (optional)
-
-```bash
-npm install
-npm run dev
-```
-
-You do not need this. GitHub Actions builds everything. But it is much faster
-to iterate on the 3D locally if you ever want to.
-
----
+**Corrections are part of the record.** When the board gets something wrong it
+says what it said before, what it says now, and what changed its mind.
 
 ## Layout
 
 ```
 content/
-  schema/item.schema.json   the contract. Change carefully.
-  items/*.md                the content graph. Hand-editable in GitHub's web editor.
-  site.json                 title, tagline, byline, disclaimer
+  schema/*.schema.json    the contracts — one per collection, and the authority
+                          on every field limit
+  frontier/               the items: what is being tracked, graded
+  news/                   dated events, never revised, optionally carrying
+                          structured measurements
+  questions/              the twelve standing questions and their current state
+  milestones/             regulatory deadlines, each with the document that set it
+  assessment/             the Mosca questionnaires and maturity levels
+  forecasts/              expert elicitation feeding the Q-Day derivation
+  items/                  other published projects, linked from the board
+  site.json               title, tagline, byline, disclaimer
+
 src/
-  content/                  loader + types. PROTECTED — no agent writes here.
-  worlds/
-    types.ts                World interface, Placement, spectral palette
-    orbital/                mapping + scene
-    landscape/              mapping + stub scene (Phase 5)
-    index.ts                registry — add a world with one line
-  renderers/document/       PROTECTED — the permanent readable route
-  components/               SpectralIndex (signature), RendererToggle
-  capability.ts             input class, quality tier, fold posture
-scripts/
-  validate-content.mjs      Gate 1 — schema
-  check-budget.mjs          Gate 2 — performance
-  check-scope.mjs           Gate 3 — agent write scope
+  content/                loaders and types. Content is fetched at runtime, not
+                          bundled — see plugins/contentJson.ts
+  renderers/board/        the Frontier surface
+  qday/                   the Q-Day surface, its seven tabs and its derivation
+  components/             the shared shell: header, dock, menu, windows
+
+agents/
+  <name>/agent.json       schedule, model, write scope, budget
+  <name>/prompt.md        the brief
+  _decisions.md           every question already answered — read before escalating
+  _queue.md               focus instructions waiting to run
+  _sources.md             the source register, in tier order
+
+scripts/                  the gates, the agent runner, the derivation checks
 ```
 
-## Adding a world
+## The gates
 
-1. `src/worlds/<name>/index.ts` — implement `World`
-2. `src/worlds/<name>/Scene.tsx` — the R3F scene
-3. One line in `src/worlds/index.ts`
+`npm run build` runs all of them, and a failure blocks a deploy:
 
-No content changes. Ever. If a new world needs a content change, the
-abstraction has sprung a leak — fix the abstraction, not the content.
+| Gate | What it refuses |
+| --- | --- |
+| `check:order` | scripts that depend on each other running out of order |
+| `check:exports` | one symbol exported from two modules |
+| `check:state` | invalid review state on any record |
+| `validate` | any record that does not satisfy its schema |
+| `validate:news` | a measurement without the fields that make it comparable |
+| `validate:questions` | a thirteenth standing question |
+| `provenance` | an agent claiming human review |
+| `derive` | a Q-Day derivation that no longer reproduces |
+| `budget` | a payload over its gzipped limit, per bucket |
 
-## Adding an agent (Phase 4)
+## Local development
 
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # every gate, then the production build
+npm run test:agent
 ```
-agents/<name>/
-  agent.json    schedule, model, write_scope, output, enabled
-  prompt.md     the system prompt
+
+You do not need any of this to change content — the markdown files are editable
+in GitHub's web editor, and Actions builds and deploys on push.
+
+## Agents
+
+```bash
+npm run agent -- scout      # research and propose
+npm run agent -- sourcer    # attach better sources to what exists
+npm run agent -- verifier   # check that claims still hold
+npm run agent -- newsroom   # the dated record
+npm run agent -- reviewer   # check existing entries
+npm run steward             # read the issues, write the queue
 ```
 
-`write_scope` is enforced by `check-scope.mjs` on every agent PR. Scout can only
-create files in an inbox; the redesign agent can only create new world folders.
-`src/renderers/document/`, `src/content/`, `content/schema/`, `scripts/` and
-`.github/` are forbidden to every agent regardless of scope.
+Each writes only inside its declared `write_scope`, enforced by the runner. A
+run that produces nothing valid returns its queue entry rather than spending it.
+
+## Deployment
+
+GitHub Actions builds and publishes to GitHub Pages on every push to `main`,
+and after any agent or review workflow completes successfully.
 
 ---
 
-## The three gates
-
-Every change — yours or an agent's — passes the same checks:
-
-1. **Schema.** Front matter validates; ids unique; connections resolve.
-2. **Budget.** Entry JS under 180 KB, world chunk under 900 KB, CSS under 40 KB.
-   Three.js must not leak into the initial bundle: the document route has to
-   paint without downloading a 3D engine.
-3. **Scope.** Agent PRs only. Declared paths, protected paths, locked fields.
-
-Broken output fails CI instead of reaching the site. That is what makes it safe
-to leave agents running while you are at work.
-
----
-
-## Design language
-
-The palette is derived rather than picked. Each pillar is a real emission line,
-and the five appear in wavelength order everywhere:
-
-| Pillar    | Line          | nm    |
-| --------- | ------------- | ----- |
-| Cyber     | Hg            | 435.8 |
-| Materials | H-beta        | 486.1 |
-| Quantum   | O III         | 500.7 |
-| AI        | Na D          | 589.0 |
-| Energy    | H-alpha       | 656.3 |
-
-The **spectral index** is the signature element: those five lines on a
-continuum, acting as the filter in the document renderer and the legend in every
-world. Same object, two contexts.
-
-Type is Archivo (display, expanded), Newsreader (body), IBM Plex Mono (data and
-labels).
-
----
-
-## Phase roadmap
-
-| Phase | Status | What |
-| ----- | ------ | ---- |
-| 0 | **this** | Domain, repo, stack, CI, three gates, deployable skeleton |
-| 1 | partly done | Content graph, schema, document renderer |
-| 2 | started | Orbital world, control matrix, measured quality tiers |
-| 3 | next | Decision queue, on-site console, mobile chat client |
-| 4 | | Agent runner, Scout + Liveness, canary window, one-tap rollback |
-| 5 | | Landscape world — proves the abstraction |
-| 6 | | Editor, redesigner, test agents |
-| 7 | | PWA, offline, installable |
-
-## Known gaps in Phase 0
-
-- Dependency versions are pinned to a known-good React 18 / R3F 8 / drei 9 set
-  and have not been installed and resolved here. First `npm install` may want a
-  bump.
-- Article bodies are not rendered yet — only titles and summaries. Markdown
-  rendering lands in Phase 1.
-- No routing. One page, two renderers. Per-item URLs land in Phase 1.
-- Landscape scene is deliberately a stub.
+Views expressed here are my own and do not represent the position of Ofgem or
+any organisation I advise.

@@ -114,7 +114,7 @@ export default function Help({ colour, pool }: { colour: string; pool: FrontierI
 
       <Section id="what" title="What this is, and what it is not" open={open.has('what')} onToggle={toggle}>
         <p>
-          Horizon Q is not a feed, and its value comes from what it refuses to
+          The Quantum Observatory is not a feed, and its value comes from what it refuses to
           include. Thousands of quant-ph preprints appear each year, hundreds of
           peer-reviewed results across computing, cryptography, communications
           and sensing, and a trade press that publishes daily. The aggregators

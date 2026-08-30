@@ -2,7 +2,7 @@
 schema: news/v1
 id: 2026-06-12-nist-piv-pqc-dual-stack-working-drafts
 headline: 'NIST releases working drafts for post-quantum updates to PIV identity standards using a dual-stack model'
-pillar: cyber
+pillar: quantum
 date: '2026-06-12'
 plain: 'Personal Identity Verification credentials underpin physical and logical access across the US federal government. NIST has released working drafts of proposed updates to SP 800-73 and SP 800-78 that would add ML-DSA signatures and ML-KEM key encapsulation to PIV cards, alongside — not replacing — existing classical keys. A dual-stack model means current PIV tokens remain valid during the transition, avoiding a forced simultaneous upgrade. These are preliminary working materials, not a formal public draft, but they indicate the direction of the specification and invite implementer feedback now.'
 significance: notable

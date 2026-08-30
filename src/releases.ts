@@ -24,6 +24,26 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
+    version: '0.56.0',
+    date: '2026-08-20',
+    headline: 'Horizon Q becomes the Quantum Observatory, and stops offering four domains it never had.',
+    ui: [
+      'The product is the Quantum Observatory. The galaxy view is Frontier and the seven-section surface is Q-Day — which demotes "Observatory" from the Q-Day surface to the whole product, where it belongs now that Q-Day is one part of a board also covering architectures, error correction, enabling technology, sensing and communications.',
+      'The galaxy picker is gone. It offered quantum, cyber, AI, materials and energy; four of those never held a single item and the fifth held one that was mis-filed. A selector with one real option is furniture that does nothing, and four disabled options are a promise the board was never going to keep.',
+      'The constellation layer is untouched. Architectures, error correction, algorithms, enabling, PQC, migration, communications, sensing and applications are where the structure actually lives, and nothing about them changes.',
+    ],
+    content: [
+      'Nothing was deleted. Three records carried `pillar: cyber` and all three are post-quantum cryptography — the NIST IR 8610 additional signature candidates, the NIST PIV dual-stack drafts, and HAWK’s withdrawal after AI found a lattice weakness in sixty hours. They were mis-filed; they are now quantum. Three field edits, no rewriting.',
+      'The cryptography material is unaffected, because it never lived in the pillar. It is in the constellations — six items in PQC, eight in migration — plus fifteen regulatory milestones and the whole Q-Day surface, which is a cryptography surface end to end.',
+      'The pillar field survives the narrowing rather than being stripped from ninety-two files. Every record still states its domain, and a second could be added without a migration.',
+      'One schema was deliberately *not* narrowed. `content/items/` describes other published projects — a cyber incident globe, an AI vulnerability guide, an energy tracker — and their domains are facts about those projects rather than categories this board offers. Narrowing it would have made eight true records invalid.',
+    ],
+    agents: [
+      'The scout and verifier briefs carry the new name, and scout no longer refers to "the quantum galaxy" now that there is only one.',
+      'Schema identifiers stop pretending to be URLs. They read `urn:quantum-observatory:frontier:v1` rather than naming a domain this project will not use — nothing ever resolved them, and a link that will never work is exactly the sort of quiet untruth this board exists to avoid.',
+    ],
+  },
+  {
     version: '0.55.0',
     date: '2026-08-19',
     headline: 'Two surfaces stop pretending to be two sites.',
@@ -164,27 +184,6 @@ export const RELEASES: Release[] = [
       'Modality and qualifier are mandatory for anything plotted, and the gate refuses a count without them. Caltech\u2019s 6,100 trapped atoms and QuEra\u2019s 448 operated below threshold are not the same measurement \u2014 grouped naively they show capability falling by an order of magnitude.',
       'A doubling time is only computed from three points sharing one qualifier and showing growth. Nothing clears that yet, and each series says which condition it failed rather than drawing a line through whatever is there.',
       'Twenty-one derivation self-tests, up from sixteen. The new ones cover the traps this design invites: mixed qualifiers, mixed platforms, and a declining series that would otherwise produce a negative doubling time.',
-    ],
-  },
-  {
-    version: '0.51.0',
-    date: '2026-08-19',
-    headline: 'The Q-Day estimate stops being asserted and starts being derived.',
-    ui: [
-      'Trends is live, and everything on it is computed from the board\u2019s own items when the page loads \u2014 no figure is typed into the source. It reports what it refuses as well as what it uses: a model that quietly drops the data it cannot read looks more complete than it is.',
-      'The headline finding is one the board already held and nobody had drawn: the requirement is falling faster than any hardware is rising toward it. Physical qubits to factor RSA-2048 went from under a million to under a hundred thousand in eight months \u2014 a full order of magnitude, from algorithmic improvement alone.',
-      'Two charts, one per kind of qubit, never both on one axis: physical and logical are three orders of magnitude apart and putting them on one scale would invite a comparison that is not valid. Each cryptographic target gets its own line, because successive estimates of RSA-2048 are a trend and an RSA figure joined to an ECC figure is not.',
-      'Capability is drawn as dated marks and never as a line. The board records today\u2019s best figures, not their history, so a capability trend would be a line through points that share one date. The vertical distance from a mark to the requirement is the gap, and that gap is quoted from the most favourable reading on both sides and labelled as such.',
-      'Chart colours were validated rather than chosen. The interface amber and teal sit outside the lightness band a categorical mark wants against this ground, so the marks use a stepped-down pair that passes lightness, chroma, colour-blind separation and contrast against the actual surface. Chrome keeps the bright accents.',
-      'The impact ledger shows what has been pushing the estimate and which way, from the Q-Day impact score each item already carries. The net is a direction, not a number of years \u2014 it answers the question a countdown cannot: what would have to change for this to move.',
-    ],
-    agents: [
-      'The derivation reproduces the asserted range exactly. Anchored on the expert survey the board holds, the evidence-derived window is 2036\u20132041 against an asserted 2036\u20132041 \u2014 so the number a human set is confirmed by the only evidence that maps to calendar years, rather than replaced by it.',
-      'It does not compute a crossing point, and that is the finding rather than a shortfall. There is no capability time series to fit, and the only way to get a forward capability curve is a vendor roadmap \u2014 which the board\u2019s own precedent has always scored zero. The missing data and the standing rule point the same way.',
-      'Where the derived window and the asserted forecast disagree, the build writes a proposal for the weekly issue and changes nothing. Moving the forecast stays a human decision: one axis at a time, a two-year cap, evidence required.',
-      'A metric is dated by the paper its note names, not by when the board last checked it. Dating from evidence.verified would collapse every figure onto the week an agent last ran and destroy the whole signal. A figure whose note names no source the item carries is refused rather than dated from the item.',
-      'Sixteen self-tests over fixtures, each one a mistake this made on the way to working: 2.4 times read as a count of qubits; the single most relevant capability figure on the board thrown away because its name contained the word error; an annealer\u2019s five thousand qubits counted as progress toward breaking RSA.',
-      'The forecast\u2019s change log recorded a baseline of 2036-2041 while its estimates have always read earliest 2034. The outermost axis was omitted from the record rather than changed after it. Corrected \u2014 a metadata fix, no number a reader sees has moved. It became visible because the Observatory started rendering the log beside the countdown.',
     ],
   },
 ]

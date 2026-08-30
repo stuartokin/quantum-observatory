@@ -1,57 +1,112 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://horizonqltd.com/schema/item/v1",
-  "title": "Horizon Q content item",
+  "$id": "urn:quantum-observatory:item:v1",
+  "title": "Quantum Observatory content item",
   "description": "One item in the content graph. Items NEVER carry coordinates. Worlds derive geometry from the abstract spatial properties below.",
   "type": "object",
-  "required": ["schema", "id", "title", "type", "pillars", "status", "spatial"],
+  "required": [
+    "schema",
+    "id",
+    "title",
+    "type",
+    "pillars",
+    "status",
+    "spatial"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schema": { "const": "item/v1" },
+    "schema": {
+      "const": "item/v1"
+    },
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
       "description": "Stable slug. Never regenerate; other items reference it."
     },
-    "title": { "type": "string", "minLength": 3, "maxLength": 140 },
-    "summary": { "type": "string", "maxLength": 400 },
-
+    "title": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 140
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 400
+    },
     "type": {
-      "enum": ["article", "observatory", "note", "talk", "pillar"],
+      "enum": [
+        "article",
+        "observatory",
+        "note",
+        "talk",
+        "pillar"
+      ],
       "description": "observatory = external standalone tool, linked not absorbed."
     },
-
     "pillars": {
       "type": "array",
       "minItems": 1,
-      "items": { "enum": ["ai", "quantum", "materials", "energy", "cyber"] }
+      "items": {
+        "enum": [
+          "ai",
+          "quantum",
+          "materials",
+          "energy",
+          "cyber"
+        ]
+      },
+      "description": "Which domains this project touches. **Deliberately not narrowed with the board's own `pillar` field.** These records describe Stuart's other published work — a cyber incident globe, an AI vulnerability guide, an energy tracker — and their domains are facts about those projects rather than categories this board offers. Narrowing this would have made eight true records invalid."
     },
-
-    "status": { "enum": ["draft", "review", "published", "archived"] },
-
-    "published": { "type": "string", "format": "date" },
-    "updated": { "type": "string", "format": "date" },
-
-    "url": { "type": "string", "format": "uri", "description": "External destination for observatory/talk items." },
-    "poster": { "type": "string", "description": "Path under /public. Lets the world render richly without loading the target." },
-
+    "status": {
+      "enum": [
+        "draft",
+        "review",
+        "published",
+        "archived"
+      ]
+    },
+    "published": {
+      "type": "string",
+      "format": "date"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "External destination for observatory/talk items."
+    },
+    "poster": {
+      "type": "string",
+      "description": "Path under /public. Lets the world render richly without loading the target."
+    },
     "spatial": {
       "type": "object",
       "description": "Abstract properties only. A world maps these to geometry; content must not know whether it is a star or a tower.",
-      "required": ["magnitude", "depth"],
+      "required": [
+        "magnitude",
+        "depth"
+      ],
       "additionalProperties": false,
       "properties": {
         "magnitude": {
-          "type": "number", "minimum": 0, "maximum": 1,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
           "description": "How much this item should dominate. Orbital -> radius+size. Landscape -> building height."
         },
         "depth": {
-          "type": "number", "minimum": 0, "maximum": 1,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
           "description": "0 = entry-level overview, 1 = deep technical. Drives placement away from the arrival point."
         },
         "connections": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "default": [],
           "description": "IDs of related items. Orbital -> gravitational grouping. Landscape -> street adjacency."
         },
@@ -62,9 +117,12 @@
         }
       }
     },
-
     "access": {
-      "enum": ["public", "registered", "paid"],
+      "enum": [
+        "public",
+        "registered",
+        "paid"
+      ],
       "default": "public",
       "description": "Reserved. Everything is public today; the build filters on this if that ever changes."
     },
@@ -72,25 +130,46 @@
       "type": "string",
       "description": "Provenance for aggregated third-party data. Recorded now so it never has to be reconstructed."
     },
-
     "locked": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "default": [],
       "description": "Field names agents must not modify. CI fails any PR that touches one."
     },
-    "lastHumanEdit": { "type": "string", "format": "date" },
-    "lastAgentEdit": { "type": "string", "format": "date" },
-    "author": { "type": "string", "default": "Stuart Okin" },
-
+    "lastHumanEdit": {
+      "type": "string",
+      "format": "date"
+    },
+    "lastAgentEdit": {
+      "type": "string",
+      "format": "date"
+    },
+    "author": {
+      "type": "string",
+      "default": "Stuart Okin"
+    },
     "liveness": {
       "type": "object",
       "additionalProperties": false,
       "description": "Maintained by the liveness agent for observatory items.",
       "properties": {
-        "lastChecked": { "type": "string", "format": "date" },
-        "state": { "enum": ["ok", "slow", "broken", "stale"] },
-        "note": { "type": "string" }
+        "lastChecked": {
+          "type": "string",
+          "format": "date"
+        },
+        "state": {
+          "enum": [
+            "ok",
+            "slow",
+            "broken",
+            "stale"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
       }
     }
   }

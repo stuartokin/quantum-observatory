@@ -90,11 +90,11 @@ export default function QDay({ tab }: { tab: QDayTab }) {
               goToBoard()
             }}
           >
-            Horizon Q
+            Quantum Observatory
           </a>
           <span className="app-head__sep">·</span>
           <span className="app-head__where">
-            Q-Day <i>Observatory</i>
+            Q-Day
           </span>
         </div>
         <p className="app-head__sub">

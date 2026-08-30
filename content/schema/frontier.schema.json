@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://horizonqltd.com/schema/frontier/v1",
-  "title": "Horizon Q frontier item",
+  "$id": "urn:quantum-observatory:frontier:v1",
+  "title": "Quantum Observatory frontier item",
   "description": "One development on the frontier. Position is derived from readiness; nothing here stores coordinates. No item exists without a source.",
   "type": "object",
   "required": [
@@ -40,12 +40,9 @@
     },
     "pillar": {
       "enum": [
-        "ai",
-        "quantum",
-        "materials",
-        "energy",
-        "cyber"
-      ]
+        "quantum"
+      ],
+      "description": "The board covers one domain. The field is kept so a second could be added without a migration, and so every record still says which it is."
     },
     "readiness": {
       "enum": [
@@ -79,7 +76,7 @@
       "items": {
         "type": "string"
       },
-      "description": "Who demonstrated or published this. A facet, not a category \u2014 organisations do not have readiness levels."
+      "description": "Who demonstrated or published this. A facet, not a category — organisations do not have readiness levels."
     },
     "metrics": {
       "type": "array",
@@ -193,7 +190,7 @@
               "note": {
                 "type": "string",
                 "maxLength": 600,
-                "description": "What a reader needs to know about this source specifically \u2014 what it adds, what it supersedes, where it is contested."
+                "description": "What a reader needs to know about this source specifically — what it adds, what it supersedes, where it is contested."
               },
               "accessed": {
                 "type": "string",
@@ -212,7 +209,7 @@
             "E4",
             "E5"
           ],
-          "description": "unrated = no evidence attached yet; says nothing about the development itself \u00b7 E0 speculative \u00b7 E1 proposal or theoretical work \u00b7 E2 prototype or vendor claim \u00b7 E3 preprint, review article, or credible lab demonstration \u00b7 E4 peer-reviewed experimental result \u00b7 E5 independently replicated. unrated and E1 are NOT the same: E1 is a judgement that the work is theoretical, unrated is an admission that nobody has looked. Conflating them made a well-demonstrated topic read as untested."
+          "description": "unrated = no evidence attached yet; says nothing about the development itself · E0 speculative · E1 proposal or theoretical work · E2 prototype or vendor claim · E3 preprint, review article, or credible lab demonstration · E4 peer-reviewed experimental result · E5 independently replicated. unrated and E1 are NOT the same: E1 is a judgement that the work is theoretical, unrated is an admission that nobody has looked. Conflating them made a well-demonstrated topic read as untested."
         }
       }
     },
@@ -285,7 +282,7 @@
     "qdayReasoning": {
       "type": "string",
       "maxLength": 1600,
-      "description": "Required whenever qdayImpact is not 0. Explain what changes and by how much \u2014 a score without reasoning is an opinion. Room here for a real argument: a twenty-fold reduction in the qubits needed to break RSA deserves more than a line."
+      "description": "Required whenever qdayImpact is not 0. Explain what changes and by how much — a score without reasoning is an opinion. Room here for a real argument: a twenty-fold reduction in the qubits needed to break RSA deserves more than a line."
     },
     "country": {
       "type": "array",
@@ -305,11 +302,11 @@
         2,
         3
       ],
-      "description": "1 mainstream 0-3y \u00b7 2 emerging lab/prototype 3-10y \u00b7 3 frontier/blue sky."
+      "description": "1 mainstream 0-3y · 2 emerging lab/prototype 3-10y · 3 frontier/blue sky."
     },
     "review": {
       "type": "object",
-      "description": "Provenance. Every item declares whether a human has read it. An agent writes agent-merged and cannot write reviewed \u2014 that is the whole safeguard.",
+      "description": "Provenance. Every item declares whether a human has read it. An agent writes agent-merged and cannot write reviewed — that is the whole safeguard.",
       "required": [
         "state"
       ],
@@ -322,7 +319,7 @@
             "agent-merged",
             "vetoed"
           ],
-          "description": "reviewed = a human read it \u00b7 agent-reviewed = checked by the reviewer agent against its sources, still unread by a person \u00b7 agent-merged = published by an agent, unchecked \u00b7 vetoed = reverted, kept for the record"
+          "description": "reviewed = a human read it · agent-reviewed = checked by the reviewer agent against its sources, still unread by a person · agent-merged = published by an agent, unchecked · vetoed = reverted, kept for the record"
         },
         "by": {
           "enum": [

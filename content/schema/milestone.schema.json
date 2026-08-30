@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://horizonqltd.com/schema/milestone/v1",
+  "$id": "urn:quantum-observatory:milestone:v1",
   "title": "Regulatory or standards milestone",
   "description": "A dated obligation or publication in the post-quantum migration — an NCSC checkpoint, a CNSA-2 deadline, a FIPS publication. Deliberately not a frontier item: a frontier item maps how close a development is to being real, and a deadline is not a development. It is a date somebody has to meet, and it does not have a readiness level.",
   "type": "object",

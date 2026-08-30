@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://horizonqltd.com/schema/forecast/v1",
+  "$id": "urn:quantum-observatory:forecast:v1",
   "title": "Forecast",
   "description": "A dated estimate the rest of the board is measured against — currently just Q-Day. Agents may move it within guardrails (one axis at a time, a two-year cap, evidence required) and it is stamped agent-estimate when they do; only a human can write state: human-set.",
   "type": "object",
@@ -24,12 +24,9 @@
     },
     "pillar": {
       "enum": [
-        "ai",
-        "quantum",
-        "materials",
-        "energy",
-        "cyber"
-      ]
+        "quantum"
+      ],
+      "description": "The board covers one domain. The field is kept so a second could be added without a migration, and so every record still says which it is."
     },
     "title": {
       "type": "string",
@@ -44,10 +41,18 @@
       "additionalProperties": false,
       "description": "Years. Missing axes are legitimately unset, not zero.",
       "properties": {
-        "earliest": { "type": "number" },
-        "aggressive": { "type": "number" },
-        "central": { "type": "number" },
-        "conservative": { "type": "number" }
+        "earliest": {
+          "type": "number"
+        },
+        "aggressive": {
+          "type": "number"
+        },
+        "central": {
+          "type": "number"
+        },
+        "conservative": {
+          "type": "number"
+        }
       }
     },
     "state": {
