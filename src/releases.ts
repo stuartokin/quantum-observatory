@@ -24,7 +24,7 @@ export interface Release {
  */
 export const RELEASES: Release[] = [
   {
-    version: '0.56.0',
+    version: '0.56.1',
     date: '2026-08-20',
     headline: 'Horizon Q becomes the Quantum Observatory, and stops offering four domains it never had.',
     ui: [
@@ -39,7 +39,8 @@ export const RELEASES: Release[] = [
       'One schema was deliberately *not* narrowed. `content/items/` describes other published projects — a cyber incident globe, an AI vulnerability guide, an energy tracker — and their domains are facts about those projects rather than categories this board offers. Narrowing it would have made eight true records invalid.',
     ],
     agents: [
-      'The scout and verifier briefs carry the new name, and scout no longer refers to "the quantum galaxy" now that there is only one.',
+      'The scout and verifier briefs carry the new name, and scout no longer refers to "the quantum galaxy" now that there is only one. No brief ever offered the retired domains as options, so the narrowed schema — which every agent is shown in full — is what keeps them right from here.',
+      'Validation failures now say what would have been acceptable. "Must be equal to one of the allowed values" is true and useless; it now adds "(allowed: quantum)". A field over its limit says how far over, and an unknown field is named rather than merely counted. This surfaced the moment the pillar narrowed: an agent had already written the retired value into a new item, and the build said only that it was wrong.',
       'Schema identifiers stop pretending to be URLs. They read `urn:quantum-observatory:frontier:v1` rather than naming a domain this project will not use — nothing ever resolved them, and a link that will never work is exactly the sort of quiet untruth this board exists to avoid.',
     ],
   },

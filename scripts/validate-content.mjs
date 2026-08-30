@@ -36,6 +36,42 @@ function normalise(value) {
   return value
 }
 
+/**
+ * The part of a validation failure a person can act on.
+ *
+ * Ajv says "must be equal to one of the allowed values" and does not say what
+ * they are, or "must NOT have more than 400 characters" and does not say how
+ * long the field actually is. Both are true and neither is enough to fix
+ * anything without opening the schema, which is exactly the round trip this
+ * message exists to save.
+ *
+ * The narrowing of `pillar` to a single value is what made this obvious: an
+ * agent wrote `pillar: cyber` into a new item, the build stopped, and the log
+ * said only that the value was not allowed — not that the sole allowed value
+ * is `quantum`.
+ */
+function explain(err, data) {
+  if (err.keyword === 'enum') {
+    const allowed = (err.params.allowedValues ?? []).join(', ')
+    return allowed ? ` (allowed: ${allowed})` : ''
+  }
+  if (err.keyword === 'maxLength') {
+    const value = err.instancePath
+      .split('/')
+      .slice(1)
+      .reduce((cur, k) => (cur == null ? cur : cur[k.replace(/~1/g, '/').replace(/~0/g, '~')]), data)
+    if (typeof value !== 'string') return ''
+    return ` (it is ${value.length}, so ${value.length - err.params.limit} over)`
+  }
+  if (err.keyword === 'additionalProperties') {
+    return ` — "${err.params.additionalProperty}" is not a field this schema has`
+  }
+  if (err.keyword === 'required') {
+    return ''
+  }
+  return ''
+}
+
 const errors = []
 let total = 0
 
@@ -70,7 +106,9 @@ for (const col of COLLECTIONS) {
   // Pass 2: schema
   for (const { file, data } of parsed) {
     if (!validate(data)) {
-      for (const e of validate.errors) errors.push(`${col.dir}/${file}${e.instancePath} ${e.message}`)
+      for (const e of validate.errors) {
+        errors.push(`${col.dir}/${file}${e.instancePath} ${e.message}${explain(e, data)}`)
+      }
     }
   }
 
