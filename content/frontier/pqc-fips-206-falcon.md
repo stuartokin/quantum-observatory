@@ -15,7 +15,7 @@ metrics:
 evidence:
   claim: 'NIST submitted the FN-DSA (FIPS 206) draft standard for approval on August 28, 2025. Ray Perlner (NIST) presented FIPS 206 status at the Sixth PQC Standardization Conference (September 25, 2025), confirming the IPD was ''basically written, awaiting approval''; a March 2025 NIST news release had already stated the draft would be ''released shortly'' alongside the HQC selection. FIPS 206 specifies FN-DSA based on the FALCON submission: an NTRU-lattice hash-then-sign scheme producing smaller signatures and public keys than ML-DSA, at the cost of floating-point arithmetic in signing. The NIST CSRC PQC project page describes FIPS 206 as ''in development'' as of August 2026. Public review of approximately one year places the final standard in late 2026 or early 2027. No Federal Register notice for a final FIPS 206 has been published as of 2026-08-19.'
   level: E3
-  verified: '2026-08-19'
+  verified: '2026-08-31'
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
       role: standard
@@ -47,10 +47,10 @@ status: published
 added: '2026-08-04'
 origin: human
 review:
-  state: agent-reviewed
+  state: agent-merged
   by: agent
-  agent: reviewer
-  agentMergedOn: '2026-08-19'
+  agent: verifier
+  agentMergedOn: '2026-08-31'
   reviewedOn: '2026-08-24'
-  note: 'FIPS 206 status confirmed via NIST CSRC, DigiCert (Sep 2025), and IETF draft-ietf-cose-falcon-04 (Mar 2026): IPD submitted Aug 28 2025, public review ~1 year, final expected late 2026 or early 2027. CSRC project page describes as ''in development'' Aug 2026. E3 correct for draft standard. Readiness experimental correct. No corrections.'
+  note: 'Focus 2026-08-31: searched federalregister.gov and NIST CSRC for a Federal Register notice for FIPS 206 (FN-DSA). None found. NIST CSRC PQC standardization page still describes FIPS 206 as ''in development.'' pqc-forum April 3 2026: IPD still not released publicly. IACR news 6 Aug 2026 describes IPD as ''submitted August 2025'' (internal, not public). Encryption Consulting July 2026: ''not yet finalized as of mid-2026.'' No Federal Register notice exists to add. Claim and sources confirmed unchanged.'
 ---
