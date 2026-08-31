@@ -64,8 +64,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-12'
-  reviewedOn: '2026-08-12'
-  note: 'First reviewer pass. arXiv:2603.28648 confirmed as preprint by Legeza et al. (Wigner Research Centre / TU Munich / PNNL), targeting Fe4S4 CAS(54,36) and Fe5S12 CAS(89,102). This is distinct from algo-classical-femoco (Zhai et al. arXiv:2601.04621, FeMoco benchmark, Caltech/Flatiron) — different groups, different molecular systems, no overlap. E3 correct for preprint primary source; companion JCTC method paper is peer-reviewed but covers the GPU method, not the chemistry application directly. Scout note asking whether Legeza was already in femoco resolved: it was not. No changes.'
+  reviewedOn: '2026-08-31'
+  note: arXiv:2603.28648 HTML opened. Legeza et al. at Wigner/TU Munich. Fe4S4 CAS(54,36) on IBM/RIKEN Quantum Advantage Tracker confirmed; Fe5S12H4(5-) at CAS(89,102) confirmed (paper states '89 electrons in 102 orbitals'). E3 correct for preprint. No journal record found. No corrections.
 ---
 
 **What happened.** A team at the Wigner Research Centre for Physics (Budapest), the Technical University of Munich, and Pacific Northwest National Laboratory used the Density Matrix Renormalization Group (DMRG) algorithm in mixed-precision mode on NVIDIA Blackwell GPUs to compute high-accuracy classical ground-state energies for Fe4S4 at CAS(54,36) active space. Fe4S4 is explicitly listed on the IBM/RIKEN Quantum Advantage Tracker as a benchmark where quantum computation is expected to be necessary. The team also extended the classical frontier to CAS(89,102) for a larger Fe5S12H4(5-) complex — the largest active space reported classically for this system. The authors argue that rigorous DMRG must serve as a required classical reference before any quantum advantage claim in electronic structure is accepted, and note that GPU implementations of DMRG are not yet fully optimised, meaning the classical frontier will continue to advance.

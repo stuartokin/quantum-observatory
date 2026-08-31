@@ -145,8 +145,8 @@ added: '2026-08-08'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-19'
-  note: 'Steward review 2026-08-19. Confirmed Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) present as first-class metric and corroborating source with identifier in the form the Trends derivation matches. Confirmed Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metric and corroborating source. Both verified by sourcer run same date. E3 correct for synthesis across preprints plus one peer-reviewed record. No other changes.'
+  reviewedOn: '2026-08-31'
+  note: arXiv:2505.15917 confirmed still preprint per arXiv HTML (no journal record; HTML date shows Aug 24 2026 suggesting minor update). E3 correct for primary source. New paper arXiv:2605.03951 (Xue & Covey, modular atomic processor, ~500k qubits for RSA-2048) noted in run summary under Worth Scout's attention — not added here as it needs Scout evaluation first. No downward corrections.
 ---

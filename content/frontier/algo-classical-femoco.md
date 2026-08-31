@@ -58,8 +58,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-12'
-  reviewedOn: '2026-08-17'
-  note: 'arXiv:2601.04621 confirmed as preprint-only as of Aug 2026 via INSPIRE (12 citations, no journal record) and ResearchGate (explicitly listed as preprint). E3 correct. No changes to evidence level or readiness.'
+  reviewedOn: '2026-08-31'
+  note: 'arXiv:2601.04621 confirmed preprint-only via INSPIRE (12 citations, no journal DOI) and ResearchGate. E3 correct. All key claims match: Zhai et al. Caltech/Flatiron, FeMoco 76-orbital model, chemical accuracy, 2.77M CPU core-hours. No corrections.'
 ---
 
 ## What happened

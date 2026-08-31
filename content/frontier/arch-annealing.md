@@ -71,8 +71,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-10'
-  note: 'Tindall Science 2026 (adx2728) confirmed published May 22 2026. D-Wave dispute (arXiv:2504.06283) confirmed and accurately described. BP-TNS matches D-Wave on 2D/3D lattice geometries (cubic, diamond, square confirmed in secondary sources); D-Wave argues higher-dimensional biclique problems and largest 3D simulations remain beyond BP-TNS. E4 correct; both sources are peer-reviewed Science papers. No changes made.'
+  reviewedOn: '2026-08-31'
+  note: Science 392, 868-872 (Tindall et al., adx2728) confirmed peer-reviewed. D-Wave response confirmed active (LinkedIn post 'Still beyond classical' May 26 2026; D-Wave press release same date per arXiv:2606.20187 references). E4 correct for two peer-reviewed Science papers as primary and corroborating. No corrections.
 ---
 
 Quantum annealing encodes combinatorial optimisation and physics-simulation problems as an Ising Hamiltonian and exploits quantum tunnelling to search the energy landscape. D-Wave has operated cloud-accessible superconducting annealers commercially since 2011, scaling to ~5,000 qubits on the Advantage and Advantage2 systems.
