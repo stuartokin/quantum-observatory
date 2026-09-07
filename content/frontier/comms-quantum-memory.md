@@ -51,8 +51,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'Science Advances 11(38) eadx3223 confirmed via science.org abstract, PMC full text, phys.org news article, and CNRS press page. Mamann et al., Laboratoire Kastler Brossel / Sorbonne / CNRS / ENS-Université PSL confirmed as authors. First-quantum-memory-in-complete-cryptographic-protocol claim confirmed (direct quote from Mamann in press coverage). Wiesner quantum money protocol correctly identified. E4 correct for peer-reviewed Science Advances paper. No changes made.'
+  reviewedOn: '2026-09-07'
+  note: Sci. Adv. 11, eadx3223 (2025) confirmed via science.org, PMC (PMC12448085), phys.org, and CNRS/INP press page. Mamann et al. at Laboratoire Kastler Brossel, Sorbonne/CNRS/ENS-PSL confirmed. First quantum memory in complete cryptographic protocol (Wiesner quantum money) confirmed from phys.org quote and PMC abstract. E4 correct for peer-reviewed Science Advances. No changes.
 ---
 
 Quantum memories are essential nodes in any quantum repeater architecture. The 2025 Science Advances result is the first time a quantum memory met the noise and efficiency requirements of a real cryptographic primitive, not just a laboratory benchmark.

@@ -50,8 +50,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-09'
-  note: 'E4 → E3: both sources are NIST draft documents (preliminary draft practice guide and initial public draft internal report), not finalised formal standards. Schema caps non-finalised guidance at E3. Amending an agent-merged item.'
+  reviewedOn: '2026-09-07'
+  note: 'Sources are two NIST draft documents (SP 1800-38A preliminary draft and IR 8547 IPD). E3 correct for non-finalised guidance per decisions file rule. Readiness experimental and confidence high defensible: concept mandated by NIST, enterprise deployment not yet standard. RSA/ECC deprecation 2030/2035 deadlines from IR 8547 IPD correctly stated. No changes.'
 ---
 
 Crypto-agility is not a feature — it is an architectural property that must be designed in from the start. NIST IR 8547 has set hard dates: deprecated 2030, disallowed 2035. Systems without agility face a forced rebuild.
