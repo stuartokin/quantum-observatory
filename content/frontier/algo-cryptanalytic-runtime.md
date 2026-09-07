@@ -89,11 +89,12 @@ horizon: 2
 origin: agent
 added: '2026-08-19'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  note: 'Gidney-Ekerå 2021 sourced from quantum-journal.org (peer-reviewed). Gidney 2025 from arxiv.org/abs/2505.15917 (preprint E3). Pinnacle from arxiv.org/abs/2602.11457 (preprint E3, Iceberg Quantum). Cain from arxiv.org/abs/2603.28627 (preprint E3, Oratomic/Caltech). Item rated E3 overall as synthesis across preprints plus one peer-reviewed record. Checked board list: algo-resource-estimation exists but records qubit counts without paired runtimes; this is not a duplicate.'
+  note: 'First reviewer pass (item was agent-merged by scout, no prior reviewedOn). Pinnacle arXiv:2602.11457 confirmed via abstract: <100k qubits, 1 µs cycle, 0.1% error, ~1 month runtime. Cain arXiv:2603.28627 confirmed: RSA-2048 runtime ''1-2 orders of magnitude longer'' than ECC-256 at 26k qubits per abstract. Gidney-Ekerā 2021 (Quantum 5, 433) peer-reviewed baseline correct. E3 correct: synthesis of one peer-reviewed and three preprints. qdayImpact 0 correct: spacetime product not materially reduced; impractical runtime is not a threat metric per decisions file.'
+  reviewedOn: '2026-09-07'
 ---
 
 ## What happened

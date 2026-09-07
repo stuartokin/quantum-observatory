@@ -16,11 +16,11 @@ metrics:
   - name: Matter-to-matter entanglement distance
     value: '420'
     unit: km
-    note: 'Atomic ensemble quantum memories, telecom S-band conversion, Luo, Wang et al. Phys. Rev. Lett. 136, 240601 (2026)'
+    note: Atomic ensemble quantum memories, telecom S-band conversion, Luo, Wang et al. Phys. Rev. Lett. 137, 070801 (2026)
   - name: Previous record
-    value: '~100'
+    value: ~50
     unit: km
-    note: 'Prior memory-memory demonstrations using quantum frequency conversion (Liu et al. Nature 2024 metropolitan network; Yu et al. Nature 2020 demonstrated 50 km). Paper states result exceeds previous demonstrations by more than four times.'
+    note: 'Prior memory-memory entanglement over fiber: Yu et al. Nature 578 (2020) at 50 km by same group. The >4x claim (420 km > 200 km) is consistent with this baseline.'
 horizon: 3
 qdayImpact: 0
 links:
@@ -36,19 +36,19 @@ moved:
   from: emerging
   on: '2026-08-08'
 evidence:
-  claim: 'Luo et al. (Physical Review Letters 136, 240601, June 2026; preprint arXiv:2504.05660) report entanglement between two atomic ensemble quantum memories separated by 420 km of optical fibre. Photons from the memories are converted to telecom S-band (1,350 nm) via quantum frequency conversion to exploit low fibre loss (0.17 dB/km). Phase is stabilised using combined far-off-resonant and dual-band locking. The result exceeds the previous memory-memory entanglement record by more than four times and is published in a peer-reviewed journal, though not yet independently replicated by a different group.'
+  claim: Luo et al. (Physical Review Letters 137, 070801, August 2026; preprint arXiv:2504.05660) report entanglement between two atomic ensemble quantum memories separated by 420 km of optical fibre. Photons from the memories are converted to telecom S-band (1,350 nm) via quantum frequency conversion to exploit low fibre loss (0.17 dB/km). Phase is stabilised using combined far-off-resonant and dual-band locking. The result exceeds the previous memory-memory entanglement record (50 km, Yu et al. Nature 578, 2020) by more than four times and is published in a peer-reviewed journal, though not yet independently replicated by a different group.
   level: E4
-  verified: '2026-08-10'
+  verified: '2026-09-07'
   sources:
-    - url: https://link.aps.org/doi/10.1103/PhysRevLett.136.240601
+    - url: https://link.aps.org/doi/10.1103/ccd6-rf1s
       role: primary
-      title: Entangling Quantum Memories over 420 km in Fiber
+      title: Entangling Quantum Memories through a 420 km Long Fiber
       publisher: Physical Review Letters
-      date: '2026-06-16'
-      identifier: 'Phys. Rev. Lett. 136, 240601 (2026)'
-      doi: 10.1103/PhysRevLett.136.240601
-      accessed: '2026-08-11'
-      note: 'Xi-Yu Luo, Chao-Yang Wang, Ming-Yang Zheng, Bin Wang et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 16 June 2026. Luo is first author (Bin Wang is 4th author). Confirmed via ScienceAlert, DigiconAsia, ICO-Optics all citing published PRL paper. Not yet independently replicated.'
+      date: '2026-08-11'
+      identifier: Phys. Rev. Lett. 137, 070801 (2026)
+      doi: 10.1103/ccd6-rf1s
+      accessed: '2026-09-07'
+      note: Xi-Yu Luo, Chao-Yang Wang, Ming-Yang Zheng, Bin Wang et al.; USTC / Hefei National Laboratory. Peer-reviewed. Published 11 August 2026. Prior item had wrong identifier (PRL 136, 240601); corrected 2026-09-07 via APS DOI 10.1103/ccd6-rf1s. Not yet independently replicated.
     - url: https://arxiv.org/abs/2504.05660
       role: preprint
       title: Entangling quantum memories over 420 km in fiber
@@ -57,13 +57,13 @@ evidence:
       identifier: arXiv:2504.05660
       doi: 10.48550/arXiv.2504.05660
       accessed: '2026-08-09'
-      note: 'Preprint version submitted April 2025; published in PRL June 2026 as Phys. Rev. Lett. 136, 240601.'
+      note: Preprint version submitted April 2025; published in PRL 137, 070801 (2026) August 2026.
     - url: https://www.nature.com/articles/s41467-022-33919-0
       role: corroborating
       title: Continuous entanglement distribution over a transnational 248 km fiber link
       publisher: Nature Communications
       date: '2022-10-17'
-      identifier: 'Nat. Commun. 13, 6134 (2022)'
+      identifier: Nat. Commun. 13, 6134 (2022)
       doi: 10.1038/s41467-022-33919-0
       accessed: '2026-08-08'
       note: 248 km deployed-fibre photon entanglement (Austria-Slovakia), confirming feasibility at intercity scale for photon pairs.
@@ -76,8 +76,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-11'
-  note: 'PRL 136, 240601 re-confirmed this run via ScienceAlert, DigiconAsia, ICO-Optics all citing the published PRL paper. Author order confirmed: Xi-Yu Luo is first author (Bin Wang 4th). Previous record metric note updated to note both Yu et al. 2020 (50 km) and Liu et al. 2024 metropolitan context; paper states >4× improvement. E4 correct. No level or readiness changes.'
+  reviewedOn: '2026-09-07'
+  note: 'PRL 137, 070801 (11 Aug 2026) confirmed via APS link.aps.org/doi/10.1103/ccd6-rf1s and phys.org/digiconasia. Prior identifier PRL 136, 240601 was wrong — corrected to PRL 137, 070801, DOI 10.1103/ccd6-rf1s. Previous-record metric corrected ~100→~50 km: Yu et al. Nature 578 (2020) at 50 km is the prior record; >4x claim is consistent. Claim text updated accordingly. E4 correct for peer-reviewed PRL.'
 ---
 
 Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.
