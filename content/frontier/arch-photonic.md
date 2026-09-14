@@ -74,8 +74,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-11'
-  reviewedOn: '2026-08-11'
-  note: 'Nature 641, 876-883 confirmed this run via nature.com abstract and postquantum.com analysis. All four fidelity figures (99.98% SPAM, 99.50% HOM, 99.22% fusion, 99.72% chip-to-chip) confirmed as conditional on photon detection. E4 correct for peer-reviewed experimental Nature paper. No independent replication found. No changes made.'
+  reviewedOn: '2026-09-14'
+  note: 'Nature 641, 876-883 (2025) confirmed via PMC full text (PMC12095036) and postquantum.com analysis: 99.98%±0.01% SPAM, 99.50%±0.25% HOM, 99.22%±0.12% fusion, 99.72%±0.04% chip-to-chip interconnect over 42m fibre. All conditional on photon detection and not accounting for optical loss — item correctly states this. GlobalFoundries 300mm process confirmed. E4 correct for peer-reviewed Nature. No independent replication from different institution found; E5 not warranted. No corrections.'
 ---
 
 Photonic quantum computing uses photons — particles of light — as qubits. Their insensitivity to thermal noise means no dilution refrigerator is needed, which matters enormously for scaling. The fundamental obstacle is that photons do not naturally interact, so entangling two photonic qubits requires probabilistic techniques or ancilla photons. PsiQuantum's May 2025 Nature paper reported the first manufacturable platform: a chipset built in GlobalFoundries' commercial 300mm silicon-photonics process, demonstrating component fidelities above 99% for single-qubit operations, fusion gates, and 42-metre chip-to-chip links. All fidelities are conditional on detecting a photon — optical loss remains the main engineering challenge for scale-up. The result is a component demonstration, not a working quantum processor; fault-tolerant logical computation in this modality has not yet been shown.
