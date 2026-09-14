@@ -75,8 +75,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-11'
-  note: 'Steinacker et al. Nature 646, 81-87 confirmed this run via nature.com abstract (all four devices >99% two-qubit, SPAM up to 99.9%) and PubMed (Oct 2025 issue, epub Sep 24). Four-device wafer result confirmed via postquantum.com analysis. E4 correct for peer-reviewed Nature paper. No changes made.'
+  reviewedOn: '2026-09-14'
+  note: 'Nature 646, 81-87 confirmed via nature.com abstract and multiple citing papers: Steinacker et al. (UNSW/Diraq/imec/KU Leuven), 300mm SiMOS foundry, >99% single- and two-qubit fidelity on all four devices, SPAM up to 99.9%, T1=9.5 s, T2*=40.6 µs, T2_Hahn=1.9 ms confirmed. E4 correct for peer-reviewed Nature. Tandtu et al. Nature Physics 2024 (primary source) previously confirmed. Note: a new 8-qubit 300mm foundry result (Nature Communications 2026) cited by subsequent papers may extend this — flagged under Worth Scout''s attention.'
 ---
 
 Silicon spin qubits confine individual electrons (or holes) in electrostatically defined quantum dots in silicon or silicon-germanium heterostructures, using spin states as |0⟩ and |1⟩. The platform is attractive for scalability because it is compatible with existing CMOS manufacturing.

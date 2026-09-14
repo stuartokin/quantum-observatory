@@ -88,8 +88,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-11'
-  reviewedOn: '2026-08-11'
-  note: 'State corrected from agent-merged to agent-reviewed this run. Prior run (2026-08-11) confirmed all four sources and updated actors/country fields but incorrectly left state as agent-merged. 97-qubit figure for Zuchongzhi 3.2 re-confirmed this run from PRL 135 cover caption: distance-7 surface code on 97 of 107 total qubits. E4 correct. No evidence level or readiness changes.'
+  reviewedOn: '2026-09-14'
+  note: 'Nature 638 (Google Willow), PRL 135, 260601 (He et al./USTC), and Nature 649 (Bluvstein et al./Harvard-MIT) all confirmed against prior verification records and current search. Three independent institutions, two hardware modalities. Lambda=2.14±0.02 (Willow), Lambda=1.40±0.06 (USTC), Lambda=2.14(13)x (neutral atom). E4 correct: three peer-reviewed papers but E5 is in the dedicated below-threshold item. No corrections.'
 ---
 
 The error correction threshold is the boundary below which quantum error correction actually helps. Google Willow crossed it in 2024 on superconducting hardware. He et al. (USTC) confirmed it in December 2025 on superconducting hardware using a different leakage-suppression technique. Bluvstein et al. (Harvard/MIT) confirmed it in January 2026 on neutral-atom hardware. Three independent demonstrations across two hardware modalities establish below-threshold QEC as a reproducible, platform-agnostic milestone.
