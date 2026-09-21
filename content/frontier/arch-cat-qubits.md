@@ -61,8 +61,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-18'
-  note: 'Nature 638, 927-934 (2025) confirmed via PMC (PMC11864976), CaltechAUTHORS, and nature.com. Putterman et al. (AWS/Caltech). 1.75(2)% d=3 and 1.65(3)% d=5 logical error per cycle confirmed from CaltechAUTHORS record. Below-threshold repetition code, intrinsic bit-flip suppression confirmed. E4 correct. No changes.'
+  reviewedOn: '2026-09-21'
+  note: 'Nature 638, 927-934 (2025) confirmed via nature.com, PMC11864976, and CaltechAUTHORS: Putterman et al. (AWS/Caltech), 1.75(2)% d=3 and 1.65(3)% d=5 logical error per cycle confirmed from arXiv:2409.13025 and multiple citing sources. Below-threshold phase-flip repetition code, intrinsic bit-flip suppression confirmed. E4 correct. No changes.'
 ---
 
 Cat qubits encode quantum information in superpositions of coherent states of a microwave cavity. The nonlinear dissipation that stabilises the encoding strongly suppresses bit-flip errors, making only phase-flip errors the dominant noise channel. A simple classical repetition code — much cheaper in hardware than the surface code — can then correct the remaining phase flips.

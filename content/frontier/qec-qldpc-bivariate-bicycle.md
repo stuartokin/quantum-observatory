@@ -55,8 +55,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-18'
-  note: 'Nature 627, 778-782 (2024) confirmed via multiple citations in recent literature (arXiv:2511.13560, errorcorrectionzoo.org, arXiv:2412.04181 all cite Bravyi et al. DOI 10.1038/s41586-024-07107-7). [[144,12,12]] gross code encoding 12 logical into 288 physical confirmed. ~10x overhead reduction vs surface code confirmed. E4 correct for peer-reviewed Nature paper. No changes.'
+  reviewedOn: '2026-09-21'
+  note: Nature 627, 778-782 (2024) confirmed via ResearchGate, errorcorrectionzoo, and multiple citing papers (arXiv:2511.13560, arXiv:2506.03094, arXiv:2606.02418). Bravyi, Cross, Gambetta, Maslov, Rall, Yoder (IBM). [[144,12,12]] gross code encoding 12 logical into 288 physical confirmed. ~10x overhead reduction vs surface code confirmed. E4 correct. No changes.
 ---
 
 A code family encoding many logical qubits into relatively few physical qubits. IBM introduced a fault-tolerant quantum memory based on bivariate bicycle qLDPC codes; the gross code encodes 12 logical qubits into 144 data qubits plus 144 syndrome qubits, correcting as well as the surface code with about ten times fewer qubits.
