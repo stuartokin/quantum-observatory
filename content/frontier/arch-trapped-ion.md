@@ -86,8 +86,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-17'
-  reviewedOn: '2026-08-18'
-  note: 'Nature 655, 81-86 opened: 2.5(1)×10-5 1Q, 7.9(2)×10-4 2Q, 3.3(5)×10-4 SPAM confirmed from published paper (preprint had 4.8(6)×10-4 SPAM — item notes discrepancy correctly). arXiv:2604.26423 opened: 4,096 nodes, 16,384 GH200, coherent performance to 93 qubits (12,834 two-qubit gates) confirmed. Dasu et al. arXiv:2602.22211 confirmed as preprint: 48 QEC and 94 QED logical qubits on Helios, beyond break-even confirmed from arXiv PDF. E4 correct on peer-reviewed Nature primary. No changes.'
+  reviewedOn: '2026-09-21'
+  note: 'Nature 655, 81-86 confirmed via nature.com, PMC13322971, phys.org, and QCR: 99.921% 2Q (7.9(2)×10⁻⁴), 99.9975% 1Q (2.5(1)×10⁻⁵), 99.967% SPAM (3.3(5)×10⁻⁴). Publisher correction exists: Nature 655:E8 (DOI 10.1038/s41586-026-10882-0, July 7 2026); nature could not be read but PMC notes it. The preprint SPAM discrepancy (4.8×10⁻⁴ vs published 3.3×10⁻⁴) remains correctly noted. E4 correct. No substantive changes to claims.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.

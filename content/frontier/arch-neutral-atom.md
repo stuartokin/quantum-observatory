@@ -69,8 +69,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'Both sources confirmed this run. Nature 645 (magic state distillation): confirmed via prior runs. Nature 649 (Bluvstein FTQC): confirmed via nature.com abstract (2.14(13)x below-threshold, 448 atoms, surface code). phys.org and postquantum.com confirm Bluvstein lead author and 448-atom system. Publisher correction Nature 650, E3 confirmed as label-only. E4 correct. No changes made.'
+  reviewedOn: '2026-09-21'
+  note: 'Nature 649, 39-46 (2026) confirmed via nature.com, OSTI (record 3376340), and Weizmann CRIS: 448 atoms, 2.14(13)x below-threshold, transversal gates, lattice surgery, [[15,1,3]] teleportation. Publisher correction Nature 650, E3 confirmed label-only. Nature 645 (magic state distillation, QuEra/Harvard/MIT) confirmed via arch-neutral-atom source record. E4 correct for two peer-reviewed Nature papers. No changes.'
 ---
 
 Neutral-atom arrays use optical tweezers — focused laser beams — to hold individual uncharged atoms in programmable 2D patterns. Unlike superconducting or silicon-spin qubits, the atoms can be physically moved mid-computation, allowing the connectivity graph to be reconfigured on the fly. Any atom can be brought next to any other, enabling the all-to-all entanglement operations that fault-tolerant protocols often require.
