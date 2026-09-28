@@ -67,8 +67,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-31'
-  note: Science 392, 868-872 (adx2728) confirmed published via science.org. King et al. Science 388 (ado6285) confirmed. D-Wave dispute (arXiv:2504.06283 and D-Wave press release) active as of June 2026 per arXiv:2606.20187 references. E4 correct for two peer-reviewed Science papers. Contested scope accurately described. No corrections.
+  reviewedOn: '2026-09-28'
+  note: 'D-Wave press release May 26, 2026 confirms dispute remains active: D-Wave states Tindall et al. did not attempt most complex geometry, largest 3D simulations, low-precision ensembles, or fourth-order observables. Both Science papers (King ado6285 and Tindall adx2728) confirmed E4. Contested scope accurately described. No corrections.'
 ---
 
 The most valuable early application of quantum computers is expected to be simulating quantum physics itself — chemistry, materials, and condensed matter — where the quantum state space grows exponentially and classical computers must approximate. D-Wave published the first result in a high-profile peer-reviewed venue (Science, 2025) claiming that their annealing processor outperforms the world-class Frontier supercomputer on a specific spin-glass simulation relevant to magnetic materials research.

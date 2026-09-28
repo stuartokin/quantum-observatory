@@ -147,6 +147,6 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-31'
-  note: arXiv:2505.15917 confirmed still preprint per arXiv HTML (no journal record; HTML date shows Aug 24 2026 suggesting minor update). E3 correct for primary source. New paper arXiv:2605.03951 (Xue & Covey, modular atomic processor, ~500k qubits for RSA-2048) noted in run summary under Worth Scout's attention — not added here as it needs Scout evaluation first. No downward corrections.
+  reviewedOn: '2026-09-28'
+  note: arXiv:2505.15917 confirmed still preprint-only (no journal DOI found). Luo et al. arXiv:2607.13816 confirmed still preprint; v1/v2 Toffoli count differs (919 vs 1056 n³/log₂n) but 835 logical qubit figure unchanged. Luo's citation of Chevignard at 1098 (P-224, not P-256) correctly documented. E3 correct. IonQ Sep 2026 resource estimate (19,397 physical qubits, Walking Cat, ~25.7 days for secp256k1) not yet on board — flagged under Worth Scout's attention.
 ---
