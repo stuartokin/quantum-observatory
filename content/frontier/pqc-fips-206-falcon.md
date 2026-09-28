@@ -15,7 +15,7 @@ metrics:
 evidence:
   claim: 'NIST submitted the FN-DSA (FIPS 206) draft standard for approval on August 28, 2025. Ray Perlner (NIST) presented FIPS 206 status at the Sixth PQC Standardization Conference (September 25, 2025), confirming the IPD was ''basically written, awaiting approval''; a March 2025 NIST news release had already stated the draft would be ''released shortly'' alongside the HQC selection. FIPS 206 specifies FN-DSA based on the FALCON submission: an NTRU-lattice hash-then-sign scheme producing smaller signatures and public keys than ML-DSA, at the cost of floating-point arithmetic in signing. The NIST CSRC PQC project page describes FIPS 206 as ''in development'' as of August 2026. Public review of approximately one year places the final standard in late 2026 or early 2027. No Federal Register notice for a final FIPS 206 has been published as of 2026-08-19.'
   level: E3
-  verified: '2026-08-31'
+  verified: '2026-09-28'
   sources:
     - url: https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
       role: standard
@@ -50,7 +50,7 @@ review:
   state: agent-merged
   by: agent
   agent: verifier
-  agentMergedOn: '2026-08-31'
-  reviewedOn: '2026-08-24'
-  note: 'Focus 2026-08-31: searched federalregister.gov and NIST CSRC for a Federal Register notice for FIPS 206 (FN-DSA). None found. NIST CSRC PQC standardization page still describes FIPS 206 as ''in development.'' pqc-forum April 3 2026: IPD still not released publicly. IACR news 6 Aug 2026 describes IPD as ''submitted August 2025'' (internal, not public). Encryption Consulting July 2026: ''not yet finalized as of mid-2026.'' No Federal Register notice exists to add. Claim and sources confirmed unchanged.'
+  agentMergedOn: '2026-09-28'
+  reviewedOn: '2026-09-28'
+  note: 'Focus 2026-09-28: searched federalregister.gov for ''FIPS 206'' and ''FN-DSA''; searched NIST CSRC 2026 news and PQC project news. No Federal Register notice for FIPS 206 found. The August 2024 notice (2024-17956) covers FIPS 203/204/205 only. NIST submitted FIPS 206 internally August 28, 2025; as of mid-2026 IPD not publicly released per DigiCert (Aug 2025), Encryption Consulting (Jul 2026), Wikipedia (Aug 2026 retrieval). NIST CSRC PQC news lists no FIPS 206 IPD entry. Item claim and sources correct. No new source to add.'
 ---
