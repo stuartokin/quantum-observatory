@@ -51,8 +51,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'Nature 638, 920-926 confirmed; Lambda=2.14, 0.143% per cycle, 2.4x breakeven confirmed against paper. E4 correct for the Google Willow result. Caution: IBM Nighthawk metrics (120 qubits, 218 tunable couplers) appear in the metrics block but no IBM source is listed in evidence.sources — this portion rests on vendor announcements not captured in the evidence record. An upward evidence move for the IBM result would require an independent source. The E4 level is defensible on the Google result alone. Nighthawk metric note amended to flag vendor-only status. qdayImpact and qdayReasoning fields added (0; defence-enabling infrastructure, no direct Q-Day effect).'
+  reviewedOn: '2026-09-28'
+  note: No new peer-reviewed Google superconducting paper found; Willow (Nature 638, 920-926) remains primary E4 source. IBM Nighthawk metrics remain vendor-only with no independent source in evidence.sources — correctly flagged in metrics note. Google Quantum AI page as of Aug 2026 still spotlights Willow as flagship. E4 correct on Google result alone. No corrections.
 ---
 
 Superconducting transmon qubits are lithographically patterned Josephson-junction circuits cooled to ~15 mK in dilution refrigerators, where they behave as artificial two-level atoms. The platform is the most mature and has scaled fastest: IBM and Google have both shipped successive generations on published roadmaps.

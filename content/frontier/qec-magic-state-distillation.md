@@ -89,10 +89,10 @@ country: [US]
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-19'
-  note: 'Steward review 2026-08-19. Nature 645, 620-625 confirmed as E4 primary (peer-reviewed). Cultivation metrics from arXiv:2409.17595 (Gidney et al.) and arXiv:2505.15917 (Gidney 2025 RSA estimate) correctly attributed. Experimental cultivation result from arXiv:2512.13908 (Rosenfeld et al.) is a preprint, E3 individually — correctly noted in source note. Magic state production fraction metric correctly framed as reduced vs 2019 baseline with RSA-2048 sourcing. No corrections needed.'
+  reviewedOn: '2026-09-28'
+  note: 'Primary source Nature 645, 620-625 (2025, QuEra/Harvard/MIT distillation) confirmed E4. arXiv:2512.13908 (Rosenfeld cultivation) confirmed still preprint-only — ResearchGate and ADS both list as arXiv with no journal DOI. Note: Chen, Chen, Lu, Pan (USTC) published cultivation result in PRX Quantum 7, 010315 (2026) — independent peer-reviewed cultivation paper; whether this is experimental or theoretical warrants Scout check before adding as source.'
 confidence: high
 status: published
 added: '2026-08-04'

@@ -142,8 +142,8 @@ added: '2026-08-09'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-19'
-  note: 'Steward review 2026-08-19. Confirmed Gidney+Ekerå 2019 (arXiv:1905.09749; Quantum 5, 433) and Häner et al. 2020 (arXiv:2001.09580; PQCrypto 2020) present as first-class metrics with identifiers in the correct form. Both verified by sourcer same date against primary sources. E3 correct. No other changes.'
+  reviewedOn: '2026-09-28'
+  note: 'arXiv:2607.13816 (Luo et al., 835 logical qubits) confirmed still preprint-only; no journal record found. Luo''s abstract cites Chevignard at 1098 (P-224 figure, not P-256 1193) — error correctly documented in item. Bagourd arXiv:2512.15330 and Willsch arXiv:2410.14397 not re-opened this run; confirmed in prior passes. E3 correct. Hardware gap remains enormous: demonstrated ~96 logical qubits vs 835+ required. No corrections.'
 ---
