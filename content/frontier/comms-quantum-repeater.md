@@ -76,8 +76,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'Nature Photonics s41566-026-01911-5 confirmed this run via nature.com abstract and USTC faculty page (Zhou group). 78.6%±2.0% and 3.7σ CHSH confirmed from abstract. CHSH S=2.22 confirmed from Nature Photonics issue table — consistent with 3.7σ statement (S=2.22 exceeds classical bound of 2). Metric note for CHSH updated to include S value. E4 correct. No level or readiness changes.'
+  reviewedOn: '2026-10-05'
+  note: Nature Photonics 20, 812-817 (2026) confirmed via nature.com (DOI 10.1038/s41566-026-01911-5, published 7 May 2026) and Crossref. Zhu, Zhang, Ou, Liu, Liang et al. at USTC/Hefei confirmed from Zhou lab publications page. 14.5 km, 78.6%±2.0% fidelity, 3.7σ CHSH, S=2.22 all confirmed from arXiv:2508.17940 HTML and nature.com abstract. E4 correct for peer-reviewed Nature Photonics. No changes.
 ---
 
 Quantum repeaters are the missing infrastructure for long-distance quantum networks. By combining heralded entanglement generation with entanglement swapping at intermediate nodes, they circumvent the exponential photon-loss barrier of optical fibre. The 2026 Nature Photonics result from USTC is the first metropolitan-scale demonstration that certifies the non-classical quality of the distributed entanglement through a Bell inequality violation, closing a loophole in earlier demonstrations that produced entanglement too noisy to certify.

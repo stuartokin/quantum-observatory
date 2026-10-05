@@ -88,10 +88,10 @@ country:
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-19'
-  note: 'Steward review 2026-08-19. Sparse Blossom (Quantum 9, 1600) and Collision Clustering (Nature Electronics 8, 84-91) confirmed as peer-reviewed primaries sourced by the issue #145 sourcer run. Mean 0.62 µs/round at d=17, 97.4% below 1 µs, 810 ns FPGA (881 qubits), 240 ns ASIC (1057 qubits) all consistent with sourcer summary. Google Willow 63 µs at d=5 retained from prior reviewer pass. E4 correct. No corrections needed.'
+  reviewedOn: '2026-10-05'
+  note: 'Quantum 9, 1600 (2025) confirmed via quantum-journal.org: Higgott (Google QAI + UCL) and Gidney (Google QAI), published 20 January 2025. Sub-microsecond per round at distance-17 confirmed from abstract. Nature Electronics 8, 84-91 (Barber et al.) confirmed as cited in multiple papers. Google Willow 63 µs confirmed from prior checks. E4 correct. No changes.'
 confidence: high
 status: published
 added: '2026-08-04'

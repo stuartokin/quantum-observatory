@@ -68,8 +68,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-12'
-  reviewedOn: '2026-08-12'
-  note: 'First reviewer pass. PRL 136, 020604 (2026) by Schwerdt et al. (Weizmann Institute) confirmed via APS DOI. E4 correct for peer-reviewed experimental PRL paper. This is the gate-experiment companion to the arch-ion-tweezer architectural proposal (Schiffer et al. arXiv:2606.27249) — distinct items, not duplicates. Readiness experimental correct. No changes.'
+  reviewedOn: '2026-10-05'
+  note: PRL 136, 020604 (2026) confirmed via APS DOI 10.1103/h4c6-463f, Weizmann Ozeri lab publications page, and PubMed (PMID 41616330). Schwerdt, Peleg, Dekel et al. at Weizmann Institute + Quantum Art. Received 11 June 2025, published 15 January 2026. Three-ion chain, controlled Mølmer-Sørensen, intensity-noise dephasing limitation on superposition correctly documented. E4 correct for peer-reviewed PRL. No changes.
 ---
 
 ## What happened
