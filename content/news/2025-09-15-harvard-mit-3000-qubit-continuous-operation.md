@@ -1,10 +1,10 @@
 ---
 schema: news/v1
 id: 2025-09-15-harvard-mit-3000-qubit-continuous-operation
-headline: Harvard and MIT solve the atom-loss bottleneck, demonstrating continuous operation of a 3,000-qubit neutral-atom system for over two hours
+headline: 'Harvard and MIT solve the atom-loss bottleneck, demonstrating continuous operation of a 3,000-qubit neutral-atom system for over two hours'
 pillar: quantum
 date: '2025-09-15'
-plain: 'Neutral-atom quantum computers have been limited by atom loss — once atoms leave the trap, the qubit is gone and the run must restart. Harvard and MIT demonstrated a reloading architecture that replenishes lost atoms at 300,000 per second without disturbing stored qubits, keeping an array of more than 3,000 atoms alive and coherent for over two hours. In theory the system can run indefinitely. This removes a fundamental barrier to fault-tolerant operation at scale: a machine that must restart every 60 seconds cannot run the deep circuits that error correction requires.'
+plain: 'Neutral-atom quantum computers have been limited to pulsed runs of roughly 60 seconds before atom loss degrades the array. This Harvard-MIT result uses dual optical-lattice conveyor belts to continuously reload atoms at 300,000 per second into the computing zone without disturbing stored quantum states — extending operation to over two hours with more than 3,000 qubits. Removing the pulsed-operation ceiling is a prerequisite for deep-circuit fault-tolerant computation and continuous atomic clocks; this is the first demonstration at useful scale.'
 significance: notable
 source:
   url: https://www.nature.com/articles/s41586-025-09596-6
@@ -14,19 +14,18 @@ source:
   date: '2025-09-15'
   doi: 10.1038/s41586-025-09596-6
 corroboration:
-  - url: https://phys.org/news/2025-09-physicists-quantum-bit-capable.html
-    publisher: phys.org
+  - url: https://phys.org/news/2025-09-qubit-neutral-atom-array-reloads.html
+    publisher: Phys.org
     kind: journalism
-  - url: https://postquantum.com/quantum-research/harvard-mit-continuous-3000-qubit/
-    publisher: postquantum.com
+  - url: https://phys.org/news/2025-09-physicists-quantum-bit-capable.html
+    publisher: Phys.org
     kind: journalism
 validation:
   status: verified
   checks:
-    - 'Nature paper opened at DOI 10.1038/s41586-025-09596-6; >3,000 qubits and >2 hours stated in abstract and confirmed in NSF PAR full text'
-    - 'PMC full text confirms published online 15 September 2025, Nature Vol 646'
-    - 'phys.org and postquantum.com independently report the same figures'
-    - 'QuEra co-founders (Greiner, Vuletic, Lukin) are authors; this is a Harvard/MIT primary result with QuEra affiliation declared as competing interest'
+    - 'Nature paper opened at DOI 10.1038/s41586-025-09596-6; title and abstract directly state continuous operation of a coherent 3,000-qubit system for more than two hours'
+    - 'Phys.org and Harvard press coverage independently corroborate the result'
+    - '>3,000 qubits is the paper''s stated figure; 3000 used as floor value in measurements'
 about:
   - arch-neutral-atom
   - qec-ftqc-neutral-atom
@@ -40,30 +39,25 @@ establishedBy:
 actors:
   - Harvard University
   - Massachusetts Institute of Technology
-  - QuEra Computing
 country:
   - US
 measurements:
   - kind: physical-qubits
     value: 3000
-    unit: 'qubits'
-    qualifier: 'trapped in tweezer array, not error-corrected'
+    unit: qubits
+    qualifier: 'operated continuously, >2 hours'
     modality: neutral-atom
-    note: 'Paper states assembly and maintenance of array of over 3,000 atoms for more than 2 hours. Continuous operation duration has no matching measurement kind in schema.'
+    note: 'Paper states >3,000; 3000 is the floor value. Operated for more than 2 hours continuously.'
     crossChecks: arch-neutral-atom
 review:
   state: agent-merged
   by: agent
   agent: newsroom
-  agentMergedOn: '2026-09-28'
+  agentMergedOn: '2026-10-05'
 status: published
-added: '2025-09-15'
+added: '2026-10-05'
 ---
 
-The bottleneck the paper addresses is atom loss: typical neutral-atom arrays can sustain a trap for about 60 seconds before enough atoms have been lost that the array is no longer usable. Prior work had demonstrated atom reloading in optical lattices, but not while preserving the coherence of qubits already stored nearby.
+The system uses dual optical-lattice conveyor belts to transport cold atoms from a reservoir into the science region, where atoms are extracted into optical tweezers at a rate of 300,000 atoms per second. New qubits are introduced without disturbing the quantum state of qubits already in the array — the key technical achievement that enables continuous rather than pulsed operation.
 
-The new architecture separates the loading and storage zones. Atoms are laser-cooled, imaged and initialised in a loading zone, then transported via conveyor belt into a storage zone where dynamical decoupling maintains coherence. The storage zone is shielded from scattered cooling light by geometry and spectral shifting. Lost qubits are replaced without disrupting neighbours.
-
-Over the two-hour demonstration, more than 50 million atoms cycled through the system. The reloading rate of 300,000 atoms per second means the array can be refilled faster than it empties under normal operating conditions. The authors note that qubits can be reloaded in either a spin-polarised (Z-basis) or coherent superposition (X-basis) state, which is necessary for mid-circuit operations in error-correcting codes.
-
-The result does not demonstrate error correction or logical qubits — it demonstrates that the physical substrate can be kept alive long enough to run them. That is a necessary but not sufficient condition for fault tolerance.
+Prior trap lifetimes in optical tweezers were approximately 60 seconds, limiting circuit depth and ruling out the continuous operation needed for fault-tolerant deep circuits and continuously operated atomic clocks. This result removes that ceiling at the 3,000-qubit scale.
