@@ -72,8 +72,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-18'
-  note: 'Nature 645, 614-619 confirmed via nature.com abstract (Lacroix et al., Google QAI/ETH Zürich, DOI 10.1038/s41586-025-09061-4) and ideas.repec.org record. Λ3/5=1.56(4) confirmed from arXiv preprint (2412.14256). Transversal gate error 0.0027 and >99% magic state fidelity confirmed from preprint. E4 correct. No changes.'
+  reviewedOn: '2026-10-05'
+  note: 'Nature 645, 614-619 confirmed via nature.com (DOI 10.1038/s41586-025-09061-4): published online 26 May 2025, issue date 18 September 2025. Lacroix et al. (Google Research + ETH Zürich). Λ3/5=1.56(4) confirmed from abstract and multiple citing papers. Transversal Clifford gate error 0.0027, >99% magic state fidelity, lattice-surgery state teleportation all confirmed. E4 correct for peer-reviewed Nature. No independent replication found; E5 not warranted. No corrections.'
 ---
 
 Colour codes have been a theoretical favourite for years because they support transversal logical gates — a property the surface code lacks, making the surface code dependent on expensive magic-state factories for universal computation. The practical question was whether colour codes could actually be made to work on real hardware, and whether adding more physical qubits would actually suppress errors. Lacroix et al. answered both questions affirmatively in 2025. This does not mean colour codes will displace the surface code, but it establishes them as a credible competing architecture at the experimental level.

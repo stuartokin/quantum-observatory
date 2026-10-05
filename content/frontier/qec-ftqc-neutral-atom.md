@@ -62,8 +62,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-11'
-  reviewedOn: '2026-08-11'
-  note: 'Nature 649, 39-46 confirmed this run via nature.com abstract (2.14(13)x below-threshold, 448 atoms confirmed) and NIST publications page (tsapps.nist.gov/publication confirms paper and full author list including Bluvstein, Geim, Li, Evered et al.). Publisher correction Nature 650, E3 confirmed as figure-label only. E4 correct for peer-reviewed Nature paper. Status left as draft pending human review of this new scout item.'
+  reviewedOn: '2026-10-05'
+  note: 'Nature 649, 39-46 confirmed via nature.com and NIST/tsapps: Bluvstein, Geim, Li, Evered et al. (Harvard/MIT/Caltech/NIST-Maryland). 448 atoms, 2.14(13)x below-threshold, transversal gates, lattice surgery, [[15,1,3]] teleportation all confirmed from abstract and multiple citing papers. E4 correct. Publisher correction (label only) previously noted. No changes.'
 ---
 
 ## What happened
