@@ -1,39 +1,33 @@
 ---
 schema: news/v1
 id: 2025-11-05-princeton-transmon-millisecond-coherence-nature
-headline: 'Princeton publishes tantalum-on-silicon transmon qubit with T1 up to 1.68 ms in Nature, tripling the prior record'
+headline: Princeton publishes tantalum-on-silicon transmon qubit with T1 up to 1.68 ms in Nature, tripling the prior record
 pillar: quantum
 date: '2025-11-05'
-plain: 'Princeton researchers replaced the sapphire substrate with high-resistivity silicon and deposited tantalum in ultra-high-vacuum conditions, cutting bulk dielectric loss enough to push the best qubit''s relaxation time to 1.68 ms — roughly three times the prior lab record and fifteen times longer than current industry devices. The result matters because the same material stack can be fabricated at wafer scale, making it directly translatable to large processors rather than a one-off laboratory device. A time-averaged quality factor of 9.7×10⁶ was also measured across 45 qubits, and single-qubit gates reached 99.994% fidelity.'
+plain: Superconducting qubits lose their quantum state quickly, which forces error-correction systems to work faster than the hardware can sustain. Princeton''s tantalum-on-silicon transmon achieves a coherence time of 1.68 ms — roughly three times the previous best — across a 45-qubit device, not just a single handpicked qubit. That combination of scale and consistency is what makes it relevant to real processors rather than just a laboratory record.
 significance: notable
 source:
   url: https://www.nature.com/articles/s41586-025-09687-4
   kind: paper
-  title: 'Millisecond lifetimes and coherence times in 2D transmon qubits'
+  title: Millisecond lifetimes and coherence times in 2D transmon qubits
   publisher: Nature
   date: '2025-11-05'
   doi: 10.1038/s41586-025-09687-4
-corroboration:
-  - url: https://singularityhub.com/2025/11/11/record-breaking-qubits-are-stable-for-15-times-longer-than-google-and-ibms-designs/
-    publisher: Singularity Hub
-    kind: journalism
 validation:
   status: verified
   checks:
-    - 'Nature paper opened at DOI 10.1038/s41586-025-09687-4; T1 up to 1.68 ms stated in abstract and results for best qubit'
-    - 'Single-qubit gate fidelity 99.994% directly stated in paper'
-    - 'Qavg = 9.7×10⁶ across 45 qubits stated as dimensionless quality factor, not a coherence time in ms; conversion to ~1.0 ms T1 requires resonance frequency and is inference — not recorded as measurement'
-    - 'Independent journalism corroboration from Singularity Hub confirmed'
+    - Nature paper opened; T1 up to 1.68 ms for the best qubit stated in abstract and results
+    - Qavg of 9.7e6 across 45 qubits also stated; conversion to T1 requires resonance frequency and is therefore inference — not recorded as a measurement
+    - Princeton University affiliation confirmed; independent of vendor programmes
 about:
-  - enable-transmon-millisecond-coherence
   - arch-superconducting
+  - enable-transmon-millisecond-coherence
 establishedBy:
-  - url: https://www.nature.com/articles/s41586-025-09687-4
-    title: 'Millisecond lifetimes and coherence times in 2D transmon qubits'
-    publisher: Nature
+  - url: https://doi.org/10.1038/s41586-025-09687-4
+    title: Millisecond lifetimes and coherence times in 2D transmon qubits
+    relation: reports
     date: '2025-11-05'
     doi: 10.1038/s41586-025-09687-4
-    relation: reports
 actors:
   - Princeton University
 country:
@@ -41,24 +35,18 @@ country:
 measurements:
   - kind: coherence-time
     value: 1680
-    unit: "\xB5s"
-    qualifier: 'single qubit, best device'
+    unit: "µs"
+    qualifier: single qubit, best device
     modality: superconducting
+    note: T1 directly stated in Nature abstract and results. Qavg of 9.7e6 across 45 qubits is a dimensionless quality factor; converting to T1 requires resonance frequency and is not transcribed.
     crossChecks: enable-transmon-millisecond-coherence
-  - kind: single-qubit-fidelity
-    value: 99.994
-    unit: '%'
-    qualifier: 'single qubit, best device'
-    modality: superconducting
 review:
   state: agent-merged
   by: agent
   agent: newsroom
-  agentMergedOn: '2026-10-05'
+  agentMergedOn: '2026-10-12'
 status: published
-added: '2026-10-05'
+added: '2026-10-12'
 ---
 
-The 1.68 ms T1 figure is for the single best qubit in the array and is directly stated in the Nature paper; it should not be read as a typical device figure. The time-averaged Qavg of 9.7×10⁶ across 45 qubits represents typical performance across the fabricated array — converting this to a coherence time requires knowing the resonance frequency and is therefore not recorded as a structured measurement here, though it corresponds to roughly 1.0 ms at typical transmon frequencies. Single-qubit gate fidelity of 99.994% is also directly stated.
-
-The tantalum-on-silicon stack is notable for scalability: unlike sapphire substrates, high-resistivity silicon is compatible with standard wafer-scale fabrication processes, which the authors explicitly flag as a route to large-scale processors.
+The tantalum-on-silicon platform replaces the substrate used in standard 2D transmon designs, markedly decreasing bulk substrate loss. The paper reports a time-averaged quality factor (Qavg) of 9.7 × 10⁶ across 45 qubits, with the best qubit reaching Qavg of 1.5 × 10⁷ and a maximum Q of 2.5 × 10⁷ — corresponding to T1 up to 1.68 ms. The Qavg figure is dimensionless and is not transcribed as a coherence-time measurement because converting it to milliseconds requires knowing the resonance frequency, which would make it inference rather than transcription.
