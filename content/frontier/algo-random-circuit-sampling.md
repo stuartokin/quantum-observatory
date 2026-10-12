@@ -67,8 +67,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-18'
-  note: PRL 134, 090601 (2025) previously confirmed via APS and ADS. 5.9×10^9 yr figure confirmed as published PRL figure (preprint said 6.4×10^9 — item documents this correctly). 83-qubit 32-cycle RCS, 10^6 samples in hundreds of seconds, 99.90% 1Q and 99.62% 2Q gate fidelity confirmed from prior verification. E4 correct for peer-reviewed PRL paper. No changes.
+  reviewedOn: '2026-10-12'
+  note: PRL 134, 090601 confirmed via APS abstract and ADS record (DOI 10.1103/PhysRevLett.134.090601, published 3 March 2025). 83-qubit 32-cycle RCS, 5.9×10^9 yr Frontier estimate, 99.90% 1Q and 99.62% 2Q gate fidelity, 10^6 samples in hundreds of seconds all confirmed. Preprint arXiv:2412.11924 correctly notes 6.4×10^9 yr (revised to 5.9×10^9 in published version) — item documents this correctly. E4 correct for peer-reviewed PRL. No corrections.
 ---
 
 Random circuit sampling is the leading experimental demonstration of quantum computational advantage: quantum hardware completing a specific task faster than any classical computer. The current state of the art is USTC's Zuchongzhi 3.0 (105 physical qubits), which in a peer-reviewed Physical Review Letters paper (March 2025) reported generating one million samples from an 83-qubit, 32-cycle random circuit in seconds — a task estimated to require 5.9 billion years on the Frontier supercomputer. This places the classical simulation cost six orders of magnitude beyond earlier Google experiments. The caveat is important: RCS is specifically designed to favour quantum hardware, and improvements in classical tensor-network algorithms have repeatedly narrowed claimed advantages. Furthermore, RCS does not constitute a cryptographically relevant computation. Demonstrating quantum advantage on a random circuit does not translate to running Shor's algorithm.

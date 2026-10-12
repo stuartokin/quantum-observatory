@@ -56,11 +56,12 @@ status: draft
 origin: agent
 added: '2026-08-31'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-08-31'
-  note: 'Checked arXiv:2605.03951 abstract and PDF directly. The 16% overhead figure, 500K-qubit count, 10^5 Bell pairs/s and 1 ms measurement assumptions are stated in the abstract. Not peer-reviewed; two authors from same institution (UIUC). Confidence medium: compilation analysis with no hardware operation; Bell-pair rate assumption not yet demonstrated at scale in a modular neutral-atom system.'
+  note: 'arXiv:2605.03951 HTML opened: Xue and Covey (UIUC; Covey also UChicago). 16% overhead, 500,000 qubits, 10^5 Bell pairs/s, 1ms measurement confirmed from abstract. First end-to-end modular factoring analysis on neutral-atom hardware confirmed from paper text. No journal record found; v1 preprint only. E3 correct. qdayImpact +1 defensible. No corrections.'
+  reviewedOn: '2026-10-12'
 ---
 
 ## What happened

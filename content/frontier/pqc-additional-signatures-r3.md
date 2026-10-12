@@ -35,18 +35,18 @@ links:
   - to: mig-crypto-agility
     relation: enables
 evidence:
-  claim: 'NIST IR 8610 (14 May 2026) reports the selection of nine algorithms advancing from the second to the third round of the Additional Digital Signatures process: FAEST, HAWK, MAYO, MQOM, QR-UOV, SDitH, SNOVA, SQIsign, and UOV. The report states any eventual selection will augment FIPS 204, FIPS 205, FIPS 186-5, and SP 800-208. Five second-round candidates (CROSS, LESS, Mirath, PERK, RYDE) were eliminated due to uncompetitive performance or security vulnerabilities. The third round is expected to last approximately two years, with a seventh PQC Standardization Conference planned for spring/summer 2027. NIST IR 8610 organises the nine candidates into four mathematical families: AES-based (FAEST), lattice (HAWK), supersingular-isogeny (SQIsign), and multivariate/MPC-in-the-head (UOV, MAYO, QR-UOV, SNOVA, MQOM, SDitH). No candidate has been standardised.'
+  claim: 'NIST IR 8610 (14 May 2026) reports the selection of nine algorithms advancing from the second to the third round of the Additional Digital Signatures process: FAEST, HAWK, MAYO, MQOM, QR-UOV, SDitH, SNOVA, SQIsign, and UOV. The report states any eventual selection will augment FIPS 204, FIPS 205, FIPS 186-5, and SP 800-208. Five second-round candidates (CROSS, LESS, Mirath, PERK, RYDE) were eliminated due to uncompetitive performance or security vulnerabilities. The third round is expected to last approximately two years, with a seventh PQC Standardization Conference planned for spring/summer 2027. NIST IR 8610 organises the nine candidates into four mathematical families: AES-based (FAEST), lattice (HAWK), supersingular-isogeny (SQIsign), and multivariate/MPC-in-the-head (UOV, MAYO, QR-UOV, SNOVA, MQOM, SDitH). No candidate has been standardised. HAWK was withdrawn 29 July 2026 after Straznickas and Weis (Anthropic) published a key-recovery reduction from HAWK-n to SVP in dimension n/2+1; eight active candidates remain, with no lattice representative.'
   level: E4
   verified: '2026-08-17'
   sources:
     - url: https://csrc.nist.gov/pubs/ir/8610/final
       role: standard
-      title: 'IR 8610, Status Report on the Second Round of the Additional Digital Signature Schemes for the NIST PQC Standardization Process'
+      title: IR 8610, Status Report on the Second Round of the Additional Digital Signature Schemes for the NIST PQC Standardization Process
       publisher: NIST CSRC
       date: '2026-05-14'
       identifier: NIST IR 8610
       accessed: '2026-08-17'
-      note: 'Formal NIST Internal Report. Names nine third-round candidates and gives rationale for elimination of five. PDF at nvlpubs.nist.gov/nistpubs/ir/2026/NIST.IR.8610.pdf'
+      note: Formal NIST Internal Report. Names nine third-round candidates and gives rationale for elimination of five. PDF at nvlpubs.nist.gov/nistpubs/ir/2026/NIST.IR.8610.pdf
     - url: https://nvlpubs.nist.gov/nistpubs/ir/2026/NIST.IR.8610.pdf
       role: primary
       title: NIST IR 8610 full report PDF
@@ -54,7 +54,7 @@ evidence:
       date: '2026-05-14'
       identifier: NIST IR 8610
       accessed: '2026-08-17'
-      note: 'Source for candidate names, mathematical family breakdown per NIST organisation (four families), evaluation rationale, and timeline cited in the claim. Family count corrected from earlier secondary-source framing of six to four per the report itself.'
+      note: Source for candidate names, mathematical family breakdown per NIST organisation (four families), evaluation rationale, and timeline cited in the claim. Family count corrected from earlier secondary-source framing of six to four per the report itself.
 confidence: high
 priority: P1
 qdayImpact: 0
@@ -69,8 +69,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-16'
-  reviewedOn: '2026-08-18'
-  note: 'NIST IR 8610 PDF and csrc.nist.gov confirmed: nine candidates (FAEST, HAWK, MAYO, MQOM, QR-UOV, SDitH, SNOVA, SQIsign, UOV) advancing to round 3; five eliminated (CROSS, LESS, Mirath, PERK, RYDE). Second round concluded May 14, 2026 after 18 months. Third round ~2 years, 7th conference spring/summer 2027 near Gaithersburg. Four mathematical families per IR 8610. E4 correct for formally published NIST Internal Report. No changes.'
+  reviewedOn: '2026-10-12'
+  note: 'NIST IR 8610 PDF and NIST PQC news confirmed nine candidates selected 14 May 2026. HAWK withdrawn 29 July 2026: Straznickas and Weis (Anthropic) published unconditional key-recovery reduction from HAWK-n to SVP in dimension n/2+1; HAWK-256 keys recovered end-to-end; team withdrew citing mitigations would leave scheme uncompetitive. Confirmed via hawk-sign.info, NIST PQC candidate page, and independent sources. Claim updated to note withdrawal and eight active remaining candidates. Downward correction amending previously reviewed item: HAWK withdrawal preceded the 2026-08-18 review date but was not noted then.'
 ---
 
 NIST launched the Additional Digital Signatures process in September 2022 specifically because ML-DSA and FN-DSA — its two lattice-based signature standards — rest on related mathematical problems. A structural breakthrough in lattice cryptanalysis could compromise both simultaneously. The nine candidates in round three are spread across incompatible mathematical foundations so that a single breakthrough cannot invalidate the whole portfolio.
