@@ -71,8 +71,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-08-31'
-  note: Science 392, 868-872 (Tindall et al., adx2728) confirmed peer-reviewed. D-Wave response confirmed active (LinkedIn post 'Still beyond classical' May 26 2026; D-Wave press release same date per arXiv:2606.20187 references). E4 correct for two peer-reviewed Science papers as primary and corroborating. No corrections.
+  reviewedOn: '2026-10-12'
+  note: 'Both primary sources confirmed peer-reviewed: King et al. Science 388 (ado6285, 2025) and Tindall et al. Science 392, 868 (adx2728, 2026). D-Wave dispute via arXiv:2504.06283 confirmed active in prior passes. E4 correct for two peer-reviewed Science papers as primary and corroborating. Readiness experimental and confidence medium correctly reflect contested scope. No corrections.'
 ---
 
 Quantum annealing encodes combinatorial optimisation and physics-simulation problems as an Ising Hamiltonian and exploits quantum tunnelling to search the energy landscape. D-Wave has operated cloud-accessible superconducting annealers commercially since 2011, scaling to ~5,000 qubits on the Advantage and Advantage2 systems.

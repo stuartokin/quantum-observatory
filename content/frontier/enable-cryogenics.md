@@ -54,8 +54,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-08-11'
-  note: 'First reviewer pass on this agent-merged item. Primary source EPJ Quantum Technology 6, 2 (2019), DOI 10.1140/epjqt/s40507-019-0072-0 confirmed as open access SpringerOpen article; Wallraff group ETH Zurich authorship consistent with board entries for arch-superconducting and enable-control-electronics. Claim — 14 mK, ~50 qubits demonstrated, ~150 feasible — consistent with prior board checks. E4 correct for peer-reviewed engineering paper. readiness demonstrated correct for a 2019 result that established an engineering baseline. No changes made.'
+  reviewedOn: '2026-10-12'
+  note: EPJ Quantum Technology 6, 2 (2019) confirmed as open-access SpringerOpen peer-reviewed engineering paper (DOI 10.1140/epjqt/s40507-019-0072-0, Krinner et al., Wallraff group ETH Zurich). 14mK demonstrated temperature, ~50 qubits demonstrated with ~150 estimated feasible before space constraints dominate — consistent with prior verification. E4 correct. Readiness demonstrated and confidence high correct for a 2019 result establishing an engineering baseline. No corrections.
 ---
 
 Dilution refrigerators are the enabling infrastructure for superconducting qubit platforms. The ETH Zurich 2019 study — a systematic engineering measurement rather than a physics experiment — characterises how passive conduction and active signal dissipation through coaxial cables load each temperature stage of a commercial dilution refrigerator. It validates a thermally optimised design capable of hosting ~50 qubits at 14 mK, with ~150 qubits estimated to be feasible before the physical cabling volume becomes the binding constraint. The paper remains the canonical engineering reference for cryogenic wiring design at processor scale.
