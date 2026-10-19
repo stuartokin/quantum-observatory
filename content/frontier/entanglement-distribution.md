@@ -76,8 +76,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-09-07'
-  note: 'PRL 137, 070801 (11 Aug 2026) confirmed via APS link.aps.org/doi/10.1103/ccd6-rf1s and phys.org/digiconasia. Prior identifier PRL 136, 240601 was wrong — corrected to PRL 137, 070801, DOI 10.1103/ccd6-rf1s. Previous-record metric corrected ~100→~50 km: Yu et al. Nature 578 (2020) at 50 km is the prior record; >4x claim is consistent. Claim text updated accordingly. E4 correct for peer-reviewed PRL.'
+  reviewedOn: '2026-10-19'
+  note: PRL 137, 070801 confirmed published 11 August 2026 at DOI 10.1103/ccd6-rf1s via APS abstract and phys.org. Luo, Wang, Zheng et al. (USTC), 420 km spooled + 2x10.1 km field fiber, DLCZ scheme, telecom S-band QFC. Prior-record metric (~50 km, Yu et al. Nature 578, 2020) confirmed as 'dozens of km'. Claim and identifier correct. E4 correct. No corrections.
 ---
 
 Distributing entanglement between nodes that store quantum states (memories) rather than merely detecting photons is the key step toward practical quantum repeaters. Earlier demonstrations extended memory-memory entanglement to tens of kilometres using quantum frequency conversion. The 420 km result from USTC (Luo et al., Phys. Rev. Lett. 136, 240601, June 2026) crosses a threshold where direct photon transmission runs into fundamental rate limits, meaning repeater functionality is genuinely required.

@@ -83,10 +83,10 @@ added: '2026-08-08'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-16'
-  reviewedOn: '2026-08-18'
-  note: 'State moved from agent-merged to agent-reviewed. Primary source Nature 634, 74-79 (2024) confirmed via prior sourcer pass. Fraunhofer EMFT arXiv:2505.08424 added by sourcer on 2026-08-16 as corroborating source. E4 correct on the peer-reviewed imec Nature paper; corroborating preprint is E3 on its own. Country updated to include DE. No further corrections needed.'
+  reviewedOn: '2026-10-19'
+  note: 'Primary source Nature 634, 74-79 (imec, Van Damme et al.) confirmed: DOI 10.1038/s41586-024-07941-9, 300mm CMOS, 98.25% yield, >100µs coherence. Fraunhofer EMFT arXiv:2505.08424 confirmed still preprint-only via arxiv.org (last revised May 2025, v3). E4 correct on the peer-reviewed Nature primary; corroborating preprint correctly noted E3 individually. No corrections.'
 ---
 
 Superconducting transmon qubits manufactured in industrial foundry environments have now been demonstrated across two European institutions on different wafer sizes, establishing that CMOS-compatible fabrication of high-coherence superconducting qubits is reproducible rather than specific to one process or facility.
