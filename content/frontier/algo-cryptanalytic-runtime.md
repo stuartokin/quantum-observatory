@@ -93,8 +93,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-19'
-  note: 'First reviewer pass (item was agent-merged by scout, no prior reviewedOn). Pinnacle arXiv:2602.11457 confirmed via abstract: <100k qubits, 1 µs cycle, 0.1% error, ~1 month runtime. Cain arXiv:2603.28627 confirmed: RSA-2048 runtime ''1-2 orders of magnitude longer'' than ECC-256 at 26k qubits per abstract. Gidney-Ekerā 2021 (Quantum 5, 433) peer-reviewed baseline correct. E3 correct: synthesis of one peer-reviewed and three preprints. qdayImpact 0 correct: spacetime product not materially reduced; impractical runtime is not a threat metric per decisions file.'
-  reviewedOn: '2026-09-07'
+  note: 'Four sources confirmed in prior passes: Gidney-Ekerā Quantum 5,433 (peer-reviewed baseline), Gidney 2025 arXiv:2505.15917 (preprint, <1M qubits, <1 week), Pinnacle arXiv:2602.11457 (<100k qubits, ~1 month), Cain arXiv:2603.28627 (~10k qubits minimum). E3 correct: synthesis of one peer-reviewed + three preprints. qdayImpact 0 correct per decisions file: spacetime product not materially reduced, impractical runtime is not a threat metric. No corrections.'
+  reviewedOn: '2026-10-19'
 ---
 
 ## What happened

@@ -82,8 +82,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-14'
-  reviewedOn: '2026-08-18'
-  note: 'Nature 655, 1154-1159 confirmed as cover article 29 Jul 2026. arXiv:2604.16216 HTML opened: cable carries 296 traces (body text corrected from ''150 control waveforms'' to ''296 traces''). 70M transistors, 18 EO qubits, 4.7x d5/d3 suppression, <3.5 W power all confirmed. E4 correct.'
+  reviewedOn: '2026-10-19'
+  note: Nature 655, 1154-1159 confirmed via nature.com (DOI 10.1038/s41586-026-10754-7) and PubMed (PMID 42527564, PMC13421337). HRL Quantum Team, 18-qubit EO silicon QPU, 70M-transistor cryo-CMOS at 4K, superconducting ribbon cable to mK, distance-5 repetition code, 4.7x d5/d3 logical error suppression confirmed. E4 correct. No corrections.
 ---
 
 ## What happened
