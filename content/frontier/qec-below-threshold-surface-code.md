@@ -96,8 +96,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-11'
-  reviewedOn: '2026-09-21'
-  note: 'Nature 638, 920-926 (2025) confirmed via nature.com and PubMed: Lambda=2.14±0.02, 101-qubit d=7, 0.143%/cycle, 2.4x break-even. Nature 649, 39-46 (2026) confirmed via nature.com and OSTI: 448 atoms, 2.14(13)x below-threshold, transversal gates, lattice surgery. PRL 135, 260601 (2025) cited in multiple papers as He et al./USTC. E5 correct — three independent institutions, two hardware modalities. No changes.'
+  reviewedOn: '2026-10-26'
+  note: 'All three primary sources opened. Nature 638, 920-926: Λ=2.14±0.02, 0.143%/cycle, 2.4x break-even on 101-qubit d=7 confirmed from nature.com and ADS abstract. PRL 135, 260601 (He et al., USTC): Λ=1.40(6), d=7 surface code, 97 qubits, all-microwave leakage suppression confirmed from APS abstract and PRL cover caption. Nature 649, 39-46 (Bluvstein et al.): 448 atoms, 2.14(13)x below-threshold confirmed via nature.com and OSTI. E5 correct — three independent institutions, two hardware modalities. Publisher correction to Nature 649 (label-only) confirmed at Weizmann CRIS. No corrections.'
 ---
 
 Below-threshold surface code operation — where adding more physical qubits suppresses logical errors exponentially — has been confirmed independently across two hardware platforms and at least three research groups, meeting the E5 standard for independent replication.
