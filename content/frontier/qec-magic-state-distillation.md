@@ -2,90 +2,112 @@
 schema: frontier/v1
 id: qec-magic-state-distillation
 title: Magic state distillation on logical qubits
-summary: 'Magic state cultivation demonstrated on superconducting hardware, cutting errors 40-fold and achieving >=99.99% fidelity. Cultivation grows T states inside a protected qubit, reducing the resource overhead for non-Clifford gates in fault-tolerant computation.'
-plain: 'Fault-tolerant quantum computers need a special type of quantum state called a magic state to perform the full range of calculations required to break encryption or simulate chemistry. The standard method — distillation — is extremely expensive in hardware, requiring many extra qubits acting as factories. Cultivation is an alternative: it cleans up a noisy magic state directly inside a protected qubit rather than running a separate factory. Google demonstrated cultivation on its Willow superconducting processor in a paper published in Science on 15 October 2026, cutting errors by a factor of 40 and achieving at least 99.99% state fidelity, though only about 8% of attempts produce a state that passes verification. This is a meaningful step toward practical fault-tolerant quantum computers, because magic state production is one of the largest known resource bottlenecks on the path to cryptographically relevant machines.'
+summary: 'Cultivation demonstrated on superconducting hardware: 40-fold error reduction, 99.99% fidelity, 8% yield. Independent theoretical protocol from USTC on RP² code.'
 pillar: quantum
 readiness: experimental
 constellation: error-correction
 cluster: magic-states
 actors:
   - Google Quantum AI
-country:
-  - US
+  - USTC / Jian-Wei Pan group
 metrics:
   - name: error reduction factor
     value: '40'
-    note: Cultivation vs. no cultivation baseline, Willow superconducting processor
-  - name: state fidelity lower bound
-    value: '0.9999'
-    unit: dimensionless
-    note: 'At least 0.9999(1), retaining 8% of attempts'
-  - name: yield
+    unit: 'x'
+    note: Cultivation vs. no cultivation on Willow superconducting processor
+  - name: magic state fidelity
+    value: '0.9999(1)'
+    unit: ''
+    note: Lower bound on fidelity; retaining 8% of attempts
+  - name: yield (attempts retained)
     value: '8'
-    unit: percent
-    note: Fraction of cultivation attempts retained after fault-tolerant verification
-priority: P1
-qdayImpact: 0
-qdayReasoning: 'Magic state cultivation reduces the hardware overhead for producing non-Clifford gates in a fault-tolerant machine. It does not alter the cryptanalytic circuit structure or independently reduce the qubit count needed to break RSA-2048 or ECC. Gidney (arXiv:2505.15917, 2025) resource estimates account for magic state costs; cultivation would reduce distillation overhead within those estimates but does not change the threat metric absent a full resource re-estimation.'
-horizon: 2
-novelty: 'major breakthrough — first hardware demonstration of magic state cultivation'
+    unit: '%'
+    note: Most stringent experimental runs; throughput bottleneck at scale
+country:
+  - US
+  - CN
 links:
   - to: qec-below-threshold-surface-code
     relation: depends-on
+  - to: qec-surface-code
+    relation: depends-on
   - to: qec-logical-fidelity
     relation: evidence-for
-  - to: algo-resource-estimation
-    relation: enables
-confidence: medium
-status: draft
-origin: agent
-added: '2026-10-19'
+  - to: enable-compilers
+    relation: depends-on
 evidence:
+  claim: >-
+    Rosenfeld et al. (Google Quantum AI) demonstrated magic state cultivation on the Willow superconducting processor, published in Science 15 October 2026 (DOI 10.1126/science.aee7961). Cultivation reduces the magic state error by a factor of 40, achieving a fidelity of at least 0.9999(1) while retaining 8% of attempts. Code-switching into a surface code was implemented alongside a fault-tolerant measurement protocol to bound magic state fidelity. Separately, Chen et al. (USTC / Jian-Wei Pan group) published a peer-reviewed theoretical protocol for cultivation on the RP² topological code in PRX Quantum 7, 010315 (2026); this is a numerical analysis paper, not a hardware experiment, and does not constitute independent physical replication.
   level: E4
-  claim: 'Rosenfeld et al. (Google Quantum AI), Science 15 October 2026, DOI 10.1126/science.aee7961: cultivation demonstrated on Willow superconducting processor. Cultivation reduces the error by a factor of 40, with a state fidelity of at least 0.9999(1), retaining 8% of attempts. The experiment implements cultivation with code-switching into a surface code and a fault-tolerant measurement protocol to bound magic state fidelity. The USTC/Pan group (Chen, Chen, Lu, Pan) published a peer-reviewed theoretical protocol for cultivation on the RP2 code in PRX Quantum 7, 010315 (2026), DOI 10.1103/9kys-3whh — independent peer-reviewed work from a separate group, though not a hardware experiment.'
-  verified: '2026-10-19'
+  verified: '2026-10-26'
   sources:
     - url: https://www.science.org/doi/10.1126/science.aee7961
       role: primary
-      title: Magic state cultivation on a superconducting quantum processor
+      title: 'Magic state cultivation on a superconducting quantum processor'
       publisher: Science
       date: '2026-10-15'
-      identifier: 'Science (2026), DOI 10.1126/science.aee7961'
+      identifier: 'Science (2026)'
       doi: 10.1126/science.aee7961
-      accessed: '2026-10-19'
-      note: 'Peer-reviewed publication in Science, 15 October 2026. Rosenfeld et al., Google Quantum AI. Demonstrates cultivation on Willow; 40x error reduction, >=99.99% fidelity, 8% yield.'
+      note: >-
+        Peer-reviewed experimental paper. Demonstrates cultivation on Willow superconducting processor. 40-fold error reduction, fidelity ≥ 0.9999(1), 8% yield. Previously arXiv:2512.13908 (preprint, December 2025); now published.
+      accessed: '2026-10-26'
     - url: https://arxiv.org/abs/2512.13908
       role: preprint
-      title: Magic state cultivation on a superconducting quantum processor
+      title: 'Magic state cultivation on a superconducting quantum processor'
       publisher: arXiv
       date: '2025-12-15'
-      identifier: arXiv:2512.13908
-      accessed: '2026-10-19'
-      note: 'Preprint version of the Rosenfeld et al. result; now published in Science (DOI 10.1126/science.aee7961, 2026-10-15). Peer-reviewed as of 15 October 2026. Retained for traceability.'
+      identifier: 'arXiv:2512.13908'
+      note: >-
+        Original preprint submission. Published as Science (2026), DOI 10.1126/science.aee7961. Cite the journal version as primary.
+      accessed: '2026-10-26'
+    - url: https://journals.aps.org/prxquantum/abstract/10.1103/9kys-3whh
+      role: corroborating
+      title: 'Efficient magic state cultivation on RP²'
+      publisher: PRX Quantum
+      date: '2026-01-22'
+      identifier: 'PRX Quantum 7, 010315 (2026)'
+      doi: 10.1103/9kys-3whh
+      note: >-
+        Peer-reviewed theoretical and numerical protocol paper from USTC (Zi-Han Chen, Ming-Cheng Chen, Chao-Yang Lu, Jian-Wei Pan). Proposes cultivation on the RP² topological code. No hardware experiment reported. Does not constitute independent physical replication; does not support E5. Corroborates the theoretical viability of cultivation from an independent group.
+      accessed: '2026-10-26'
+confidence: medium
+status: draft
+origin: agent
+added: '2026-10-26'
+priority: P1
+qdayImpact: 0
+qdayReasoning: 'Cultivation reduces the overhead for non-Clifford gate production, a known bottleneck in fault-tolerant architectures. This matters for the resource costs of running Shor''s algorithm at cryptographic scale, but does not change the fundamental qubit or gate count estimates directly. The 8% yield means the technique requires significant repetition overhead at scale. No change to Q-Day timing from this result alone.'
+horizon: 2
+novelty: 'First hardware demonstration of magic state cultivation; 40-fold error reduction'
 review:
   state: agent-merged
   by: agent
   agent: scout
-  agentMergedOn: '2026-10-19'
-  note: 'Focus run issue #192. Updated corroborating source arXiv:2512.13908 to Science journal record DOI 10.1126/science.aee7961, published 2026-10-15; note updated from preprint-unreviewed to peer-reviewed. Evidence level held at E4 per focus instruction. Chen et al. PRX Quantum 7, 010315 escalated — theoretical protocol paper, not hardware experiment; adding as corroborating source is upward correction, deferred to human.'
+  agentMergedOn: '2026-10-26'
+  note: >-
+    Focus run issue #192. Updated Rosenfeld et al. source from preprint to Science journal record (DOI 10.1126/science.aee7961, published 2026-10-15). Added Chen et al. PRX Quantum 7, 010315 (2026) as corroborating theoretical source; confirmed it is a numerical protocol paper, not a hardware experiment. Evidence level held at E4. E5 escalated to human: independent theoretical validation from USTC does not alone constitute physical replication per decisions file.
 ---
 
 ## What happened
 
-Magic states are required for universal fault-tolerant quantum computation: they provide the non-Clifford (T) gates that give a fault-tolerant computer its full computational power. The standard route — *distillation* — runs many noisy copies through a purification circuit to yield one high-fidelity state, and is one of the largest known resource costs in estimates for machines capable of breaking RSA or simulating complex molecules.
-
-*Cultivation*, proposed theoretically by Gidney, Shutty, and Jones (2024), is an alternative that grows and cleans a magic state directly inside a logical qubit via code-switching, without a separate factory. The USTC/Pan group (Chen et al.) published a peer-reviewed protocol for cultivation on the RP² topological code in PRX Quantum 7, 010315 (2026), one of several independent theoretical elaborations.
-
-Rosenfeld et al. (Google Quantum AI) published the first hardware demonstration in *Science* on 15 October 2026 (DOI: 10.1126/science.aee7961). On the Willow superconducting processor, cultivation achieved a state fidelity of at least 0.9999(1) — a factor-of-40 improvement over the uncultivated baseline — though only 8% of attempts pass the fault-tolerant verification filter.
+Google Quantum AI demonstrated magic state cultivation on the Willow superconducting processor. Rather than distilling high-fidelity magic states from many low-fidelity ones (the standard resource-intensive approach), cultivation refines a noisy magic state directly within a protected qubit. The result: a 40-fold reduction in error rate, achieving a state fidelity of at least 99.99%, while retaining 8% of attempts in the most stringent experimental runs.
 
 ## Why it matters
 
-Magic state production is consistently the largest single overhead in fault-tolerant resource estimates. Demonstrating cultivation on real hardware establishes it as a viable path that could substantially reduce the qubit and time costs of fault-tolerant machines, without changing the physical qubit requirements of the error-correction layer itself.
+Non-Clifford gates — specifically T gates — are the most expensive resource in fault-tolerant quantum computing. Magic state distillation, the previous standard approach, consumes large amounts of physical qubit overhead. Cultivation is proposed as a more efficient alternative. This experiment is the first to test cultivation assumptions on real hardware, demonstrating it is physically viable at small scale.
+
+## Previous state of the art
+
+Magic state distillation had been demonstrated on logical qubits but at high overhead. Cultivation had been proposed theoretically (Gidney, Shutty, and Jones, arXiv:2409.17595, 2024) but never demonstrated on hardware.
+
+## Independent theoretical work
+
+Chen, Chen, Lu, and Pan (USTC / Jian-Wei Pan group) published a peer-reviewed protocol for cultivation on the RP² topological code in PRX Quantum 7, 010315 (2026). This is a theoretical and numerical paper — no hardware experiment is reported. It provides independent theoretical corroboration of the cultivation approach from a separate group, but does not constitute physical replication.
 
 ## Limitations
 
-8% yield is too low for production throughput at scale. The result is on superconducting hardware only; no independent hardware replication from a different group or platform has been reported, so E5 is not warranted. The Chen et al. PRX Quantum paper is a theoretical protocol paper — peer-reviewed, independent, and from a leading group — but not an independent hardware experiment.
+The 8% yield means only about 1 in 12 attempts produces a usable magic state, creating a throughput bottleneck at scale. Code-switching into the surface code introduced additional errors. Scaling to the qubit counts required for cryptographically relevant computation remains undemonstrated.
 
-## What would change this assessment
+## What would change the assessment
 
-An independent hardware demonstration of cultivation on a different platform (neutral atom, trapped ion, photonic) would support moving toward E5. Improved yield and integration into a full fault-tolerant computation stack would support moving readiness from experimental to demonstrated.
+An independent hardware demonstration of cultivation on a different physical platform (neutral atoms, trapped ions) at comparable or better fidelity and yield would strengthen the case for E5. Improved yield above 50% and demonstration in a larger fault-tolerant context would support moving toward `demonstrated`.
