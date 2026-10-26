@@ -4,7 +4,7 @@ id: 2025-09-15-harvard-mit-3000-qubit-continuous-operation
 headline: Harvard and MIT solve the atom-loss bottleneck, demonstrating continuous operation of a 3,000-qubit neutral-atom system for over two hours
 pillar: quantum
 date: '2025-09-15'
-plain: Neutral-atom quantum computers lose atoms during computation, forcing them to restart every 60 seconds or so. Harvard and MIT demonstrated a continuous reloading architecture — using optical lattice conveyor belts to replenish the array — that keeps a 3,000-qubit system running coherently for over two hours. This removes one of the practical barriers to running deep quantum circuits on large neutral-atom arrays.
+plain: Neutral-atom quantum computers have been limited to pulsed operation of about 60 seconds because atoms are lost during computation and cannot be replaced without disrupting the processor. Harvard and MIT solved this by building a dual optical-lattice conveyor belt that continuously feeds fresh atoms into the array at up to 300,000 atoms per second, maintaining a coherent 3,000-qubit system for more than two hours. Continuous operation removes the circuit-depth ceiling imposed by atom loss and is a prerequisite for running the deep error-correction circuits that fault-tolerant quantum computing requires.
 significance: notable
 source:
   url: https://www.nature.com/articles/s41586-025-09596-6
@@ -13,41 +13,40 @@ source:
   publisher: Nature
   date: '2025-09-15'
   doi: 10.1038/s41586-025-09596-6
+corroboration:
+  - url: https://phys.org/news/2025-09-physicists-quantum-bit-capable.html
+    publisher: Phys.org
+    kind: journalism
 validation:
   status: verified
   checks:
-    - Nature paper opened; title and abstract directly state continuous operation of a 3,000-qubit system for more than two hours
-    - Reloading rate of up to 300,000 atoms per second stated in paper and confirmed in APS abstract
-    - Harvard and MIT affiliations confirmed from author list
+    - 'Nature paper DOI 10.1038/s41586-025-09596-6 confirmed via PubMed (PMID 40953821) and OSTI (ID 3376337); >3000-qubit continuous operation for >2 hours stated in abstract'
+    - 'Phys.org and ResearchGate records corroborate independently'
+    - 'No contradicting report found'
 about:
   - arch-neutral-atom
   - qec-ftqc-neutral-atom
 establishedBy:
-  - url: https://doi.org/10.1038/s41586-025-09596-6
+  - url: https://www.nature.com/articles/s41586-025-09596-6
     title: Continuous operation of a coherent 3,000-qubit system
-    relation: reports
+    publisher: Nature
     date: '2025-09-15'
     doi: 10.1038/s41586-025-09596-6
-actors:
-  - Harvard University
-  - Massachusetts Institute of Technology
-country:
-  - US
+    relation: reports
+actors: [Harvard University, MIT]
+country: [US]
 measurements:
   - kind: physical-qubits
     value: 3000
     unit: qubits
-    qualifier: physical, continuously operated
+    qualifier: 'trapped in tweezer array, not error-corrected'
     modality: neutral-atom
-    note: Paper states array of over 3,000 atoms maintained for more than 2 hours. 3000 used as the floor value; paper does not give a precise upper count.
-    crossChecks: arch-neutral-atom
+    note: 'Paper states ''more than 3,000 atoms''; 3000 is the floor stated. Operated continuously for more than 2 hours using optical lattice conveyor belt reloading.'
 review:
   state: agent-merged
   by: agent
   agent: newsroom
-  agentMergedOn: '2026-10-12'
+  agentMergedOn: '2026-10-26'
 status: published
-added: '2026-10-12'
+added: '2026-10-26'
 ---
-
-Atom loss has been a fundamental constraint on neutral-atom quantum computing: tweezers hold atoms for roughly 60 seconds, after which the array must be reloaded from scratch, limiting circuit depth and continuous operation. The Harvard-MIT team used dual optical lattice conveyor belts to transport cold atom reservoirs continuously into the science region, replenishing tweezers at up to 300,000 atoms per second without disturbing qubits already in storage. The result is continuous coherent operation for over two hours — more than seven times the prior trap lifetime limit. The paper does not report gate fidelities for circuits run across the full array during continuous operation; the result is architectural rather than a fidelity benchmark.

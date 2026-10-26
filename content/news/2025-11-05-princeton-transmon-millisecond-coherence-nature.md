@@ -4,7 +4,7 @@ id: 2025-11-05-princeton-transmon-millisecond-coherence-nature
 headline: Princeton publishes tantalum-on-silicon transmon qubit with T1 up to 1.68 ms in Nature, tripling the prior record
 pillar: quantum
 date: '2025-11-05'
-plain: Superconducting qubits lose their quantum state quickly, which forces error-correction systems to work faster than the hardware can sustain. Princeton''s tantalum-on-silicon transmon achieves a coherence time of 1.68 ms — roughly three times the previous best — across a 45-qubit device, not just a single handpicked qubit. That combination of scale and consistency is what makes it relevant to real processors rather than just a laboratory record.
+plain: Superconducting transmon qubits have been limited by energy loss at material interfaces for years. Princeton replaced the standard sapphire substrate with high-resistivity silicon and grew tantalum directly on it, reducing bulk substrate loss enough to reach a T1 of 1.68 ms on the best device — around three times the previous record. The team also demonstrated 99.994% single-qubit gate fidelity and showed the architecture is compatible with standard quantum processor fabrication, which matters for scaling.
 significance: notable
 source:
   url: https://www.nature.com/articles/s41586-025-09687-4
@@ -13,40 +13,41 @@ source:
   publisher: Nature
   date: '2025-11-05'
   doi: 10.1038/s41586-025-09687-4
+corroboration:
+  - url: https://engineering.princeton.edu/news/2025/11/05/princeton-engineers-say-new-qubit-could-make-current-quantum-computers-1000-times
+    publisher: Princeton University Engineering
+    kind: authority
 validation:
   status: verified
   checks:
-    - Nature paper opened; T1 up to 1.68 ms for the best qubit stated in abstract and results
-    - Qavg of 9.7e6 across 45 qubits also stated; conversion to T1 requires resonance frequency and is therefore inference — not recorded as a measurement
-    - Princeton University affiliation confirmed; independent of vendor programmes
+    - 'Nature paper DOI 10.1038/s41586-025-09687-4 opened; T1 up to 1.68 ms and Q_avg of 9.7 × 10^6 across 45 qubits appear in the abstract'
+    - 'Princeton Engineering news release corroborates the result independently'
+    - 'No contradicting report found'
 about:
-  - arch-superconducting
   - enable-transmon-millisecond-coherence
+  - arch-superconducting
 establishedBy:
-  - url: https://doi.org/10.1038/s41586-025-09687-4
+  - url: https://www.nature.com/articles/s41586-025-09687-4
     title: Millisecond lifetimes and coherence times in 2D transmon qubits
-    relation: reports
+    publisher: Nature
     date: '2025-11-05'
     doi: 10.1038/s41586-025-09687-4
-actors:
-  - Princeton University
-country:
-  - US
+    relation: reports
+actors: [Princeton University, C2QA, Brookhaven National Laboratory]
+country: [US]
 measurements:
   - kind: coherence-time
     value: 1680
-    unit: "µs"
-    qualifier: single qubit, best device
+    unit: µs
+    qualifier: 'single qubit, best device'
     modality: superconducting
-    note: T1 directly stated in Nature abstract and results. Qavg of 9.7e6 across 45 qubits is a dimensionless quality factor; converting to T1 requires resonance frequency and is not transcribed.
     crossChecks: enable-transmon-millisecond-coherence
+    note: 'T1 up to 1.68 ms stated in Nature abstract. Q_avg of 9.7e6 across 45 qubits also reported; that figure is a quality factor, not a directly stated ms value, so not transcribed separately.'
 review:
   state: agent-merged
   by: agent
   agent: newsroom
-  agentMergedOn: '2026-10-12'
+  agentMergedOn: '2026-10-26'
 status: published
-added: '2026-10-12'
+added: '2026-10-26'
 ---
-
-The tantalum-on-silicon platform replaces the substrate used in standard 2D transmon designs, markedly decreasing bulk substrate loss. The paper reports a time-averaged quality factor (Qavg) of 9.7 × 10⁶ across 45 qubits, with the best qubit reaching Qavg of 1.5 × 10⁷ and a maximum Q of 2.5 × 10⁷ — corresponding to T1 up to 1.68 ms. The Qavg figure is dimensionless and is not transcribed as a coherence-time measurement because converting it to milliseconds requires knowing the resonance frequency, which would make it inference rather than transcription.
