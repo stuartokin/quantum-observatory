@@ -57,8 +57,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-09-14'
-  note: 'Quantum 8, 1354 (2024) opened at quantum-journal.org: authors are George Watkins (Aalto U + Simon Fraser U), Hoang Minh Nguyen, Keelan Watkins, Steven Pearce, Hoi-Kwan Lau (Simon Fraser U + Quantum Algorithms Institute), and Alexandru Paler (Aalto U). Actors corrected from ''Macquarie University, Horizon Quantum Computing'' (both wrong — neither appears in the paper) to actual institutions. Country corrected from AU to FI and CA. E4 correct for peer-reviewed Quantum journal. Claim (80M instructions, 128-qubit QFT, streaming speed) confirmed from Semantic Scholar and INSPIRE records. Open-source at github.com/latticesurgery-com confirmed.'
+  reviewedOn: '2026-10-26'
+  note: 'Quantum 8, 1354 (2024) confirmed at quantum-journal.org (DOI 10.22331/q-2024-05-22-1354): Watkins, Nguyen, Watkins, Pearce, Lau (Simon Fraser U + Quantum Algorithms Institute), Paler (Aalto U). 80M instructions, 128-qubit QFT, streaming speed confirmed from abstract. Actors (Aalto, Simon Fraser, QAI) correct per prior correction run. Open-source at github.com/latticesurgery-com confirmed. Widely cited in 2024-2026 lattice surgery compilation literature. E4 correct. No corrections.'
 ---
 
 Fault-tolerant quantum computers must translate human-readable algorithms into millions of precise physical operations suited to the error-correction code they run. Compilers do this. Watkins et al. built and published the first compiler capable of handling very large surface-code computations using lattice surgery, processing 80 million logical instructions for a 128-qubit quantum Fourier transform in seconds — fast enough to keep pace with a real device. The compiler is open source and includes a resource estimator, making it a practical tool for planning future fault-tolerant systems.

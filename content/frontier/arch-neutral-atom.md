@@ -69,8 +69,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-09-21'
-  note: 'Nature 649, 39-46 (2026) confirmed via nature.com, OSTI (record 3376340), and Weizmann CRIS: 448 atoms, 2.14(13)x below-threshold, transversal gates, lattice surgery, [[15,1,3]] teleportation. Publisher correction Nature 650, E3 confirmed label-only. Nature 645 (magic state distillation, QuEra/Harvard/MIT) confirmed via arch-neutral-atom source record. E4 correct for two peer-reviewed Nature papers. No changes.'
+  reviewedOn: '2026-10-26'
+  note: 'Nature 645, 620-625 (QuEra/Harvard/MIT, Sales Rodriguez et al.): first logical magic state distillation, 5-to-1 protocol on d=3 and d=5 colour codes confirmed via nature.com, INSPIRE, ResearchGate. Nature 649, 39-46 (Bluvstein et al.): 448 atoms, 2.14(13)x below-threshold, transversal gates, lattice surgery, [[15,1,3]] teleportation confirmed via nature.com, OSTI, Weizmann CRIS. Publisher correction Nature 650, E3 (label only) confirmed. E4 correct — two peer-reviewed Nature papers, single group. No corrections.'
 ---
 
 Neutral-atom arrays use optical tweezers — focused laser beams — to hold individual uncharged atoms in programmable 2D patterns. Unlike superconducting or silicon-spin qubits, the atoms can be physically moved mid-computation, allowing the connectivity graph to be reconfigured on the fly. Any atom can be brought next to any other, enabling the all-to-all entanglement operations that fault-tolerant protocols often require.
