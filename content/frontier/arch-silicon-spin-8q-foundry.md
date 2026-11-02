@@ -78,11 +78,12 @@ evidence:
       accessed: '2026-09-14'
       note: 'Steinacker et al. (2025) — prior result on same 300mm process, reporting >99% two-qubit gate fidelity on unit cells. Provides the fidelity baseline this paper extends in qubit count.'
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-09-14'
-  note: 'Primary source is Nature Communications peer-reviewed paper (DOI 10.1038/s41467-026-74597-6), confirmed open access via nature.com. Preprint arXiv:2512.10174 confirmed as same work. Corroborating Steinacker Nature 646 source confirmed via PubMed record 40993388, DOI 10.1038/s41586-025-09531-9. Gate fidelity figures explicitly excluded from this item per paper text and per postquantum.com analysis confirming the 8-qubit paper reports no fidelity benchmarks.'
+  note: Nat Commun 17, 5878 confirmed via nature.com, PubMed (PMID 42425974, PMC13350989), and Diraq publications page. DOI 10.1038/s41467-026-74597-6, published 9 July 2026. Nickl, Dumoulin Stuyck, Steinacker et al. (UNSW/Diraq/imec). T2* up to 41(2)µs, T2Hahn up to 1.31(4)ms, 8 qubits as 4 double-dot pairs, cascaded charge-sensing readout for central 4, two-qubit gate with low phase noise all confirmed. No gate fidelity benchmarks in this paper — correctly documented. E4 correct. No corrections.
+  reviewedOn: '2026-11-02'
 ---
 
 ## What happened

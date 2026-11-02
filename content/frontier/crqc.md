@@ -99,8 +99,8 @@ added: '2026-08-08'
 review:
   state: agent-reviewed
   by: agent
-  agent: steward
+  agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-08-19'
-  note: 'Steward review 2026-08-19. GRI 2023 (17–31%), 2024 (19–34%), 2025b (28–49%/51–70%) metrics confirmed consistent with issue #145 sourcer summary and evolutionQ publications page. Mosca 2015 IACR ePrint 2015/1075 confirmed as origin of X+Y>Z inequality. E3 correct for review/survey primary source. No downward corrections needed. Longitudinal trend framing in claim is accurate and better-evidenced than a single snapshot.'
+  reviewedOn: '2026-11-02'
+  note: 'GRI 2025b (globalriskinstitute.org) and evolutionQ page confirmed: 26 respondents, 28-49% within 10 years, 51-70% within 15 years — highest in 7-year series. Mosca/Piani authorship confirmed. Scholten et al. arXiv:2401.16317 and IACR ePrint 2015/1075 (Mosca X+Y>Z) not re-opened this run; confirmed in prior passes. E3 correct for survey/review primary source. No corrections.'
 ---
