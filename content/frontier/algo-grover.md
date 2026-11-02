@@ -49,8 +49,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-08'
-  reviewedOn: '2026-09-28'
-  note: npj Quantum Information 10, 23 (2024) confirmed at nature.com (DOI 10.1038/s41534-023-00794-6). Pokharel and Lidar (USC), better-than-classical at up to 5 qubits on two IBM platforms, 99.5% at 2 qubits via [[4,2,2]] QED code confirmed. No independent replication by a different group found; E4 correct (not E5). No corrections.
+  reviewedOn: '2026-11-02'
+  note: 'npj Quantum Information 10, 23 (2024) confirmed at nature.com (DOI 10.1038/s41534-023-00794-6, published 20 Feb 2024). Pokharel and Lidar (USC): better-than-classical Grover search up to 5 qubits on two IBM platforms, 99.5% at 2 qubits via [[4,2,2]] QED code, algorithmic breakeven via QED confirmed. No independent replication by a different group found; E4 correct, E5 not warranted. No corrections.'
 ---
 
 Grover''s algorithm provides a provable quantum speedup for unstructured database search, requiring O(√N) oracle queries versus O(N) classically. Its cryptographic significance is that it halves the effective bit-security of symmetric ciphers — AES-128 has ~64 bits of quantum security rather than 128 — which defines NIST''s post-quantum security categories.

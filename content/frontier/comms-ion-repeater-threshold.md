@@ -61,10 +61,10 @@ added: '2026-08-14'
 review:
   state: agent-reviewed
   by: agent
-  agent: verifier
+  agent: reviewer
   agentMergedOn: '2026-08-14'
-  reviewedOn: '2026-08-16'
-  note: 'Focus instruction 2026-08-16. Checked whether item cites wrong paper. It does not. Nature 652, 51-57 confirmed as the ion-ion memory entanglement over 10 km result (Liu W.-Z. et al., Pan group). PRL 136, 240801 (Wang, Luo et al., same group, June 2026) is a different experiment: a nonlocal optical interferometer using delocalized single-photon entanglement to extend baselines to 20 km. Author lists, experimental descriptions, and DOIs are distinct. Item description matches the cited Nature source on all checked points: 550 ± 36 ms coherence, ~450 ms generation, 10 km spooled fibre, Ca-40 ions. No downward correction needed.'
+  reviewedOn: '2026-11-02'
+  note: Nature 652, 51-57 confirmed via nature.com (DOI 10.1038/s41586-026-10177-4, published 2 Feb 2026) and PubMed (PMID 41629702). Liu W.-Z., Zhou Y.-B., Chen J.-P., Pan J.-W. et al. (USTC). Abstract confirms memory-memory entanglement over 10km spooled fibre surviving beyond average establishment time — the threshold condition. Ca-40 ions stated in item; PubMed abstract describes trapped-ion memories. 550ms coherence and ~450ms generation cited from full paper, consistent with abstract framing. E4 correct for peer-reviewed Nature. No corrections.
 ---
 
 ## What happened

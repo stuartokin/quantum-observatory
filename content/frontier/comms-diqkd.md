@@ -72,8 +72,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-16'
-  reviewedOn: '2026-09-21'
-  note: 'Science 391, 592-597 confirmed via USTC Pan group publications page, arXiv:2602.09596 (author-posted), and PRL-Research citing paper: Lu et al. (USTC/Hefei/Jinan), DI-QKD over 100 km spooled fibre, 1.2M heralded Bell pairs at 11 km over 624 hours, 0.112 bits/event finite-size secure key against general attacks, positive asymptotic rate to 100 km. All claims match. E4 correct. No changes.'
+  reviewedOn: '2026-11-02'
+  note: 'Science 391, 592-597 confirmed via arXiv:2602.09596 HTML and sciencemediacentre.es: Lu et al. (USTC), Rb-87 atoms, 100km spooled fibre, 1.2M heralded Bell pairs over 624h at 11km, 0.112 bits/event finite-size secure key against general attacks, positive asymptotic rate to 100km. Single-photon heralding, QFC to telecom band confirmed. Prior record 700m confirmed. E4 correct for peer-reviewed Science paper. No corrections.'
 ---
 
 ## What happened
