@@ -144,6 +144,6 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-09-28'
-  note: 'arXiv:2607.13816 (Luo et al., 835 logical qubits) confirmed still preprint-only; no journal record found. Luo''s abstract cites Chevignard at 1098 (P-224 figure, not P-256 1193) — error correctly documented in item. Bagourd arXiv:2512.15330 and Willsch arXiv:2410.14397 not re-opened this run; confirmed in prior passes. E3 correct. Hardware gap remains enormous: demonstrated ~96 logical qubits vs 835+ required. No corrections.'
+  reviewedOn: '2026-11-09'
+  note: Bagourd arXiv:2512.15330 confirmed still preprint-only (v3, January 2026, typographic corrections only; no journal record on arXiv, ADS, or author page). E3 correct. Hardware gap claim (N=21 ceiling, noise overwhelms Shor circuits) confirmed from paper HTML. No corrections.
 ---

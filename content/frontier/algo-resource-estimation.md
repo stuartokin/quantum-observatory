@@ -147,6 +147,6 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-19'
-  reviewedOn: '2026-09-28'
-  note: arXiv:2505.15917 confirmed still preprint-only (no journal DOI found). Luo et al. arXiv:2607.13816 confirmed still preprint; v1/v2 Toffoli count differs (919 vs 1056 n³/log₂n) but 835 logical qubit figure unchanged. Luo's citation of Chevignard at 1098 (P-224, not P-256) correctly documented. E3 correct. IonQ Sep 2026 resource estimate (19,397 physical qubits, Walking Cat, ~25.7 days for secp256k1) not yet on board — flagged under Worth Scout's attention.
+  reviewedOn: '2026-11-09'
+  note: arXiv:2505.15917 (Gidney 2025) confirmed still preprint-only via arXiv abstract page and multiple citing papers — no journal DOI found. E3 correct. D-Wave/Tindall dispute confirmed still active per multiple May 2026 sources. No corrections.
 ---
