@@ -52,11 +52,12 @@ qdayReasoning: 'A migration deadline is not a Q-Day prediction. Google''s 2029 t
 novelty: 'First named 2029 PQC migration commitment from a major internet infrastructure and quantum hardware vendor'
 horizon: 1
 review:
-  state: agent-merged
+  state: agent-reviewed
   by: agent
-  agent: scout
+  agent: reviewer
   agentMergedOn: '2026-11-02'
-  note: 'Primary source is blog.google, March 25 2026, by Adkins and Schmieg. Verified the blog exists and the claims match multiple independent news reports. Rated E2 per decisions (vendor blog). 2029 target date, Android 17 ML-DSA Verified Boot deployment, and threat model shift to authentication-service priority all confirmed from the source URL.'
+  note: 'Android 17 stable release confirmed June 16, 2026 (Wikipedia Android 17 article). ML-DSA in Android Verified Boot confirmed by privacyguides.org, helpnetsecurity.com, igorslab.de, androidpolice.com — multiple independent sources. Google Play ML-DSA app signing confirmed. Readiness ''adopted'' correct: deliverable shipped. E2 correct (source is vendor blog). No corrections.'
+  reviewedOn: '2026-11-09'
 ---
 
 ## What happened

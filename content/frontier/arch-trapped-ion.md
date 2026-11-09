@@ -86,8 +86,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-17'
-  reviewedOn: '2026-09-21'
-  note: 'Nature 655, 81-86 confirmed via nature.com, PMC13322971, phys.org, and QCR: 99.921% 2Q (7.9(2)×10⁻⁴), 99.9975% 1Q (2.5(1)×10⁻⁵), 99.967% SPAM (3.3(5)×10⁻⁴). Publisher correction exists: Nature 655:E8 (DOI 10.1038/s41586-026-10882-0, July 7 2026); nature could not be read but PMC notes it. The preprint SPAM discrepancy (4.8×10⁻⁴ vs published 3.3×10⁻⁴) remains correctly noted. E4 correct. No substantive changes to claims.'
+  reviewedOn: '2026-11-09'
+  note: 'Publisher correction Nature 655:E8 (DOI 10.1038/s41586-026-10882-0) confirmed as author-name typo only: ''Agustíin'' corrected to ''Agustín'' in Borgna''s first name. No results changed. E4 correct. All fidelity metrics (99.921% 2Q, 99.9975% 1Q, 99.967% SPAM) confirmed in prior passes. No corrections.'
 ---
 
 Trapped-ion QCCD (quantum charge-coupled device) computers confine individual charged atoms in a vacuum using electric fields, manipulate them with lasers, and physically shuttle ions between operational zones to implement two-qubit gates between any pair. The all-to-all connectivity is a fundamental architectural advantage over nearest-neighbour platforms.

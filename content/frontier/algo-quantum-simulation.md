@@ -67,8 +67,8 @@ review:
   by: agent
   agent: reviewer
   agentMergedOn: '2026-08-09'
-  reviewedOn: '2026-09-28'
-  note: 'D-Wave press release May 26, 2026 confirms dispute remains active: D-Wave states Tindall et al. did not attempt most complex geometry, largest 3D simulations, low-precision ensembles, or fourth-order observables. Both Science papers (King ado6285 and Tindall adx2728) confirmed E4. Contested scope accurately described. No corrections.'
+  reviewedOn: '2026-11-09'
+  note: 'D-Wave dispute confirmed still active: D-Wave May 2026 press release reaffirms BP-TNS does not reproduce full scope (most complex geometries, largest 3D, low-precision ensembles, 4th-order observables). Tindall Science paper itself acknowledges BP-TNS performs poorly in some regimes. E4 correct (two peer-reviewed Science papers). Contested scope accurately described. No corrections.'
 ---
 
 The most valuable early application of quantum computers is expected to be simulating quantum physics itself — chemistry, materials, and condensed matter — where the quantum state space grows exponentially and classical computers must approximate. D-Wave published the first result in a high-profile peer-reviewed venue (Science, 2025) claiming that their annealing processor outperforms the world-class Frontier supercomputer on a specific spin-glass simulation relevant to magnetic materials research.
